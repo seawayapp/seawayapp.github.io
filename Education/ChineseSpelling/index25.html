@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Education - 华文听写 2025</title>
+    <!-- Input Data -->
+    <script src="./data/mainList_2025.js"></script>
+    <style>
+        body {
+            font-family: 'Book Antiqua';
+            background: #eaeaea;
+            text-align: center;
+        }
+
+        .wrap {
+            width: 80%;
+            margin: auto;
+            max-width: 1000px;
+        }
+
+        h1 {
+            color: #272727;
+            font-size: 40px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 10px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        th {
+            background: #272727;
+            color: #fff;
+        }
+
+        td a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            display: block;
+        }
+
+        td a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrap">
+        <h1>华文听写 2025</h1>
+        <div id="mainContent">Loading...</div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            try {
+                const tableHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>目录</th>
+                                <th>科目</th>
+                                <th>日期</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${mainList.map((item, index) => `
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td style="text-align: left;">
+                                        <a href="./CS_Template25.html?input=${item.filename}&pageno=${index}" target="_blank">
+                                            &nbsp;${item.title}&nbsp;
+                                        </a>
+                                    </td>
+                                    <td>${item.testdate}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>`;
+
+                document.getElementById("mainContent").innerHTML = tableHTML;
+            } catch (error) {
+                console.error("Failed to load main list:", error);
+                document.getElementById("mainContent").innerHTML = "<p>Error loading data.</p>";
+            }
+        });
+    </script>
+
+</body>
+
+</html>

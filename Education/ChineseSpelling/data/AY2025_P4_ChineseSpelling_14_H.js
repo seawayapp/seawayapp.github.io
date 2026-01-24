@@ -1,0 +1,70 @@
+const mainData = [
+  {
+    category: "华文听写 2025",
+    title: "第十四课，这个注意很棒 (HSH)",
+    subtitle: "第十四课",
+    testdate: "",
+    group: [
+      "识读词语",
+      "识读词语",
+      "识读词语",
+      "识读词语",
+      "识读词语",
+
+      "识写字词",
+      "识写字词",
+      "识写字词",
+      "识写字词",
+      "识写字词",
+      "识写字词",
+
+      "词语搭配",
+      "词语搭配",
+      "词语搭配",
+      "词语搭配",
+      "句式",
+      "句式",
+      "默写"
+    ],
+    sentences: [
+      "香皂",
+      "瞪",
+      "钱袋",
+      "眉开眼笑",
+      "欠",
+      "词典",
+      "刚巧",
+      "凶巴巴",
+      "可怜",
+      "竟然",
+      "不慌不忙",
+      "挥动拳头",
+      "走进厨房",
+      "阅读角落",
+      "压在身下",
+      "小乐兴奋地说，她收到了生日礼物。",
+      "爷爷神秘地说，他带我去一个地方。",
+      "老师告诉同学们坚持不放弃的体育精神，是值得大家学习的。"
+    ],
+    pronunciation: [
+      "xiāng zào",
+      "dèng",
+      "qián dài",
+      "méi kāi yǎn xiào",
+      "qiàn",
+      "cí diǎn",
+      "gāng qiǎo",
+      "xiōng bā bā",
+      "kě lián",
+      "jìng rán",
+      "bù huāng bù máng",
+      "huī dòng quán tóu",
+      "zǒu jìn chú fáng",
+      "yuè dú jiǎo luò",
+      "yā zài shēn xià",
+      "xiǎo lè xīng fèn dì shuō ， tā shōu dào le shēng rì lǐ wù 。",
+      "yé ye shén mì dì shuō ， tā dài wǒ qù yí gè dì fāng 。",
+      "lǎo shī gào sù tóng xué men jiān chí bú fàng qì de tǐ yù jīng shén ， shì zhí dé dà jiā xué xí de 。"
+    ]
+  }
+];

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="菩提道次第广论 - 佛教经典学习">
+    <title id="maintitle">菩提道次第广论</title>
+
+    <!-- Combined CSS -->
+    <link rel="stylesheet" href="./css/combined.css" media="all">
+
+    <!-- Preload font -->
+    <link href="../../public/fonts/simkai.woff" as="font" type="font/woff">
+
+    <!-- Configuration -->
+    <meta name="defaultView" content="slideshow">
+    <meta name="controlVis" content="hidden">
+</head>
+
+<body>
+    <header id="header" role="banner"></header>
+
+    <main class="layout" role="main">
+        <div id="controls" aria-hidden="true"></div>
+        <div id="currentSlide" aria-live="polite"></div>
+
+        <footer id="footer" role="contentinfo">
+            <h1></h1>
+            <h2></h2>
+        </footer>
+    </main>
+
+    <article class="presentation" role="article">
+        <div id="paragraph"></div>
+    </article>
+
+    <!-- Combined and deferred JS -->
+    <script src="./js/combined.js" defer></script>
+    <script src="../lib/ui/default/slidesPortable.js" defer></script>
+
+    <script>
+        // JavaScript remains largely the same but could be moved to external file
+        (function () {
+            const mainData = [];
+
+            function loadScript(fileName) {
+                return new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = fileName;
+                    script.defer = true;
+                    script.onload = resolve;
+                    script.onerror = () => reject(new Error(`Failed to load: ${fileName}`));
+                    document.body.appendChild(script);
+                });
+            }
+
+            function getScriptParam(key) {
+                return new URLSearchParams(window.location.search).get(key);
+            }
+
+            window.addEventListener('load', async () => {
+                const scriptFile = getScriptParam('input');
+                const pageNo = getScriptParam('pageno');
+
+                if (scriptFile) {
+                    try {
+                        await loadScript(`./data/${scriptFile}.js`);
+                        if (typeof mainData !== 'undefined') {
+                            processData(mainData[0], pageNo);
+                            startup();
+                        }
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }
+            });
+
+            function processData(inputJSON) {
+                document.getElementById("maintitle").textContent = inputJSON.title;
+                populateHTMLparagraph(inputJSON, "paragraph");
+            }
+
+            function populateHTMLparagraph(inputJSON, type) {
+                let html = `
+                <div class="slide">
+                    <h1>菩提道次第广论</h1>
+                    <p class="title-center">${inputJSON.title}</p>
+                </div>`;
+
+                inputJSON.sentences.forEach((paragraphTemp, j) => {
+                    html += `
+                    <div class="slide">
+                        <h1>${inputJSON.subtitle} - ${j + 1}</h1>
+                        <div class="vertical-center">
+                            <p class="content-center">${paragraphTemp}</p>
+                        </div>
+                    </div>`;
+                });
+
+                html += `
+                <div class="slide">
+                    <h1>${inputJSON.subtitle}</h1>
+                    <div class="vertical-center">
+                        <p class="content-center"><a>未完待续</a></p>
+                    </div>
+                </div>`;
+
+                document.getElementById(type).innerHTML = html;
+            }
+        })();
+    </script>
+</body>
+
+</html>

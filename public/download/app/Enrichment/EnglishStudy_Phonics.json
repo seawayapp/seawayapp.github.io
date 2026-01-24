@@ -1,0 +1,22 @@
+{
+    "category": "English Phonic",
+    "title": "英语48音标",
+    "subtitle":"元音",
+    "imageFileName": [
+        "Phonics_1.png",
+        "Phonics_2.png",
+        "Phonics_3.png",
+        "Phonics_4.png"
+    ],
+    "audioFileName": [
+        "Phonics_1.m4a",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+		"",
+        ""        
+    ]
+}

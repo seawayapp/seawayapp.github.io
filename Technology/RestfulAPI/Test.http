@@ -1,0 +1,7 @@
+GET http://192.168.68.88:8080/WebAPI/dbTest.asp
+
+
+GET http://192.168.68.88:8080/WebAPI/servertime.asp
+
+
+

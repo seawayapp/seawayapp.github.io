@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English-Chinese Slide Viewer</title>
+    <style>
+        body {
+            font-family: Book Antiqua;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .slide-card {
+            width: 90%;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .english {
+            font-size: 66px;  /* Increased from 28px */
+            margin-bottom: 30px;
+            color: #333;
+            font-weight: bold;
+            line-height: 1.3;
+        }
+        .chinese {
+            font-size: 32px;  /* Increased from 24px */
+            color: #2c3e50;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+        footer {
+            background-color: #f8f9fa;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #ddd;
+        }
+        .nav-btn {
+            padding: 10px 25px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+        }
+        .slide-info {
+            font-size: 16px;
+            color: #666;
+        }
+        .jump-select {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+        .controls {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 id="slide-title">Slide Viewer</h1>
+    </header>
+
+    <div class="content">
+        <div class="slide-card">
+            <div class="english" id="english-text"></div>
+            <div class="chinese" id="chinese-text"></div>
+        </div>
+    </div>
+
+    <footer>
+        <button class="nav-btn" id="prev-btn">◀ Previous</button>
+        
+        <div class="controls">
+            <span class="slide-info" id="slide-counter">1 of 2</span>
+            <select class="jump-select" id="slide-select">
+                <!-- Options will be added by JavaScript -->
+            </select>
+        </div>
+        
+        <button class="nav-btn" id="next-btn">Next ▶</button>
+    </footer>
+
+    <script>
+const sentences = [
+  { "en": "Where are you going?", "cn": "你要去哪儿？" },
+  { "en": "Can you help me with this question?", "cn": "你能帮我解决这个问题吗？" },
+  { "en": "Don’t be afraid to ask questions.", "cn": "不要害怕提问。" },
+  { "en": "He goes to the library every Saturday.", "cn": "他每个星期六去图书馆。" },
+  { "en": "She is cooking dinner in the kitchen.", "cn": "她正在厨房做饭。" },
+  { "en": "It’s time to go to school.", "cn": "该去上学了。" },
+  { "en": "This book is more interesting than that one.", "cn": "这本书比那本更有趣。" },
+  { "en": "That sounds like a great idea!", "cn": "那听起来是个好主意！" },
+  { "en": "There are many people in the park.", "cn": "公园里有很多人。" },
+  { "en": "We must finish the homework today.", "cn": "我们今天必须完成作业。" },
+  { "en": "What time does the movie start?", "cn": "电影几点开始？" },
+  { "en": "The weather is getting colder and colder.", "cn": "天气越来越冷了。" },
+  { "en": "Be quiet in the library.", "cn": "在图书馆要保持安静。" },
+  { "en": "Close the door, please.", "cn": "请把门关上。" },
+  { "en": "Don’t talk with your mouth full.", "cn": "吃东西时不要说话。" },
+  { "en": "Who is your English teacher?", "cn": "谁是你的英语老师？" },
+  { "en": "How many students are there in your class?", "cn": "你们班有多少学生？" },
+  { "en": "His backpack is under the chair.", "cn": "他的书包在椅子下。" },
+  { "en": "Your shoes look very nice.", "cn": "你的鞋子看起来很好看。" },
+  { "en": "Some of the apples are bad.", "cn": "有些苹果坏了。" },
+  { "en": "Winter is my favorite season.", "cn": "冬天是我最喜欢的季节。" },
+  { "en": "Can she play the piano?", "cn": "她会弹钢琴吗？" },
+  { "en": "Don’t forget to bring your homework.", "cn": "别忘了带作业。" },
+  { "en": "Let’s go and play basketball.", "cn": "我们去打篮球吧。" },
+  { "en": "Why are you so late?", "cn": "你为什么这么晚？" },
+  { "en": "May I use your pen?", "cn": "我可以用一下你的笔吗？" },
+  { "en": "Put on your coat. It’s cold outside.", "cn": "穿上外套，外面很冷。" },
+  { "en": "The train has already left.", "cn": "火车已经开走了。" },
+  { "en": "Their house is bigger than ours.", "cn": "他们的房子比我们的大。" },
+  { "en": "Nobody knows the answer to this question.", "cn": "没人知道这个问题的答案。" },
+  { "en": "The boy who won the race is my cousin.", "cn": "赢得比赛的那个男孩是我表哥。" },
+  { "en": "Many children like cartoons.", "cn": "很多孩子喜欢卡通。" },
+  { "en": "English is spoken all over the world.", "cn": "英语在全世界广泛使用。" },
+  { "en": "Be careful when you cross the road.", "cn": "过马路时要小心。" },
+  { "en": "The baby is sleeping, so please be quiet.", "cn": "宝宝在睡觉，请安静些。" },
+  { "en": "Their parents are very friendly.", "cn": "他们的父母非常友善。" },
+  { "en": "It’s dangerous to swim alone.", "cn": "一个人游泳很危险。" },
+  { "en": "How long does it take to get there?", "cn": "到那里需要多长时间？" },
+  { "en": "The movie has just started.", "cn": "电影刚开始。" },
+  { "en": "The cake smells delicious.", "cn": "这蛋糕闻起来真香。" },
+  { "en": "Everything is ready.", "cn": "一切都准备好了。" },
+  { "en": "Her handwriting is very neat.", "cn": "她的字写得很工整。" },
+  { "en": "Everyone needs a friend.", "cn": "每个人都需要朋友。" },
+  { "en": "The classroom is clean and bright.", "cn": "教室干净又明亮。" },
+  { "en": "Some students are playing chess.", "cn": "一些学生在下棋。" },
+  { "en": "Nothing is impossible if you try.", "cn": "只要努力，没有什么不可能。" },
+  { "en": "What a beautiful day it is!", "cn": "多么美好的一天啊！" },
+  { "en": "Whose notebook is this?", "cn": "这是谁的笔记本？" },
+  { "en": "The door was opened by a stranger.", "cn": "门被一个陌生人打开了。" }
+]
+;
+
+        let currentSlide = 0;
+        const englishText = document.getElementById('english-text');
+        const chineseText = document.getElementById('chinese-text');
+        const slideTitle = document.getElementById('slide-title');
+        const slideCounter = document.getElementById('slide-counter');
+        const slideSelect = document.getElementById('slide-select');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        // Initialize the dropdown select options
+        function initSlideSelect() {
+            slideSelect.innerHTML = '';
+            sentences.forEach((_, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = `Slide ${index + 1}`;
+                slideSelect.appendChild(option);
+            });
+        }
+
+        // Update the slide display
+        function showSlide(index) {
+            // Handle wrap-around for continuous navigation
+            if (index < 0) {
+                index = sentences.length - 1;
+            } else if (index >= sentences.length) {
+                index = 0;
+            }
+            
+            englishText.textContent = sentences[index].en;
+            chineseText.textContent = sentences[index].cn;
+            slideTitle.textContent = `Slide ${index + 1}`;
+            slideCounter.textContent = `${index + 1} of ${sentences.length}`;
+            slideSelect.value = index;
+            currentSlide = index;
+        }
+
+        // Event listeners
+        prevBtn.addEventListener('click', () => {
+            showSlide(currentSlide - 1);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            showSlide(currentSlide + 1);
+        });
+
+        slideSelect.addEventListener('change', () => {
+            showSlide(parseInt(slideSelect.value));
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                showSlide(currentSlide - 1);
+            } else if (e.key === 'ArrowRight') {
+                showSlide(currentSlide + 1);
+            }
+        });
+
+        // Initialize
+        initSlideSelect();
+        showSlide(0);
+    </script>
+</body>
+</html>

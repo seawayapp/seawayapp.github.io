@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="./bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <form method="post" action="#" id="#">
+
+
+
+
+                <div class="form-group files">
+                    <label>Upload Your File </label>
+                    <input type="file" class="form-control" multiple="">
+                </div>
+
+
+            </form>
+
+
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <textarea cols="160" rows="20" id="base64Encode"></textarea>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="./bootstrap.min.js"></script>
+<script src="./jquery-1.11.1.min.js"></script>
+<script>
+    var input = document.querySelector('input[type=file]');
+
+    // You will receive the Base64 value every time a user selects a file from his device
+    // As an example I selected a one-pixel red dot GIF file from my computer
+    input.onchange = function () {
+        var file = input.files[0],
+            reader = new FileReader();
+
+        reader.onloadend = function () {
+            // Since it contains the Data URI, we should remove the prefix and keep only Base64 string
+            var b64 = reader.result.replace(/^data:.+;base64,/, '');
+            document.querySelector('#base64Encode').value=b64
+            document.querySelector('#base64Encode').select()
+            document.execCommand("copy")
+
+        };
+
+        reader.readAsDataURL(file);
+    };
+</script>
+</body>
+</html>

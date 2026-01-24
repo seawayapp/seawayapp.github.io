@@ -1,0 +1,22 @@
+[
+  {
+    "DisplayName": "论语 Sayings of Confucius",
+    "FileName": "indexChineseClassical_LunYu.json",
+    "ReleaseDate": "2024-04-26"
+  },
+  {
+    "DisplayName": "古诗文",
+    "FileName": "indexChineseClassical_Essay.json",
+    "ReleaseDate": "2024-04-27"
+  },
+  {
+    "DisplayName": "三字经",
+    "FileName": "indexChineseClassical_SanZiJing.json",
+    "ReleaseDate": "2024-05-24"
+  },
+  {
+    "DisplayName": "英语学习",
+    "FileName": "indexEnglish_Study.json",
+    "ReleaseDate": "2024-08-23"
+  }
+]

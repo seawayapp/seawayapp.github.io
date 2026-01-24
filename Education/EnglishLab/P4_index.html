@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A4 Centered Text</title>
+    <style>
+        /* Print-specific styles */
+        @media print {
+            @page {
+                size: A4;
+                /* Set the page size to A4 */
+                margin: 12.7mm;
+                /* Adjust margins for print */
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            table {
+                page-break-inside: auto;
+                /* Avoid breaking table rows */
+            }
+
+            tr {
+                page-break-inside: avoid;
+                /* Prevent row splitting */
+                page-break-after: auto;
+            }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            width: 100vw;
+            height: 100vh;
+            margin: 20px;
+            padding: 10px;
+            /* Inner padding for readability */
+            background-color: #f0f0f0;
+            /* Optional background color */
+        }
+
+        .content {
+            text-align: center;
+            width: 80%;
+            /* Adjust as needed */
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            /* 3 equal columns */
+            gap: 10px;
+            /* Optional spacing */
+            font-size: 20px;
+        }
+
+        .sub-title {
+            font-size: 20px;
+            text-align: left;
+            margin: 20px;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            text-align: center;
+            padding: 8px;
+        }
+
+        tr {
+            height: 30px;
+            /* Set a fixed height for all rows */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <div class="grid-container">
+            <div>Level: <b>Primary 4</b></div>
+            <div>Term 1</div>
+            <div>Year: <b>2025</b></div>
+        </div>
+        <hr>
+        <div class="sub-title">1. Compositions</div>
+        <table>
+            <colgroup>
+                <col style="width: 12%;">
+                <col style="width: 58%;">
+                <col style="width: 10%;">
+                <col style="width: 10%;">
+                <col style="width: 10%;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Title</th>
+                    <th>Marks</th>
+                    <th>Draft2</th>
+                    <th>Filed</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Repeat this row 8 times -->
+                <tr>
+                    <td>03 Jan</td>
+                    <td>Focus on Intro and scene setting</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>03 Jan</td>
+                    <td>Building Vocabulary (coloured doc)</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>10 Jan</td>
+                    <td>A Horrible Day</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <!-- Add additional rows as needed -->
+            </tbody>
+        </table>
+        <div class="sub-title">2. Composition - Scaffolded Responses</div>
+        <table>
+            <colgroup>
+                <col style="width: 12%;">
+                <col style="width: 68%;">
+                <col style="width: 10%;">
+                <col style="width: 10%;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Title</th>
+                    <th>Marks</th>
+                    <th>Filed</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="sub-title">3. Composition Open-Ended</div>
+        <table>
+            <colgroup>
+                <col style="width: 12%;">
+                <col style="width: 68%;">
+                <col style="width: 10%;">
+                <col style="width: 10%;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Title</th>
+                    <th>Marks</th>
+                    <th>Filed</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="sub-title">4. Cloze Passages</div>
+        <table>
+            <colgroup>
+                <col style="width: 12%;">
+                <col style="width: 68%;">
+                <col style="width: 10%;">
+                <col style="width: 10%;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Title</th>
+                    <th>Marks</th>
+                    <th>Filed</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>22 Dec</td>
+                    <td>Focus on phrasal verbs</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>22 Dec</td>
+                    <td>Power your vocabulary</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="sub-title">5. Grammar, Vocabulary, Synthesis & Transformation</div>
+        <table>
+            <colgroup>
+                <col style="width: 12%;">
+                <col style="width: 68%;">
+                <col style="width: 10%;">
+                <col style="width: 10%;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Title</th>
+                    <th>Marks</th>
+                    <th>Filed</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="sub-title">6. Preparing for the exams - Mock papers and exam tips</div>
+        <table>
+            <colgroup>
+                <col style="width: 12%;">
+                <col style="width: 68%;">
+                <col style="width: 10%;">
+                <col style="width: 10%;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Title</th>
+                    <th>Marks</th>
+                    <th>Filed</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="sub-title">7. Individual presentations and orals for exams</div>
+        <table>
+            <colgroup>
+                <col style="width: 12%;">
+                <col style="width: 68%;">
+                <col style="width: 10%;">
+                <col style="width: 10%;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Title</th>
+                    <th>Marks</th>
+                    <th>Filed</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="sub-title">8. Mdedia Studies</div>
+        <table>
+            <colgroup>
+                <col style="width: 12%;">
+                <col style="width: 68%;">
+                <col style="width: 10%;">
+                <col style="width: 10%;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Title</th>
+                    <th>Marks</th>
+                    <th>Filed</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="sub-title">9. Situational writing for exams (P4 GEP)</div>
+        <table>
+            <colgroup>
+                <col style="width: 12%;">
+                <col style="width: 68%;">
+                <col style="width: 10%;">
+                <col style="width: 10%;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Title</th>
+                    <th>Marks</th>
+                    <th>Filed</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="sub-title">10. Stying Plugged-In</div>
+        <table>
+            <colgroup>
+                <col style="width: 12%;">
+                <col style="width: 68%;">
+                <col style="width: 10%;">
+                <col style="width: 10%;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Title</th>
+                    <th>Marks</th>
+                    <th>Filed</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>22 Dec</td>
+                    <td>How stores get you to spend, spend, spend</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>10 Jan</td>
+                    <td>Do old traditions die hard</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</body>
+
+</html>

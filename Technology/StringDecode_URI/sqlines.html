@@ -1,0 +1,149 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"> <!-- Required to highlight hovered rows in IE using CSS -->
+<html>
+<head>
+<title>SQLines - Online SQL Conversion - SQL Scripts, DDL, Queries, Views, Stored Procedures, Triggers, Embedded SQL</title>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-21200062-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+<body>
+<style type="text/css">
+body { font-family: verdana; }
+h1 { font-family: trebuchet ms, verdana; font-size: 20px; color: #000000; border-bottom:1px solid; }
+h2 { font-family: trebuchet ms, verdana; font-size: 18px; color: #000000; }
+p { font-size: 13px; }
+table { font-size: 13px; border: 1px solid; border-collapse:collapse; }
+table.mainview { font-size: 13px; border: 0px; border-collapse:collapse; }
+th { background: #E6E6FA; padding: 0px 10px 0px 10px; border: 1px solid; font-size: 13px; } 
+tr:hover td { background-color: #A4BBFE; }
+tr.mainview:hover td.mainview { background-color: #FFFFFF; }
+td { padding: 0px 10px 0px 10px; border: 1px solid; } 
+td.mainview { padding: 3px 0px 3px 0px; border: 0px; } 
+tr.alternateRow { background-color: #F0F8FF; }
+td.sortedColumn { background-color: #F0F8FF; }
+tr.alternateRow td.sortedColumn { background-color: #F0F8FF; }
+tr:hover td.sortedColumn { background-color: #A4BBFE; }
+a:link { text-decoration: none; color: #0000A0;}
+a:visited { text-decoration: none; color: #0000A0;}
+a:active { text-decoration: none; color: #0000A0;}
+a:hover { text-decoration: none; color: #800517;}
+input { border: 1px solid #006; background: #fff; cursor:pointer; font-weight: bold; font-size: 13px; } 
+select { font-size: 13px; }
+</style>
+<table class="mainview">
+<tr class="mainview">
+	<td class="mainview">
+    Source:
+	<select id="source_type" name="source_type">
+	<option value="Greenplum" >Greenplum</option><option value="Hive" >Hive</option><option value="IBM DB2" >IBM DB2</option><option value="Informix" >Informix</option><option value="Impala" >Impala</option><option value="MariaDB" >MariaDB</option><option value="Microsoft SQL Server" >Microsoft SQL Server</option><option value="MySQL" selected="selected">MySQL</option><option value="Netezza" >Netezza</option><option value="Oracle" >Oracle</option><option value="Snowflake" >Snowflake</option><option value="Spark SQL" >Spark SQL</option><option value="Sybase ASE" >Sybase ASE</option><option value="Sybase SQL Anywhere" >Sybase SQL Anywhere</option><option value="Sybase Advantage" >Sybase Advantage</option><option value="PostgreSQL" >PostgreSQL</option><option value="Presto" >Presto</option><option value="Redshift" >Redshift</option><option value="Teradata" >Teradata</option><option value="Vertica" >Vertica</option>	</select> 
+    <input id="convert_button" name="convert" type="button" value="Convert" onclick="runConversion()";>
+	<img id="ajax_load_img" src="ajaxload.gif" />
+	<a href="http://www.sqlines.com" target="_blank">www.sqlines.com</a> - Download tools
+	</td>
+	<td class="mainview">
+    Target:
+	<select id="target_type" name="target_type">
+	<option value="Microsoft SQL Server" >Microsoft SQL Server</option><option value="Oracle" >Oracle</option><option value="IBM DB2" >IBM DB2</option><option value="Hive" >Hive</option><option value="MySQL" >MySQL</option><option value="MariaDB" >MariaDB</option><option value="PostgreSQL" >PostgreSQL</option><option value="Presto" >Presto</option><option value="Redshift" >Redshift</option><option value="Snowflake" >Snowflake</option><option value="Spark SQL" >Spark SQL</option><option value="Sybase" >Sybase</option><option value="Informix" >Informix</option><option value="Teradata" >Teradata</option><option value="Greenplum" >Greenplum</option><option value="Netezza" >Netezza</option><option value="Vertica" >Vertica</option>	</select>
+	<!-- &nbsp;&nbsp;&nbsp;License Key: <input type="password" id="key" name="key"> -->
+	<!-- &nbsp;<a href="http://www.sqlines.com/purchase" target="_blank">Purchase a license ($95)</a> -->
+	</td>
+</tr>
+<tr class="mainview">
+    <td class="mainview">
+       	<textarea id="source" name="source" rows="35" cols="77">-- Please use the desktop version to convert large SQL scripts,&#13;&#10;-- or if there are any issues with Online conversion.&#13;&#10;&#13;&#10;-- Feel free to contact us at support@sqlines.com</textarea>
+    </td>
+    <td class="mainview">	
+        <textarea id="target" name="target" rows="35" cols="77"></textarea>
+	</td>
+</tr>
+</table>
+
+<div id="full_report_link_id">
+</div>
+<div id="conversion_report_id">
+</div>
+<p>	 
+GUI Code Viewer is <a href="http://www.cdolivet.com">Edit Area &copy; by Christophe Dolivet</a>
+</p>
+
+<script language="javascript" type="text/javascript" src="/edit_area/edit_area_full.js"></script>
+<script type="text/javascript">
+
+window.onload=function() {
+    document.getElementById("ajax_load_img").style.visibility = "hidden";
+    document.getElementById('source').cols = screen.width/15
+    document.getElementById('target').cols = screen.width/15
+    document.getElementById('source').rows = screen.height/20
+    document.getElementById('target').rows = screen.height/20
+	editAreaLoader.init({id : "target", syntax: "sql", start_highlight: true, font_size: 10, word_wrap: false });
+	editAreaLoader.init({id : "source", syntax: "sql", start_highlight: true, font_size: 10, word_wrap: false });	// source gets focus after load	
+}
+
+function getXMLHttpRequest()
+{
+  var xmlhttp;
+
+  try {
+    // Firefox, Chrome, IE 7+, Opera 8.0+, Safari
+    xmlhttp = new XMLHttpRequest();
+  } catch(e) {
+    // IE 6 and earlier
+    try  { xmlhttp = new ActiveXObject("Msxml2.XMLHTTP"); }
+    catch(e) { 
+	  try { xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); }
+      catch(e) { alert("Your browser does not support XMLHttpRequest!"); return false; }
+    }
+  }
+  return xmlhttp;
+}
+ 
+function runConversion() {
+
+	if(editAreaLoader.getValue("source")) {
+	
+		var xmlhttp = getXMLHttpRequest();
+  
+		if(xmlhttp) { 
+			xmlhttp.onreadystatechange=function() {
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				
+				    var response = xmlhttp.responseText.split("__SQLINES_MULTI_PART__");
+					
+					editAreaLoader.setValue("target", response[0]);
+					document.getElementById("full_report_link_id").innerHTML = response[1];
+				}
+			
+				document.getElementById("convert_button").disabled = false;
+				document.getElementById("ajax_load_img").style.visibility = "hidden";
+			}
+		
+			var params = "source=" + encodeURIComponent(editAreaLoader.getValue("source")) + 
+						"&source_type=" + document.getElementById("source_type").value +
+						"&target_type=" + document.getElementById("target_type").value;
+					 
+			xmlhttp.open("POST","sqlines_run.php", true); 
+			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xmlhttp.setRequestHeader("Content-length", params.length);
+			xmlhttp.setRequestHeader("Connection", "close");
+		
+			xmlhttp.send(params);
+		
+			document.getElementById("convert_button").disabled = true;
+			document.getElementById("ajax_load_img").style.visibility = "visible";
+		}
+	}
+}
+
+</script>
+</body>
+</html>

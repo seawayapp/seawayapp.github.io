@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title id="maintitle"></title>
+
+    <!-- Input Data -->
+    <script src="../DataSource/englishVocabulary.js"></script>
+    <script src="../DataSource/MasterEnglishWords.js"></script>
+
+    <!-- configuration parameters -->
+    <meta name="defaultView" content="slideshow" />
+    <meta name="controlVis" content="hidden" />
+    <!-- style sheet links -->
+    <link rel="stylesheet" href="../lib/ui/default/slides.css" type="text/css" media="projection" id="slideProj" />
+    <link rel="stylesheet" href="../lib/ui/default/outline.css" type="text/css" media="screen" id="outlineStyle" />
+    <link rel="stylesheet" href="../lib/ui/default/print.css" type="text/css" media="print" id="slidePrint" />
+    <link rel="stylesheet" href="../lib/ui/default/opera.css" type="text/css" media="projection" id="operaFix" />
+    <!-- <link media="screen" rel="stylesheet" href="./css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="../lib/css/common.css">
+    <link media="print" rel="stylesheet" href="../lib/css/print.css">
+    <!-- S5 JS -->
+    <script src="../lib/ui/default/slides.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+    <div class="layout">
+        <div id="controls">
+            <!-- DO NOT EDIT -->
+        </div>
+        <div id="currentSlide">
+            <!-- DO NOT EDIT -->
+        </div>
+        <div id="header"></div>
+        <div id="footer">
+            <h1></h1>
+            <h2></h2>
+        </div>
+    </div>
+    <div class="presentation">
+        <div id="paragraph"></div>
+    </div>
+</body>
+<script>
+    const params = new URLSearchParams(window.location.search)
+    var pageNo = ''
+    let i = 0
+    for (const param of params) {
+        if (i == 0) {
+            pageNo = param[1]
+        }
+        i++
+    }
+    console.log("pageNo:" + pageNo)
+
+    let inputJSON = mainData[pageNo];
+    document.getElementById("maintitle").innerHTML = inputJSON.testdate;
+
+    function populateHTMLparagraph(type) {
+        let showPinYin = true
+        let html = ""
+
+        var title = inputJSON.title
+        var subtitle = inputJSON.subtitle
+        html += `<div class="slide"><h1>English Vocabulary Banks</h1><p style="text-align: center;font-size: 6vmax;">`
+        html += title
+        html += `</p></div>`
+
+        for (var j = 0; j < inputJSON.sentences.length; j++) {
+            let paragraphTemp = inputJSON.sentences[j]
+            html += `<div class="slide"><h1>`
+            var displayID = j + 1
+            html = html + subtitle + " - " + displayID
+            html += `</h1><div class="vertical-center"><p style="text-align: center;font-size: 5vmax;">`
+            html += paragraphTemp
+
+            if (MasterEnglishWords[inputJSON.words[j]]) {
+                html += `<div style="text-align: center;font-size: 2vmax;">${MasterEnglishWords[inputJSON.words[j]].description}"</div>`
+                var audioID = 0;
+                audioID = j + 1
+                html += `<audio id="audio${audioID}" src="${MasterEnglishWords[inputJSON.words[j]].audio}"></audio>`
+            }
+
+            html += `</p></div></div>`
+        }
+
+        html += `<div class="slide"><h1>`
+        html += subtitle
+        html += `</h1><div class="vertical-center"><p style="text-align: center;font-size: 10vmax;"><a>The End</a></p></div></div>`
+
+        document.getElementById(type).innerHTML = html;
+    }
+
+    populateHTMLparagraph("paragraph");
+
+
+</script>
+
+</html>

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title id="maintitle"></title>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Input Data -->
+    <script src="../DataSource/englishPhonics.js"></script>
+    <script src="../DataSource/englishPhonicsCategory.js"></script>
+    <script src="../DataSource/MasterEnglishWords.js"></script>
+
+    <!-- configuration parameters -->
+    <meta name="defaultView" content="slideshow" />
+    <meta name="controlVis" content="hidden" />
+    <!-- style sheet links -->
+    <link rel="stylesheet" href="../lib/ui/default/slides.css" type="text/css" media="projection" id="slideProj" />
+    <link rel="stylesheet" href="../lib/ui/default/outline.css" type="text/css" media="screen" id="outlineStyle" />
+    <link rel="stylesheet" href="../lib/ui/default/print.css" type="text/css" media="print" id="slidePrint" />
+    <link rel="stylesheet" href="../lib/ui/default/opera.css" type="text/css" media="projection" id="operaFix" />
+    <!-- <link media="screen" rel="stylesheet" href="./css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="../lib/css/common.css">
+    <link media="print" rel="stylesheet" href="../lib/css/print.css">
+    <!-- S5 JS -->
+    <script src="../lib/ui/default/slides.js" type="text/javascript"></script>
+
+    <style type="text/css">
+        b {
+            color: #ff0000;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="layout">
+        <div id="controls">
+            <!-- DO NOT EDIT -->
+        </div>
+        <div id="currentSlide">
+            <!-- DO NOT EDIT -->
+        </div>
+        <div id="header"></div>
+        <div id="footer">
+            <h1></h1>
+            <h2></h2>
+        </div>
+    </div>
+    <div class="presentation">
+        <div id="paragraph"></div>
+    </div>
+</body>
+<script>
+    const params = new URLSearchParams(window.location.search)
+    // console.log("params:" + params)
+    var pageNo = params.get("pageNo") || '';
+    var wordNo = params.get("wordNo") || '';
+    // console.log("pageNo:" + pageNo)
+    // console.log("wordNo:" + wordNo)
+
+    let inputJSON = mainData[pageNo];
+    let inputJSONcategory = mainDataCategory[wordNo];
+    let sound = inputJSON.sound[wordNo]
+    document.getElementById("maintitle").innerHTML = inputJSONcategory.subtitle + " " + inputJSON.sound[wordNo];
+
+    function populateHTMLparagraph(type) {
+        let showPinYin = true
+        let html = ""
+
+        var title = "" + inputJSONcategory.title
+        var subtitle = inputJSONcategory.subtitle + " " + sound
+        console.log("title:" + title)
+        html += `<div class="slide"><h1>English Phonics</h1><p style="text-align: center;font-size: 6vmax;">`
+        // html += title
+        // html += "<br>"
+        html += subtitle
+        html += `</p></div>`
+
+        var wordList = inputJSON.words[wordNo]
+        var remarksList = inputJSON.remarks[wordNo]
+        for (var j = 0; j < wordList.length; j++) {
+            let paragraphTemp = wordList[j] + "<br>" + remarksList[j]
+            html += `<div class="slide"><h1>`
+            var displayID = j + 1
+            html = html + subtitle + " - " + displayID
+            html += `</h1><div class="vertical-center"><p style="text-align: center;font-size: 5vmax;">`
+            html += paragraphTemp
+
+            var audioID = 0;
+            audioID = j + 1
+            var audioSrc1 = wordList[j].replaceAll('<b>', '').replaceAll('</b>', '').replaceAll('<u>', '').replaceAll('</u>', '').replaceAll('"', '')
+            html += `<audio id="audio${audioID}" src="https://dict.youdao.com/dictvoice?type=1&audio=${audioSrc1}"></audio>`
+
+            html += `</p></div></div>`
+        }
+
+
+        html += `<div class="slide"><h1>`
+        html += subtitle
+        html += `</h1><div class="vertical-center"><p style="text-align: center;font-size: 10vmax;"><a>The End</a></p></div></div>`
+
+        document.getElementById(type).innerHTML = html;
+    }
+
+    populateHTMLparagraph("paragraph");
+
+
+</script>
+
+</html>

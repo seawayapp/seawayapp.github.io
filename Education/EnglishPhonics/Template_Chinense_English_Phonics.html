@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="中文音节与英文单词对照表">
+    <title>中文音节与英文单词对照表</title>
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #eaf2ea;
+            --text-color: #333;
+            --border-color: #ccc;
+            --highlight-color: #ffd54f;
+            --color-blue: #4fc3f7;
+            --color-green: #aed581;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0 30px;
+            color: var(--primary-color);
+            font-size: clamp(1.5rem, 2.5vw, 2rem);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            min-width: 800px;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 10px;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+        }
+
+        td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            background-color: var(--secondary-color);
+            vertical-align: middle;
+        }
+
+        .red {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+
+        .pinyin {
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .syllable-block {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 0.95em;
+        }
+
+        .syllable-block span {
+            padding: 5px 10px;
+            border-radius: 5px;
+            white-space: nowrap;
+        }
+
+        .color1 {
+            background-color: var(--highlight-color);
+        }
+
+        .color2 {
+            background-color: var(--color-blue);
+        }
+
+        .color3 {
+            background-color: var(--color-green);
+        }
+
+        .word-image {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            border-radius: 4px;
+            background-color: white;
+            padding: 2px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s;
+        }
+
+        .word-image:hover {
+            transform: scale(1.1);
+        }
+
+        .translation {
+            font-size: 0.9em;
+            color: #555;
+            max-width: 200px;
+            margin: 0 auto;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #666;
+        }
+
+        .no-image {
+            color: #999;
+            font-size: 0.8em;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            td,
+            th {
+                padding: 8px 6px;
+                font-size: 0.9em;
+            }
+
+            .word-image {
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .syllable-block {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .syllable-block span {
+                padding: 3px 6px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>中文音节与英文单词对照表</h1>
+
+    <div class="table-container">
+        <table id="phoneticTable">
+            <thead>
+                <tr>
+                    <th>中文</th>
+                    <th>拼音</th>
+                    <th>英文单词</th>
+                    <th>图片</th>
+                    <th>音标</th>
+                    <th>音节拆分</th>
+                    <th>中文释义</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="7" class="loading">加载数据中...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="./data/Chinese_English_Phonics_part_1.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tbody = document.querySelector("#phoneticTable tbody");
+
+            // 清空加载状态
+            tbody.innerHTML = '';
+
+            // 检查数据是否存在
+            if (typeof phoneticData === 'undefined' || !Array.isArray(phoneticData)) {
+                tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="loading">数据加载失败，请检查数据源</td>
+          </tr>
+        `;
+                return;
+            }
+
+            // 创建文档片段提高性能
+            const fragment = document.createDocumentFragment();
+
+            phoneticData.forEach(entry => {
+                const wordCount = entry.words.length;
+
+                entry.words.forEach((wordObj, index) => {
+                    const row = document.createElement("tr");
+
+                    // 只在第一行添加中文和拼音
+                    if (index === 0) {
+                        const chineseCell = document.createElement("td");
+                        chineseCell.innerHTML = `<span class="red" aria-label="中文">${entry.chinese}</span>`;
+                        chineseCell.rowSpan = wordCount;
+                        row.appendChild(chineseCell);
+
+                        const pinyinCell = document.createElement("td");
+                        pinyinCell.innerHTML = `<span class="pinyin" aria-label="拼音">${entry.pinyin}</span>`;
+                        pinyinCell.rowSpan = wordCount;
+                        row.appendChild(pinyinCell);
+                    }
+
+                    // 英文单词
+                    const wordCell = document.createElement("td");
+                    wordCell.textContent = wordObj.word;
+                    wordCell.setAttribute('aria-label', '英文单词');
+                    row.appendChild(wordCell);
+
+                    // 图片
+                    const imgCell = document.createElement("td");
+                    if (wordObj.image) {
+                        const img = document.createElement("img");
+                        img.src = "placeholder.jpg"; // 占位图片
+                        img.dataset.src = wordObj.image; // 实际图片URL
+                        img.alt = `${wordObj.word} 图片`;
+                        img.className = "word-image";
+                        img.loading = "lazy"; // 懒加载
+
+                        img.onerror = () => {
+                            imgCell.innerHTML = `<span class="no-image"></span>`;
+                        };
+
+                        imgCell.appendChild(img);
+                    } else {
+                        imgCell.innerHTML = `<span class="no-image"></span>`;
+                    }
+                    row.appendChild(imgCell);
+
+                    // 完整音标
+                    const phoneticCell = document.createElement("td");
+                    phoneticCell.textContent = wordObj.fullPhonetic || '-';
+                    phoneticCell.setAttribute('aria-label', '音标');
+                    row.appendChild(phoneticCell);
+
+                    // 音节拆分
+                    const syllableCell = document.createElement("td");
+                    const block = document.createElement("div");
+                    block.className = "syllable-block";
+
+                    if (wordObj.syllables && wordObj.syllables.length > 0) {
+                        wordObj.syllables.forEach((s, i) => {
+                            const span = document.createElement("span");
+                            span.className = s.color || `color${(i % 3) + 1}`;
+                            span.textContent = `${s.syllable} (${s.phonetic})`;
+                            block.appendChild(span);
+                        });
+                    } else {
+                        block.textContent = '-';
+                    }
+
+                    syllableCell.appendChild(block);
+                    row.appendChild(syllableCell);
+
+                    // 中文释义
+                    const transCell = document.createElement("td");
+                    transCell.className = "translation";
+                    transCell.textContent = wordObj.translation || '-';
+                    transCell.setAttribute('aria-label', '中文释义');
+                    row.appendChild(transCell);
+
+                    fragment.appendChild(row);
+                });
+            });
+
+            tbody.appendChild(fragment);
+
+            // 懒加载图片
+            const lazyLoadImages = function () {
+                const lazyImages = document.querySelectorAll("img[data-src]");
+
+                lazyImages.forEach(img => {
+                    if (img.dataset.src && img.getBoundingClientRect().top <= window.innerHeight + 100) {
+                        img.src = img.dataset.src;
+                        img.removeAttribute('data-src');
+                    }
+                });
+            };
+
+            // 初始加载可视区域图片
+            lazyLoadImages();
+
+            // 滚动时加载图片
+            window.addEventListener('scroll', lazyLoadImages);
+            window.addEventListener('resize', lazyLoadImages);
+        });
+    </script>
+</body>
+
+</html>
