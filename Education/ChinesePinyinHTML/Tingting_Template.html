@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="Generator" content="EditPlus®">
+    <meta name="Author" content="">
+    <meta name="Keywords" content="">
+    <meta name="Description" content="">
+    <title id="maintitle"></title>
+
+    <link media="screen" rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <link media="print" rel="stylesheet" href="./css/print.css">
+    <script src="./Tingting_Data.js"></script>
+
+</head>
+
+<body>
+
+    <div class="align-items-center justify-content-center" style="width:100%;">
+
+        <div class="d-flex flex-column align-items-center justify-content-center">
+            <br>
+            <div class="card text-center md-3" style="width: 95%;">
+                <div class="card-body">
+
+                    <h3 class="card-title mr-1">
+                        <div id="title"></div>
+                    </h3>
+
+                    <p class="card-subtitle md-2 text-muted mr-1">
+                    <div id="subtitle"></div>
+                    </p>
+
+                    <div id="paragraph"></div>
+
+                </div>
+            </div>
+            <br>
+        </div>
+
+    </div>
+
+
+    <script type="text/javascript" src="./dict/pinyin_dict_withtone.js"></script>
+    <script type="text/javascript" src="./dict/pinyin_dict_polyphone.js"></script>
+    <script type="text/javascript" src="./pinyinUtil.js"></script>
+
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search)
+        var pageNo = ''
+        let i = 0
+        for (const param of params) {
+            if (i == 0) {
+                pageNo = param[1]
+            }
+            i++
+        }
+        console.log("pageNo:" + pageNo)
+
+        function populateHTML(type, value, myArr) {
+            let html = '';
+            for (var i = 0; i < myArr.length; i++) {
+                html = html + "<ruby>" + "&nbsp;" + value[i] + "&nbsp;<rt>" + myArr[i] + "</rt>" + "</ruby>"
+            }
+            document.getElementById(type).innerHTML = html;
+        }
+
+        function populateHTMLparagraph(type, value, myArr, index) {
+            // let html = '<ruby>&nbsp;　&nbsp;<rt> </rt>&nbsp;' + index + ')&nbsp;<rt> </rt>';
+            let html = '<ruby>&nbsp;　&nbsp;<rt> </rt>&nbsp; &nbsp;<rt> </rt>';
+
+            for (var i = 0; i < myArr.length; i++) {
+
+                if (value[i] == "，" || value[i] == "；" || value[i] == "。" || value[i] == "？"
+                    || value[i] == "!" || value[i] == "：" || value[i] == "< " || value[i] == "> ") {
+                    html = html + value[i] + "&nbsp;" + "<rt class='symbol'> </rt>"
+                } else {
+                    html = html + "&nbsp;" + value[i] + "&nbsp;<rt>" + myArr[i] + "</rt>"
+                }
+
+            }
+            html += "</ruby>"
+            document.getElementById(type).innerHTML = html;
+        }
+
+        function getPinyin() {
+
+            let inputJSON = mainData[pageNo];
+
+            document.getElementById("maintitle").innerHTML = inputJSON.title;
+
+            let titlePinyin = pinyinUtil.getPinyin(inputJSON.title, ' ', true, true);
+            let subtitlePinyin = pinyinUtil.getPinyin(inputJSON.subtitle, ' ', true, true);
+            populateHTML("title", inputJSON.title, titlePinyin.split(" "));
+            populateHTML("subtitle", inputJSON.subtitle, subtitlePinyin.split(" "));
+
+            let text = "";
+            for (var i = 0; i < inputJSON.paragraph.length; i++) {
+                let index = i + 1
+                let type = "paragraph" + i
+                text += `<p class="norm py-content" id="${type}"></p>`
+            }
+            document.getElementById("paragraph").innerHTML = text;
+
+            for (var i = 0; i < inputJSON.paragraph.length; i++) {
+                let index = i + 1
+                let type = "paragraph" + i
+                let paragraphTemp = inputJSON.paragraph[i].bodytext
+                let paragraphPinyinTemp = pinyinUtil.getPinyin(paragraphTemp, ' ', true, true);
+                populateHTMLparagraph(type, paragraphTemp, paragraphPinyinTemp.split(" "), index);
+            }
+
+
+        }
+
+
+        getPinyin();
+    </script>
+
+</body>
+
+</html>

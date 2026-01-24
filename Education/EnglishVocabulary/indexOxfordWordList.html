@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Input Data -->
+    <script src="./mainOxford.js"></script>
+    <title>English Vocabulary - 牛津单词列表</title>
+    <style type="text/css">
+        body {
+            font-family: 'Book Antiqua';
+        }
+
+        body {
+            background: #eaeaea;
+        }
+
+        .wrap {
+            margin: 0 auto;
+            width: 1000px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-top: 200px;
+        }
+
+        .logo img {
+            width: 350px;
+        }
+
+        .logo p {
+            color: #272727;
+            font-size: 40px;
+            margin-top: 1px;
+        }
+
+        .logo p span {
+            color: lightgreen;
+        }
+
+        .sub a {
+            color: #fff;
+            background: #272727;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 13px;
+            font-family: arial, serif;
+            font-weight: bold;
+            -webkit-border-radius: .5em;
+            -moz-border-radius: .5em;
+            -border-radius: .5em;
+        }
+
+        .footer {
+            color: black;
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+        }
+
+        .footer a {
+            color: rgb(114, 173, 38);
+        }
+
+        table {
+            width: 100%;
+            /* Full width of the parent container */
+            /* border-collapse: collapse; Remove spaces between borders */
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            font-size: 30px;
+        }
+
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!---728x90--->
+    <div class="wrap">
+        <div class="logo">
+            <h1>English Vocabulary - 牛津单词列表</h1>
+            <div id="mainContent"></div>
+        </div>
+    </div>
+
+</body>
+<script>
+    let inputJSON = mainData;
+
+    let text = `    <table id="myTable">
+    <tr>
+        <th>SN</th>
+        <th>File</th>
+        <th>Part</th>
+    </tr>`;
+
+    for (var i = 0; i < inputJSON.length; i++) {
+        let index = i + 1
+        let type = "paragraph" + i
+        text += `
+        <tr>
+            <td>${index}</td>
+            <td>${inputJSON[i].title}</td>
+            <td><a href="./EV_Template_Oxford.html?input=${inputJSON[i].filename}" target="_blank">&nbsp;${inputJSON[i].subtitle}&nbsp;</a></td>
+        </tr>`
+    }
+
+    text += `
+        </table>
+    `
+    document.getElementById("mainContent").innerHTML = text;
+</script>
+
+<div style="text-align: center;margin-top: 40px"> Last updated on 10/10/2024</div>
+
+</html>

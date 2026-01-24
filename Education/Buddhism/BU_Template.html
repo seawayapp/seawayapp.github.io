@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="maintitle"></title>
+
+    <link media="screen" rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <link media="print" rel="stylesheet" href="./css/print.css">
+
+    <style>
+        dd {
+            display: block;
+            border: 1px solid #4CAF50;
+            height: 50px;
+            line-height: 50px;
+            color: #000;
+            text-decoration: none;
+            text-align: center;
+            padding: 0px 8px;
+            margin-top: 20px;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 32px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="align-items-center justify-content-center" style="width:100%;">
+
+        <div class="d-flex flex-column align-items-center justify-content-center">
+            <br>
+            <div class="card text-center md-3" style="width: 95%;">
+                <div class="card-body">
+
+                    <h3 class="card-title mr-1">
+                        <div id="title"></div>
+                    </h3>
+
+                    <p class="card-subtitle md-2 text-muted mr-1">
+                    <div id="subtitle"></div>
+                    </p>
+
+                    <div id="paragraph"></div>
+
+                </div>
+            </div>
+            <br>
+        </div>
+
+    </div>
+
+
+    <script type="text/javascript" src="./dict/pinyin_dict_withtone.js"></script>
+    <script type="text/javascript" src="./dict/pinyin_dict_polyphone.js"></script>
+    <script type="text/javascript" src="./js/pinyinUtil.js"></script>
+
+    </div>
+
+    <script>
+        mainData = []
+        // console.log(JSON.stringify(mainData))
+        // Function to dynamically load JavaScript file
+        function loadScript(fileName) {
+            return new Promise(function (resolve, reject) {
+                const script = document.createElement('script');
+                script.src = fileName;
+                script.type = 'text/javascript';
+                script.onload = function () {
+                    // console.log(`${fileName} has been loaded successfully.`);
+                    resolve(); // Resolve the promise once the script is loaded
+                };
+                script.onerror = function () {
+                    reject(new Error(`Failed to load the script: ${fileName}`));
+                };
+                document.body.appendChild(script);
+            });
+        }
+        // Function to get the 'js' parameter from the URL
+        function getScriptParam() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('input'); // Get the value of 'js' parameter
+        }
+
+        // Load the JavaScript dynamically based on the URL parameter
+        window.onload = function () {
+            var scriptFile = getScriptParam();
+
+            if (scriptFile) {
+                var fileName = "./data/" + scriptFile + ".js";
+                loadScript(fileName)
+                    .then(function () {
+                        if (typeof mainData !== 'undefined') {
+                            getPinyin(mainData);
+                        } else {
+                            console.log('No data found in the loaded script.');
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error(error);
+                    });
+            } else {
+                console.log('No JS file specified.');
+            }
+        };
+
+        function populateHTML(type, value, myArr) {
+            let html = '';
+            for (var i = 0; i < myArr.length; i++) {
+                html = html + "<ruby>" + "&nbsp;" + value[i] + "&nbsp;<rt>" + myArr[i] + "</rt>" + "</ruby>"
+            }
+            document.getElementById(type).innerHTML = html;
+        }
+
+        function populateHTMLparagraph(type, value, myArr, index) {
+            // let html = '<ruby>&nbsp;　&nbsp;<rt> </rt>&nbsp;' + index + ')&nbsp;<rt> </rt>';
+            let html = '<ruby>&nbsp;　&nbsp;<rt> </rt>&nbsp; &nbsp;<rt> </rt>';
+
+            for (var i = 0; i < myArr.length; i++) {
+
+                if (value[i] == "< " || value[i] == "> " || value[i] == '《' || value[i] == '》' || value[i] == " ") {
+                    // html = html + value[i] + "&nbsp;&nbsp;" + "<rt class='symbol'></rt>"
+                    html = html + "<rt class='symbol'></rt>"
+                } else {
+                    if (value[i] == "？" || value[i] == "!" || value[i] == "；" ||
+                        value[i] == "," || value[i] == "." ||
+                        value[i] == "，" || value[i] == "。" ||
+                        value[i] == "（" || value[i] == "）" ||
+                        value[i] == '“' || value[i] == '”' ||
+                        value[i] == '《' || value[i] == '》' ||
+                        value[i] == '「' || value[i] == '」' ||
+                        value[i] == "：" ||
+                        value[i] == "？" || value[i] == "！") {
+
+                        html = html + "<dd>&nbsp;" + value[i] + "&nbsp;<rt></rt></dd>"
+
+                        // if (value[i] == "\(") {
+                        //     html = html + "<dd>&nbsp;\(&nbsp;<rt></rt></dd>"
+                        // } else {
+                        //     if (value[i] == "\)") {
+                        //         html = html + "<dd>&nbsp;)&nbsp;<rt></rt></dd>"
+                        //     } else
+                        //         html = html + "<dd>&nbsp;" + value[i] + "&nbsp;<rt></rt></dd>"
+                        // }
+
+                    } else {
+                        html = html + "<dd>&nbsp;" + value[i] + "&nbsp;<rt>" + myArr[i] + "</rt></dd>"
+                    }
+
+                }
+
+            }
+            html += "</ruby>"
+
+            document.getElementById(type).innerHTML = html;
+        }
+
+        function getPinyin(mainDataInput) {
+
+            let inputJSON = mainDataInput; // Load data directly from the JS file
+
+            document.getElementById("maintitle").innerHTML = inputJSON.title;
+
+            let titlePinyin = pinyinUtil.getPinyin(inputJSON.title, ' ', true, true);
+            let subtitlePinyin = pinyinUtil.getPinyin(inputJSON.subtitle, ' ', true, true);
+            populateHTML("title", inputJSON.title, titlePinyin.split(" "));
+            if (inputJSON.subtitle != "") {
+                populateHTML("subtitle", inputJSON.subtitle, subtitlePinyin.split(" "));
+            }
+
+            let text = "";
+            for (var i = 0; i < inputJSON.paragraph.length; i++) {
+                let index = i + 1
+                let type = "paragraph" + i
+                text += `<p class="norm py-content" id="${type}"></p>`
+            }
+            document.getElementById("paragraph").innerHTML = text;
+
+            for (var i = 0; i < inputJSON.paragraph.length; i++) {
+                let index = i + 1
+                let type = "paragraph" + i
+                let paragraphTemp = inputJSON.paragraph[i].bodytext
+                let paragraphPinyinTemp = pinyinUtil.getPinyin(paragraphTemp, ' ', true, true);
+                // console.log(paragraphPinyinTemp)
+                populateHTMLparagraph(type, paragraphTemp, paragraphPinyinTemp.split(" "), index);
+            }
+
+
+        }
+
+
+
+    </script>
+
+</body>
+
+</html>

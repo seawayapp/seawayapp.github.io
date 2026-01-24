@@ -1,0 +1,80 @@
+@font-face {
+  font-family: "Kaiti";
+  src: url("../../public/fonts/simkai.woff") format("woff");
+}
+
+body {
+  font-family: "Kaiti" !important;
+}
+
+.grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.grid-item,
+.grid-item-Big {
+  border: 1px solid;
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid-item {
+  width: 120px;
+  height: 120px;
+  border-color: #2e2e2e;
+}
+
+.grid-item-Big {
+  width: 200px;
+  height: 200px;
+  border-color: #796363;
+}
+
+.pinyin,
+.pinyinBig {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #333;
+}
+
+.pinyin {
+  font-size: 18px;
+}
+
+.pinyinBig {
+  font-size: 26px;
+}
+
+.character,
+.characterBig {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #000;
+}
+
+.character {
+  font-size: 5vmax;
+}
+
+.characterBig {
+  font-size: 10vmax;
+}
+
+.vertical-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}

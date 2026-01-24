@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>QR Code Generator</title>
+    <script src="./qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 60vh;
+            margin: 0;
+        }
+
+        #container {
+            text-align: center;
+        }
+
+        input {
+            padding: 8px;
+            font-size: 16px;
+            width: 250px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        #qrcode {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="container">
+        <h1>QR Code Generator</h1>
+
+        <label for="text">Enter text:</label><br /><br />
+        <input type="text" id="text" placeholder="Enter text to generate QR code" /><br />
+        <button onclick="generateQRCode()">Generate</button>
+        <button onclick="resetQRCode()">Reset</button>
+
+        <div id="qrcode"></div>
+    </div>
+
+    <script>
+        function generateQRCode() {
+            var text = document.getElementById('text').value;
+            if (!text) {
+                alert('Please enter some text.');
+                return;
+            }
+
+            // Clear previous QR code
+            var qrcodeContainer = document.getElementById('qrcode');
+            qrcodeContainer.innerHTML = '';
+
+            // Generate new QR code
+            var qrcode = new QRCode(qrcodeContainer, {
+                text: text,
+                width: 256,
+                height: 256
+            });
+        }
+
+        function resetQRCode() {
+            // Clear the text input
+            document.getElementById('text').value = '';
+
+            // Clear the QR code
+            document.getElementById('qrcode').innerHTML = '';
+        }
+    </script>
+
+</body>
+
+</html>

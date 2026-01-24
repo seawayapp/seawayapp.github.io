@@ -1,0 +1,47 @@
+[
+  {
+    "DisplayName": "华文听写 2025",
+    "FileName": "indexChineseSpelling2025.json",
+    "ReleaseDate": "2025-01-13"
+  },
+  {
+    "DisplayName": "English Spelling 2025",
+    "FileName": "indexEnglishSpelling2025.json",
+    "ReleaseDate": "2025-01-13"
+  },
+  {
+    "DisplayName": "Learning Lab 2025 (P4)",
+    "FileName": "indexLearningLab2025.json",
+    "ReleaseDate": "2025-05-19"
+  },
+  {
+    "DisplayName": "华文听写 2024",
+    "FileName": "indexChineseSpelling2024.json",
+    "ReleaseDate": "2024-01-03"
+  },
+  {
+    "DisplayName": "English Spelling 2024",
+    "FileName": "indexEnglishSpelling2024.json",
+    "ReleaseDate": "2024-01-03"
+  },
+  {
+    "DisplayName": "Casco Classroom English 2024 (P3)",
+    "FileName": "indexClassroomEnglish2024.json",
+    "ReleaseDate": "2024-01-03"
+  },
+  {
+    "DisplayName": "Learning Lab 2024 (P3)",
+    "FileName": "indexLearningLab2024.json",
+    "ReleaseDate": "2024-01-03"
+  },
+  {
+    "DisplayName": "Learning Lab 2023 (P2)",
+    "FileName": "indexLearningLab2023.json",
+    "ReleaseDate": "2023-01-03"
+  },
+  {
+    "DisplayName": "Taboo Cards Game",
+    "FileName": "indexTabooCardsGame.json",
+    "ReleaseDate": "2024-05-18"
+  }
+]

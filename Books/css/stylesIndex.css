@@ -1,0 +1,75 @@
+body {
+  font-family: "Book Antiqua";
+  background: #eaeaea;
+  margin: 0;
+  padding: 0;
+}
+
+.wrap {
+  margin: 0 auto;
+  width: 1000px;
+}
+
+.logo {
+  text-align: center;
+  margin-top: 200px;
+}
+
+.logo img {
+  width: 350px;
+}
+
+.logo p {
+  color: #272727;
+  font-size: 40px;
+  margin-top: 1px;
+}
+
+.logo p span {
+  color: lightgreen;
+}
+
+.sub a {
+  color: #fff;
+  background: #272727;
+  text-decoration: none;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-family: arial, serif;
+  font-weight: bold;
+  border-radius: 0.5em;
+}
+
+.footer {
+  color: black;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+
+.footer a {
+  color: rgb(114, 173, 38);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid black;
+  font-size: 30px;
+  padding: 8px;
+  text-align: center;
+}
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.update-date {
+  text-align: center;
+  margin-top: 40px;
+}

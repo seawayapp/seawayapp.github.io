@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中文转拼音</title>
+    <script src="./js/pinyin-pro.js"></script>
+    <style>
+        body {
+            font-family: "Book Antiqua";
+            margin: 20px;
+            text-align: center;
+        }
+
+        textarea {
+            width: 400px;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-family: "Book Antiqua";
+        }
+
+        #output {
+            width: 600px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>中文转拼音</h1>
+    <textarea id="inputArray" rows="5" placeholder='请输入数组，例如：["扔掉", "推倒"]'></textarea>
+    <br>
+    <button onclick="generatePinyin()">生成拼音</button>
+    <br><br>
+    <textarea id="output" rows="15" readonly></textarea>
+
+    <script>
+        function generatePinyin() {
+            // 获取用户输入的数组
+            const inputArrayText = document.getElementById('inputArray').value;
+            let words;
+            try {
+                words = JSON.parse(inputArrayText); // 将输入的字符串解析为数组
+                if (!Array.isArray(words)) {
+                    throw new Error("输入的不是有效的数组");
+                }
+            } catch (error) {
+                document.getElementById('output').value = "请输入有效的数组格式，例如：[\"扔掉\", \"推倒\"]";
+                return;
+            }
+
+            // 将每个词语转换为拼音，并替换顿号 `、` 为逗号 `,`
+            const pronunciation = words.map(word => {
+                const pinyinResult = pinyinPro.pinyin(word, { toneType: 'symbol' });
+                return pinyinResult.replace(/、/g, ',');
+            });
+
+            // 构造结果对象
+            const result = {
+                sentences: words,
+                pronunciation: pronunciation
+            };
+
+            // 将结果放入 textarea
+            document.getElementById('output').value = JSON.stringify(result, null, 4);
+        }
+    </script>
+</body>
+
+</html>

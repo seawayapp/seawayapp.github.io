@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="maintitle"></title>
+
+    <link media="screen" rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <link media="print" rel="stylesheet" href="./css/print.css">
+    <script src="./Main_Data.js"></script>
+
+    <style>
+        @font-face {
+            font-family: 'Kaiti';
+            src: url('../../public/fonts/simkai.woff') format('woff');
+        }
+
+        dd {
+            display: inline-block;
+            border: 1px solid #4CAF50;
+            height: 100px;
+            width: 100px;
+            line-height: 100px;
+            color: #000;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 20px;
+            font-family: 'Kaiti' !important;
+            font-size: 60px;
+        }
+
+        ddd {
+            display: inline-block;
+            height: 100px;
+            width: 100px;
+            line-height: 100px;
+            color: #000;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 20px;
+            font-family: 'Kaiti' !important;
+            font-size: 60px;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        /* 按钮样式 */
+        #toggleButton {
+            position: fixed;
+            /* 固定定位 */
+            top: 40px;
+            right: 10px;
+            padding: 10px 20px;
+            color: white;
+            /* 字体颜色为白色 */
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            z-index: 1000;
+            /* 确保按钮在最上层 */
+        }
+
+        /* 拼音样式 */
+        rt {
+            font-size: 12px;
+            /* 拼音字体大小 */
+            color: #666;
+            /* 拼音颜色 */
+        }
+
+        /* 隐藏拼音时的样式 */
+        .hide-rt rt {
+            display: none;
+        }
+    </style>
+
+</head>
+
+<body>
+    <button id="toggleButton">拼</button>
+    <div class="align-items-center justify-content-center" style="width:100%;">
+
+        <div class="d-flex flex-column align-items-center justify-content-center">
+            <br>
+            <div class="card text-center md-3" style="width: 95%;">
+
+                <div class="card-body">
+
+                    <h3 class="card-title mr-1">
+                        <div id="title"></div>
+                    </h3>
+
+                    <p class="card-subtitle md-2 text-muted mr-1">
+                    <div id="subtitle"></div>
+                    </p>
+
+                    <div id="paragraph"></div>
+
+                </div>
+            </div>
+            <br>
+        </div>
+
+    </div>
+
+
+    <script type="text/javascript" src="./dict/pinyin_dict_withtone.js"></script>
+    <script type="text/javascript" src="./dict/pinyin_dict_polyphone.js"></script>
+    <script type="text/javascript" src="./pinyinUtil.js"></script>
+
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search)
+        var pageNo = ''
+        let i = 0
+        for (const param of params) {
+            if (i == 0) {
+                pageNo = param[1]
+            }
+            i++
+        }
+        // console.log("pageNo:" + pageNo)
+
+        function populateHTML(type, value, myArr) {
+            let html = '';
+            for (var i = 0; i < myArr.length; i++) {
+                html = html + "<ruby class='hide-rt'>" + "&nbsp;" + value[i] + "&nbsp;<rt>" + myArr[i] + "</rt>" + "</ruby>"
+            }
+            document.getElementById(type).innerHTML = html;
+        }
+
+        function populateHTMLparagraph(type, value, myArr, index) {
+            //let html = '<ruby>&nbsp;　&nbsp;<rt> </rt>&nbsp;' + index + ')&nbsp;<rt> </rt>';
+            //let html = '<ruby class="hide-rt"><rt> </rt><ddd>&nbsp; &nbsp;</ddd><rt> </rt>';
+            //html += '<rt> </rt><ddd>&nbsp; &nbsp;</ddd><rt> </rt>';
+            let html = '<ruby class="hide-rt">';
+
+            for (var i = 0; i < myArr.length; i++) {
+
+                if (value[i] == "：" || value[i] == "< " || value[i] == "> " || value[i] == '《' || value[i] == '》' || value[i] == " ") {
+                    // html = html + value[i] + "&nbsp;&nbsp;" + "<rt class='symbol'></rt>"
+                    html = html + "<rt class='symbol'></rt>"
+                } else {
+                    if (value[i] == "？" || value[i] == "!" || value[i] == "；" ||
+                        value[i] == "," || value[i] == "." ||
+                        value[i] == "，" || value[i] == "。" ||
+                        value[i] == '“' || value[i] == '”' ||
+                        value[i] == '《' || value[i] == '》' ||
+                        value[i] == "？" || value[i] == "！") {
+                        html = html + "<dd>" + value[i] + "<rt></rt></dd>"
+                    } else {
+                        html = html + "<dd>" + value[i] + "<rt>" + myArr[i] + "</rt></dd>"
+                    }
+
+                }
+
+            }
+            html += "</ruby>"
+
+            document.getElementById(type).innerHTML = html;
+        }
+
+        function getPinyin() {
+
+            let inputJSON = mainData[pageNo];
+
+            document.getElementById("maintitle").innerHTML = inputJSON.title;
+
+            let titlePinyin = pinyinUtil.getPinyin(inputJSON.title, ' ', true, true);
+            let subtitlePinyin = pinyinUtil.getPinyin(inputJSON.subtitle, ' ', true, true);
+            populateHTML("title", inputJSON.title, titlePinyin.split(" "));
+            populateHTML("subtitle", inputJSON.subtitle, subtitlePinyin.split(" "));
+
+            let text = "";
+            for (var i = 0; i < inputJSON.paragraph.length; i++) {
+                let index = i + 1
+                let type = "paragraph" + i
+                text += `<p class="norm py-content" id="${type}"></p>`
+            }
+            document.getElementById("paragraph").innerHTML = text;
+
+            for (var i = 0; i < inputJSON.paragraph.length; i++) {
+                let index = i + 1
+                let type = "paragraph" + i
+                let paragraphTemp = inputJSON.paragraph[i].bodytext
+                let paragraphPinyinTemp = pinyinUtil.getPinyin(paragraphTemp, ' ', true, true);
+                populateHTMLparagraph(type, paragraphTemp, paragraphPinyinTemp.split(" "), index);
+            }
+
+
+        }
+
+
+        getPinyin();
+    </script>
+
+    <script>
+        // 获取按钮和拼音 div 的引用
+        const toggleButton = document.getElementById('toggleButton');
+        const rubyElements = document.querySelectorAll('ruby');
+
+        // 添加点击事件监听器
+        toggleButton.addEventListener('click', function () {
+            rubyElements.forEach(ruby => {
+                if (ruby.classList.contains('hide-rt')) {
+                    // 如果拼音是隐藏的，显示拼音
+                    ruby.classList.remove('hide-rt');
+                    toggleButton.textContent = '字';
+                    toggleButton.style.backgroundColor = '#0F9ED5';
+                } else {
+                    // 如果拼音是显示的，隐藏拼音
+                    ruby.classList.add('hide-rt');
+                    toggleButton.textContent = '拼';
+                    toggleButton.style.backgroundColor = '#4CAF50';
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

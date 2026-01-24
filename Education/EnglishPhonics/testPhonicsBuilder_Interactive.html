@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Phonics Builder</title>
+    <style>
+        body {
+            font-family: "Arial", sans-serif;
+            background-color: #fffaf0;
+            padding: 10px 10px 20px;
+            margin: 0;
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        #display-input-container {
+            width: 80vw;
+            max-width: 900px;
+            margin: 0 auto 20px;
+        }
+
+        #display-area {
+            font-size: clamp(24px, 4vw, 66px);
+            min-height: 60px;
+            padding: 10px;
+            border: 2px dashed #ccc;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        #word-input {
+            width: 100%;
+            font-size: clamp(24px, 5vw, 46px);
+            padding: 10px;
+            text-align: center;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+        }
+
+        #phonics-table {
+            max-width: 90vw;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 8px;
+        }
+
+        .phoneme {
+            aspect-ratio: 1 / 1;
+            font-size: clamp(18px, 2.5vw, 32px);
+            padding: clamp(10px, 1.2vw, 20px);
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s;
+            white-space: nowrap;
+            color: #000000;
+            /* Prevent phoneme text from breaking */
+        }
+
+        .phoneme:hover {
+            transform: scale(1.1);
+        }
+
+        /* 🎨 Color Groups for table phonemes */
+        .bg-vowel {
+            background-color: #ffffff;
+            /* #ffe4e1; */
+        }
+
+        .bg-consonant {
+            background-color: #ffffff;
+            /* #e0f7ff; */
+        }
+
+        .bg-diphthong {
+            background-color: #ffffff;
+            /* #e6ffe0; */
+        }
+
+        .bg-other {
+            background-color: #ffffff;
+            /* #f5e0ff; */
+        }
+
+        /* 🎨 Color Classes for display area phonics */
+        .color1 {
+            color: #E25624;
+            background-color: #FFF979;
+            padding: 5px 12px;
+            border-radius: 8px;
+            user-select: none;
+        }
+
+        .color2 {
+            color: #453667;
+            background-color: #F0EBFD;
+            padding: 5px 12px;
+            border-radius: 8px;
+            user-select: none;
+        }
+
+        .color3 {
+            color: #4D9D1D;
+            background-color: #EEF9EE;
+            padding: 5px 12px;
+            border-radius: 8px;
+            user-select: none;
+        }
+
+        .color4 {
+            color: #197DC7;
+            background-color: #CFF6FF;
+            padding: 5px 12px;
+            border-radius: 8px;
+            user-select: none;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🗣️ Phonics Builder</h1>
+
+    <div id="display-input-container">
+        <div id="display-area"></div>
+        <input type="text" id="word-input" placeholder="Type corresponding word" />
+    </div>
+
+    <button onclick="playPhonemes()">🔊 Play</button>
+    <button onclick="clearPhonemes()">❌ Clear</button>
+    <hr />
+    <div id="phonics-table"></div>
+
+    <script>
+        // const phonemes = [
+        //     { symbol: "ɑː", filename: "sound_a2", type: "vowel" },
+        //     { symbol: "ɔː", filename: "sound_o2", type: "vowel" },
+        //     { symbol: "ɜː", filename: "sound_er", type: "vowel" },
+        //     { symbol: "iː", filename: "sound_i2", type: "vowel" },
+        //     { symbol: "uː", filename: "sound_u2", type: "vowel" },
+        //     { symbol: "juː", filename: "sound_u2", type: "diphthong" },
+        //     { symbol: "ʌ", filename: "sound_a", type: "vowel" },
+        //     { symbol: "ɒ", filename: "sound_o", type: "vowel" },
+        //     { symbol: "ə", filename: "sound_e4", type: "vowel" },
+        //     { symbol: "ɪ", filename: "sound_I", type: "vowel" },
+        //     { symbol: "ʊ", filename: "sound_u", type: "vowel" },
+        //     { symbol: "e", filename: "sound_e", type: "vowel" },
+        //     { symbol: "æ", filename: "sound_ae", type: "vowel" },
+        //     { symbol: "aɪ", filename: "sound_aɪ", type: "diphthong" },
+        //     { symbol: "eɪ", filename: "sound_eɪ", type: "diphthong" },
+        //     { symbol: "ɔɪ", filename: "sound_oɪ", type: "diphthong" },
+        //     { symbol: "aʊ", filename: "sound_au", type: "diphthong" },
+        //     { symbol: "əʊ", filename: "sound_eu", type: "diphthong" },
+        //     { symbol: "ɪə", filename: "sound_Ir", type: "diphthong" },
+        //     { symbol: "eə", filename: "sound_air", type: "diphthong" },
+        //     { symbol: "ʊə", filename: "sound_ur", type: "diphthong" },
+        //     { symbol: "b", filename: "sound_b", type: "consonant" },
+        //     { symbol: "d", filename: "sound_d", type: "consonant" },
+        //     { symbol: "f", filename: "sound_f", type: "consonant" },
+        //     { symbol: "g", filename: "sound_g", type: "consonant" },
+        //     { symbol: "h", filename: "sound_h", type: "consonant" },
+        //     { symbol: "j", filename: "sound_j", type: "consonant" },
+        //     { symbol: "k", filename: "sound_k", type: "consonant" },
+        //     { symbol: "l", filename: "sound_l", type: "consonant" },
+        //     { symbol: "m", filename: "sound_m", type: "consonant" },
+        //     { symbol: "n", filename: "sound_n", type: "consonant" },
+        //     { symbol: "ŋ", filename: "sound_ng", type: "consonant" },
+        //     { symbol: "p", filename: "sound_p", type: "consonant" },
+        //     { symbol: "r", filename: "sound_r", type: "consonant" },
+        //     { symbol: "s", filename: "sound_s", type: "consonant" },
+        //     { symbol: "t", filename: "sound_t", type: "consonant" },
+        //     { symbol: "v", filename: "sound_v", type: "consonant" },
+        //     { symbol: "w", filename: "sound_w", type: "consonant" },
+        //     { symbol: "z", filename: "sound_z", type: "consonant" },
+        //     { symbol: "ʃ", filename: "sound_xi", type: "consonant" },
+        //     { symbol: "θ", filename: "sound_si", type: "consonant" },
+        //     { symbol: "ð", filename: "sound_the", type: "consonant" },
+        //     { symbol: "ʒ", filename: "sound_n3", type: "consonant" },
+        //     { symbol: "tʃ", filename: "sound_qi", type: "consonant" },
+        //     { symbol: "tr", filename: "sound_tr", type: "consonant" },
+        //     { symbol: "ts", filename: "sound_ts", type: "consonant" },
+        //     { symbol: "dʒ", filename: "sound_d3", type: "consonant" },
+        //     { symbol: "dr", filename: "sound_dr", type: "consonant" },
+        //     { symbol: "dz", filename: "sound_dz", type: "consonant" }
+        // ];
+
+        const phonemes = [
+            { symbol: "θ", filename: "sound_si", type: "consonant" },
+            { symbol: "w", filename: "sound_w", type: "consonant" },
+            { symbol: "e", filename: "sound_e", type: "vowel" },
+            { symbol: "r", filename: "sound_r", type: "consonant" },
+            { symbol: "t", filename: "sound_t", type: "consonant" },
+            { symbol: "ʒ", filename: "sound_n3", type: "consonant" },
+            { symbol: "ʊ", filename: "sound_u", type: "vowel" },
+            { symbol: "ɪ", filename: "sound_I", type: "vowel" },
+            { symbol: "ɒ", filename: "sound_o", type: "vowel" },
+            { symbol: "p", filename: "sound_p", type: "consonant" },
+
+
+            { symbol: "ɑː", filename: "sound_a2", type: "vowel" },
+            { symbol: "ɔː", filename: "sound_o2", type: "vowel" },
+            { symbol: "ɜː", filename: "sound_er", type: "vowel" },
+            { symbol: "iː", filename: "sound_i2", type: "vowel" },
+
+            { symbol: "ʌ", filename: "sound_a", type: "vowel" },
+            { symbol: "s", filename: "sound_s", type: "consonant" },
+            { symbol: "d", filename: "sound_d", type: "consonant" },
+            { symbol: "f", filename: "sound_f", type: "consonant" },
+            { symbol: "g", filename: "sound_g", type: "consonant" },
+            { symbol: "h", filename: "sound_h", type: "consonant" },
+            { symbol: "j", filename: "sound_j", type: "consonant" },
+            { symbol: "k", filename: "sound_k", type: "consonant" },
+            { symbol: "l", filename: "sound_l", type: "consonant" },
+
+            { symbol: "uː", filename: "sound_u2", type: "vowel" },
+            { symbol: "juː", filename: "sound_u2", type: "diphthong" },
+
+            { symbol: "aɪ", filename: "sound_aɪ", type: "diphthong" },
+            { symbol: "eɪ", filename: "sound_eɪ", type: "diphthong" },
+            { symbol: "aʊ", filename: "sound_au", type: "diphthong" },
+
+            { symbol: "z", filename: "sound_z", type: "consonant" },
+            { symbol: "ð", filename: "sound_the", type: "consonant" },
+            { symbol: "ʃ", filename: "sound_xi", type: "consonant" },
+            { symbol: "v", filename: "sound_v", type: "consonant" },
+            { symbol: "b", filename: "sound_b", type: "consonant" },
+            { symbol: "n", filename: "sound_n", type: "consonant" },
+            { symbol: "m", filename: "sound_m", type: "consonant" },
+            { symbol: "ŋ", filename: "sound_ng", type: "consonant" },
+
+
+            { symbol: "æ", filename: "sound_ae", type: "vowel" },
+            { symbol: "ə", filename: "sound_e4", type: "vowel" },
+            { symbol: "əʊ", filename: "sound_eu", type: "diphthong" },
+            { symbol: "ɔɪ", filename: "sound_oɪ", type: "diphthong" },
+
+            { symbol: "ɪə", filename: "sound_Ir", type: "diphthong" },
+            { symbol: "eə", filename: "sound_air", type: "diphthong" },
+            { symbol: "ʊə", filename: "sound_ur", type: "diphthong" },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            { symbol: "tʃ", filename: "sound_qi", type: "consonant" },
+            { symbol: "tr", filename: "sound_tr", type: "consonant" },
+            { symbol: "ts", filename: "sound_ts", type: "consonant" },
+            { symbol: "dʒ", filename: "sound_d3", type: "consonant" },
+            { symbol: "dr", filename: "sound_dr", type: "consonant" },
+            { symbol: "dz", filename: "sound_dz", type: "consonant" }
+        ];
+
+        const selectedPhonemes = [];
+        const table = document.getElementById("phonics-table");
+        const display = document.getElementById("display-area");
+
+        // Build phonics table
+        phonemes.forEach((p) => {
+            const div = document.createElement("div");
+            div.className = "phoneme";
+
+            // Assign background color class for table
+            switch (p.type) {
+                case "vowel":
+                    div.classList.add("bg-vowel");
+                    break;
+                case "consonant":
+                    div.classList.add("bg-consonant");
+                    break;
+                case "diphthong":
+                    div.classList.add("bg-diphthong");
+                    break;
+                default:
+                    div.classList.add("bg-other");
+                    break;
+            }
+
+            div.textContent = `/${p.symbol}/`;
+            div.onclick = () => {
+                selectedPhonemes.push(p);
+                updateDisplay();
+            };
+            table.appendChild(div);
+        });
+
+        // Color classes for display-area phonics in sequence
+        const colorClasses = ["color1", "color2", "color3", "color4"];
+
+        function updateDisplay() {
+            display.innerHTML = ""; // Clear existing
+
+            selectedPhonemes.forEach((p, i) => {
+                const span = document.createElement("span");
+                span.textContent = p.symbol;
+                span.className = colorClasses[i % colorClasses.length];
+                display.appendChild(span);
+            });
+        }
+
+        function clearPhonemes() {
+            selectedPhonemes.length = 0;
+            updateDisplay();
+            document.getElementById("word-input").value = "";
+        }
+
+        function playPhonemes() {
+            if (selectedPhonemes.length === 0) return;
+
+            let i = 0;
+            function playNext() {
+                if (i >= selectedPhonemes.length) return;
+                const audio = new Audio(`./audio/${selectedPhonemes[i].filename}.mp3`);
+                audio.onended = playNext;
+                audio.play();
+                i++;
+            }
+            playNext();
+        }
+    </script>
+</body>
+
+</html>

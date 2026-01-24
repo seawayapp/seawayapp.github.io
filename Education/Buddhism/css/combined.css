@@ -1,0 +1,73 @@
+/* Combined CSS for optimized template */
+
+/* Font face */
+@font-face {
+  font-family: "Kaiti";
+  src: url("../../../public/fonts/simkai.woff") format("woff");
+}
+
+/* Base styles */
+body {
+  font-family: "Kaiti", serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+/* Layout */
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Presentation styles */
+.presentation {
+  flex: 1;
+  padding: 20px;
+}
+
+/* Slide styles */
+.slide {
+  margin-bottom: 2rem;
+  padding: 1rem;
+}
+
+/* Text alignment */
+.title-center {
+  text-align: center;
+  font-size: 6vmax;
+  margin: 1rem 0;
+}
+
+.content-center {
+  text-align: center;
+  font-size: 3.5vmax;
+  margin: 0.5rem 0;
+}
+
+/* Vertical centering */
+.vertical-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+/* Footer styles */
+footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #f5f5f5;
+}
+
+/* Print styles */
+@media print {
+  .slide {
+    page-break-after: always;
+  }
+
+  .vertical-center {
+    min-height: auto;
+  }
+}

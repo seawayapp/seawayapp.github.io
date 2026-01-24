@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title id="maintitle"></title>
+
+    <style>
+        @font-face {
+            font-family: 'Kaiti';
+            src: url('../../public/fonts/simkai.woff') format('woff');
+        }
+
+        body {
+            font-family: 'Kaiti' !important;
+        }
+
+        .grid-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            /* 水平居中 */
+            align-items: center;
+            /* 垂直居中 */
+            /* 使容器占满整个视口高度 */
+            /* 10个字 * 100px */
+            margin: 0 auto;
+        }
+
+        .grid-item {
+            width: 120px;
+            height: 120px;
+            border: 1px solid #796363;
+            position: relative;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            /* 垂直居中 */
+            align-items: center;
+            /* 水平居中 */
+        }
+
+        .grid-item-Big {
+            width: 200px;
+            height: 200px;
+            border: 1px solid #796363;
+            position: relative;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            /* 垂直居中 */
+            align-items: center;
+            /* 水平居中 */
+        }
+
+        .pinyin {
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            color: red;
+        }
+
+        .pinyinBig {
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 26px;
+            color: red;
+        }
+
+        .character {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5vmax;
+            color: #000;
+        }
+
+        .characterBig {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 9vmax;
+            color: #000;
+        }
+    </style>
+
+    <style>
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 10%;
+            /* 距离顶部 20% */
+            left: 50%;
+            transform: translateX(-50%);
+            /* 水平居中 */
+            width: 500px;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            text-align: center;
+            /* 内容居中 */
+        }
+
+        /* 遮罩层样式 */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        /* 关闭按钮样式 */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 24px;
+            /* 增大字体大小 */
+            padding: 5px 10px;
+            /* 增加内边距 */
+            line-height: 1;
+            /* 确保图标垂直居中 */
+            color: #333;
+            /* 设置颜色 */
+        }
+
+        .close-btn:hover {
+            color: #000;
+            /* 鼠标悬停时颜色变深 */
+        }
+
+        /* 汉字点击区域样式 */
+        .hanzi {
+            font-size: 80px;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* 按钮容器样式 */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            /* 按钮之间的间距 */
+            margin-top: 20px;
+        }
+
+        /* 按钮样式 */
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
+    <!-- configuration parameters -->
+    <meta name="defaultView" content="slideshow" />
+    <meta name="controlVis" content="hidden" />
+    <!-- style sheet links -->
+    <link rel="stylesheet" href="../lib/ui/default/slides.css" type="text/css" media="projection" id="slideProj" />
+    <link rel="stylesheet" href="../lib/ui/default/outline.css" type="text/css" media="screen" id="outlineStyle" />
+    <link rel="stylesheet" href="../lib/ui/default/print.css" type="text/css" media="print" id="slidePrint" />
+    <link rel="stylesheet" href="../lib/ui/default/opera.css" type="text/css" media="projection" id="operaFix" />
+    <!-- <link media="screen" rel="stylesheet" href="./css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="../lib/css/common.css">
+    <link media="print" rel="stylesheet" href="../lib/css/print.css">
+    <!-- S5 JS -->
+    <script src="../lib/ui/default/slides.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+    <div class="layout">
+        <div id="controls">
+            <!-- DO NOT EDIT -->
+        </div>
+        <div id="currentSlide">
+            <!-- DO NOT EDIT -->
+        </div>
+        <div id="header"></div>
+        <div id="footer">
+            <h1></h1>
+            <h2></h2>
+        </div>
+    </div>
+    <div class="presentation">
+        <div id="paragraph"></div>
+    </div>
+</body>
+
+<script>
+    mainData = []
+    // console.log(JSON.stringify(mainData))
+    // Function to dynamically load JavaScript file
+    function loadScript(fileName) {
+        return new Promise(function (resolve, reject) {
+            const script = document.createElement('script');
+            script.src = fileName;
+            script.type = 'text/javascript';
+            script.onload = function () {
+                // console.log(`${fileName} has been loaded successfully.`);
+                resolve(); // Resolve the promise once the script is loaded
+            };
+            script.onerror = function () {
+                reject(new Error(`Failed to load the script: ${fileName}`));
+            };
+            document.body.appendChild(script);
+        });
+    }
+    // Function to get the 'js' parameter from the URL
+    function getScriptParam(key) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(key); // Get the value of 'js' parameter
+    }
+
+    // Load the JavaScript dynamically based on the URL parameter
+    window.onload = async function () {
+        const scriptFile = getScriptParam('input');
+        const pageNo = getScriptParam('pageno');
+        if (scriptFile) {
+            try {
+                let fileName = "./data/" + scriptFile + ".js";
+
+                await loadScript(fileName); // Wait for the JS file to load
+                // Log data from the dynamically loaded script after it's fully loaded
+                if (typeof mainData !== 'undefined') {
+                    // console.log('Data from loaded script:', JSON.stringify(mainData));
+                    processData(mainData[0], pageNo);
+                    startup(); // Added 
+                } else {
+                    console.log('No data found in the loaded script.');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        } else {
+            console.log('No JS file specified.');
+        }
+    }
+
+    async function processData(inputJSON, pageNo) {
+        // console.log(JSON.stringify(inputJSON));
+
+        document.getElementById("maintitle").innerHTML = inputJSON.testdate;
+        populateHTMLparagraph(inputJSON, "paragraph");
+
+    }
+
+    function populateHTMLparagraph(inputJSON, type) {
+        try {
+            let showPinYin = true
+            let html = ""
+
+            var title = inputJSON.title
+            var subtitle = inputJSON.subtitle
+
+            html += `<div class="slide"><h1>华文听写 2025</h1><p style="text-align: center;font-size: 6vmax;">`
+            html += title
+            html += `</p></div>`
+
+            for (var j = 0; j < inputJSON.sentences.length; j++) {
+                // pronunciation
+                let sentenceTemp = inputJSON.sentences[j]
+                let pinyinTemp = inputJSON.pronunciation[j]
+                html += `<div class="slide"><h1>`
+                var displayID = j + 1
+                html = html + subtitle + " - " + displayID
+
+                if (sentenceTemp.length > 10) {
+                    html += `</h1><div class="grid-container vertical-center" id="grid-container">`
+                    // 遍历句子中的每个字符
+                    for (let k = 0; k < sentenceTemp.length; k++) {
+                        html += `<div class="grid-item" onclick="openModal('${sentenceTemp[k]}')">`
+                        html += `<div class="pinyin">${pinyinTemp.split(' ')[k]}</div>`
+                        html += `<div class="character">${sentenceTemp[k]}</div>`
+                        html += `</div>`
+                    }
+
+                    html += `</div></div>`
+                } else {
+                    html += `</h1><div class="grid-container vertical-center" id="grid-container">`
+                    // 遍历句子中的每个字符
+                    for (let k = 0; k < sentenceTemp.length; k++) {
+                        html += `<div class="grid-item-Big" onclick="openModal('${sentenceTemp[k]}')">`
+                        html += `<div class="pinyinBig">${pinyinTemp.split(' ')[k]}</div>`
+                        html += `<div class="characterBig">${sentenceTemp[k]}</div>`
+                        html += `</div>`
+                    }
+
+                    html += `</div></div>`
+                }
+
+            }
+
+            html += `<div class="slide"><h1>`
+            html += subtitle
+            html += `</h1><div class="vertical-center"><p style="text-align: center;font-size: 5vmax;"><a>结 束</a></p></div></div>`
+
+
+            // Added on 02-Feb-2025
+            html += `
+                <div class="overlay" id="overlay"></div>
+                <div class="modal" id="modal">
+                    <span class="close-btn" onclick="closeModal('')">×</span>
+                    <div id="hanzi-writer-target" style="width: 400px; height: 400px; margin: 0 auto;"></div>
+                    <div class="button-container">
+                        <!-- <button onclick="startAnimation()">重新播放</button> -->
+                        <button onclick="closeModal('')">关闭</button>
+                        <button onclick="closeModal('next')">关闭并跳去下一页</button>
+                    </div>
+                </div>
+                <div id="wordDiv"></div>`
+
+
+            document.getElementById(type).innerHTML = html;
+        } catch (error) {
+            console.error('加载数据失败:', error);
+        }
+    }
+
+
+</script>
+
+<!-- 引入 Hanzi Writer 库 -->
+<script src="../lib/js/hanzi-writer.min.js"></script>
+<script>
+    let writer = null; // 用于存储 Hanzi Writer 实例
+
+    // 打开模态框
+    function openModal(character) {
+        // console.log("Open " + character)
+        document.getElementById('wordDiv').innerHTML = character;
+        const modal = document.getElementById('modal');
+        const overlay = document.getElementById('overlay');
+        modal.style.display = 'block';
+        overlay.style.display = 'block';
+
+        // 销毁之前的 Hanzi Writer 实例
+        if (writer) {
+            writer._svg.remove(); // 移除 SVG 元素
+            writer = null; // 清空实例
+        }
+
+        document.getElementById('hanzi-writer-target').innerHTML = '';
+
+        var writer = HanziWriter.create('hanzi-writer-target', character, {
+            width: 400,
+            height: 400,
+            showCharacter: false,
+            showOutline: true,
+            strokeAnimationSpeed: 1, // 笔画动画速度
+            delayBetweenStrokes: 300, // 笔画之间的延迟
+            padding: 5,
+            delayBetweenLoops: 3000
+        });
+
+        writer.loopCharacterAnimation();
+
+        // // 初始化 Hanzi Writer
+        // writer = HanziWriter.create('hanzi-writer-target', character, {
+        //     width: 200,
+        //     height: 200,
+        //     showCharacter: false,
+        //     showOutline: true,
+        //     strokeAnimationSpeed: 1, // 笔画动画速度
+        //     delayBetweenStrokes: 300, // 笔画之间的延迟
+        // });
+
+        // // 自动开始动画
+        // writer.animateCharacter();
+    }
+
+    // 关闭模态框
+    function closeModal(command) {
+        if (command != "") {
+            document.getElementById('wordDiv').innerHTML = "";
+        }
+
+        const modal = document.getElementById('modal');
+        const overlay = document.getElementById('overlay');
+        modal.style.display = 'none';
+        overlay.style.display = 'none';
+
+    }
+
+    // 重新播放动画
+    function startAnimation() {
+        if (writer) {
+            writer.animateCharacter();
+        }
+    }
+</script>
+
+</html>

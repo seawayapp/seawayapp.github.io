@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel=icon href=./favicon.png>
+	<title>Welcome</title>
+	<style type="text/css">
+		body {
+			font-family: Arial, Helvetica, sans-serif;
+		}
+
+		body {
+			background: #eaeaea;
+		}
+
+		.wrap {
+			margin: 0 auto;
+			width: 1000px;
+		}
+
+		.logo {
+			text-align: center;
+			margin-top: 200px;
+		}
+
+		.logo img {
+			width: 350px;
+		}
+
+		.logo p {
+			color: #272727;
+			font-size: 40px;
+			margin-top: 1px;
+		}
+
+		.logo p span {
+			color: lightgreen;
+		}
+
+		.sub a {
+			color: #fff;
+			background: #272727;
+			text-decoration: none;
+			padding: 10px 20px;
+			font-size: 13px;
+			font-family: arial, serif;
+			font-weight: bold;
+			-webkit-border-radius: .5em;
+			-moz-border-radius: .5em;
+			-border-radius: .5em;
+		}
+
+		.footer {
+			color: black;
+			position: absolute;
+			right: 10px;
+			bottom: 10px;
+		}
+
+		.footer a {
+			color: rgb(114, 173, 38);
+		}
+
+		table,
+		th,
+		td {
+			border: 1px solid black;
+			border-radius: 5px;
+			background-color: #FFFFFF;
+			text-align: center;
+			vertical-align: middle;
+			font-size: 30px;
+		}
+
+		.center {
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		/* make the table a 100% wide by default */
+		table {
+			width: 100%;
+		}
+
+		/* if the browser window is at least 800px-s wide: */
+		@media screen and (min-width: 800px) {
+			table {
+				width: 90%;
+			}
+		}
+
+		/* if the browser window is at least 1000px-s wide: */
+		@media screen and (min-width: 1000px) {
+			table {
+				width: 80%;
+			}
+		}
+
+		img {
+			height: 200px;
+			width: 200px;
+		}
+	</style>
+	<script>
+		let inputData =
+			[
+				["I", "bite", "blow", "sit", "give", "massage", "five"],
+				["you", "face", "finish", "more", "yes", "go", "ten"],
+				["teacher", "mouth", "horn", "bye", "no", "stop", "class"]
+			]
+
+		function playSound(fileName, id) {
+			var audio = document.getElementById("audio_" + fileName);
+			if (audio) {
+				audio.play();
+			}
+
+			resetAllColor();
+			document.getElementById(id).style.backgroundColor = "#8ec63f";
+			document.getElementById(id).style.color = "white";
+		}
+
+		function resetAllColor() {
+			for (var i = 0; i < inputData.length; i++) {
+				for (var j = 0; j < inputData[i].length; j++) {
+					document.getElementById(`${i}${j}`).style.backgroundColor = "white";
+					document.getElementById(`${i}${j}`).style.color = "black";
+				}
+			}
+		}
+
+	</script>
+</head>
+
+<body>
+
+	<div id="mainContent"></div>
+
+	<script>
+		let text = `<table class=" center" id="mytable">`
+		for (var i = 0; i < inputData.length; i++) {
+			let xData = inputData[i]; text += `<tr>`
+			for (var j = 0; j < xData.length; j++) {
+				if (xData[j] != "") {
+					text += `<td
+				onclick="playSound('${xData[j]}','${i}${j}')" id="${i}${j}"><img src="./img/${xData[j]}.png"><br>${xData[j]}
+				<audio id="audio_${xData[j]}" src="./mp3/${xData[j]}.mp3"></audio>
+				</td>`
+				} else {
+					text += `<td></td>`
+				}
+			}
+			text += `</tr>`
+		}
+
+		text += `</table>`
+		document.getElementById("mainContent").innerHTML = text;
+	</script>
+
+</body>
+
+</html>

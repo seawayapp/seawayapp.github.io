@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="maintitle"></title>
+    <style>
+        body {
+            font-family: 'Book Antiqua', '楷体';
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        #category-label {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            background-color: #ffe082;
+            /* soft yellow background */
+            color: #333;
+            font-size: 18px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .slide-card {
+            position: relative;
+            width: 90%;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: left;
+        }
+
+        #question-text {
+            font-size: 28px;
+            color: #4285f4;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .option {
+            background: #f2f2f2;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            padding: 10px 16px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            display: flex;
+            justify-content: space-between;
+            transition: 0.2s;
+        }
+
+        .option:hover {
+            background: #e8f0fe;
+        }
+
+        .option.selected {
+            border: 2px solid #4a90e2;
+            background: #eef5ff;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        footer {
+            background-color: #f8f9fa;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #ddd;
+            position: relative;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 5px;
+        }
+
+        .slide-info {
+            font-size: 16px;
+            color: #666;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .nav-group {
+            display: flex;
+            align-items: center;
+        }
+
+        #prev-btn {
+            margin-right: 10px;
+        }
+
+        #next-btn {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1 id="slide-title">MCQ Quiz</h1>
+    </header>
+
+    <div class="content">
+        <div class="slide-card">
+            <div id="category-label"></div>
+            <div id="question-text"></div>
+            <div id="options-container"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="nav-group">
+            <button class="nav-btn" id="prev-btn">◀ Previous</button>
+        </div>
+
+        <span class="slide-info" id="slide-counter">1 of 10</span>
+
+        <div class="nav-group">
+            <button class="nav-btn" id="retry-btn" style="display:none;">Retry</button>
+            <button class="nav-btn" id="submit-btn">Submit</button>
+            <button class="nav-btn" id="next-btn">Next ▶</button>
+        </div>
+    </footer>
+
+    <script>
+        let currentQuestion = 0;
+        let selectedOption = null;
+        let questions = [];
+
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const retryBtn = document.getElementById('retry-btn');
+        const slideCounter = document.getElementById('slide-counter');
+        const slideTitle = document.getElementById('slide-title');
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]]; // swap
+            }
+            return array;
+        }
+
+        function loadScript(fileName) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = fileName;
+                script.onload = () => resolve();
+                script.onerror = () => reject(`Failed to load ${fileName}`);
+                document.body.appendChild(script);
+            });
+        }
+
+        function renderQuestion() {
+            const q = questions[currentQuestion];
+            questionText.innerHTML = q.question;
+            optionsContainer.innerHTML = '';
+            selectedOption = null;
+
+            // handle category label
+            const categoryLabel = document.getElementById('category-label');
+            if (q.category && q.category.trim() !== '') {
+                categoryLabel.style.display = 'block';
+                categoryLabel.textContent = q.category;
+            } else {
+                categoryLabel.style.display = 'none';
+            }
+
+            const shuffledOptions = shuffleArray(q.options);
+
+            shuffledOptions.forEach((opt, index) => {
+                const div = document.createElement('div');
+                div.classList.add('option');
+                // div.innerHTML = `(${index + 1}) ${opt.text}`;
+                // create a label node safely
+                const label = document.createElement('span');
+                label.innerHTML = `(${index + 1}) ${opt.text}`;
+
+                // attach the label
+                div.appendChild(label);
+
+                div.dataset.correct = opt.correct; // ✅ store truth value for later
+                div.addEventListener('click', () => {
+                    document.querySelectorAll('.option').forEach(opt => {
+                        // cleanup old marks
+                        opt.innerHTML = opt.innerHTML.replace(/✅|❌/g, '').trim();
+                        opt.classList.remove('selected', 'correct', 'incorrect');
+                    });
+                    div.classList.add('selected');
+                    selectedOption = index + 1;
+                });
+                optionsContainer.appendChild(div);
+            });
+
+            slideCounter.textContent = `${currentQuestion + 1} of ${questions.length}`;
+        }
+
+        function showCorrectness() {
+            if (!selectedOption) return;
+
+            const q = questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+
+            options.forEach(opt => {
+                // cleanup old marks
+                opt.innerHTML = opt.innerHTML.replace(/✅|❌/g, '').trim();
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+
+            options.forEach((opt, i) => {
+                const isCorrect = opt.dataset.correct === 'true';
+                if (isCorrect) {
+                    opt.classList.add('correct');
+                    opt.innerHTML += ' ✅';
+                } else if (selectedOption === i + 1) {
+                    opt.classList.add('incorrect');
+                    opt.innerHTML += ' ❌';
+                }
+            });
+        }
+
+        prevBtn.addEventListener('click', () => {
+            currentQuestion = (currentQuestion - 1 + questions.length) % questions.length;
+            renderQuestion();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentQuestion = (currentQuestion + 1) % questions.length;
+            renderQuestion();
+        });
+
+        submitBtn.addEventListener('click', showCorrectness);
+        retryBtn.addEventListener('click', renderQuestion);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevBtn.click();
+            if (e.key === 'ArrowRight') nextBtn.click();
+            if (e.key === 'Enter') submitBtn.click();
+            if (e.key === 's' || e.key === 'S') submitBtn.click(); // ✅ Press 's' or 'S' to submit
+        });
+
+        async function init() {
+            try {
+                const inputParam = new URLSearchParams(window.location.search).get('input');
+                if (!inputParam) throw new Error('No input file specified.');
+
+                const canRetry = new URLSearchParams(window.location.search).get('canRetry'); // read canRetry from URL
+                // Show or hide Retry button based on canRetry parameter
+                if (canRetry === 'true') {
+                    retryBtn.style.display = 'inline-block';
+                } else {
+                    retryBtn.style.display = 'none';
+                }
+
+                await loadScript(`./data/${inputParam}.js`);
+                if (!mainData || !mainData.questions) throw new Error('No questions found in JS file.');
+                questions = shuffleArray(mainData.questions); // Random order every time the page reloads
+                slideTitle.textContent = mainData.title;
+                document.getElementById('maintitle').textContent = `${mainData.title} ${mainData.subtitle}`;
+                renderQuestion();
+
+            } catch (err) {
+                questionText.textContent = 'Error loading questions.';
+                console.error(err);
+            }
+        }
+
+        window.addEventListener('load', init);
+    </script>
+</body>
+
+</html>

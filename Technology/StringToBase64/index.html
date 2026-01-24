@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Encoder / Decoder</title>
+</head>
+<body>
+<textarea  style="width:50%" name="ta1" id="ta1" cols="50" rows="20"></textarea>
+
+
+
+<button id="encode" style="width:50%;display: block ; margin-top: 20px">Encode</button>
+<button id="decode" style="width:50%;display: block ; margin-top: 20px">Decode</button>
+<textarea style="width:50%; margin-top: 20px" name="ta2" id="ta2" cols="50" rows="20"></textarea>
+
+
+<script src="jquery.3.5.1.min.js"></script>
+<script>
+    $( "#encode" ).click(function() {
+        const encodedStr=window.btoa($("#ta1").val())
+        console.log(encodedStr)
+        $("#ta2").val(encodedStr)
+        document.querySelector('#ta2').select()
+        document.execCommand("copy")
+    });
+    $( "#decode" ).click(function() {
+        const decodedStr=window.atob($("#ta1").val())
+        console.log(decodedStr)
+        $("#ta2").val(decodedStr)
+        document.querySelector('#ta2').select()
+        document.execCommand("copy")
+    });
+</script>
+</body>
+</html>

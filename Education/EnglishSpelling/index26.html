@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Input Data -->
+    <script src="data/A_index_EnglishSpelling26.js"></script>
+    <title>Education - English Spelling 2026</title>
+    <style type="text/css">
+      body {
+        font-family: "Book Antiqua";
+      }
+
+      body {
+        background: #eaeaea;
+      }
+
+      .wrap {
+        margin: 0 auto;
+        width: 1000px;
+      }
+
+      .logo {
+        text-align: center;
+        margin-top: 200px;
+      }
+
+      .logo img {
+        width: 350px;
+      }
+
+      .logo p {
+        color: #272727;
+        font-size: 40px;
+        margin-top: 1px;
+      }
+
+      .logo p span {
+        color: lightgreen;
+      }
+
+      .sub a {
+        color: #fff;
+        background: #272727;
+        text-decoration: none;
+        padding: 10px 20px;
+        font-size: 13px;
+        font-family: arial, serif;
+        font-weight: bold;
+        -webkit-border-radius: 0.5em;
+        -moz-border-radius: 0.5em;
+        -border-radius: 0.5em;
+      }
+
+      .footer {
+        color: black;
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+      }
+
+      .footer a {
+        color: rgb(114, 173, 38);
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        font-size: 30px;
+      }
+
+      .center {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!---728x90--->
+    <div class="wrap">
+      <div class="logo">
+        <h1>English Spelling 2026</h1>
+        <div id="mainContent"></div>
+      </div>
+    </div>
+  </body>
+  <script>
+    let inputJSON = mainData;
+
+    let text = `<table class="center">
+    <tr>
+        <th>SN</th>
+        <th>Week</th>
+        <th>Date</th>
+    </tr>`;
+    for (var i = 0; i < inputJSON.length; i++) {
+      let index = i + 1;
+      let type = "paragraph" + i;
+      let title = inputJSON[i].title || "";
+      let subTitle = inputJSON[i].subtitle || "";
+      let testDate = inputJSON[i].testdate || "";
+
+      if (inputJSON[i].category == "file") {
+        text += `
+                <tr>
+                    <td>${index}</td>
+                    <td><a href="./Spelling_Template.html?input=${inputJSON[i].filename}" target="_blank">&nbsp;${inputJSON[i].title}&nbsp;&nbsp;${inputJSON[i].subtitle}&nbsp;</a></td>
+                    <td>&nbsp;${testDate}&nbsp;</td>    
+            `;
+      }
+
+      if (inputJSON[i].category == "file_slide") {
+        text += `
+                <tr>
+                    <td>${index}</td>
+                    <td><a href="./template_textslide.html?input=${inputJSON[i].filename}" target="_blank">&nbsp;${inputJSON[i].title}&nbsp;&nbsp;${inputJSON[i].subtitle}&nbsp;</a></td>
+                    <td>&nbsp;${testDate}&nbsp;</td>    
+            `;
+      }
+
+      if (inputJSON[i].category == "folder") {
+        text += `
+                <tr>
+                    <td>${index}</td>
+                    <td><a href="./${inputJSON[i].filename}" target="_blank">&nbsp;${inputJSON[i].title}&nbsp;&nbsp;${inputJSON[i].subtitle}&nbsp;</a></td>
+                    <td>&nbsp;${testDate}&nbsp;</td>    
+            `;
+      }
+    }
+
+    text += `
+</table>
+    `;
+    document.getElementById("mainContent").innerHTML = text;
+  </script>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            font-size: 32px;
+        }
+    </style>
+    <script src="./Tingting_Data.js"></script>
+</head>
+
+<body>
+
+    <h1>婷婷唱诗词</h1>
+    <div id="mainContent"></div>
+
+    <script>
+        let inputJSON = mainData;
+
+        let text = `    <table>
+        <tr>
+            <th>目录</th>
+            <th>诗歌名</th>
+            <th>诗人</th>
+        </tr>`;
+        for (var i = 0; i < inputJSON.length; i++) {
+            let index = i + 1
+            let type = "paragraph" + i
+            text += `
+            <tr>
+                <td>${index}</td>
+                <td><a href="./Tingting_Template.html?pageNo=${i}" target="_blank">&nbsp;${inputJSON[i].title}&nbsp;</a></td>
+                <td>&nbsp;${inputJSON[i].subtitle}&nbsp;</td>
+            </tr>`
+        }
+
+        text += `
+    </table>
+        `
+        document.getElementById("mainContent").innerHTML = text;
+    </script>
+</body>
+
+</html>

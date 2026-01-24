@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Generate Calendar</title>
+    <style type="text/css">
+        body {
+            font-family: 'Book Antiqua';
+        }
+
+        body {
+            background: #eaeaea;
+        }
+
+        .wrap {
+            margin: 0 auto;
+            width: 1000px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-top: 200px;
+        }
+
+        .logo img {
+            width: 350px;
+        }
+
+        .logo p {
+            color: #272727;
+            font-size: 40px;
+            margin-top: 1px;
+        }
+
+        .logo p span {
+            color: lightgreen;
+        }
+
+        .sub a {
+            color: #fff;
+            background: #272727;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 13px;
+            font-family: arial, serif;
+            font-weight: bold;
+            -webkit-border-radius: .5em;
+            -moz-border-radius: .5em;
+            -border-radius: .5em;
+        }
+
+        .footer {
+            color: black;
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+        }
+
+        .footer a {
+            color: rgb(114, 173, 38);
+        }
+
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            font-size: 30px;
+        }
+
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!---728x90--->
+    <div class="wrap">
+        <div class="logo">
+            <h1>Generate Calendar 年历</h1>
+            <div id="mainContent"></div>
+        </div>
+    </div>
+
+</body>
+<script>
+    mainData = []
+    for (i = 2016; i < 2046; i++) {
+        mainData.push({ "year": i })
+    }
+    let inputJSON = mainData;
+
+    let text = `<table class="center">
+    <tr>
+        <th>目录M</th>
+        <th>目录N</th>
+        <th>年份</th>
+        <th></th>
+        <th>目录M</th>
+        <th>目录N</th>
+        <th>年份</th>
+        <th></th>
+        <th>目录M</th>
+        <th>目录N</th>
+        <th>年份</th>        
+    </tr>`;
+    let rows = Math.ceil(inputJSON.length / 3)
+    // console.log(`rows is ${rows}`)
+    for (var i = 0; i < rows; i++) {
+        let i1 = i * 3
+        let index1 = i * 3 + 1
+        let i2 = i * 3 + 1
+        let index2 = i * 3 + 2
+        let i3 = i * 3 + 2
+        let index3 = i * 3 + 3
+
+        let nIndex1 = index1 - 3;
+        let nIndex2 = index2 - 3;
+        let nIndex3 = index3 - 3;
+        if (nIndex1 < 1) {
+            nIndex1 = ""
+        }
+        if (nIndex2 < 1) {
+            nIndex2 = ""
+        }
+        if (nIndex3 < 1) {
+            nIndex3 = ""
+        }
+
+        text += `
+            <tr>
+                <td>${index1}</td>
+                <td>${nIndex1}</td>
+                <td><a href="./Calendar_Template_Landscape.html?year=${inputJSON[i1].year}" target="_blank">&nbsp;${inputJSON[i1].year}&nbsp;</a></td>
+                <td></td>
+            `
+
+        if (inputJSON[i2]) {
+            //console.log(inputJSON[i2].category)
+            text += `
+                <td>${index2}</td>
+                <td>${nIndex2}</td>
+                <td><a href="./Calendar_Template_Landscape.html?year=${inputJSON[i2].year}" target="_blank">&nbsp;${inputJSON[i2].year}&nbsp;</a></td>
+                <td></td>
+                `
+        } else {
+            text += `
+                <td></td>
+                <td></td>
+                <td></td>
+            `
+        }
+
+        if (inputJSON[i3]) {
+            text += `
+                <td>${index3}</td>
+                <td>${nIndex3}</td>
+                <td><a href="./Calendar_Template_Landscape.html?year=${inputJSON[i3].year}" target="_blank">&nbsp;${inputJSON[i3].year}&nbsp;</a></td>
+                `
+        } else {
+            text += `
+                <td></td>
+                <td></td>
+            `
+        }
+
+        text += `
+            </tr>`
+    }
+
+    text += `
+        </table>
+    `
+    document.getElementById("mainContent").innerHTML = text;
+</script>
+
+
+<div style="text-align: center;margin-top: 40px"> Last updated on 01/01/2025</div>
+
+</html>

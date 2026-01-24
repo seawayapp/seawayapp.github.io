@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            font-size: 32px;
+        }
+    </style>
+    <title>中文列表</title>
+    <script src="./Main_Data.js"></script>
+</head>
+
+<body>
+
+    <h1>中文列表</h1>
+    <div id="mainContent"></div>
+
+    <script>
+        let inputJSON = mainData;
+
+        let text = `    <table>
+        <tr>
+            <th>目录</th>
+            <th>书名</th>
+            <th>作者</th>
+            <th></th>
+            <th>目录</th>
+            <th>书名</th>
+            <th>作者</th>
+        </tr>`;
+        let rows = Math.ceil(inputJSON.length / 2)
+        console.log(`rows is ${rows}`)
+        for (var i = 0; i < rows; i++) {
+            let index1 = i + 1
+            let i2 = i + rows
+            let index2 = i + 1 + rows
+            let type = "paragraph" + i
+            text += `
+            <tr>
+                <td>${index1}</td>
+                <td><a href="./Main_Template.html?pageNo=${i}" target="_blank">&nbsp;${inputJSON[i].title}&nbsp;</a></td>
+                <td>&nbsp;${inputJSON[i].subtitle}&nbsp;</td>
+                <td></td>
+                <td>${index2}</td>
+            `
+
+            if (inputJSON[i2]) {
+                text += `
+                    <td><a href="./Main_Template.html?pageNo=${i2}" target="_blank">&nbsp;${inputJSON[i2].title}&nbsp;</a></td>
+                    <td>&nbsp;${inputJSON[i2].subtitle}&nbsp;</td>
+                `
+            } else {
+                text += `
+                    <td></td>
+                    <td></td>
+                `
+            }
+            text += `
+                </tr>`
+        }
+
+        text += `
+            </table>
+        `
+        document.getElementById("mainContent").innerHTML = text;
+    </script>
+</body>
+
+</html>

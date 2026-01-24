@@ -1,0 +1,30 @@
+[
+  {
+    "uuid": "test-1",
+    "question": "--- It's a good idea. But who's going to ______ the plan?\n---I think Tom and Greg will.",
+    "options": ["A. set aside", "B. carry out", "C. take in", "D. get through"],
+    "correctIndex": 1
+  },
+  {
+    "uuid": "test-2",
+    "question": "Happily for John's mother, he is working harder to ______ his lost time.",
+    "options": [
+      "A. make up for",
+      "B. keep up with",
+      "C. catch up with",
+      "D. make use of"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "uuid": "test-3",
+    "question": "If you had ______ your test paper carefully before handing it in, you would have made fewer mistakes.",
+    "options": [
+      "A. looked up",
+      "B. thought about",
+      "C. gone over",
+      "D. gone round"
+    ],
+    "correctIndex": 2
+  }
+]

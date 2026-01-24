@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Picture Dictionary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            display: none;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        img {
+            height: 80px;
+        }
+
+        audio {
+            width: 120px;
+        }
+
+        .card {
+            display: none;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .card img {
+            height: 150px;
+        }
+
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .mode-switch {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .phonetic {
+            font-size: 1.2em;
+            color: #555;
+            margin: 5px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+        }
+    </style>
+
+    <!-- Input Data -->
+    <script src="./data/oxford_data.js"></script>
+</head>
+
+<body>
+
+    <h1>Picture Dictionary</h1>
+
+    <div class="mode-switch">
+        <button onclick="showTable()">📋 表格模式</button>
+        <button onclick="showCard()">📖 翻页模式</button>
+    </div>
+
+    <!-- Table Mode -->
+    <table id="wordTable">
+        <thead>
+            <tr>
+                <th>单词</th>
+                <th>音标</th>
+                <th>图片</th>
+                <th>发音</th>
+                <th>中文翻译</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+
+    <!-- Card Mode -->
+    <div class="card" id="wordCard">
+        <h2 id="cardWord">Word</h2>
+        <p class="phonetic" id="cardPhonetic">/ˈfɪkʃən/</p>
+        <img id="cardImage" src="" alt="Image">
+        <div>
+            <audio id="cardAudio" controls></audio>
+        </div>
+        <p id="cardTranslation">中文翻译</p>
+        <div class="controls">
+            <button onclick="prevCard()">⬅️ 上一个</button>
+            <button onclick="nextCard()">➡️ 下一个</button>
+        </div>
+    </div>
+
+    <script>
+        let words = [];
+        let currentIndex = 0;
+
+        async function loadData() {
+            words = mainData;
+            populateTable();
+            renderCard();
+            showTable(); // 默认显示表格模式
+        }
+
+        function populateTable() {
+            const tableBody = document.getElementById("tableBody");
+            tableBody.innerHTML = '';
+            words.forEach(word => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+      <td>${word.word}</td>
+      <td>${word.phonetic || ""}</td>
+      <td><img src="./images/${word.word}.jpg" alt="${word.word}"></td>
+      <td><audio controls src="$./audio/{word.word}.mp3"></audio></td>
+      <td>${word.translation}</td>
+    `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function renderCard() {
+            const word = words[currentIndex];
+            if (!word) return;
+            document.getElementById("cardWord").textContent = word.word;
+            document.getElementById("cardPhonetic").textContent = word.phonetic || "";
+            document.getElementById("cardImage").src = `./images/${word.word}.jpg`;
+            document.getElementById("cardImage").alt = word.word;
+            document.getElementById("cardAudio").src = `./audio/${word.word}.mp3`;
+            document.getElementById("cardTranslation").textContent = word.translation;
+        }
+
+        function prevCard() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderCard();
+            }
+        }
+
+        function nextCard() {
+            if (currentIndex < words.length - 1) {
+                currentIndex++;
+                renderCard();
+            }
+        }
+
+        function showTable() {
+            document.getElementById("wordTable").style.display = "table";
+            document.getElementById("wordCard").style.display = "none";
+        }
+
+        function showCard() {
+            document.getElementById("wordTable").style.display = "none";
+            document.getElementById("wordCard").style.display = "block";
+            renderCard();
+        }
+
+        loadData();
+    </script>
+
+</body>
+
+</html>

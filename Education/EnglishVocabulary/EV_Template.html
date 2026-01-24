@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title id="maintitle"></title>
+
+    <style type="text/css">
+        body {
+            font-family: 'Book Antiqua';
+        }
+
+        body {
+            background: #eaeaea;
+        }
+
+        .wrap {
+            margin: 0 auto;
+            width: 1000px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .logo img {
+            width: 350px;
+        }
+
+        .logo p {
+            color: #272727;
+            font-size: 40px;
+            margin-top: 1px;
+        }
+
+        .logo p span {
+            color: lightgreen;
+        }
+
+        .sub a {
+            color: #fff;
+            background: #272727;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 13px;
+            font-family: arial, serif;
+            font-weight: bold;
+            -webkit-border-radius: .5em;
+            -moz-border-radius: .5em;
+            -border-radius: .5em;
+        }
+
+        .footer {
+            color: black;
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+        }
+
+        .footer a {
+            color: rgb(114, 173, 38);
+        }
+
+        table {
+            width: 100%;
+            /* Full width of the parent container */
+            /* border-collapse: collapse; Remove spaces between borders */
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            font-size: 30px;
+        }
+
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!---728x90--->
+    <div class="wrap">
+        <div class="logo">
+            <h1>
+                <div id="tableTop1"></div>
+            </h1>
+            <h2>
+                <div id="tableTop2"></div>
+            </h2>
+            <div id="mainContent"></div>
+        </div>
+    </div>
+
+    <script>
+        mainData = []
+        // console.log(JSON.stringify(mainData))
+        // Function to dynamically load JavaScript file
+        function loadScript(fileName) {
+            return new Promise(function (resolve, reject) {
+                const script = document.createElement('script');
+                script.src = "./" + fileName + ".js";
+                script.type = 'text/javascript';
+                script.onload = function () {
+                    // console.log(`${fileName} has been loaded successfully.`);
+                    resolve(); // Resolve the promise once the script is loaded
+                };
+                script.onerror = function () {
+                    reject(new Error(`Failed to load the script: ${fileName}`));
+                };
+                document.body.appendChild(script);
+            });
+        }
+        // Function to get the 'js' parameter from the URL
+        function getScriptParam() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('input'); // Get the value of 'js' parameter
+        }
+
+        // Load the JavaScript dynamically based on the URL parameter
+        window.onload = async function () {
+            const scriptFile = getScriptParam();
+            if (scriptFile) {
+                try {
+                    await loadScript(scriptFile); // Wait for the JS file to load
+                    // Log data from the dynamically loaded script after it's fully loaded
+                    if (typeof mainData !== 'undefined') {
+                        console.log('Data from loaded script:', JSON.stringify(mainData));
+                        processData(mainData);
+                    } else {
+                        console.log('No data found in the loaded script.');
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            } else {
+                console.log('No JS file specified.');
+            }
+        }
+
+        function processData(mainDataInput) {
+
+            let inputJSON = mainDataInput; // Load data directly from the JS file
+            console.log(inputJSON.title)
+            document.getElementById("maintitle").innerHTML = inputJSON.title;
+            document.getElementById("tableTop1").innerHTML = inputJSON.title;
+            document.getElementById("tableTop2").innerHTML = inputJSON.subtitle;
+
+
+            let text = "";
+            text = `<table id="myTable">
+                <tr bgcolor= "#A6A6A6" style="color: white;">
+                    <th>SN</th>
+                    <th>Prefix</th>
+                    <th>Root</th>
+                    <th>Postfix</th>
+                    <th>Word</th>
+                    <th>Prounciation</th>
+                    <th>Meaning</th>
+                </tr>`;
+
+
+
+
+
+
+            // let titlePinyin = pinyinUtil.getPinyin(inputJSON.title, ' ', true, true);
+            // let subtitlePinyin = pinyinUtil.getPinyin(inputJSON.subtitle, ' ', true, true);
+            // populateHTML("title", inputJSON.title, titlePinyin.split(" "));
+            // if (inputJSON.subtitle != "") {
+            //     populateHTML("subtitle", inputJSON.subtitle, subtitlePinyin.split(" "));
+            // }
+
+
+            for (var i = 0; i < inputJSON.paragraph.length; i++) {
+                text += `<tr>`
+                let index = i + 1
+                let type = "paragraph" + i
+                text += `<td>${index}</td>`
+                let wordTemp = ""
+
+                text += `<td bgcolor= "#C00000" style="color: white;">${inputJSON.paragraph[i].prefixText}</td>`
+                wordTemp += inputJSON.paragraph[i].prefixText
+
+                text += `<td bgcolor= "#00B0F0" style="color: white;">${inputJSON.paragraph[i].bodyText}</td>`
+                wordTemp += inputJSON.paragraph[i].bodyText
+
+                text += `<td bgcolor= "#92D050" style="color: white;">${inputJSON.paragraph[i].postfixText}</td>`
+                wordTemp += inputJSON.paragraph[i].postfixText
+
+
+                text += `<td style="color: #ffba73;"><b>${wordTemp}</b></td>`
+                text += `<td>${inputJSON.paragraph[i].pronuciation}</td>`
+                text += `<td>${inputJSON.paragraph[i].meaning}</td>`
+
+                text += `</tr>`
+
+                if (inputJSON.paragraph[i].sentence) {
+                    text += `<tr>`
+                    text += `<td colspan="100%">${inputJSON.paragraph[i].sentence}</td>`
+                    text += `</tr>`
+                }
+
+                // text += `<tr>`
+                // text += `<td colspan="100%">${inputJSON.paragraph[i].sentenceCN}</td>`
+                // text += `</tr>`
+            }
+
+            // document.getElementById("mainContent").innerHTML = text;
+
+            // for (var i = 0; i < inputJSON.paragraph.length; i++) {
+            //     let index = i + 1
+            //     let type = "paragraph" + i
+            //     let paragraphTemp = inputJSON.paragraph[i].bodytext
+            //     let paragraphPinyinTemp = pinyinUtil.getPinyin(paragraphTemp, ' ', true, true);
+            //     // console.log(paragraphPinyinTemp)
+            //     populateHTMLparagraph(type, paragraphTemp, paragraphPinyinTemp.split(" "), index);
+            // }
+
+            text += `<tr>`
+
+            text += `</tr>`
+            document.getElementById("mainContent").innerHTML = text;
+
+        }
+
+
+
+    </script>
+
+</body>
+
+</html>

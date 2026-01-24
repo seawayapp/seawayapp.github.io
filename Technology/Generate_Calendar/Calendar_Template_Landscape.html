@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="maintitle"></title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .page {
+            width: 297mm;
+            height: 210mm;
+            /* padding: 10mm 15mm; */
+            padding: 8mm 12mm;
+            /* Narrow margins similar to Word's narrow layout */
+            box-sizing: border-box;
+            page-break-after: always;
+            border: 1px solid #ddd;
+            /* Optional for visible boundaries */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        table {
+            width: 100%;
+            height: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            text-align: center;
+        }
+
+        .header-row {
+            /* background-color: black;
+            color: white; */
+            font-family: "Halis R Book", sans-serif;
+            font-size: 30px;
+            text-align: center;
+            height: 30px;
+            /* Reset height */
+        }
+
+        .subHeader-row {
+            font-family: "Halis R Book", sans-serif;
+            font-size: 16px;
+            text-align: center;
+            height: 20px;
+        }
+
+        .cell-row {
+            position: relative;
+            font-family: "Halis R Book", sans-serif;
+            font-size: 16px;
+            padding: 5px;
+            margin: 0;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .cell-row-weekend {
+            position: relative;
+            font-family: "Halis R Book", sans-serif;
+            background-color: #D9D9D9;
+            font-size: 16px;
+            padding: 5px;
+            margin: 0;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .top-left {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+        }
+
+        .bottom-right {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+        }
+
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 0;
+            }
+
+            .page {
+                border: none;
+                page-break-after: always;
+            }
+
+        }
+    </style>
+
+    <script>
+        function getDaysInMonth(year, month, nextMonthFirstWeek = null) {
+            const daysInMonth = new Date(year, month, 0).getDate(); // Get the number of days in the month
+            const firstDayOfMonth = new Date(year, month - 1, 1).getDay(); // Get the first day of the month (0 = Sunday)
+            const weeks = [];
+            let week = Array(7).fill(0); // Initialize an empty week with 0s
+
+            // Adjust firstDayOfMonth to Monday to Sunday (0 = Monday)
+            const adjustedFirstDay = (firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1);
+
+            let currentDay = 1;
+
+            // Fill in the first week
+            for (let i = adjustedFirstDay; i < 7; i++) {
+                week[i] = currentDay++;
+            }
+            weeks.push(week);
+
+            // Fill in the remaining weeks
+            while (currentDay <= daysInMonth) {
+                week = Array(7).fill(0); // Create a new week
+                for (let i = 0; i < 7 && currentDay <= daysInMonth; i++) {
+                    week[i] = currentDay++;
+                }
+                weeks.push(week);
+            }
+
+            // Merge the last week with the first week of the next month, if provided
+            if (nextMonthFirstWeek) {
+                const lastWeek = weeks[weeks.length - 1];
+                for (let i = 0; i < 7; i++) {
+                    if (lastWeek[i] === 0 && nextMonthFirstWeek[i] !== 0) {
+                        lastWeek[i] = nextMonthFirstWeek[i];
+                    }
+                }
+                weeks[weeks.length - 1] = lastWeek;
+            }
+
+            // Merge rows beyond the 5th row into the 1st row
+            if (weeks.length > 5) {
+                for (let i = 5; i < weeks.length; i++) {
+                    const extraWeek = weeks[i];
+                    for (let j = 0; j < 7; j++) {
+                        if (weeks[0][j] === 0 && extraWeek[j] !== 0) {
+                            weeks[0][j] = extraWeek[j];
+                        }
+                    }
+                }
+                weeks.splice(5); // Keep only the first 5 rows
+            }
+
+            return weeks;
+        }
+    </script>
+
+
+    <script>
+        const data = []
+        titleArray = ["January 一月", "February 二月 ", "March 三月", "April 四月", "May 五月", "June 六月", "July 七月", "August 八月", "September 九月", "October 十月", "November 十一月", "December 十二月"]
+        weekArray = ["Mon 星期一", "Tue 星期二", "Wed 星期三", "Thu 星期四", "Fri 星期五", "Sat 星期六", "Sun 星期天"]
+
+        let printYear = new Date().getFullYear();
+
+        // Function to get the 'js' parameter from the URL
+        function getScriptParam() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('year'); // Get the value of 'js' parameter
+        }
+
+        printYear = getScriptParam() || new Date().getFullYear();
+
+        document.getElementById("maintitle").innerHTML = printYear;
+
+        // Loop for 12 months
+        for (i = 0; i < 12; i++) {
+            //console.log(`Month ${i}`);
+            const weeks = getDaysInMonth(printYear, i + 1);
+            //console.log(weeks);
+            data[i] = {
+                title: titleArray[i],
+                subtitle: weekArray,
+                table: weeks
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const container = document.body;
+
+            data.forEach(item => {
+                const page = document.createElement('div');
+                page.className = 'page';
+
+                const table = document.createElement('table');
+
+                // Create header row
+                const headerRow = document.createElement('tr');
+                const headerCell = document.createElement('td');
+                headerCell.colSpan = 7;
+                headerCell.className = 'header-row';
+                headerCell.textContent = item.title + " " + printYear;
+                headerRow.appendChild(headerCell);
+                table.appendChild(headerRow);
+
+                // Create subtitle row and cell
+                const subHeaderRow = document.createElement('tr');
+                weekArray.forEach(cellData => {
+                    const subHeaderCell = document.createElement('td');
+                    subHeaderCell.className = 'subHeader-row';
+                    subHeaderCell.textContent = cellData;
+                    subHeaderRow.appendChild(subHeaderCell);
+                });
+                table.appendChild(subHeaderRow);
+
+
+                // Create table rows and cells
+                item.table.forEach(rowData => {
+                    const row = document.createElement('tr');
+                    rowData.forEach((cellData, cellIndex) => {
+                        const cell = document.createElement('td');
+                        if (cellIndex > 4) {
+                            cell.className = 'cell-row-weekend';
+                        } else {
+                            cell.className = 'cell-row';
+                        }
+
+                        if (cellData == "0") {
+                            cellData = "";
+                        }
+
+
+
+                        // Create the first <span> element
+                        const spanTopLeft = document.createElement('span');
+                        spanTopLeft.className = 'top-left';
+                        spanTopLeft.textContent = cellData;
+
+                        // Create the second <span> element
+                        // const spanBottomRight = document.createElement('span');
+                        // spanBottomRight.className = 'bottom-right';
+                        // spanBottomRight.textContent = cellData;
+
+                        cell.appendChild(spanTopLeft);
+                        // cell.appendChild(spanBottomRight);
+
+                        row.appendChild(cell);
+                    });
+                    table.appendChild(row);
+                });
+
+                page.appendChild(table);
+                container.appendChild(page);
+            });
+        });
+
+
+
+
+
+
+    </script>
+
+
+</head>
+
+<body>
+</body>
+
+</html>

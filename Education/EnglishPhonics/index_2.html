@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Input Data -->
+    <script src="../DataSource/englishPhonics.js"></script>
+    <script src="../DataSource/englishPhonicsCategory.js"></script>
+    <title>Education - English Phonics</title>
+    <style type="text/css">
+        body {
+            font-family: Arial, Tahoma, Roboto, "Droid Sans", "Helvetica Neue", "Droid Sans Fallback", "Microsoft YaHei", "Heiti SC", sans-self;
+        }
+
+        body {
+            background: #eaeaea;
+        }
+
+        .wrap {
+            margin: 0 auto;
+            width: 1000px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-top: 200px;
+        }
+
+        .logo img {
+            width: 350px;
+        }
+
+        .logo p {
+            color: #272727;
+            font-size: 40px;
+            margin-top: 1px;
+        }
+
+        .logo p span {
+            color: lightgreen;
+        }
+
+        .sub a {
+            color: #fff;
+            background: #272727;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 13px;
+            font-family: arial, serif;
+            font-weight: bold;
+            -webkit-border-radius: .5em;
+            -moz-border-radius: .5em;
+            -border-radius: .5em;
+        }
+
+        .footer {
+            color: black;
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+        }
+
+        .footer a {
+            color: rgb(114, 173, 38);
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            font-size: 30px;
+        }
+
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!---728x90--->
+    <div class="wrap">
+        <div class="logo">
+            <h1>English Phonics</h1>
+            <div id="mainContent"></div>
+        </div>
+    </div>
+
+</body>
+<script>
+    let inputJSON = mainData;
+    let inputJSONcategory = mainDataCategory;
+
+    let text = `<table class="center">
+    <tr>
+        <th rowspan="3">SN</th>
+        <th colspan="3">元音 Vowel (20)</th>
+        <th colspan="6">辅音 Consonant Sounds (28)</th>
+    </tr>`
+    let line2 = ""
+    let line3 = ""
+    for (var k = 0; k < inputJSONcategory.length; k++) {
+        line2 += `<th>${inputJSONcategory[k].title}</th>`
+        line3 += `<th>${inputJSONcategory[k].subtitle}</th>`
+    }
+    text += `<tr>${line2}</tr>`;
+    text += `<tr>${line3}</tr>`;
+
+    for (var i = 0; i < inputJSON.length; i++) {
+        let index = i + 1
+        let type = "paragraph" + i
+        text += `
+        <tr>
+            <td>${index}</td>`
+        for (var j = 0; j < inputJSONcategory.length; j++) {
+            if (inputJSON[i].sound[j] == "") {
+                text += `
+                <td></td>
+                `
+            } else {
+                text += `
+                <td><a style="text-decoration:none" href="./Phonics_Template.html?pageNo=${i}&wordNo=${j}" target="_blank">&nbsp;${inputJSON[i].sound[j]}&nbsp;</a></td>
+                `
+            }
+
+        }
+
+        text += `</tr>`
+    }
+
+    text += `
+</table>
+    `
+    document.getElementById("mainContent").innerHTML = text;
+</script>
+
+</html>

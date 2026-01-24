@@ -1,0 +1,97 @@
+body {
+  font-size: 1.5rem !important;
+}
+.card-content {
+  margin-top: 0.4em;
+  margin-bottom: 0.3em;
+}
+
+.card-line {
+  margin-bottom: 0.1em;
+  margin-top: 0.1em;
+}
+
+.card-line-para {
+  margin-bottom: 0.4em;
+  margin-top: 0.4em;
+  text-indent: 2em;
+}
+
+p.norm {
+  text-align: left;
+  margin-bottom: 0.5em;
+}
+
+p.mid-compact {
+  text-align: center;
+  margin-bottom: 0.1em;
+}
+
+p.preface {
+  text-align: left;
+  font-style: italic;
+}
+
+.cn-para-indent {
+  text-indent: 2em;
+}
+
+rt {
+  text-align: center;
+  color: #666;
+}
+
+.card-title {
+  padding-right: 0.5em;
+}
+
+.card-subtitle {
+  padding-right: 0.5em;
+}
+
+.card-title > ruby > rt {
+  min-width: 2.5em;
+  font-size: 0.5em;
+}
+
+.card-title > ruby > rt.symbol {
+  min-width: 1em;
+  width: 1em;
+  font-size: 0.5em;
+}
+
+.card-subtitle ruby > rt {
+  min-width: 2.8em;
+  font-size: 0.66em;
+}
+
+.card-subtitle ruby > rt.symbol {
+  width: 1.4em;
+  font-size: 0.66em;
+}
+
+.preface > ruby > rt {
+  min-width: 2.8em;
+  font-size: 0.66em;
+}
+
+.preface > ruby > rt.symbol {
+  min-width: 1.4em;
+  width: 1em;
+  font-size: 0.66em;
+}
+
+.py-content.norm {
+  line-height: 2.2em;
+}
+
+.py-content > ruby > rt {
+  min-width: 2.8em;
+  font-size: 0.66em;
+}
+
+.py-content > ruby > rt.symbol {
+  min-width: 1.4em;
+  width: 1em;
+  font-size: 0.66em;
+}

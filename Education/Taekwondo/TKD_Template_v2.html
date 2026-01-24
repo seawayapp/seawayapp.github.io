@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="maintitle"></title>
+    <style>
+        table {
+            width: 100%;
+            /* border-collapse: collapse; Remove spaces between borders */
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            font-size: 30px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* Set header row background color to grey */
+        th {
+            background-color: #A6A6A6;
+            color: white;
+        }
+
+        img {
+            width: 100px;
+            height: auto;
+            cursor: pointer;
+        }
+
+        /* Popup container - hidden by default */
+        .popup {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        /* Popup content */
+        .popup-content {
+            position: relative;
+            margin: auto;
+            padding: 10px;
+            max-width: 80%;
+            max-height: 80%;
+        }
+
+        .popup img {
+            width: 100%;
+            height: auto;
+        }
+
+        /* Close button */
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: #fff;
+            font-weight: bold;
+            font-size: 100px;
+            cursor: pointer;
+        }
+
+        /* Slider controls */
+        .prev,
+        .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            margin-top: -22px;
+            padding: 24px;
+            color: white;
+            font-weight: bold;
+            font-size: 100px;
+            transition: 0.6s ease;
+        }
+
+        .prev {
+            left: 0;
+        }
+
+        .next {
+            right: 0;
+        }
+
+        /* Description overlay */
+        .description-overlay {
+            position: absolute;
+            /* Positioned 10% from the top */
+            top: 5%;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 36px;
+        }
+
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2 class="center" id="header"></h2>
+    <div id="mainContent"></div>
+
+    <!-- The Popup -->
+    <div id="popup" class="popup">
+        <span class="close" onclick="closePopup()">&times;</span>
+        <div class="popup-content">
+            <img id="popup-img" src="">
+            <div id="description" class="description-overlay"></div>
+            <a class="prev" onclick="changeImage(-1)">&#10094;</a>
+            <a class="next" onclick="changeImage(1)">&#10095;</a>
+        </div>
+    </div>
+
+    <script>
+        mainData = []
+        intervalTiming = 3;
+        // console.log(JSON.stringify(mainData))
+        // Function to dynamically load JavaScript file
+        function loadScript(fileName) {
+            return new Promise(function (resolve, reject) {
+                const script = document.createElement('script');
+                script.src = "./data/" + fileName + ".js";
+                script.type = 'text/javascript';
+                script.onload = function () {
+                    // console.log(`${fileName} has been loaded successfully.`);
+                    resolve(); // Resolve the promise once the script is loaded
+                };
+                script.onerror = function () {
+                    reject(new Error(`Failed to load the script: ${fileName}`));
+                };
+                document.body.appendChild(script);
+            });
+        }
+        // Function to get the 'js' parameter from the URL
+        function getScriptParam() {
+            const urlParams = new URLSearchParams(window.location.search);
+            intervalTiming = urlParams.get('interval') || 3;
+            return urlParams.get('input'); // Get the value of 'js' parameter
+        }
+
+        // Load the JavaScript dynamically based on the URL parameter
+        window.onload = async function () {
+
+            const scriptFile = getScriptParam();
+            if (scriptFile) {
+                try {
+                    await loadScript(scriptFile); // Wait for the JS file to load
+                    // Log data from the dynamically loaded script after it's fully loaded
+                    if (typeof mainData !== 'undefined') {
+                        // console.log('Data from loaded script:', JSON.stringify(mainData));
+                        processData(mainData);
+                    } else {
+                        console.log('No data found in the loaded script.');
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            } else {
+                console.log('No JS file specified.');
+            }
+        }
+
+        function processData(mainDataInput) {
+            images = []
+            // console.log(`intervalTiming is ${intervalTiming} seconds`)
+            let inputJSON = mainDataInput; // Load data directly from the JS file
+
+            document.getElementById("maintitle").innerHTML = inputJSON.pattern;
+            document.getElementById("header").innerHTML = inputJSON.pattern + "<br>" + inputJSON.belt_color;
+
+            let text = `<table class="center">
+                <tr>
+                    <th>Step No.</th>
+                    <th>Description</th>
+                    <th>Image</th>
+                </tr>
+            `
+
+            for (var i = 0; i < inputJSON.steps.length; i++) {
+                let index = i + 1
+                text += `
+                    <tr>
+                        <td onclick="startSlideshow(${i})">${inputJSON.steps[i].step}</td>
+                        <td>${inputJSON.steps[i].description_en}<br>${inputJSON.steps[i].description_cn}</td>
+                        <td><img src="./images/${inputJSON.folder}/${inputJSON.steps[i].image}_small.png" onclick="openPopup(${i})"></td>
+                    </tr>
+                `
+                images.push(
+                    {
+                        "src": "./images/" + inputJSON.folder + "/" + inputJSON.steps[i].image + ".png",
+                        "description": inputJSON.steps[i].step + ". " + inputJSON.steps[i].description_en + " " + inputJSON.steps[i].description_cn
+                    }
+                )
+            }
+
+            text += `
+                </table>
+            `
+            document.getElementById("mainContent").innerHTML = text;
+
+        }
+
+
+
+    </script>
+
+    <script>
+
+        let currentIndex = 0;
+        let slideshowInterval;
+
+        function openPopup(index) {
+            document.getElementById("popup").style.display = "block";
+            currentIndex = index;
+            showImage();
+            // Add event listener for keyboard input
+            document.addEventListener('keydown', handleKeyboard);
+        }
+
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+            // Remove the event listener for keyboard input when popup is closed
+            document.removeEventListener('keydown', handleKeyboard);
+            clearInterval(slideshowInterval); // Stop the slideshow when popup is closed
+        }
+
+        function changeImage(direction) {
+            currentIndex += direction;
+            if (currentIndex < 0) {
+                currentIndex = images.length - 1;
+            } else if (currentIndex >= images.length) {
+                currentIndex = 0;
+            }
+            showImage();
+        }
+
+        function showImage() {
+            document.getElementById("popup-img").src = images[currentIndex].src;
+            document.getElementById("description").innerText = images[currentIndex].description;
+        }
+
+        // Function to handle keyboard events
+        function handleKeyboard(event) {
+            if (event.key === 'ArrowLeft') {
+                changeImage(-1);
+            } else if (event.key === 'ArrowRight') {
+                changeImage(1);
+            } else if (event.key === 'Escape') {
+                closePopup();
+            }
+        }
+
+
+        function startSlideshow(index) {
+            openPopup(index);
+            slideshowInterval = setInterval(() => {
+                changeImage(1); // Automatically go to the next image every 5 seconds
+            }, intervalTiming * 1000);
+        }
+    </script>
+
+</body>
+
+</html>

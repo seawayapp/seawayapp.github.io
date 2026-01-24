@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JSON / String</title>
+    <link rel=stylesheet href="pretty-print-json.css">
+    <style>
+
+        textarea {
+            max-width: none;
+            min-height: 100px;
+            font-family: monospace;
+            color: navy;
+            background-color: white;
+            padding: 10px 15px;
+            margin: 0px;
+        }
+
+        pre {
+            min-height: 150px;
+            width: 50%;
+            font-size: 0.9rem;
+            color: black;
+            background-color: white;
+            border: 5px solid silver;
+            padding: 5px 10px;
+            margin: 0px;
+            overflow: scroll;
+            transition: background-color 400ms;
+        }
+    </style>
+</head>
+<body>
+<textarea  style="width:50%" name="ta1" id="ta1" cols="50" rows="10"></textarea>
+
+
+
+<button id="JSONstringify" style="width:50%;display: block ; margin-top: 20px">JSON.stringify()</button>
+
+<button id="JSONparse" style="width:50%;display: block ; margin-top: 20px">JSON.parse</button>
+
+<button id="JSONformat" style="width:50%;display: block ; margin-top: 20px">JSON format</button>
+
+<textarea style="width:50%; margin-top: 20px" name="ta2" id="ta2" cols="50" rows="10"></textarea>
+
+<pre><div id="JSONformatRes" ></div></pre>
+
+<script src="jquery.3.5.1.min.js"></script>
+<script src="pretty-print-json.js"></script>
+
+<script>
+
+    $( "#JSONstringify" ).click(function() {
+        try {
+            const encodedStr=JSON.stringify($("#ta1").val())
+            console.log(encodedStr)
+            $("#ta2").val(encodedStr)
+            document.querySelector('#ta2').select()
+            document.execCommand("copy")
+        }
+        catch(e) {
+            $("#ta2").val('Invalid JSON').finish().fadeIn();
+        }
+    });
+
+    $( "#JSONparse" ).click(function() {
+        try {
+            const decodedStr=JSON.parse($("#ta1").val())
+            console.log(decodedStr)
+            $("#ta2").val(decodedStr)
+            document.querySelector('#ta2').select()
+            document.execCommand("copy")
+        }
+        catch(e) {
+            $("#ta2").val('Invalid JSON').finish().fadeIn();
+        }
+    });
+
+
+    
+    $( "#JSONformat" ).click(function() {
+        try {
+            const data = $("#ta1").val().trim().length ? JSON.parse($("#ta1").val()) : null;
+            const options = { indent: 4, quoteKeys: true };
+
+            const html = data ? prettyPrintJson.toHtml(data, options) : '[EMPTY]';
+            //console.log(html)
+            //$("#ta2").val(html)
+            document.querySelector('#ta2').select()
+            document.execCommand("copy")
+            $("#JSONformatRes").html(html)
+            
+        }
+        catch(e) {
+            $("#ta2").val('Invalid JSON').finish().fadeIn();
+        }
+    });
+
+
+</script>
+</body>
+</html>

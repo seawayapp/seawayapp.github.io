@@ -1,0 +1,17 @@
+[
+    {
+        "DisplayName":"英语48音标 - 元音 (20)",
+        "FileName":"EnglishStudy_Phonics_Vowel.json",
+        "ReleaseDate":"2024-08-23"
+    },
+    {
+        "DisplayName":"英语48音标 - 辅音 (28)",
+        "FileName":"EnglishStudy_Phonics_Consonant.json",
+        "ReleaseDate":"2024-08-23"
+    },    
+    {
+        "DisplayName":"初中英语单词",
+        "FileName":"EnglishStudy_Words_Secondary.json",
+        "ReleaseDate":"2024-08-23"
+    }
+]

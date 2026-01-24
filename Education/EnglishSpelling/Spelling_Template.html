@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="maintitlePage"></title>
+    <style>
+        :root {
+            --primary-color: #E25624;
+            --secondary-color: #1e2714;
+            --bg-color: #f9fdf0;
+            --border-color: #d4e6a3;
+            --text-color: #333;
+            --text-light: #666;
+            --text-lighter: #888;
+            --shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            padding: 20px;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .highlight-letter {
+            color: red;
+        }
+
+        /* Header Styles */
+        .lesson-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .lesson-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .lesson-subtitle {
+            font-size: 18px;
+            color: var(--text-light);
+        }
+
+        /* Word Card Styles */
+        .word-card {
+            position: relative;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 15px;
+            margin: 0 auto 20px;
+            max-width: 300px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .word-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-index,
+        .pronunciation-display {
+            position: absolute;
+            padding: 2px 8px;
+            background-color: var(--bg-color);
+            font-weight: bold;
+            border: 1px solid var(--border-color);
+            line-height: 1.2;
+        }
+
+        .card-index {
+            top: 0;
+            left: 0;
+            color: var(--secondary-color);
+            border-radius: 0 8px 0 4px;
+            font-size: 12px;
+        }
+
+        .pronunciation-display {
+            top: 0;
+            right: 0;
+            color: var(--primary-color);
+            border-radius: 8px 0 4px 0;
+            font-size: 11px;
+        }
+
+        .word {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin: 35px 0 10px;
+        }
+
+        .syllables-row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .syllable-card {
+            padding: 3px 8px;
+            border-radius: 4px;
+            text-align: center;
+            min-width: 40px;
+        }
+
+        .syllable {
+            display: block;
+            font-weight: bold;
+        }
+
+        .phonetic {
+            display: block;
+            font-size: 13px;
+        }
+
+        .full-phonetic {
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-light);
+            margin: 8px 0;
+            padding-top: 8px;
+            border-top: 1px dashed #eee;
+        }
+
+        .translation {
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-lighter);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: var(--text-lighter);
+        }
+
+        /* Modal Styles */
+        .word-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ffffff;
+            z-index: 1000;
+            overflow: auto;
+            padding: 20px;
+        }
+
+        .word-modal.active {
+            display: block;
+        }
+
+        .modal-tags {
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 5%;
+            pointer-events: none;
+        }
+
+        .modal-card-index,
+        .modal-pronunciation-display {
+            padding: 3px 12px;
+            background-color: var(--bg-color);
+            font-weight: bold;
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-card-index {
+            color: var(--secondary-color);
+            border-radius: 0 15px 15px 0;
+        }
+
+        .modal-pronunciation-display {
+            color: var(--primary-color);
+            border-radius: 15px 0 0 15px;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            margin: 60px auto 40px;
+            text-align: center;
+        }
+
+        .modal-word-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .modal-word {
+            font-size: 90px;
+            font-weight: bold;
+            margin: 0 20px;
+            flex-grow: 1;
+            color: var(--text-color);
+        }
+
+        .modal-syllables {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .modal-syllable-card {
+            padding: 10px 20px;
+            border-radius: 8px;
+            min-width: 80px;
+        }
+
+        .modal-syllable {
+            display: block;
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .modal-phonetic {
+            display: block;
+            text-align: center;
+            font-size: 20px;
+            margin-top: 5px;
+        }
+
+        .modal-full-phonetic {
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 28px;
+            text-align: center;
+            color: #666;
+            margin: 30px 0;
+            padding: 15px 0;
+            border-top: 2px dashed #eee;
+            border-bottom: 2px dashed #eee;
+        }
+
+        .modal-full-phonetic:hover {
+            color: var(--primary-color);
+            text-shadow: 0 0 2px rgba(226, 86, 36, 0.3);
+        }
+
+        .modal-translation {
+            font-size: 28px;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .modal-arrow {
+            background: none;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #555;
+            padding: 15px 25px;
+            transition: all 0.3s;
+        }
+
+        .modal-arrow:hover {
+            background: #f0f0f0;
+            color: #000;
+        }
+
+        .modal-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding: 0 10%;
+        }
+
+        /* Collocations & Sentences */
+        .modal-collocations {
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #f0f7ff;
+            border-radius: 8px;
+            border-left: 4px solid #197DC7;
+            max-width: 80%;
+            font-size: 18px;
+        }
+
+        .modal-collocation-item {
+            margin: 8px 0;
+            padding: 8px 5px;
+            font-size: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 30px;
+        }
+
+        .modal-sentences {
+            margin: 15px auto;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #6c757d;
+            max-width: 80%;
+            font-size: 26px;
+        }
+
+        .modal-word-image-container {
+            display: flex;
+            align-items: center;
+            /* 垂直居中 */
+            justify-content: center;
+            /* 水平居中 */
+            margin-bottom: 30px;
+            gap: 30px;
+            /* 图片和文字之间的间距 */
+        }
+
+        .modal-word-image {
+            width: 400px;
+            height: 400px;
+            object-fit: contain;
+            /* 保持比例，不拉伸 */
+            border-radius: 8px;
+            flex-shrink: 0;
+            /* 防止图片缩小 */
+        }
+
+        /* 图片占位符样式 */
+        .modal-word-image-placeholder {
+            width: 400px;
+            height: 400px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            flex-shrink: 0;
+        }
+
+        /* 单词信息区域样式 */
+        .modal-word-info {
+            flex-grow: 1;
+            /* 占据剩余空间 */
+            min-width: 200px;
+            /* 最小宽度 */
+        }
+
+        .sentence-en {
+            margin-bottom: 10px;
+            font-style: italic;
+            color: var(--text-color);
+        }
+
+        .sentence-zh {
+            color: var(--text-light);
+            padding-left: 25px;
+            border-left: 2px solid #ddd;
+        }
+
+        .sentence-en em,
+        .sentence-zh em {
+            color: var(--primary-color);
+            font-style: normal;
+            font-weight: bold;
+            text-shadow: 0 0 1px rgba(226, 86, 36, 0.3);
+        }
+
+        .close-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 36px;
+            cursor: pointer;
+            color: var(--text-lighter);
+            z-index: 1001;
+        }
+
+        .close-btn:hover {
+            color: var(--text-color);
+        }
+
+        /* Color Classes */
+        .color1 {
+            color: #E25624;
+            background-color: #FFF979;
+        }
+
+        .color2 {
+            color: #453667;
+            background-color: #F0EBFD;
+        }
+
+        .color3 {
+            color: #4D9D1D;
+            background-color: #EEF9EE;
+        }
+
+        .color4 {
+            color: #197DC7;
+            background-color: #CFF6FF;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-size: 18px;
+            color: var(--text-light);
+        }
+
+
+        /* Main page word card with image */
+        .word-card-with-image {
+            display: flex;
+            flex-direction: column;
+            max-width: 250px;
+            /* Adjust as needed */
+            margin-bottom: 20px;
+        }
+
+        /* Add/update these styles */
+        .word-image-container {
+            width: 200px;
+            margin: 15px auto 10px;
+            /* 上下边距，水平居中 */
+            position: relative;
+        }
+
+        .word-image {
+            width: 200px;
+            height: auto;
+            max-height: 200px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+            border-radius: 4px;
+        }
+
+        .word-image-placeholder {
+            width: 200px;
+            height: 200px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            border-radius: 4px;
+        }
+
+
+        /* Position index and pronunciation over the image */
+        .pronunciation-display {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 2px 8px;
+            background-color: var(--bg-color);
+            font-weight: bold;
+            border: 1px solid var(--border-color);
+            border-radius: 8px 0 0 8px;
+            font-size: 11px;
+            color: var(--primary-color);
+        }
+
+        .card-index {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 2px 8px;
+            background-color: var(--bg-color);
+            font-weight: bold;
+            border: 1px solid var(--border-color);
+            border-radius: 0 8px 8px 0;
+            font-size: 12px;
+            color: var(--secondary-color);
+            z-index: 2;
+            /* 确保显示在图片上方 */
+        }
+
+        .pronunciation-display {
+            top: 10px;
+            right: 10px;
+        }
+
+        /* Main container grid layout */
+        #wordCardsContainer {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            /* 4 columns by default */
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            /* Optional: limit max width */
+            margin: 0 auto;
+            /* Center the grid */
+        }
+
+        /* Word card styling */
+        .word-card {
+            position: relative;
+            /* 为绝对定位的子元素提供参照 */
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 15px;
+            margin: 0;
+            width: 100%;
+            /* 确保卡片填满网格单元格 */
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .word {
+            margin: 10px 0 5px;
+        }
+
+        .full-phonetic {
+            margin-bottom: 10px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            #wordCardsContainer {
+                grid-template-columns: repeat(3, 1fr);
+                /* 3 columns for medium screens */
+            }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .modal-word {
+                font-size: 32px;
+            }
+
+            .modal-syllable {
+                font-size: 22px;
+            }
+
+            .modal-phonetic {
+                font-size: 16px;
+            }
+
+            .modal-full-phonetic,
+            .modal-translation {
+                font-size: 22px;
+            }
+
+            .modal-arrow {
+                padding: 10px 20px;
+                font-size: 20px;
+            }
+
+            .modal-collocations,
+            .modal-sentences {
+                font-size: 16px;
+                padding: 10px;
+                margin: 15px auto;
+            }
+
+            .modal-collocation-item {
+                font-size: 16px;
+            }
+
+            .modal-card-index,
+            .modal-pronunciation-display {
+                font-size: 12px;
+                padding: 2px 8px;
+            }
+
+            .modal-content {
+                margin: 50px auto 30px;
+            }
+
+            #wordCardsContainer {
+                grid-template-columns: repeat(2, 1fr);
+                /* 2 columns for tablets */
+            }
+
+            .word-image-container {
+                height: 200px;
+                width: 200px;
+            }
+
+            .modal-word-image-container {
+                flex-direction: column;
+                /* 小屏幕下垂直排列 */
+                gap: 20px;
+            }
+
+            .modal-word-image,
+            .modal-word-image-placeholder {
+                width: 150px;
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #wordCardsContainer {
+                grid-template-columns: 1fr;
+                /* 1 column for mobile */
+            }
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #printContainer,
+            #printContainer * {
+                visibility: visible;
+            }
+
+            #printContainer {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+
+            .modal-nav,
+            .modal-word-container button,
+            .modal-tags,
+            .close-btn {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <button id="printPdfBtn" style="
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        z-index: 2000;
+        padding: 10px 20px;
+        background-color: #E25624;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    ">
+        Print PDF
+    </button> -->
+
+    <div id="printContainer" style="display: none;"></div>
+
+    <div class="lesson-header">
+        <h1 class="lesson-title" id="maintitle"></h1>
+        <p class="lesson-subtitle" id="subtitle"></p>
+    </div>
+
+    <div id="wordCardsContainer" class="loading">Loading vocabulary data...</div>
+
+    <footer class="footer">
+        咖啡先生的英语课
+    </footer>
+
+    <!-- Word Modal -->
+    <div class="word-modal" id="wordModal">
+        <button class="close-btn" aria-label="Close modal">×</button>
+        <div class="modal-content">
+            <div class="modal-tags">
+                <div class="modal-card-index" id="modalCardIndex">01</div>
+                <div class="modal-pronunciation-display" id="modalPronunciationDisplay"></div>
+            </div>
+
+            <!-- 新增导航按钮行 -->
+            <!-- <div class="modal-nav-top">
+                <button class="modal-arrow modal-word-prev" id="modalPrevWord" aria-label="Previous word">←</button>
+                <button class="modal-arrow modal-word-next" id="modalNextWord" aria-label="Next word">→</button>
+            </div> -->
+
+            <!-- 修改后的内容区域 -->
+
+            <div class="modal-word-container">
+                <button class="modal-arrow modal-word-prev" id="modalPrevWord">←</button>
+                <div class="modal-word" id="modalWord">Word</div>
+                <button class="modal-arrow modal-word-next" id="modalNextWord">→</button>
+            </div>
+
+            <div class="modal-word-image-container">
+                <img class="modal-word-image" id="modalWordImage">
+                <div class="fallback-modal modal-syllables" id="modalSyllables" style="display: none;"></div>
+            </div>
+
+        </div>
+
+        <div class="modal-full-phonetic" id="modalFullPhonetic">/phonetic/</div>
+        <div class="modal-translation" id="modalTranslation">Translation</div>
+
+        <div class="modal-collocations" id="modalCollocations"></div>
+
+        <div class="modal-sentences">
+            <div class="sentence-en">
+                <strong>Example: </strong>
+                <span id="modalSentenceEn"></span>
+            </div>
+            <div class="sentence-zh">
+                <span id="modalSentenceZh"></span>
+            </div>
+        </div>
+
+        <div class="modal-nav">
+            <button class="modal-arrow" id="prevWord" aria-label="Previous word">← </button>
+            <button class="modal-arrow" id="nextWord" aria-label="Next word"> →</button>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        // Global variables
+        const wordData = [];
+        const audioPlayer = new Audio();
+        let currentIndex = 0;
+
+        // DOM Elements
+        const elements = {
+            maintitlePage: document.getElementById('maintitlePage'),
+            mainTitle: document.getElementById('maintitle'),
+            subTitle: document.getElementById('subtitle'),
+            wordCardsContainer: document.getElementById('wordCardsContainer'),
+            wordModal: document.getElementById('wordModal'),
+            modalWord: document.getElementById('modalWord'),
+            modalWordImage: document.getElementById('modalWordImage'),
+            modalSyllables: document.getElementById('modalSyllables'),
+            modalFullPhonetic: document.getElementById('modalFullPhonetic'),
+            modalTranslation: document.getElementById('modalTranslation'),
+            modalCardIndex: document.getElementById('modalCardIndex'),
+            modalPronunciationDisplay: document.getElementById('modalPronunciationDisplay'),
+            modalCollocations: document.getElementById('modalCollocations'),
+            modalSentenceEn: document.getElementById('modalSentenceEn'),
+            modalSentenceZh: document.getElementById('modalSentenceZh'),
+            prevBtn: document.getElementById('prevWord'),
+            nextBtn: document.getElementById('nextWord'),
+            modalPrevBtn: document.getElementById('modalPrevWord'),
+            modalNextBtn: document.getElementById('modalNextWord'),
+            closeBtn: document.querySelector('.close-btn')
+        };
+
+        // Function to load script dynamically
+        function loadScript(fileName) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = fileName;
+                script.type = 'text/javascript';
+                script.onload = () => {
+                    if (typeof mainData !== 'undefined') {
+                        resolve(mainData);
+                    } else {
+                        reject(new Error('No data found in the loaded script.'));
+                    }
+                };
+                script.onerror = () => reject(new Error(`Failed to load script: ${fileName}`));
+                document.body.appendChild(script);
+            });
+        }
+
+        // Get script parameter from URL
+        function getScriptParam() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('input');
+        }
+
+        // Initialize application
+        async function init() {
+            try {
+                const scriptFile = getScriptParam();
+                if (!scriptFile) throw new Error('No JS file specified.');
+
+                const fileName = `./data/${scriptFile}.js`;
+                const mainData = await loadScript(fileName);
+                processData(mainData);
+            } catch (error) {
+                console.error('Initialization error:', error);
+                elements.wordCardsContainer.textContent = 'Error loading vocabulary data. Please try again later.';
+            }
+        }
+
+        // Process loaded data
+        function processData(mainDataInput) {
+            elements.maintitlePage.textContent = mainDataInput.title;
+            elements.mainTitle.textContent = mainDataInput.title;
+            elements.subTitle.textContent = mainDataInput.subtitle;
+
+            wordData.length = 0; // Clear array
+            wordData.push(...mainDataInput.wordData);
+
+            renderWordCards();
+            setupEventListeners();
+        }
+
+        // Render word cards
+        function renderWordCards() {
+            elements.wordCardsContainer.innerHTML = '';
+            elements.wordCardsContainer.classList.remove('loading');
+
+            wordData.forEach((word, index) => {
+                const card = document.createElement('article');
+                card.className = 'word-card';
+                card.dataset.index = index;
+                card.tabIndex = 0;
+                card.setAttribute('aria-label', `Word: ${word.word}, Translation: ${word.translation}`);
+
+                const indexStr = (index + 1).toString().padStart(2, '0');
+                const syllablesHTML = word.syllables.map(syllable => `
+                    <div class="syllable-card ${syllable.color}" aria-label="Syllable: ${syllable.syllable}, Phonetic: ${syllable.phonetic}">
+                        <span class="syllable">${syllable.syllable}</span>
+                        <span class="phonetic">${syllable.phonetic}</span>
+                    </div>
+                `).join('');
+
+                card.innerHTML = `
+                <div class="card-index">${indexStr}</div>    
+                <div class="word-image-container">
+                    <img src="./images/${word.image}" alt="${word.word}" class="word-image">
+                    <div class="fallback syllables-row" style="display: none;">${syllablesHTML}</div>
+                </div>
+
+                <h3 class="word">${word.word}</h3>
+                <div class="full-phonetic">${word.fullPhonetic}</div>
+                <div class="translation">${word.translation}</div>
+                `;
+
+                elements.wordCardsContainer.appendChild(card);
+
+                const img = card.querySelector('img.word-image');
+                const fallbackDiv = card.querySelector('.fallback');
+
+                img.onerror = function () {
+                    img.style.display = 'none';
+                    fallbackDiv.style.display = 'flex';
+                };
+            });
+
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Event delegation for word cards
+            elements.wordCardsContainer.addEventListener('click', (e) => {
+                const card = e.target.closest('.word-card');
+                if (card) {
+                    currentIndex = parseInt(card.dataset.index);
+                    showWordModal(currentIndex);
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+
+            // Keyboard navigation for cards
+            elements.wordCardsContainer.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && e.target.classList.contains('word-card')) {
+                    currentIndex = parseInt(e.target.dataset.index);
+                    showWordModal(currentIndex);
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+
+            // Modal navigation
+            elements.prevBtn.addEventListener('click', showPrevWord);
+            elements.nextBtn.addEventListener('click', showNextWord);
+            elements.modalPrevBtn.addEventListener('click', showPrevWord);
+            elements.modalNextBtn.addEventListener('click', showNextWord);
+            elements.closeBtn.addEventListener('click', closeModal);
+
+            // Click outside modal to close
+            // elements.wordModal.addEventListener('click', (e) => {
+            //     if (e.target === elements.wordModal) {
+            //         closeModal();
+            //     }
+            // });
+
+            // Keyboard navigation in modal
+            document.addEventListener('keydown', (e) => {
+                if (elements.wordModal.classList.contains('active')) {
+                    switch (e.key) {
+                        case 'ArrowLeft':
+                            showPrevWord();
+                            break;
+                        case 'ArrowRight':
+                            showNextWord();
+                            break;
+                        case 'Escape':
+                            closeModal();
+                            break;
+                    }
+                }
+            });
+
+            // Phonetic click to play audio
+            elements.modalFullPhonetic.addEventListener('click', () => {
+                playWordAudio(wordData[currentIndex].word);
+            });
+
+            elements.modalWord.addEventListener('click', () => {
+                playWordAudio(wordData[currentIndex].word);
+            });
+        }
+
+        // Show word modal
+        function showWordModal(index) {
+            const word = wordData[index];
+
+            // Update index and pronunciation tags
+            elements.modalCardIndex.textContent = (index + 1).toString().padStart(2, '0');
+
+            if (word.chinesePronunciation) {
+                elements.modalPronunciationDisplay.textContent = word.chinesePronunciation;
+                elements.modalPronunciationDisplay.style.display = 'block';
+            } else {
+                elements.modalPronunciationDisplay.style.display = 'none';
+            }
+
+            // Update main word content
+            const wordTemp = word.word;
+            const letterToHighlight = (word.highlight && word.highlight.letter) || '';
+
+            // 用正则匹配目标字母（不区分大小写）
+            const regex = new RegExp(letterToHighlight, 'gi');
+            const highlightedWord = wordTemp.replace(regex, match =>
+                `<span class="highlight-letter">${match}</span>`
+            );
+
+            elements.modalWord.innerHTML = highlightedWord;
+            if (word.image) {
+                elements.modalWordImage.src = "./images/" + word.image;
+            } else {
+                elements.modalWordImage.style.display = "none";
+                elements.modalSyllables.style.display = "flex";
+            }
+
+            elements.modalFullPhonetic.textContent = word.fullPhonetic;
+            elements.modalTranslation.textContent = word.translation;
+
+            // Update syllables
+            elements.modalSyllables.innerHTML = '';
+            word.syllables.forEach(syllable => {
+                const syllableCard = document.createElement('div');
+                syllableCard.className = `modal-syllable-card ${syllable.color}`;
+                syllableCard.innerHTML = `
+                    <span class="modal-syllable">${syllable.syllable}</span>
+                    <span class="modal-phonetic">${syllable.phonetic}</span>
+                `;
+                elements.modalSyllables.appendChild(syllableCard);
+            });
+
+            // Update collocations
+            if (word.CommonCollocation?.length > 0) {
+                elements.modalCollocations.style.display = 'block';
+                elements.modalCollocations.innerHTML = word.CommonCollocation
+                    .map(item => `<div class="modal-collocation-item">${item}</div>`)
+                    .join('');
+            } else {
+                elements.modalCollocations.style.display = 'none';
+            }
+
+            // Update example sentences
+            const sentencesContainer = document.querySelector('.modal-sentences');
+            if (word.sentences?.length > 0) {
+                sentencesContainer.style.display = 'block';
+                const enHighlighted = word.sentences[0].en.replace(
+                    new RegExp(`\\b${word.word}\\b`, 'gi'),
+                    '<em>$&</em>'
+                );
+                elements.modalSentenceEn.innerHTML = enHighlighted;
+                elements.modalSentenceZh.textContent = word.sentences[0].zh;
+            } else {
+                sentencesContainer.style.display = 'none';
+            }
+
+            elements.wordModal.classList.add('active');
+
+            const img_modal = elements.wordModal.querySelector('img.modal-word-image');
+            const fallbackDiv_modal = elements.wordModal.querySelector('.fallback-modal');
+
+            img_modal.onerror = function () {
+                img_modal.style.display = 'none';
+                fallbackDiv_modal.style.display = 'flex';
+            };
+
+            img_modal.onload = function () {
+                img_modal.style.display = 'block';
+                fallbackDiv_modal.style.display = 'flex';
+            };
+        }
+
+        // Navigation functions
+        function showPrevWord() {
+            currentIndex = (currentIndex - 1 + wordData.length) % wordData.length;
+            showWordModal(currentIndex);
+        }
+
+        function showNextWord() {
+            currentIndex = (currentIndex + 1) % wordData.length;
+            showWordModal(currentIndex);
+        }
+
+        // Play word audio
+        function playWordAudio(word) {
+            const cleanWord = word.toLowerCase().replace(/[^a-z]/g, '');
+            audioPlayer.src = `./audio/${cleanWord}.mp3`;
+
+            audioPlayer.play().catch(e => {
+                // console.error("Audio playback failed:", e);
+                console.warn("Local audio failed, falling back to Youdao audio...");
+                // Construct Youdao audio URL
+                const youdaoUrl = `https://dict.youdao.com/dictvoice?type=1&audio=${encodeURIComponent(cleanWord)}`;
+
+                // Create new Audio object for fallback
+                const fallbackAudio = new Audio(youdaoUrl);
+
+                // Optionally, handle if even Youdao audio fails
+                fallbackAudio.onerror = function () {
+                    console.error("Youdao audio also failed.");
+                };
+
+                fallbackAudio.play().catch(err => {
+                    console.error("Failed to play fallback audio:", err);
+                });
+
+                // if (window.speechSynthesis) {
+                //     const utterance = new SpeechSynthesisUtterance(word);
+                //     utterance.lang = 'en-US';
+                //     speechSynthesis.speak(utterance);
+                // }
+            });
+        }
+
+        // Close modal
+        function closeModal() {
+            elements.wordModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Initialize on load
+        window.addEventListener('load', init);
+
+        function generateModalContentHTML(word, index) {
+            const indexStr = (index + 1).toString().padStart(2, '0');
+
+            // 生成拼读部分的 HTML
+            const syllablesHTML = word.syllables.map(syllable => `
+        <div class="modal-syllable-card ${syllable.color}">
+            <span class="modal-syllable">${syllable.syllable}</span>
+            <span class="modal-phonetic">${syllable.phonetic}</span>
+        </div>
+    `).join('');
+
+            // 例句加粗单词
+            let sentenceEn = '';
+            let sentenceZh = '';
+            if (word.sentences?.length > 0) {
+                sentenceEn = word.sentences[0].en.replace(new RegExp(`\\b${word.word}\\b`, 'gi'), '<em>$&</em>');
+                sentenceZh = word.sentences[0].zh;
+            }
+
+            // 词组搭配
+            const collocationsHTML = (word.CommonCollocation?.length > 0) ? word.CommonCollocation
+                .map(item => `<div class="modal-collocation-item">${item}</div>`).join('') : '';
+
+            return `
+    <div class="word-modal active" style="display: block; position: relative; margin-bottom: 40px; page-break-after: always;">
+
+        <div class="modal-tags" style="position: relative; padding: 0 5%; margin-bottom: 10px;">
+            <div class="modal-card-index">${indexStr}</div>
+            <div class="modal-pronunciation-display" style="color: var(--primary-color); font-weight: bold;">
+                ${word.chinesePronunciation || ''}
+            </div>
+        </div>
+
+        <div class="modal-word-container" style="display: flex; justify-content: center; align-items: center; margin-bottom: 30px;">
+            <div class="modal-word" style="font-size: 90px; font-weight: bold; color: var(--text-color); margin: 0 20px; flex-grow: 1;">${word.word}</div>
+        </div>
+
+        <div class="modal-word-image-container" style="display: flex; justify-content: center; margin-bottom: 30px; gap: 30px;">
+            ${word.image ? `<img src="./images/${word.image}" class="modal-word-image" style="width:200px; height:200px; object-fit: contain; border-radius: 8px;">` : ''}
+        </div>
+
+        <div class="modal-syllables" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-bottom: 30px;">
+            ${syllablesHTML}
+        </div>
+
+        <div class="modal-full-phonetic" style="font-size: 28px; color: #666; margin: 30px 0; padding: 15px 0; border-top: 2px dashed #eee; border-bottom: 2px dashed #eee; text-align: center;">
+            ${word.fullPhonetic}
+        </div>
+
+        <div class="modal-translation" style="font-size: 28px; color: var(--text-light); margin-bottom: 40px; text-align: center;">
+            ${word.translation}
+        </div>
+
+        ${collocationsHTML ? `<div class="modal-collocations" style="margin: 20px auto; padding: 15px; background-color: #f0f7ff; border-radius: 8px; border-left: 4px solid #197DC7; max-width: 80%; font-size: 18px;">${collocationsHTML}</div>` : ''}
+
+        ${(sentenceEn && sentenceZh) ? `
+        <div class="modal-sentences" style="margin: 15px auto; padding: 15px; background-color: #f8f9fa; border-radius: 8px; border-left: 4px solid #6c757d; max-width: 80%; font-size: 26px;">
+            <div class="sentence-en" style="margin-bottom: 10px; font-style: italic; color: var(--text-color);">
+                <strong>Example: </strong> ${sentenceEn}
+            </div>
+            <div class="sentence-zh" style="color: var(--text-light); padding-left: 25px; border-left: 2px solid #ddd;">
+                ${sentenceZh}
+            </div>
+        </div>` : ''}
+    </div>
+    `;
+        }
+
+        const printBtn = document.getElementById("printPdfBtn");
+        const modal = document.getElementById("wordModal");
+
+        // printBtn.addEventListener("click", () => {
+        //     if (!wordData.length) return alert("数据未加载完毕");
+
+        //     const start = parseInt(prompt("请输入起始页码 (1 ~ " + wordData.length + "):", "1"));
+        //     const end = parseInt(prompt("请输入结束页码 (最大 " + wordData.length + "):", wordData.length.toString()));
+
+        //     if (isNaN(start) || isNaN(end) || start < 1 || end > wordData.length || start > end) {
+        //         alert("页码输入无效");
+        //         return;
+        //     }
+
+        //     const container = document.getElementById("printContainer");
+        //     container.innerHTML = ''; // 清空
+        //     container.style.display = 'block';
+
+        //     for (let i = start - 1; i < end; i++) {
+        //         container.innerHTML += generateModalContentHTML(wordData[i], i);
+        //     }
+
+        //     window.print();
+
+        //     setTimeout(() => {
+        //         container.innerHTML = '';
+        //         container.style.display = 'none';
+        //     }, 1000);
+        // });
+
+    </script>
+</body>
+
+</html>

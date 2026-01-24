@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Input Data -->
+    <script src="./data/A_index_Reading_Notes.js"></script>
+    <title>Reading Notes</title>
+    <style type="text/css">
+        body {
+            font-family: 'Book Antiqua';
+        }
+
+        body {
+            background: #eaeaea;
+        }
+
+        .wrap {
+            margin: 0 auto;
+            width: 1000px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-top: 200px;
+        }
+
+        .logo img {
+            width: 350px;
+        }
+
+        .logo p {
+            color: #272727;
+            font-size: 40px;
+            margin-top: 1px;
+        }
+
+        .logo p span {
+            color: lightgreen;
+        }
+
+        .sub a {
+            color: #fff;
+            background: #272727;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 13px;
+            font-family: arial, serif;
+            font-weight: bold;
+            -webkit-border-radius: .5em;
+            -moz-border-radius: .5em;
+            -border-radius: .5em;
+        }
+
+        .footer {
+            color: black;
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+        }
+
+        .footer a {
+            color: rgb(114, 173, 38);
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            font-size: 30px;
+        }
+
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!---728x90--->
+    <div class="wrap">
+        <div class="logo">
+            <h1>Reading Notes 读书笔记</h1>
+            <div id="mainContent"></div>
+        </div>
+    </div>
+
+</body>
+<script>
+    let inputJSON = mainData;
+
+    let text = `    <table>
+    <tr>
+        <th>Lesson</th>
+        <th>Title</th>
+        <th></th>
+        <th>Lesson</th>
+        <th>Title</th>
+    </tr>`;
+    let rows = Math.ceil(inputJSON.length / 2)
+    console.log(`rows is ${rows}`)
+    for (var i = 0; i < rows; i++) {
+        let i1 = i * 2
+        let index1 = i * 2 + 1
+        let i2 = i * 2 + 1
+        let index2 = i * 2 + 2
+        let type = "paragraph" + i
+
+        if (inputJSON[i1].category == "file") {
+            text += `
+                <tr>
+                    <td>${index1}</td>
+                    <td><a href="./NewConcept_Template.html?input=${inputJSON[i1].filename}" target="_blank">&nbsp;${inputJSON[i1].title}&nbsp;&nbsp;${inputJSON[i1].subtitle}&nbsp;</a></td>
+                    <td></td>    
+            `
+        }
+
+        if (inputJSON[i1].category == "file_slide") {
+            text += `
+                <tr>
+                    <td>${index1}</td>
+                    <td><a href="./template_textslide.html?input=${inputJSON[i1].filename}" target="_blank">&nbsp;${inputJSON[i1].title}&nbsp;&nbsp;${inputJSON[i1].subtitle}&nbsp;</a></td>
+                    <td></td>    
+            `
+        }
+
+
+        if (inputJSON[i2]) {
+
+            if (inputJSON[i2].category == "file") {
+                text += `
+                <td>${index2}</td>    
+                <td><a href="./NewConcept_Template.html?&input=${inputJSON[i2].filename}" target="_blank">&nbsp;${inputJSON[i2].title}&nbsp;&nbsp;${inputJSON[i2].subtitle}&nbsp;</a></td>
+                `
+            }
+
+            if (inputJSON[i2].category == "file_slide") {
+                text += `
+                <td>${index2}</td>    
+                <td><a href="./template_textslide.html?&input=${inputJSON[i2].filename}" target="_blank">&nbsp;${inputJSON[i2].title}&nbsp;&nbsp;${inputJSON[i2].subtitle}&nbsp;</a></td>
+                `
+            }
+
+            if (inputJSON[i2].category == "folder") {
+                text += `
+                <td>${index2}</td>
+                <td><a href="./${inputJSON[i2].filename}" target="_blank">&nbsp;${inputJSON[i2].title}&nbsp;&nbsp;${inputJSON[i2].subtitle}&nbsp;</a></td>
+                `
+            }
+        } else {
+            text += `
+                <td></td>
+                <td></td>
+            `
+        }
+        text += `
+            </tr>`
+    }
+
+    text += `
+        </table>
+    `
+    document.getElementById("mainContent").innerHTML = text;
+</script>
+
+
+<div style="text-align: center;margin-top: 40px"> 咖啡先生的英语课<br>Last updated on 31/07/2025</div>
+
+</html>
