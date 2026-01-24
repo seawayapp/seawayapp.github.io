@@ -1,9 +1,9 @@
-# testing-ui
+# Objective
 
-> Personal Project for testing frontend UI look and feel
+> Personal Project for Education
 
 ## Access Home Page
 
-``` bash
-Fire up a browser and go to https://siweihuang.github.io
+```bash
+Fire up a browser and go to https://seawayapp.github.io
 ```
