@@ -1,6 +1,6 @@
 var mainData = {
   title: "English Spelling 2026",
-  subtitle: "P1 Unit 1",
+  subtitle: "P2 Unit 1",
   wordData: [
     {
       word: "dish",
