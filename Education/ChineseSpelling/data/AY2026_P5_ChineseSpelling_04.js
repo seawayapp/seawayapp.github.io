@@ -1,0 +1,75 @@
+const mainData = [
+  {
+    category: "华文听写 2026",
+    title: "第四课，分享是快乐的 (HSH)",
+    subtitle: "第四课",
+    testdate: "",
+    group: [
+      "识写字词",
+      "识写字词",
+      "识写字词",
+      "识写字词",
+      "识写字词",
+      "识写字词",
+
+      "词语搭配",
+      "词语搭配",
+      "词语搭配",
+      "词语搭配",
+      "词语搭配",
+      "词语搭配",
+      "词语搭配",
+      "词语搭配",
+      "句式",
+      "句式",
+      "好句子",
+      "好句子",
+      "默写"
+    ],
+    sentences: [
+      "肉类，必须",
+      "存放，果汁",
+      "饼干，自私",
+      "敲门，烧水",
+      "奇怪",
+      "一溜烟，宁静",
+
+      "查看包装",
+      "新鲜食品",
+      "纷纷围观",
+      "幸福快乐",
+      "捐出食物",
+      "味道鲜美",
+      "争相邀请",
+      "心情愉快",
+
+      "要是在汤里加上一些玉米，汤就会更甜。",
+      "要是他知道了这件事，一定会生气。",
+
+      "在好奇心的驱使下，我悄悄地跟在他后面，想要看个究竟。",
+      "在老师的带领下，同学们都跑得气喘吁吁，筋疲力尽。",
+      "小明和大华见了，吓得心扑通扑通地快速跳着，手心冒汗，急得像热锅上的蚂蚁。他们心里想：啊，我们闯祸了！看着地上的碎片，他们的脑海中不禁出现了黄老师那张愤怒的脸。"
+    ],
+    pronunciation: [
+      "ròu lèi ， bì xū",
+      "cún fàng ， guǒ zhī",
+      "bǐng gān ， zì sī",
+      "qiāo mén ， shāo shuǐ",
+      "qí guài",
+      "yì liū yān ， níng jìng",
+      "chá kàn bāo zhuāng",
+      "xīn xiān shí pǐn",
+      "fēn fēn wéi guān",
+      "xìng fú kuài lè",
+      "juān chū shí wù",
+      "wèi dào xiān měi",
+      "zhēng xiāng yāo qǐng",
+      "xīn qíng yú kuài",
+      "yào shi zài tāng lǐ jiā shàng yì xiē yù mǐ ， tāng jiù huì gèng tián 。",
+      "yào shi tā zhī dào le zhè jiàn shì ， yí dìng huì shēng qì 。",
+      "zài hǎo qí xīn de qū shǐ xià ， wǒ qiāo qiāo dì gēn zài tā hòu miàn ， xiǎng yào kàn gè jiū jìng 。",
+      "zài lǎo shī de dài lǐng xià ， tóng xué men dōu pǎo dé qì chuǎn xū xū ， jīn pí lì jìn 。",
+      "xiǎo míng hé dà huá jiàn le ， xià dé xīn pū tōng pū tōng dì kuài sù tiào zhe ， shǒu xīn mào hàn ， jí dé xiàng rè guō shàng de mǎ yǐ 。 tā men xīn lǐ xiǎng ： a ， wǒ men chuǎng huò le ！ kàn zhe dì shàng de suì piàn ， tā men de nǎo hǎi zhōng bù jīn chū xiàn le huáng lǎo shī nà zhāng fèn nù de liǎn 。"
+    ]
+  }
+];

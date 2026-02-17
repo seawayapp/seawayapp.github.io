@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>五年级华文第一课：全能复习版</title>
+    <style>
+        :root { --blue: #3498db; --green: #2ecc71; --purple: #9b59b6; --red: #e74c3c; --orange: #f39c12; --bg: #f4f7f6; }
+        body { font-family: "KaiTi", "STKaiti", "楷体", serif; background: var(--bg); padding: 15px; color: #2c3e50; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: var(--blue); border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .section { margin-bottom: 25px; padding: 15px; border-radius: 12px; border: 1px solid #e0e0e0; }
+        .section-title { font-weight: bold; color: white; padding: 6px 15px; border-radius: 5px; margin-bottom: 15px; display: inline-block; }
+        
+        /* 拼音样式 */
+        ruby { ruby-align: center; }
+        rt { font-family: Arial; font-size: 0.8rem; color: #888; padding-bottom: 2px; }
+        
+        /* 卡片网格 */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+        .card { background: #fff; border: 1px solid #ddd; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer; }
+        .card:hover { border-color: var(--blue); background: #fafafa; }
+        
+        /* 隐藏汉字用于自测 */
+        .chars { font-size: 1.4rem; opacity: 0; transition: opacity 0.3s; }
+        .show .chars { opacity: 1; }
+        
+        /* 句子盒子 */
+        .sentence-box { background: #fffdf9; border-left: 5px solid var(--orange); padding: 15px; border-radius: 5px; cursor: pointer; margin-bottom: 10px; line-height: 3; }
+        .sentence-text { font-size: 1.4rem; }
+        
+        .btn-box { text-align: center; margin-bottom: 20px; }
+        button { padding: 8px 20px; border-radius: 20px; border: none; background: var(--blue); color: white; cursor: pointer; font-size: 1rem; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>第一课《到户外去》复习宝典</h1>
+    <div class="btn-box"><button onclick="resetAll()">隐藏汉字 / 重新开始自测</button></div>
+
+    <div class="section">
+        <div class="section-title" style="background: var(--blue);">一、识读词语 (32个)</div>
+        <div id="readGrid" class="grid"></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title" style="background: var(--green);">二、识写字词 (10个)</div>
+        <div id="writeGrid" class="grid"></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title" style="background: var(--purple);">三、词语搭配 (8组)</div>
+        <div id="collabGrid" class="grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));"></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title" style="background: var(--orange);">四、好句子 & 默写</div>
+        <div class="sentence-box" onclick="cleanSpeak(this)">
+            <p><strong>好句子 1：</strong></p>
+            <span class="sentence-text">
+                <ruby>妈<rt>mā</rt></ruby><ruby>妈<rt>mā</rt></ruby><ruby>一<rt>yì</rt></ruby><ruby>听<rt>tīng</rt></ruby>，<ruby>顿<rt>dùn</rt></ruby><ruby>时<rt>shí</rt></ruby><ruby>气<rt>qì</rt></ruby><ruby>得<rt>de</rt></ruby><ruby>眼<rt>yǎn</rt></ruby><ruby>睛<rt>jing</rt></ruby><ruby>鼓<rt>gǔ</rt></ruby><ruby>得<rt>de</rt></ruby><ruby>大<rt>dà</rt></ruby><ruby>大<rt>dà</rt></ruby><ruby>的<rt>de</rt></ruby>，<ruby>好<rt>hǎo</rt></ruby><ruby>像<rt>xiàng</rt></ruby><ruby>一<rt>yì</rt></ruby><ruby>团<rt>tuán</rt></ruby><ruby>怒<rt>nù</rt></ruby><ruby>火<rt>huǒ</rt></ruby><ruby>就<rt>jiù</rt></ruby><ruby>要<rt>yào</rt></ruby><ruby>喷<rt>pēn</rt></ruby><ruby>发<rt>fā</rt></ruby><ruby>出<rt>chū</rt></ruby><ruby>来<rt>lái</rt></ruby><ruby>似<rt>sì</rt></ruby><ruby>极<rt>de</rt></ruby>。
+            </span>
+        </div>
+        <div class="sentence-box" style="border-left-color: var(--red);" onclick="cleanSpeak(this)">
+            <p><strong>默写挑战：</strong></p>
+            <span class="sentence-text">
+                <ruby>她<rt>tā</rt></ruby><ruby>吓<rt>xià</rt></ruby><ruby>得<rt>de</rt></ruby><ruby>目<rt>mù</rt></ruby><ruby>瞪<rt>dèng</rt></ruby><ruby>口<rt>kǒu</rt></ruby><ruby>呆<rt>dāi</rt></ruby>，<ruby>不<rt>bù</rt></ruby><ruby>知<rt>zhī</rt></ruby><ruby>所<rt>suǒ</rt></ruby><ruby>措<rt>cuò</rt></ruby>，<ruby>心<rt>xīn</rt></ruby><ruby>想<rt>xiǎng</rt></ruby>：<ruby>这<rt>zhè</rt></ruby><ruby>么<rt>me</rt></ruby><ruby>晚<rt>wǎn</rt></ruby><ruby>了<rt>le</rt></ruby>，<ruby>小<rt>xiǎo</rt></ruby><ruby>文<rt>wén</rt></ruby><ruby>会<rt>huì</rt></ruby><ruby>去<rt>qù</rt></ruby><ruby>哪<rt>nǎ</rt></ruby><ruby>里<rt>lǐ</rt></ruby><ruby>呢<rt>ne</rt></ruby>？<ruby>不<rt>bú</rt></ruby><ruby>会<rt>huì</rt></ruby><ruby>出<rt>chū</rt></ruby><ruby>什<rt>shén</rt></ruby><ruby>么<rt>me</rt></ruby><ruby>事<rt>shì</rt></ruby><ruby>吧<rt>ba</rt></ruby>！
+            </span>
+        </div>
+    </div>
+</div>
+
+<script>
+    const data = {
+        read: [
+            ["安排","ān pái"],["营火会","yíng huǒ huì"],["攀岩","pān yán"],["物品清单","wù pǐn qīng dān"],
+            ["卫生用品","wèi shēng yòng pǐn"],["内衣","nèi yī"],["内裤","nèi kù"],["睡袋","shuì dài"],
+            ["手电筒","shǒu diàn tǒng"],["事项","shì xiàng"],["期间","qī jiān"],["禁止","jìn zhǐ"],
+            ["保管","bǎo guǎn"],["竞赛","jìng sài"],["同伴","tóng bàn"],["结结实实","jié jié shí shí"],
+            ["齐心协力","qí xīn xié lì"],["住处","zhù chù"],["饭盒","fàn hé"],["不管三七二十一","bù guǎn sān qī èr shí yī"],
+            ["精光","jīng guāng"],["红烧排骨","hóng shāo pái gǔ"],["一望无际","yī wàng wú jì"],["清凉","qīng liáng"],
+            ["迎面","yíng miàn"],["椰树","yé shù"],["黄昏","huáng hūn"],["景色","jǐng sè"]
+        ],
+        write: [
+            ["露营","lù yíng"],["集合","jí hé"],["袜子","wà zi"],["绑","bǎng"],["摔","shuāi"],
+            ["轮到","lún dào"],["擦脸","cā liǎn"],["狼吞虎咽","láng tūn hǔ yàn"],["这顿饭","zhè dùn fàn"],["感到","gǎn dào"]
+        ],
+        collab: [
+            ["野外探险","yě wài tàn xiǎn"],["打扫营地","dǎ sǎo yíng dì"],["防蚊用品","fáng wén yòng pǐn"],
+            ["防止意外","fáng zhǐ yì wài"],["单独行动","dān dú xíng dòng"],["贵重物品","guì zhòng wù pǐn"],
+            ["互相配合","hù xiāng pèi hé"],["得到冠军","dé dào guàn jūn"]
+        ]
+    };
+
+    function cleanSpeak(element) {
+        window.speechSynthesis.cancel();
+        // 克隆节点并移除所有rt标签，确保只读汉字
+        let clone = element.cloneNode(true);
+        clone.querySelectorAll('rt').forEach(rt => rt.remove());
+        let pureText = clone.textContent.replace(/好句子\s\d：|默写挑战：/g, "").trim();
+        
+        const msg = new SpeechSynthesisUtterance(pureText);
+        msg.lang = 'zh-CN';
+        msg.rate = 0.8;
+        window.speechSynthesis.speak(msg);
+    }
+
+    function resetAll() { document.querySelectorAll('.card').forEach(el => el.classList.remove('show')); }
+
+    function renderGrid(list, targetId) {
+        const container = document.getElementById(targetId);
+        list.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.onclick = function() { this.classList.add('show'); cleanSpeak(this); };
+            
+            let rubyHtml = "";
+            let pinyinArr = item[1].split(' ');
+            for(let i=0; i<item[0].length; i++) {
+                rubyHtml += `<ruby>${item[0][i]}<rt>${pinyinArr[i]||''}</rt></ruby>`;
+            }
+            card.innerHTML = `<span class="chars">${rubyHtml}</span>`;
+            container.appendChild(card);
+        });
+    }
+
+    window.onload = function() {
+        renderGrid(data.read, 'readGrid');
+        renderGrid(data.write, 'writeGrid');
+        renderGrid(data.collab, 'collabGrid');
+    };
+</script>
+
+</body>
+</html>

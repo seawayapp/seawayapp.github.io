@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>五年级华文第二课：纯净语音复习版</title>
+    <style>
+        :root { --blue: #3498db; --green: #2ecc71; --purple: #9b59b6; --red: #e74c3c; --orange: #f39c12; --bg: #fdfaf5; }
+        body { font-family: "KaiTi", "STKaiti", "楷体", serif; background: var(--bg); padding: 15px; color: #2c3e50; line-height: 1.5; }
+        .container { max-width: 950px; margin: auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: var(--blue); margin-bottom: 20px; font-size: 1.8rem; border-bottom: 2px dashed #eee; padding-bottom: 10px; }
+        .section { margin-bottom: 30px; padding: 20px; border-radius: 15px; border: 2px solid #f0ece2; background: #fff; }
+        .section-title { font-weight: bold; color: white; display: inline-block; padding: 6px 15px; border-radius: 8px; margin-bottom: 20px; font-size: 1.1rem; }
+        
+        ruby { ruby-align: center; }
+        rt { font-family: Arial, sans-serif; font-size: 0.85rem; color: #7f8c8d; padding-bottom: 3px; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+        .card { background: #fff; border: 1px solid #e0e0e0; padding: 12px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.2s; box-shadow: 2px 2px 0px #eee; }
+        .card:hover { border-color: var(--blue); background: #fdfdfd; }
+        
+        .chars { font-size: 1.45rem; opacity: 0; transition: opacity 0.3s; }
+        .show .chars { opacity: 1; }
+        
+        .sentence-box { background: #fff9f0; border-left: 6px solid var(--orange); padding: 15px; border-radius: 8px; cursor: pointer; margin-bottom: 15px; line-height: 3.5; }
+        .sentence-text { font-size: 1.5rem; display: block; }
+        
+        .btn-box { text-align: center; margin-bottom: 25px; }
+        button { padding: 10px 25px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; background: var(--blue); color: white; font-family: "KaiTi"; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📚 第二课《身体会说话》纯净语音版</h1>
+    <div class="btn-box"><button onclick="resetAll()">隐藏全部汉字 / 重新开始</button></div>
+
+    <div class="section">
+        <div class="section-title" style="background: var(--blue);">一、识读词语 (24项)</div>
+        <div id="readGrid" class="grid"></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title" style="background: var(--green);">二、识写字词 (8项)</div>
+        <div id="writeGrid" class="grid"></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title" style="background: var(--purple);">三、词语搭配 (9组)</div>
+        <div id="collabGrid" class="grid" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));"></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title" style="background: var(--orange);">四、好句子欣赏</div>
+        <div class="sentence-box" onclick="cleanSpeak(this)">
+            <span class="sentence-text">
+                <ruby>我<rt>wǒ</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>心<rt>xīn</rt></ruby><ruby>忐<rt>tǎn</rt></ruby><ruby>忑<rt>tè</rt></ruby><ruby>不<rt>bù</rt></ruby><ruby>安<rt>ān</rt></ruby>，<ruby>就<rt>jiù</rt></ruby><ruby>像<rt>xiàng</rt></ruby><ruby>十<rt>shí</rt></ruby><ruby>五<rt>wǔ</rt></ruby><ruby>个<rt>gè</rt></ruby><ruby>吊<rt>diào</rt></ruby><ruby>桶<rt>tǒng</rt></ruby><ruby>打<rt>dǎ</rt></ruby><ruby>水<rt>shuǐ</rt></ruby>——<ruby>七<rt>qī</rt></ruby><ruby>上<rt>shàng</rt></ruby><ruby>八<rt>bā</rt></ruby><ruby>下<rt>xià</rt></ruby>。
+            </span>
+        </div>
+        <div class="sentence-box" onclick="cleanSpeak(this)">
+            <span class="sentence-text">
+                <ruby>我<rt>wǒ</rt></ruby><ruby>吓<rt>xià</rt></ruby><ruby>得<rt>de</rt></ruby><ruby>冷<rt>lěng</rt></ruby><ruby>汗<rt>hàn</rt></ruby><ruby>直<rt>zhí</rt></ruby><ruby>流<rt>liú</rt></ruby>，<ruby>手<rt>shǒu</rt></ruby><ruby>脚<rt>jiǎo</rt></ruby><ruby>发<rt>fā</rt></ruby><ruby>软<rt>ruǎn</rt></ruby>，<ruby>不<rt>bù</rt></ruby><ruby>敢<rt>gǎn</rt></ruby><ruby>直<rt>zhí</rt></ruby><ruby>视<rt>shì</rt></ruby><ruby>妈<rt>mā</rt></ruby><ruby>妈<rt>mā</rt></ruby><ruby>喷<rt>pēn</rt></ruby><ruby>火<rt>huǒ</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>双<rt>shuāng</rt></ruby><ruby>眼<rt>yǎn</rt></ruby>。
+            </span>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title" style="background: var(--red);">五、重点段落挑战</div>
+        <div class="sentence-box" style="border-left-color:var(--red); background:#fff5f5" onclick="cleanSpeak(this)">
+            <span class="sentence-text">
+                <ruby>当<rt>dāng</rt></ruby><ruby>老<rt>lǎo</rt></ruby><ruby>师<rt>shī</rt></ruby><ruby>叫<rt>jiào</rt></ruby><ruby>到<rt>dào</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>名<rt>míng</rt></ruby><ruby>字<rt>zi</rt></ruby><ruby>时<rt>shí</rt></ruby>，<ruby>我<rt>wǒ</rt></ruby><ruby>战<rt>zhàn</rt></ruby><ruby>战<rt>zhàn</rt></ruby><ruby>兢<rt>jīng</rt></ruby><ruby>兢<rt>jīng</rt></ruby><ruby>地<rt>de</rt></ruby><ruby>走<rt>zǒu</rt></ruby><ruby>上<rt>shàng</rt></ruby><ruby>前<rt>qián</rt></ruby><ruby>去<rt>qù</rt></ruby>，<ruby>从<rt>cóng</rt></ruby><ruby>老<rt>lǎo</rt></ruby><ruby>师<rt>shī</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>手<rt>shǒu</rt></ruby><ruby>中<rt>zhōng</rt></ruby><ruby>接<rt>jiē</rt></ruby><ruby>过<rt>guò</rt></ruby><ruby>卷<rt>juàn</rt></ruby><ruby>子<rt>zi</rt></ruby>。<ruby>我<rt>wǒ</rt></ruby><ruby>看<rt>kàn</rt></ruby><ruby>了<rt>le</rt></ruby><ruby>一<rt>yì</rt></ruby><ruby>眼<rt>yǎn</rt></ruby><ruby>分<rt>fēn</rt></ruby><ruby>数<rt>shù</rt></ruby>，“<ruby>不<rt>bú</rt></ruby><ruby>是<rt>shì</rt></ruby><ruby>吧<rt>ba</rt></ruby>！<ruby>才<rt>cái</rt></ruby><ruby>三<rt>sān</rt></ruby><ruby>十<rt>shí</rt></ruby><ruby>分<rt>fèn</rt></ruby>！”<ruby>我<rt>wǒ</rt></ruby><ruby>大<rt>dà</rt></ruby><ruby>吃<rt>chī</rt></ruby><ruby>一<rt>yì</rt></ruby><ruby>惊<rt>jīng</rt></ruby>，<ruby>几<rt>jǐ</rt></ruby><ruby>乎<rt>hū</rt></ruby><ruby>不<rt>bù</rt></ruby><ruby>敢<rt>gǎn</rt></ruby><ruby>相<rt>xiāng</rt></ruby><ruby>信<rt>xìn</rt></ruby><ruby>自<rt>zì</rt></ruby><ruby>己<rt>jǐ</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>眼<rt>yǎn</rt></ruby><ruby>睛<rt>jing</rt></ruby>。
+            </span>
+        </div>
+    </div>
+</div>
+
+<script>
+    const data = {
+        read: [
+            ["测试","cè shì"],["正确","zhèng què"],["号码","hào mǎ"],["填写","tián xiě"],["格子","gé zi"],["强烈","qiáng liè"],["明亮","míng liàng"],["用心","yòng xīn"],["每隔半小时","měi gé bàn xiǎo shí"],["惨","cǎn"],["目不转睛","mù bù zhuǎn jīng"],["无精打采","wú jīng dǎ cǎi"],["头疼","tóu téng"],["咳嗽","ké sou"],["诊所","zhěn suǒ"],["常客","cháng kè"],["模糊","mó hu"],["变瞎","biàn xiā"],["痛苦","tòng kǔ"]
+        ],
+        write: [
+            ["答案","dá àn"],["代表","dài biǎo"],["昏暗","hūn àn"],["平板电脑","píng bǎn diàn nǎo"],["而且","ér qiě"],["放松","fàng sōng"],["伤害","shāng hài"],["习惯","xí guàn"]
+        ],
+        collab: [
+            ["保持距离","bǎo chí jù lí"],["定期检查","dìng qī jiǎn chá"],["户外活动","hù wài huó dòng"],["光线充足","guāng xiàn chōng zú"],["迷上游戏","mí shàng yóu xì"],["盯着屏幕","dīng zhe píng mù"],["视力下降","shì lì xià jiàng"],["抛到脑后","pāo dào nǎo hòu"],["眼圈发黑","yǎn quān fā hēi"]
+        ]
+    };
+
+    // 核心修正：只提取纯文本汉字，不读RT标签里的拼音
+    function cleanSpeak(element) {
+        window.speechSynthesis.cancel();
+        // 这里的innerText在某些浏览器会包含rt，改用textContent并手动过滤
+        let text = element.innerText || element.textContent;
+        // 如果是ruby结构，拼音通常在汉字后面，我们通过正则表达式或直接取汉字
+        // 更稳妥的方法：克隆节点并移除所有rt标签
+        let clone = element.cloneNode(true);
+        clone.querySelectorAll('rt').forEach(rt => rt.remove());
+        let pureText = clone.textContent.trim();
+        
+        const msg = new SpeechSynthesisUtterance(pureText);
+        msg.lang = 'zh-CN';
+        msg.rate = 0.85; 
+        window.speechSynthesis.speak(msg);
+    }
+
+    function resetAll() { document.querySelectorAll('.card').forEach(el => el.classList.remove('show')); }
+    
+    function render(l, id) {
+        const g = document.getElementById(id);
+        l.forEach(item => {
+            const d = document.createElement('div'); d.className = 'card';
+            d.onclick = function() { 
+                this.classList.add('show'); 
+                cleanSpeak(this); // 使用纯净读音
+            };
+            let h = ""; let p = item[1].split(' ');
+            for(let i=0; i<item[0].length; i++) h += `<ruby>${item[0][i]}<rt>${p[i]||''}</rt></ruby>`;
+            d.innerHTML = `<span class="chars">${h}</span>`; g.appendChild(d);
+        });
+    }
+
+    window.onload = function() {
+        render(data.read, 'readGrid');
+        render(data.write, 'writeGrid');
+        render(data.collab, 'collabGrid');
+    };
+</script>
+</body>
+</html>
