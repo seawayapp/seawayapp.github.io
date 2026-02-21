@@ -6,6 +6,12 @@ const mainList = [
     filename: "AY2026_P2_ChineseSpelling_01"
   },
   {
+    title: "P2 第二课，(HsZ)",
+    subtitle: "第二课",
+    testdate: "",
+    filename: "AY2026_P2_ChineseSpelling_02"
+  },
+  {
     title: "P2 第三课，(HsZ)",
     subtitle: "第三课",
     testdate: "",
@@ -16,5 +22,11 @@ const mainList = [
     subtitle: "第四课",
     testdate: "2026-02-25 (星期二)",
     filename: "AY2026_P5_ChineseSpelling_04"
+  },
+  {
+    title: "P2 第四课，(HsZ)",
+    subtitle: "第四课",
+    testdate: "",
+    filename: "AY2026_P2_ChineseSpelling_04"
   }
 ];
