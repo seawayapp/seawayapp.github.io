@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="maintitle"></title>
+    <title>汉字听写 · 数据驱动拼音打印</title>
     <style>
+        /* ========== 全局 & 原页面样式 (完全保留原风格，仅增强右上角按钮) ========== */
         body {
             font-family: 'Book Antiqua', '楷体';
             display: flex;
@@ -22,6 +23,41 @@
             text-align: center;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             position: relative;
+        }
+
+        /* 右上角拼音打印按钮 (微调, 更醒目) */
+        .print-pinyin-btn {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #ffffff;
+            color: #1e3a5f;
+            border: none;
+            border-radius: 40px;
+            padding: 10px 26px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            letter-spacing: 0.3px;
+            z-index: 20;
+        }
+
+        .print-pinyin-btn:hover {
+            background-color: #eef5ff;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+            transform: translateY(-50%) scale(1.02);
+        }
+
+        .print-pinyin-btn i {
+            font-size: 20px;
+            font-style: normal;
         }
 
         h1 {
@@ -91,6 +127,7 @@
 
         .pinyinBig {
             font-size: 26px;
+            font-family: 'Century Gothic'
         }
 
         .character,
@@ -146,7 +183,7 @@
             margin-right: 10px;
         }
 
-        /* 模态框样式 */
+        /* 模态框原有样式 */
         .modal {
             display: none;
             position: fixed;
@@ -155,13 +192,11 @@
             transform: translateX(-50%);
             width: 500px;
             padding: 20px 20px 30px 20px;
-            /* 增加底部内边距为Close按钮留空间 */
             background: white;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             z-index: 1000;
             text-align: center;
             border-radius: 8px;
-            /* 稍微圆角更美观 */
         }
 
         .overlay {
@@ -182,14 +217,12 @@
             cursor: pointer;
             font-size: 24px;
             color: #666;
-            transition: color 0.2s;
         }
 
         .close-btn:hover {
             color: #000;
         }
 
-        /* 新增的底部Close按钮样式 */
         .modal-close-bottom {
             margin-top: 20px;
             text-align: center;
@@ -204,19 +237,263 @@
             border-radius: 40px;
             cursor: pointer;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.2s;
             border: 1px solid #3d8b40;
         }
 
         .close-bottom-btn:hover {
             background-color: #3d8b40;
         }
+
+        /* ---------- 新页面样式 (拼音打印表 + 切换中文按钮) ---------- */
+        .pinyin-print-page {
+            font-family: 'Segoe UI', 'Book Antiqua', '楷体', Arial, sans-serif;
+            background: #f2f5f9;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .print-header {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            background: white;
+            padding: 16px 30px;
+            border-radius: 60px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .print-header h2 {
+            margin: 0;
+            color: #1e3c5c;
+            font-weight: 400;
+            font-size: 1.8rem;
+        }
+
+        .badge {
+            background: #e9ecf3;
+            padding: 6px 18px;
+            border-radius: 40px;
+            color: #2c3e50;
+            font-size: 1rem;
+            border: 1px solid #bdc3d0;
+        }
+
+        .action-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .toggle-chinese-btn {
+            background-color: #ffb347;
+            color: #2c3e50;
+            border: none;
+            border-radius: 40px;
+            padding: 12px 28px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 180, 71, 0.3);
+            transition: 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #e09d3c;
+        }
+
+        .toggle-chinese-btn:hover {
+            background-color: #ffa726;
+            transform: scale(1.02);
+            box-shadow: 0 6px 14px rgba(255, 160, 0, 0.4);
+        }
+
+        .back-link {
+            background-color: #4285f4;
+            color: white;
+            text-decoration: none;
+            padding: 10px 25px;
+            border-radius: 40px;
+            font-weight: 500;
+            box-shadow: 0 4px 8px rgba(66, 133, 244, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-link:hover {
+            background-color: #2a6cdb;
+        }
+
+        /* 拼音网格 */
+        .pinyin-grid {
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            padding: 35px 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            box-sizing: border-box;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 18px;
+            border: 1px solid #dce4ec;
+        }
+
+        .pinyin-card {
+            background: #fbfdff;
+            border: 1px solid #d0ddeb;
+            border-radius: 24px;
+            padding: 16px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 20, 30, 0.05);
+            transition: 0.15s;
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
+        .pinyin-card:hover {
+            transform: translateY(-3px);
+            border-color: #9bb6d0;
+            background: #f6faff;
+        }
+
+        .hanzi {
+            font-size: 2.8rem;
+            line-height: 1.2;
+            color: #1f3a5f;
+            margin-bottom: 6px;
+            transition: opacity 0.2s ease;
+        }
+
+        .hanzi.hidden {
+            opacity: 0;
+            visibility: hidden;
+            /* 隐藏但仍占位，保证卡片大小一致 */
+            pointer-events: none;
+        }
+
+        .pinyin-tag {
+            background: #e6eff9;
+            padding: 8px 16px;
+            border-radius: 40px;
+            color: #0b3954;
+            font-size: 1.3rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            border: 1px solid #bbd0e4;
+            width: fit-content;
+            transition: 0.1s;
+        }
+
+        .print-actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .print-btn {
+            background: #34a853;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 14px 40px;
+            font-size: 1.3rem;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(52, 168, 83, 0.3);
+            border: 1px solid #2d8b47;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .print-btn:hover {
+            background: #2d8b47;
+        }
+
+        .print-hint {
+            color: #5f6b7a;
+            font-size: 1rem;
+            margin-top: 10px;
+            background: #eaf0f8;
+            padding: 6px 20px;
+            border-radius: 40px;
+        }
+
+        /* 打印优化 */
+        @media print {
+            .pinyin-print-page {
+                background: white;
+                padding: 0.3in;
+            }
+
+            .print-header,
+            .print-actions,
+            .back-link,
+            .print-hint,
+            .badge,
+            .toggle-chinese-btn {
+                display: none !important;
+            }
+
+            .pinyin-grid {
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                gap: 12px;
+                grid-template-columns: repeat(5, 1fr);
+            }
+
+            .pinyin-card {
+                border: 1px solid #aaa;
+                box-shadow: none;
+                background: white;
+                page-break-inside: avoid;
+            }
+
+            .pinyin-tag {
+                background: #f0f0f0 !important;
+                border: 1px solid #333 !important;
+                color: black !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .hanzi {
+                color: black;
+                opacity: 1 !important;
+                visibility: visible !important;
+                /* 打印时强制显示中文，可根据需求调整。这里保持打印时可见，或可隐藏？默认可见更符合常规，但原要求默认拼音，打印也可通过按钮控制，保留原样 */
+            }
+
+            /* 如果想保留隐藏状态打印，则无需覆盖，但为了保险，保留打印时可见（用户可通过屏幕按钮控制打印内容） */
+        }
     </style>
 </head>
 
 <body>
+    <!-- 原始页面 — 汉字听写 -->
     <header>
         <h1 id="slide-title">汉字听写</h1>
+        <button class="print-pinyin-btn" id="openPinyinPrintBtn" title="生成拼音表 (可切换中文显示)">
+            <i>📄</i> 拼音表 · 传数据
+        </button>
     </header>
 
     <div class="content">
@@ -234,12 +511,11 @@
         </div>
     </footer>
 
-    <!-- 模态框 -->
+    <!-- 模态框 (保留) -->
     <div class="overlay" id="overlay"></div>
     <div class="modal" id="modal">
         <span class="close-btn" onclick="closeModal()">×</span>
         <div id="hanzi-writer-target" style="width: 400px; height: 400px; margin: 0 auto;"></div>
-        <!-- 新增的底部Close按钮 -->
         <div class="modal-close-bottom">
             <button class="close-bottom-btn" onclick="closeModal()">Close</button>
         </div>
@@ -247,11 +523,12 @@
 
     <script src="../lib/js/hanzi-writer.min.js"></script>
     <script>
-        // let mainData = [];
+        // ---------- 原有逻辑 (完全保留，并增加数据传递) ----------
         let currentSlide = 0;
         let title = "";
         let sentences = [];
         let pronunciation = [];
+        // let mainData = [];   // 符合原脚本的全局变量
 
         const slideContainer = document.getElementById('slide-container');
         const slideTitle = document.getElementById('slide-title');
@@ -269,6 +546,7 @@
         }
 
         function renderSlide(index) {
+            if (!sentences.length) return;
             let sentence = sentences[index];
             let pinyin = pronunciation[index].split(' ');
             let html = `<div class="grid-container">`;
@@ -276,9 +554,9 @@
 
             for (let i = 0; i < sentence.length; i++) {
                 html += `<div class="${big ? "grid-item-Big" : "grid-item"}" onclick="openModal('${sentence[i]}')">
-          <div class="${big ? "pinyinBig" : "pinyin"}">${pinyin[i]}</div>
-          <div class="${big ? "characterBig" : "character"}">${sentence[i]}</div>
-        </div>`;
+                    <div class="${big ? "pinyinBig" : "pinyin"}">${pinyin[i] || ''}</div>
+                    <div class="${big ? "characterBig" : "character"}">${sentence[i]}</div>
+                </div>`;
             }
             html += `</div>`;
             slideContainer.innerHTML = html;
@@ -303,42 +581,53 @@
             if (!scriptFile) return;
 
             await loadScript(`./data/${scriptFile}.js`);
-            title = mainData[0].subtitle;
-            sentences = mainData[0].sentences;
-            pronunciation = mainData[0].pronunciation;
-            document.title = mainData[0].testdate;
-            initSlideSelect();
-            renderSlide(0);
+            // 假设载入的js设置mainData
+            if (mainData && mainData[0]) {
+                title = mainData[0].subtitle || "";
+                sentences = mainData[0].sentences || [];
+                pronunciation = mainData[0].pronunciation || [];
+                document.title = mainData[0].testdate || "汉字听写";
+                initSlideSelect();
+                renderSlide(0);
+            } else {
+                console.warn("mainData 格式不符，使用演示数据");
+                sentences = ["拼", "音", "示", "例"];
+                pronunciation = ["pin", "yin", "shi", "li"];
+                title = "示例数据";
+                initSlideSelect();
+                renderSlide(0);
+            }
         }
 
         document.getElementById('prev-btn').addEventListener('click', () => {
+            if (!sentences.length) return;
             currentSlide = (currentSlide - 1 + sentences.length) % sentences.length;
             renderSlide(currentSlide);
         });
-
         document.getElementById('next-btn').addEventListener('click', () => {
+            if (!sentences.length) return;
             currentSlide = (currentSlide + 1) % sentences.length;
             renderSlide(currentSlide);
         });
-
         slideSelect.addEventListener('change', () => {
+            if (!sentences.length) return;
             currentSlide = parseInt(slideSelect.value);
             renderSlide(currentSlide);
         });
-
-        // Keyboard navigation
         document.addEventListener('keydown', (e) => {
+            if (!sentences.length) return;
             if (e.key === 'ArrowLeft') {
                 currentSlide = (currentSlide - 1 + sentences.length) % sentences.length;
+                renderSlide(currentSlide);
             } else if (e.key === 'ArrowRight') {
                 currentSlide = (currentSlide + 1) % sentences.length;
+                renderSlide(currentSlide);
             }
-            renderSlide(currentSlide);
         });
 
         // Hanzi Writer
         let writer = null;
-        function openModal(character) {
+        window.openModal = function (character) {
             document.getElementById('modal').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
             document.getElementById('hanzi-writer-target').innerHTML = '';
@@ -347,15 +636,176 @@
                 strokeAnimationSpeed: 1, delayBetweenStrokes: 300, padding: 5, delayBetweenLoops: 3000
             });
             writer.loopCharacterAnimation();
-        }
-        function closeModal() {
+        };
+        window.closeModal = function () {
             document.getElementById('modal').style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
-            // 停止动画释放资源 (可选)
-            if (writer) {
-                writer = null;
+            if (writer) writer = null;
+        };
+
+        // ---------- ★ 核心：通过JSON数据传输到新页面，并支持显示/隐藏中文 ★ ----------
+        document.getElementById('openPinyinPrintBtn').addEventListener('click', function () {
+            // 从当前内存中提取完整的 sentences 和 pronunciation，构造成干净的JSON
+            const exportData = {
+                title: title || "汉字拼音表",
+                pairs: []   // 存储 { char, pinyin } 保持顺序
+            };
+
+            if (sentences.length && pronunciation.length) {
+                for (let i = 0; i < sentences.length; i++) {
+                    const chars = sentences[i].split('');
+                    const pinyins = pronunciation[i].split(' ');
+                    for (let j = 0; j < chars.length; j++) {
+                        // 保留原字符 (包括标点，也可过滤，但不影响)
+                        exportData.pairs.push({
+                            char: chars[j],
+                            pinyin: pinyins[j] || '?'
+                        });
+                    }
+                }
+            } else {
+                // 降级数据
+                exportData.pairs = [
+                    { char: '汉', pinyin: 'han' }, { char: '字', pinyin: 'zi' },
+                    { char: '拼', pinyin: 'pin' }, { char: '音', pinyin: 'yin' }
+                ];
             }
-        }
+
+            // 转化为JSON字符串，编码后通过URL传递 (也可以使用sessionStorage，但URL参数更直观)
+            const jsonStr = JSON.stringify(exportData);
+            // 编码传递，避免过长？大部分情况几百汉字可以接受，若过长可使用 localStorage 方案。这里采用 localStorage 更稳健
+            // 为了可靠且不污染，使用 sessionStorage 临时存储
+            sessionStorage.setItem('pinyinPrintData', jsonStr);
+
+            // 打开新窗口，新窗口从sessionStorage读取数据
+            const printWindow = window.open('', '_blank');
+            if (!printWindow) {
+                alert('请允许弹出窗口，或点击后按Ctrl+单击');
+                return;
+            }
+
+            // 构建新页面的HTML (注入读取sessionStorage的逻辑)
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>拼音打印 · 可切换中文</title>
+                    <style>
+                        /* 完全复制上面的新页面样式 (为了自包含，此处再次嵌入关键样式，已压缩但保留全部) */
+                        ${document.querySelector('style[data-new-print]') ? '' : ''} /* 实际直接内联下面完整块 */
+                        body { margin: 0; background: #f2f5f9; font-family: 'Segoe UI', 'Book Antiqua', '楷体', sans-serif; }
+                        .pinyin-print-page { background: #f2f5f9; min-height: 100vh; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+                        .print-header { width: 100%; max-width: 1200px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: white; padding: 16px 30px; border-radius: 60px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); flex-wrap: wrap; gap: 15px; }
+                        .print-header h2 { margin: 0; color: #1e3c5c; font-size: 1.8rem; }
+                        .badge { background: #e9ecf3; padding: 6px 18px; border-radius: 40px; color: #2c3e50; border: 1px solid #bdc3d0; }
+                        .action-group { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+                        .toggle-chinese-btn { background-color: #ffb347; color: #2c3e50; border: none; border-radius: 40px; padding: 12px 28px; font-size: 1.2rem; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px rgba(255,180,71,0.3); border: 1px solid #e09d3c; display: inline-flex; align-items: center; gap: 8px; }
+                        .toggle-chinese-btn:hover { background-color: #ffa726; }
+                        .back-link { background-color: #4285f4; color: white; text-decoration: none; padding: 10px 25px; border-radius: 40px; font-weight: 500; box-shadow: 0 4px 8px rgba(66,133,244,0.3); }
+                        .back-link:hover { background-color: #2a6cdb; }
+                        .pinyin-grid { max-width: 1200px; width: 100%; background: white; border-radius: 32px; padding: 35px 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 18px; border: 1px solid #dce4ec; box-sizing: border-box; }
+                        .pinyin-card { background: #fbfdff; border: 1px solid #d0ddeb; border-radius: 24px; padding: 16px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,20,30,0.05); break-inside: avoid; page-break-inside: avoid; }
+                        .hanzi { font-size: 2.8rem; line-height: 1.2; color: #1f3a5f; margin-bottom: 6px; transition: opacity 0.2s ease; }
+                        .hanzi.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+                        .pinyin-tag { background: #e6eff9; padding: 8px 16px; border-radius: 40px; color: #0b3954; font-size: 1.3rem; font-weight: 500; border: 1px solid #bbd0e4; width: fit-content; }
+                        .print-actions { margin-top: 30px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+                        .print-btn { background: #34a853; color: white; border: none; border-radius: 40px; padding: 14px 40px; font-size: 1.3rem; font-weight: 500; cursor: pointer; box-shadow: 0 8px 16px rgba(52,168,83,0.3); border: 1px solid #2d8b47; }
+                        .print-btn:hover { background: #2d8b47; }
+                        .print-hint { color: #5f6b7a; background: #eaf0f8; padding: 6px 20px; border-radius: 40px; margin-top: 10px; }
+                        @media print { 
+                            .pinyin-print-page { background: white; padding: 0.3in; } 
+                            .print-header, .print-actions, .back-link, .print-hint, .badge, .toggle-chinese-btn { display: none !important; } 
+                            .pinyin-grid { box-shadow: none; border: none; padding: 0; gap: 12px; grid-template-columns: repeat(5,1fr); } 
+                            .pinyin-card { border: 1px solid #aaa; background: white; } 
+                            .pinyin-tag { background: #f0f0f0 !important; border: 1px solid #333 !important; color: black !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; } 
+                            /* 移除强制显示汉字的样式，让汉字保持当前的显示状态 */
+                            .hanzi {
+                                font-size: 2.8rem; line-height: 1.2; color: #1f3a5f; margin-bottom: 6px; transition: opacity 0.2s ease; 
+                            }
+                            /* 保留hidden类在打印时继续生效 */
+                            .hanzi.hidden {
+                                opacity: 0; visibility: hidden; pointer-events: none;
+                            }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="pinyin-print-page" id="printRoot">
+                        <div class="print-header">
+                            <h2 id="dynamicTitle">📖 拼音表</h2>
+                            <span class="badge" id="charCount">0 个字符</span>
+                            <div class="action-group">
+                                <button class="print-btn" id="printBtn">🖨️ 打印 / PDF (A4)</button>
+                                <button class="toggle-chinese-btn" id="toggleChineseBtn">🔤 隐藏中文</button>
+                                <a href="#" class="back-link" onclick="window.close()">← 关闭</a>
+                            </div>
+                        </div>
+                        <div class="pinyin-grid" id="pinyinGrid"></div>
+                        <div class="print-actions">
+                           
+                        </div>
+                        <div class="print-hint">✨ 点击上方按钮可切换汉字显示，打印前可调整</div>
+                    </div>
+                    <script>
+                        (function() {
+                            // 从 sessionStorage 读取数据
+                            const stored = sessionStorage.getItem('pinyinPrintData');
+                            let pairs = [];
+                            let pageTitle = '拼音表';
+                            if (stored) {
+                                try {
+                                    const data = JSON.parse(stored);
+                                    pageTitle = data.title || '拼音表';
+                                    pairs = data.pairs || [];
+                                } catch (e) { console.warn('解析失败'); }
+                            }
+                            if (pairs.length === 0) {
+                                pairs = [{ char: '示', pinyin: 'shi' }, { char: '例', pinyin: 'li' }];
+                            }
+
+                            // 更新标题和计数
+                            document.getElementById('dynamicTitle').innerText = '📖 ' + pageTitle;
+                            document.getElementById('charCount').innerText = pairs.length + ' 个字符';
+
+                            const grid = document.getElementById('pinyinGrid');
+                            function renderCards(hideChinese = false) {
+                                let html = '';
+                                pairs.forEach(p => {
+                                    const hideClass = hideChinese ? 'hidden' : '';
+                                    html += \`
+                                        <div class="pinyin-card">
+                                            <span class="hanzi \${hideClass}">\${p.char}</span>
+                                            <span class="pinyin-tag">\${p.pinyin}</span>
+                                        </div>
+                                    \`;
+                                });
+                                grid.innerHTML = html;
+                            }
+
+                            // 初始默认隐藏中文 (满足要求: 新页面默认只显示拼音)
+                            let currentlyHidden = true;   // true = 中文隐藏 (默认拼音可见)
+                            renderCards(true);
+
+                            // 切换按钮逻辑
+                            const toggleBtn = document.getElementById('toggleChineseBtn');
+                            toggleBtn.addEventListener('click', function() {
+                                currentlyHidden = !currentlyHidden;
+                                renderCards(currentlyHidden);
+                                toggleBtn.innerHTML = currentlyHidden ? '🔤 显示中文' : '📖 隐藏中文';
+                            });
+
+                            // 打印按钮
+                            document.getElementById('printBtn').addEventListener('click', function() {
+                                window.print();
+                            });
+                        })();
+                    <\/script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        });
 
         window.onload = init;
     </script>
