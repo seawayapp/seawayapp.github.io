@@ -172,6 +172,7 @@
             <div style="display: flex; gap: 10px;">
                 <button class="main-btn" onclick="renderContent()">生成互动单词卡</button>
                 <button class="main-btn" style="background: #27ae60;" onclick="printHandwriting()">打印字帖</button>
+                <button class="main-btn" style="background: #e67e22;" onclick="printWordsList()">打印单词练习</button>
             </div>
         </div>
     </div>
@@ -181,72 +182,73 @@
     <script>
         // 使用你提供并校对过的最新坐标数据
         const LetterPaths = {
-            // === 大写字母 (Capitals) ===
-            'A': { width: 90, paths: ["M45 50 L10 170", "M45 50 L80 170", "M25 110 L65 110"] },
-            'B': { width: 80, paths: ["M25 50 L25 170", "M25 50 Q75 50, 75 85 Q75 110, 25 110", "M25 110 Q85 110, 85 140 Q85 170, 25 170"] },
-            'C': { width: 85, paths: ["M75 80 C 75 50, 15 50, 15 110 C 15 170, 75 170, 75 140"] },
-            'D': { width: 85, paths: ["M25 50 L25 170", "M25 50 Q85 50, 85 110 Q85 170, 25 170"] },
-            'E': { width: 75, paths: ["M70 50 L25 50 L25 170 L70 170", "M25 110 L60 110"] },
-            'F': { width: 70, paths: ["M70 50 L25 50 L25 170", "M25 110 L60 110"] },
-            'G': { width: 85, paths: ["M75 80 Q75 50, 45 50 Q15 50, 15 110 Q15 170, 45 170 Q75 170, 75 115", "M55 115 L75 115 L75 170"] },
-            'H': { width: 85, paths: ["M25 50 L25 170", "M25 110 L75 110", "M75 50 L75 170"] }, // 已修正笔顺
-            'I': { width: 45, paths: ["M22 50 L22 170", "M5 50 L40 50", "M5 170 L40 170"] },
-            'J': { width: 60, paths: ["M10 50 L55 50", "M35 50 L35 145 Q35 170, 10 170"] },
-            'K': { width: 80, paths: ["M25 50 L25 170", "M70 50 L25 110 L75 170"] },
-            'L': { width: 70, paths: ["M25 50 L25 170 L70 170"] },
-            'M': { width: 100, paths: ["M15 170 L15 50 L50 130 L85 50 L85 170"] },
-            'N': { width: 85, paths: ["M20 170 L20 50 L75 170 L75 50"] },
-            'O': { width: 85, paths: ["M47 50 Q15 50, 15 110 Q15 170, 47 170 Q82 170, 82 110 Q82 50, 47 50"] },
-            'P': { width: 75, paths: ["M25 170 L25 50 Q75 50, 75 95 Q75 125, 25 125"] },
-            'Q': { width: 85, paths: ["M47 50 Q15 50, 15 110 Q15 170, 47 170 Q82 170, 82 110 Q82 50, 47 50", "M60 145 L85 180"] },
-            'R': { width: 80, paths: ["M25 170 L25 50 Q75 50, 75 95 Q75 120, 25 120 L75 170"] },
-            'S': { width: 80, paths: ["M65 75 C 65 45, 15 45, 15 85 C 15 120, 75 100, 75 140 C 75 180, 15 180, 15 155"] },
-            'T': { width: 80, paths: ["M10 50 L70 50", "M40 50 L40 170"] },
-            'U': { width: 85, paths: ["M20 50 L20 140 Q20 170, 47 170 Q75 170, 75 140 L75 50"] },
-            'V': { width: 85, paths: ["M15 50 L47 170 L80 50"] },
-            'W': { width: 110, paths: ["M15 50 L30 170 L52 100 L75 170 L95 50"] },
-            'X': { width: 80, paths: ["M15 50 L75 170", "M75 50 L15 170"] },
-            'Y': { width: 80, paths: ["M15 50 L45 110 L75 50", "M45 110 L45 170"] },
-            'Z': { width: 80, paths: ["M15 50 L75 50 L15 170 L75 170"] },
-
-            // === 小写字母 ===
-            'a': { width: 75, paths: ["M60 120 C 60 110, 15 110, 15 140 C 15 170, 60 170, 60 140", "M60 110 L60 160 Q 60 172, 75 168"] },
-            'b': { width: 65, paths: ["M20 50 L20 170", "M20 110 Q 65 110, 65 140 Q 65 170, 20 170"] },
-            'c': { width: 65, paths: ["M60 125 C 60 110, 15 110, 15 140 C 15 170, 60 170, 60 155"] },
-            'd': { width: 65, paths: ["M60 50 L60 170", "M60 110 Q 20 110, 20 140 Q 20 170, 60 170"] },
-            'e': { width: 65, paths: ["M15 145 L60 145 Q 60 110, 35 110 Q 15 110, 15 140 Q 15 170, 40 170 Q 60 170, 60 160"] },
-            'f': { width: 50, paths: ["M40 60 Q 40 50, 25 50 Q 15 50, 15 170", "M5 110 L35 110"] },
-            'g': { width: 75, paths: ["M50 140 Q50 110, 32 110 Q15 110, 15 140 Q15 170, 32 170 Q50 170, 50 140", "M50 110 L50 190 Q50 220, 30 220 Q10 220, 10 190"] },
-            'h': { width: 70, paths: ["M20 50 L20 170", "M20 140 Q 20 110, 45 110 Q 65 110, 65 140 L65 170"] },
-            'i': { width: 35, paths: ["M17 110 L17 170", "M17 80 L17 85"] },
-            'j': { width: 40, paths: ["M25 110 L25 210 Q 25 225, 5 225", "M25 80 L25 85"] },
-            'k': { width: 70, paths: ["M20 50 L20 170", "M65 110 L25 140 L65 170"] },
-            'l': { width: 35, paths: ["M17 50 L17 170"] },
-            'm': { width: 105, paths: ["M20 110 L20 170", "M20 135 Q 20 110, 42 110 Q 60 110, 60 140 L60 170", "M60 135 Q 60 110, 82 110 Q 100 110, 100 140 L100 170"] },
-            'n': { width: 70, paths: ["M20 110 L20 170", "M20 135 Q 20 110, 45 110 Q 65 110, 65 140 L65 170"] },
-            'o': { width: 70, paths: ["M40 110 C 10 110, 10 170, 40 170 C 70 170, 70 110, 40 110"] },
-            'p': { width: 70, paths: ["M20 110 L20 220", "M20 110 Q 65 110, 65 140 Q 65 170, 20 170"] },
-            'q': { width: 75, paths: ["M55 120 C 55 110, 10 110, 10 140 C 10 170, 55 170, 55 140", "M55 110 L55 220"] },
-            'r': { width: 55, paths: ["M20 110 L20 170", "M20 135 Q 25 110, 50 110"] },
+            // 小写字母 (Lower Case)
+            'a': { width: 60, paths: ["M45 115 Q15 115, 15 142 Q15 170, 31 170 Q48 170, 48 140", "M48 110 L48 170"] },
+            'b': { width: 60, paths: ["M15 50 L15 170", "M15 140 Q15 110, 31 110 Q48 110, 48 140 Q48 170, 31 170 Q15 170, 15 140"] },
+            'c': { width: 55, paths: ["M45 125 Q45 110, 30 110 Q15 110, 15 140 Q15 170, 30 170 Q45 170, 45 155"] },
+            'd': { width: 60, paths: ["M48 50 L48 170", "M48 140 Q48 110, 32 110 Q15 110, 15 140 Q15 170, 32 170 Q48 170, 48 140"] },
+            'e': { width: 60, paths: ["M15 140 L48 140 Q48 110, 31 110 Q15 110, 15 140 Q15 170, 31 170 Q48 170, 48 155"] },
+            'f': { width: 40, paths: ["M35 60 Q35 50, 25 50 Q15 50, 15 65 L15 170", "M5 110 L30 110"] },
+            'g': { width: 60, paths: ["M48 140 Q48 110, 31 110 Q15 110, 15 140 Q15 170, 31 170 Q48 170, 48 140", "M48 110 L48 200 Q48 220, 25 220 L10 220"] },
+            'h': { width: 60, paths: ["M15 50 L15 170", "M15 130 Q15 110, 30 110 Q45 110, 45 130 L45 170"] },
+            'i': { width: 25, paths: ["M12 110 L12 170", "M12 85 L12 90"] },
+            'j': { width: 30, paths: ["M20 110 L20 200 Q20 220, 5 220", "M20 85 L20 90"] },
+            'k': { width: 60, paths: ["M15 50 L15 170", "M48 110 L15 145", "M25 135 L50 170"] },
+            'l': { width: 25, paths: ["M12 50 L12 170"] },
+            'm': { width: 90, paths: ["M15 110 L15 170", "M15 130 Q15 110, 30 110 Q45 110, 45 130 L45 170", "M45 130 Q45 110, 60 110 Q75 110, 75 130 L75 170"] },
+            'n': { width: 60, paths: ["M15 110 L15 170", "M15 130 Q15 110, 30 110 Q45 110, 45 130 L45 170"] },
+            'o': { width: 60, paths: ["M32 110 Q15 110, 15 140 Q15 170, 32 170 Q50 170, 50 140 Q50 110, 32 110"] },
+            'p': { width: 60, paths: ["M15 110 L15 220", "M15 140 Q15 110, 31 110 Q48 110, 48 140 Q48 170, 31 170 Q15 170, 15 140"] },
+            'q': { width: 60, paths: ["M45 140 Q45 110, 29 110 Q12 110, 12 140 Q12 170, 29 170 Q45 170, 45 140", "M45 110 L45 220"] },
+            'r': { width: 45, paths: ["M15 110 L15 170", "M15 135 Q15 110, 35 110"] },
             's': { width: 55, paths: ["M50 125 C 50 110, 15 110, 15 135 C 15 150, 50 130, 50 145 C 50 170, 15 170, 15 155"] },
-            't': { width: 55, paths: ["M25 70 L25 160 Q 25 172, 40 168", "M10 110 L40 110"] },
-            'u': { width: 75, paths: ["M20 110 L20 155 Q 20 170, 45 170 Q 65 170, 65 155 L65 110", "M65 110 L65 170"] },
-            'v': { width: 70, paths: ["M15 110 L35 170 L55 110"] },
-            'w': { width: 100, paths: ["M15 110 L28 170 L45 130 L62 170 L85 110"] },
-            'x': { width: 65, paths: ["M15 110 L55 170", "M55 110 L15 170"] },
-            'y': { width: 70, paths: ["M15 110 L35 170", "M55 110 L15 220"] }, // 修正为两笔式
-            'z': { width: 65, paths: ["M15 110 L55 110 L15 170 L55 170"] },
-            ' ': { width: 40, paths: [] },
-            // === 常用标点符号 (Punctuation) ===
+            't': { width: 45, paths: ["M20 50 L20 160 Q20 170, 35 170", "M5 110 L35 110"] },
+            'u': { width: 60, paths: ["M15 110 L15 160 Q15 170, 30 170 Q45 170, 45 160 L45 110", "M45 140 L45 170"] },
+            'v': { width: 55, paths: ["M10 110 L27 170 L45 110"] },
+            'w': { width: 90, paths: ["M10 110 L25 170 L45 110 L65 170 L80 110"] },
+            'x': { width: 55, paths: ["M10 110 L45 170", "M45 110 L10 170"] },
+            'y': { width: 60, paths: ["M15 110 L32 170", "M50 110 L25 210 Q20 220, 10 220"] },
+            'z': { width: 50, paths: ["M10 110 L45 110 L10 170 L45 170"] },
+
+            // 大写字母 (Upper Case)
+            'A': { width: 80, paths: ["M40 50 L10 170", "M40 50 L70 170", "M22 130 L58 130"] },
+            'B': { width: 75, paths: ["M20 50 L20 170", "M20 50 L45 50 Q65 50, 65 80 Q65 110, 45 110 L20 110", "M20 110 L50 110 Q70 110, 70 140 Q70 170, 50 170 L20 170"] },
+            'C': { width: 75, paths: ["M65 80 Q65 50, 40 50 Q15 50, 15 110 Q15 170, 40 170 Q65 170, 65 140"] },
+            'D': { width: 80, paths: ["M20 50 L20 170", "M20 50 Q75 50, 75 110 Q75 170, 20 170"] },
+            'E': { width: 70, paths: ["M20 50 L20 170", "M20 50 L60 50", "M20 110 L50 110", "M20 170 L60 170"] },
+            'F': { width: 65, paths: ["M20 50 L20 170", "M20 50 L60 50", "M20 110 L50 110"] },
+            'G': { width: 85, paths: ["M75 80 Q75 50, 45 50 Q15 50, 15 110 Q15 170, 45 170 Q75 170, 75 115", "M55 115 L75 115 L75 170"] },
+            'H': { width: 80, paths: ["M20 50 L20 170", "M20 110 L60 110", "M60 50 L60 170"] },
+            'I': { width: 40, paths: ["M20 50 L20 170", "M5 50 L35 50", "M5 170 L35 170"] },
+            'J': { width: 55, paths: ["M40 50 L40 150 Q40 170, 20 170 Q5 170, 5 150", "M20 50 L60 50"] },
+            'K': { width: 80, paths: ["M20 50 L20 170", "M65 50 L20 110 L65 170"] },
+            'L': { width: 65, paths: ["M20 50 L20 170", "M20 170 L60 170"] },
+            'M': { width: 90, paths: ["M15 170 L15 50 L45 120 L75 50 L75 170"] },
+            'N': { width: 75, paths: ["M15 170 L15 50 L60 170 L60 50"] },
+            'O': { width: 85, paths: ["M42 50 Q15 50, 15 110 Q15 170, 42 170 Q70 170, 70 110 Q70 50, 42 50"] },
+            'P': { width: 70, paths: ["M20 50 L20 170", "M20 50 L45 50 Q65 50, 65 80 Q65 110, 45 110 L20 110"] },
+            'Q': { width: 85, paths: ["M42 50 Q15 50, 15 110 Q15 170, 42 170 Q70 170, 70 110 Q70 50, 42 50", "M55 145 L75 175"] },
+            'R': { width: 75, paths: ["M20 50 L20 170", "M20 50 L45 50 Q65 50, 65 80 Q65 110, 45 110 L20 110", "M40 110 L65 170"] },
+            'S': { width: 80, paths: ["M65 75 C 65 45, 15 45, 15 85 C 15 120, 75 100, 75 140 C 75 180, 15 180, 15 155"] },
+            'T': { width: 70, paths: ["M35 50 L35 170", "M10 50 L60 50"] },
+            'U': { width: 80, paths: ["M20 50 L20 150 Q20 170, 40 170 Q60 170, 60 150 L60 50"] },
+            'V': { width: 80, paths: ["M10 50 L40 170 L70 50"] },
+            'W': { width: 110, paths: ["M10 50 L25 170 L55 70 L85 170 L100 50"] },
+            'X': { width: 80, paths: ["M15 50 L65 170", "M65 50 L15 170"] },
+            'Y': { width: 80, paths: ["M15 50 L40 110 L65 50", "M40 110 L40 170"] },
+            'Z': { width: 70, paths: ["M15 50 L65 50 L15 170 L65 170"] },
+
+            // 标点符号 (Punctuation)
             '.': { width: 30, paths: ["M12 165 L12 170"] },
-            ',': { width: 30, paths: ["M12 165 L12 170 Q12 185, 5 190"] },
+            ',': { width: 25, paths: ["M15 165 Q15 180, 10 195"] },
             '!': { width: 30, paths: ["M15 50 L15 150", "M15 165 L15 170"] },
             '?': { width: 50, paths: ["M15 75 Q15 50, 30 50 Q45 50, 45 75 Q45 100, 25 115 L25 150", "M25 165 L25 170"] },
-            ';': { width: 30, paths: ["M12 135 L12 140", "M12 165 L12 170 Q12 185, 5 190"] },
-            ':': { width: 30, paths: ["M15 115 L15 120", "M15 165 L15 170"] },
-            '"': { width: 40, paths: ["M12 110 L12 120", "M28 110 L28 120"] },
-            "'": { width: 20, paths: ["M10 110 L10 120"] },
-            '-': { width: 40, paths: ["M10 140 L30 140"] }
+            ';': { width: 30, paths: ["M12 135 L12 140", "M12 165 Q12 180, 7 190"] },
+            ':': { width: 30, paths: ["M15 135 L15 140", "M15 165 L15 170"] },
+            '"': { width: 45, paths: ["M15 55 L15 75", "M30 55 L30 75"] },
+            "'": { width: 20, paths: ["M10 55 L10 75"] },
+            '-': { width: 40, paths: ["M10 140 L30 140"] },
+            ' ': { width: 50, paths: [] }
         };
 
         let vivusStore = {};
@@ -257,30 +259,44 @@
 
             const printWin = window.open('', '_blank');
 
+            // 配置参数
             const scale = 0.32;
-            const rowMargin = 18;
-            const pageWidth = 750;
+            const rowMargin = 18;     // 极致压缩行间距以容纳更多行
+            const pageWidth = 750;    // 宽度适配 A4
             const lineHeight = 250 * scale;
+            const letterSpacing = 6;  // 字母之间的微小呼吸感
 
             let htmlContent = `
     <html>
     <head>
-        <title>最大行数字帖 - 含标点版</title>
+        <title>Manuscript Handwriting Practice</title>
         <style>
-            @page { size: A4 portrait; margin: 1cm; }
-            body { margin: 0; padding: 0; background: white; }
-            .row-container { 
-                position: relative; width: 100%; height: ${lineHeight}px; 
-                margin-bottom: ${rowMargin}px; page-break-inside: avoid; display: block;
+            @page { 
+                size: A4 portrait; 
+                margin: 1cm; 
             }
-            .guidelines { position: absolute; width: 100%; height: 100%; top:0; left:0; }
+            body { 
+                margin: 0; padding: 0; 
+                background: white !important; 
+            }
+            .row-container { 
+                position: relative; 
+                width: 100%; 
+                height: ${lineHeight}px; 
+                margin-bottom: ${rowMargin}px;
+                page-break-inside: avoid;
+                display: block;
+            }
+            .guidelines { position: absolute; width: 100%; height: 100%; top:0; left:0; pointer-events: none; }
             .line { position: absolute; width: 100%; height: 1px; }
+            /* 颜色参考字帖：淡粉色顶线和淡蓝色基线 */
             .top { top: ${50 * scale}px; background: #ffcccc; }
             .middle { top: ${110 * scale}px; border-top: 1px dashed #aad4ff; }
-            .bottom { top: ${170 * scale}px; background: #aad4ff; }
+            .bottom { top: ${170 * scale}px; background: #aad4ff; height: 1.2px; }
             .descender { top: ${220 * scale}px; background: #ffcccc; }
+            
             svg { width: 100%; height: ${lineHeight}px; display: block; overflow: visible; }
-            path { stroke: #000; stroke-width: 3.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+            path { stroke: #000; stroke-width: 3.2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
         </style>
     </head>
     <body>`;
@@ -288,36 +304,38 @@
             let currentX = 5;
             let currentLineSVG = '';
 
-            // 不再简单用 split(' ')，而是遍历每一个字符
+            // 逐字符处理以支持标点和换行
             for (let i = 0; i < input.length; i++) {
                 const char = input[i];
-                const data = LetterPaths[char] || LetterPaths[' '];
 
-                // 自动换行检查
-                if (currentX + (data.width * scale) > pageWidth) {
-                    htmlContent += createRow(currentLineSVG);
-                    currentLineSVG = '';
-                    currentX = 5;
-                }
-
-                // 如果是换行符，强制换行
-                if (char === '\\n') {
+                // 处理换行符
+                if (char === '\n') {
                     htmlContent += createRow(currentLineSVG);
                     currentLineSVG = '';
                     currentX = 5;
                     continue;
                 }
 
-                // 渲染字符
+                const data = LetterPaths[char] || LetterPaths[' '];
+
+                // 自动换行判断
+                if (currentX + (data.width * scale) > pageWidth) {
+                    htmlContent += createRow(currentLineSVG);
+                    currentLineSVG = '';
+                    currentX = 5;
+                }
+
+                // 渲染字符 SVG
                 let totalCharX = (currentX / scale);
                 currentLineSVG += `<g transform="translate(${totalCharX}, 0)">
             ${data.paths.map(d => `<path d="${d}" />`).join('')}
         </g>`;
 
-                currentX += data.width * scale;
+                // 增加字符间距
+                currentX += (data.width + letterSpacing) * scale;
             }
 
-            // 扫尾
+            // 处理最后一行内容
             if (currentLineSVG !== '' || currentX > 5) {
                 htmlContent += createRow(currentLineSVG);
             }
@@ -344,6 +362,133 @@
 
             printWin.document.write(htmlContent);
             printWin.document.close();
+        }
+
+        function printWordsList() {
+            const input = document.getElementById('wordInput').value;
+            if (!input.trim()) return;
+
+            const printWin = window.open('', '_blank');
+
+            // 物理参数：为了 10 行能撑满 A4 纸，每行物理高度设定为约 108px
+            const rowHeight = 108;
+            const pageWidth = 750;    // A4 宽度点数
+            const letterSpacing = 6;
+
+            // 提取并去重单词
+            const words = [...new Set(input.split(/[\s,，.。"”\n]+/).filter(w => w.length > 0))];
+
+            let htmlContent = `
+    <html>
+    <head>
+        <title>单词临摹练字帖</title>
+        <style>
+            @page { size: A4 portrait; margin: 0.5cm 1cm; }
+            body { margin: 0; padding: 0; background: white !important; -webkit-print-color-adjust: exact; }
+            
+            .row-container { 
+                position: relative; 
+                width: 100%; 
+                height: ${rowHeight}px; 
+                margin-bottom: 5px;
+                page-break-inside: avoid; 
+                display: block;
+                box-sizing: border-box;
+            }
+
+            /* 辅助线：严格按照 50-110-170-220 的比例计算百分比 */
+            .guidelines { position: absolute; width: 100%; height: 100%; top:0; left:0; }
+            .line { position: absolute; width: 100%; height: 1.2px; }
+            .top { top: 20%; background: #ffcccc; }           /* 50/250 */
+            .middle { top: 44%; border-top: 1.2px dashed #aad4ff; } /* 110/250 */
+            .bottom { top: 68%; background: #aad4ff; height: 1.8px; } /* 170/250 */
+            .descender { top: 88%; background: #ffcccc; }      /* 220/250 */
+            
+            svg { 
+                width: 100%; 
+                height: 100%; 
+                display: block; 
+                overflow: visible;
+            }
+            .model-word { stroke: #000; stroke-width: 4; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+            .practice-word { stroke: #e5e5e5 !important; stroke-width: 3.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+        </style>
+    </head>
+    <body>`;
+
+            words.forEach((word) => {
+                htmlContent += createWordPracticeRow(word, pageWidth, letterSpacing);
+            });
+
+            htmlContent += `
+        <script>
+            window.onload = function() { 
+                setTimeout(() => { window.print(); window.close(); }, 500);
+            };
+        <\/script>
+    </body>
+    </html>`;
+
+            printWin.document.write(htmlContent);
+            printWin.document.close();
+        }
+
+        function createWordPracticeRow(word, pageWidth, letterSpacing) {
+            let wordSvgContent = '';
+
+            // 计算单词原始逻辑宽度
+            let singleWordWidth = 0;
+            for (let char of word) {
+                singleWordWidth += (LetterPaths[char] || LetterPaths[' ']).width + letterSpacing;
+            }
+
+            // 1. 绘制范字：不再在外部套 scale，而是让 viewBox 自动撑满
+            // 我们在左侧预留一小段空白 (x=40)
+            wordSvgContent += `<g class="model-word" transform="translate(40, 0)">`;
+            wordSvgContent += generateWordPaths(word, letterSpacing);
+            wordSvgContent += `</g>`;
+
+            // 2. 绘制 3 个练习位
+            // 逻辑坐标系下的间距计算：将 A4 宽度还原回 250 坐标系对应的宽度
+            // A4 约 750px，rowHeight 约 108px，比例约为 7:1。
+            // 所以 viewBox 的宽度大约是 250 * 7 = 1750 左右。
+            const logicPageWidth = (pageWidth / 108) * 250;
+            const step = Math.max(singleWordWidth + 100, logicPageWidth / 4);
+
+            for (let i = 1; i <= 3; i++) {
+                let xPos = 40 + (i * step);
+                if (xPos + singleWordWidth > logicPageWidth - 20) break;
+
+                wordSvgContent += `<g class="practice-word" transform="translate(${xPos}, 0)">`;
+                wordSvgContent += generateWordPaths(word, letterSpacing);
+                wordSvgContent += `</g>`;
+            }
+
+            return `
+    <div class="row-container">
+        <div class="guidelines">
+            <div class="line top"></div>
+            <div class="line middle"></div>
+            <div class="line bottom"></div>
+            <div class="line descender"></div>
+        </div>
+        <svg viewBox="0 0 ${logicPageWidth} 250">${wordSvgContent}</svg>
+    </div>`;
+        }
+
+        function generateWordPaths(word, spacing) {
+            let x = 0;
+            let paths = '';
+            for (let char of word) {
+                const data = LetterPaths[char] || LetterPaths[' '];
+                if (data) {
+                    paths += `<g transform="translate(${x}, 0)">
+                ${data.paths.map(d => `<path d="${d}" />`).join('')}
+            </g>`;
+                    x += (data.width + spacing);
+                }
+            }
+            return paths;
         }
 
         function renderContent() {
