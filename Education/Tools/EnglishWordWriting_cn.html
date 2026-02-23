@@ -2,9 +2,8 @@
 <html lang="zh-CN">
 
 <head>
-    <meta charset="UTF-8" />
-    <title>Handwriting Master</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <title>英文点读互动书写板</title>
     <script src="./js/vivus.min.js"></script>
     <style>
         :root {
@@ -17,12 +16,12 @@
             background: #f8fafc;
             font-family: 'Segoe UI', Arial;
             padding: 20px;
-            margin: 0;
         }
 
+        /* 顶部控制面板 */
         .controls {
             max-width: 900px;
-            margin: 0 auto 20px;
+            margin: 0 auto 30px;
             background: white;
             padding: 20px;
             border-radius: 12px;
@@ -32,28 +31,20 @@
 
         textarea {
             width: 100%;
-            min-height: 120px;
-            /* 默认多几行 */
+            height: 80px;
             padding: 12px;
             border: 2px solid #eee;
             border-radius: 8px;
             font-size: 18px;
             margin-bottom: 15px;
             box-sizing: border-box;
-
-            resize: none;
-            /* 禁止手动拖拽 */
-            line-height: 1.6;
-            overflow: hidden;
-            /* 关键：隐藏滚动条 */
         }
 
         .config-row {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
             align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
+            margin-bottom: 15px;
         }
 
         .speed-box {
@@ -62,41 +53,9 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            white-space: nowrap;
         }
 
-        .btn-lang {
-            padding: 6px 14px;
-            border-radius: 20px;
-            border: 1px solid #ddd;
-            background: #fff;
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        .btn-lang:hover {
-            background: #f1f5f9;
-        }
-
-        .main-btn {
-            padding: 12px 18px;
-            background: var(--btn-bg);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 16px;
-            white-space: nowrap;
-        }
-
-        .main-btn.secondary {
-            background: #27ae60;
-        }
-
-        .main-btn.warn {
-            background: #e67e22;
-        }
-
+        /* 单词显示区域 */
         #display-container {
             display: flex;
             flex-wrap: wrap;
@@ -106,6 +65,7 @@
             margin: 0 auto;
         }
 
+        /* 单个单词包装 */
         .word-wrapper {
             display: inline-flex;
             flex-direction: column;
@@ -115,12 +75,14 @@
         .paper-word {
             position: relative;
             height: 250px;
+            /* 恢复 250 高度，确保 y 不被切断 */
             background: white;
             border-radius: 4px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
             overflow: hidden;
         }
 
+        /* 辅助线逻辑 */
         .guidelines {
             position: absolute;
             width: 100%;
@@ -155,10 +117,9 @@
         }
 
         svg {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
+            height: 250px;
+            z-index: 2;
+            position: relative;
         }
 
         path {
@@ -169,6 +130,7 @@
             stroke-linejoin: round;
         }
 
+        /* 交互按钮 */
         .btn-replay {
             margin-top: 10px;
             padding: 6px 16px;
@@ -178,6 +140,7 @@
             border: 1px solid var(--btn-bg);
             border-radius: 20px;
             cursor: pointer;
+            transition: 0.2s;
         }
 
         .btn-replay:hover {
@@ -185,74 +148,14 @@
             color: white;
         }
 
-        .last-updated {
-            font-size: 12px;
-            color: #888;
-            text-align: center;
-            /* 居中显示 */
-            margin: 20px 0 10px;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
-            .controls {
-                padding: 12px;
-            }
-
-            textarea {
-                min-height: 80px;
-                font-size: 16px;
-            }
-
-            .config-row {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .speed-box {
-                justify-content: space-between;
-            }
-
-            .main-btn {
-                width: 100%;
-            }
-
-            .paper-word {
-                height: 200px;
-                /* 原来 250px -> 200px */
-            }
-
-            .line.top {
-                top: 20%;
-            }
-
-            /* 50 * 0.8 */
-            .line.middle {
-                top: 44%;
-            }
-
-            /* 110 * 0.8 */
-            .line.bottom {
-                top: 68%;
-            }
-
-            /* 170 * 0.8 */
-            .line.descender {
-                top: 88%;
-            }
-
-            /* 220 * 0.8 */
-
-            #display-container {
-                gap: 20px 10px;
-            }
-
-            input[type="range"] {
-                width: 100%;
-            }
+        .main-btn {
+            padding: 12px 40px;
+            background: var(--btn-bg);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 18px;
         }
     </style>
 </head>
@@ -260,22 +163,16 @@
 <body>
 
     <div class="controls">
-        <div style="display:flex; justify-content:flex-end; gap:8px; margin-bottom:8px;">
-            <button class="btn-lang" onclick="setLang('zh')">中文</button>
-            <button class="btn-lang" onclick="setLang('en')">English</button>
-        </div>
-
-        <textarea id="wordInput">Apple</textarea>
-
+        <textarea id="wordInput">Hello World!</textarea>
         <div class="config-row">
             <div class="speed-box">
-                <span id="speedText">书写速度 (慢 ←→ 快)：</span>
-                <input type="range" id="speedRange" min="50" max="800" value="600" />
+                书写速度 (慢 ←→ 快)：
+                <input type="range" id="speedRange" min="50" max="800" value="500">
             </div>
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                <button class="main-btn" onclick="renderContent()" id="btnGen">生成互动单词卡</button>
-                <button class="main-btn secondary" onclick="printHandwriting()" id="btnPrint1">打印字帖</button>
-                <button class="main-btn warn" onclick="printWordsList()" id="btnPrint2">打印单词练习</button>
+            <div style="display: flex; gap: 10px;">
+                <button class="main-btn" onclick="renderContent()">生成互动单词卡</button>
+                <button class="main-btn" style="background: #27ae60;" onclick="printHandwriting()">打印字帖</button>
+                <button class="main-btn" style="background: #e67e22;" onclick="printWordsList()">打印单词练习</button>
             </div>
         </div>
     </div>
@@ -283,17 +180,6 @@
     <div id="display-container"></div>
 
     <script>
-
-        const ta = document.getElementById('wordInput');
-
-        function autoResize() {
-            ta.style.height = 'auto';
-            ta.style.height = ta.scrollHeight + 'px';
-        }
-
-        ta.addEventListener('input', autoResize);
-        window.addEventListener('load', autoResize);
-
         // 使用你提供并校对过的最新坐标数据
         const LetterPaths = {
             // 小写字母 (Lower Case)
@@ -318,7 +204,7 @@
             's': { width: 55, paths: ["M50 125 C 50 110, 15 110, 15 135 C 15 150, 50 130, 50 145 C 50 170, 15 170, 15 155"] },
             't': { width: 45, paths: ["M20 50 L20 160 Q20 170, 35 170", "M5 110 L35 110"] },
             'u': { width: 60, paths: ["M15 110 L15 160 Q15 170, 30 170 Q45 170, 45 160 L45 110", "M45 140 L45 170"] },
-            'v': { width: 55, paths: ["M15 110 L35 170", "M55 110 L35 170"] },
+            'v': { width: 55, paths: ["M10 110 L27 170 L45 110"] },
             'w': { width: 90, paths: ["M10 110 L25 170 L45 110 L65 170 L80 110"] },
             'x': { width: 55, paths: ["M10 110 L45 170", "M45 110 L10 170"] },
             'y': { width: 60, paths: ["M15 110 L32 170", "M50 110 L25 210 Q20 220, 10 220"] },
@@ -329,12 +215,12 @@
             'B': { width: 75, paths: ["M20 50 L20 170", "M20 50 L45 50 Q65 50, 65 80 Q65 110, 45 110 L20 110", "M20 110 L50 110 Q70 110, 70 140 Q70 170, 50 170 L20 170"] },
             'C': { width: 75, paths: ["M65 80 Q65 50, 40 50 Q15 50, 15 110 Q15 170, 40 170 Q65 170, 65 140"] },
             'D': { width: 80, paths: ["M20 50 L20 170", "M20 50 Q75 50, 75 110 Q75 170, 20 170"] },
-            'E': { width: 70, paths: ["M20 50 L60 50", "M20 50 L20 170", "M20 110 L50 110", "M20 170 L60 170"] },
-            'F': { width: 65, paths: ["M20 50 L60 50", "M20 50 L20 170", "M20 110 L50 110"] },
+            'E': { width: 70, paths: ["M20 50 L20 170", "M20 50 L60 50", "M20 110 L50 110", "M20 170 L60 170"] },
+            'F': { width: 65, paths: ["M20 50 L20 170", "M20 50 L60 50", "M20 110 L50 110"] },
             'G': { width: 85, paths: ["M75 80 Q75 50, 45 50 Q15 50, 15 110 Q15 170, 45 170 Q75 170, 75 115", "M55 115 L75 115 L75 170"] },
             'H': { width: 80, paths: ["M20 50 L20 170", "M20 110 L60 110", "M60 50 L60 170"] },
-            'I': { width: 40, paths: ["M5 50 L35 50", "M20 50 L20 170", "M5 170 L35 170"] },
-            'J': { width: 55, paths: ["M20 50 L60 50", "M40 50 L40 150 Q40 170, 20 170 Q5 170, 5 150"] },
+            'I': { width: 40, paths: ["M20 50 L20 170", "M5 50 L35 50", "M5 170 L35 170"] },
+            'J': { width: 55, paths: ["M40 50 L40 150 Q40 170, 20 170 Q5 170, 5 150", "M20 50 L60 50"] },
             'K': { width: 80, paths: ["M20 50 L20 170", "M65 50 L20 110 L65 170"] },
             'L': { width: 65, paths: ["M20 50 L20 170", "M20 170 L60 170"] },
             'M': { width: 90, paths: ["M15 170 L15 50 L45 120 L75 50 L75 170"] },
@@ -344,12 +230,12 @@
             'Q': { width: 85, paths: ["M42 50 Q15 50, 15 110 Q15 170, 42 170 Q70 170, 70 110 Q70 50, 42 50", "M55 145 L75 175"] },
             'R': { width: 75, paths: ["M20 50 L20 170", "M20 50 L45 50 Q65 50, 65 80 Q65 110, 45 110 L20 110", "M40 110 L65 170"] },
             'S': { width: 80, paths: ["M65 75 C 65 45, 15 45, 15 85 C 15 120, 75 100, 75 140 C 75 180, 15 180, 15 155"] },
-            'T': { width: 70, paths: ["M10 50 L60 50", "M35 50 L35 170"] },
+            'T': { width: 70, paths: ["M35 50 L35 170", "M10 50 L60 50"] },
             'U': { width: 80, paths: ["M20 50 L20 150 Q20 170, 40 170 Q60 170, 60 150 L60 50"] },
-            'V': { width: 80, paths: ["M15 50 L42 170", "M70 50 L42 170"] },
+            'V': { width: 80, paths: ["M10 50 L40 170 L70 50"] },
             'W': { width: 110, paths: ["M10 50 L25 170 L55 70 L85 170 L100 50"] },
             'X': { width: 80, paths: ["M15 50 L65 170", "M65 50 L15 170"] },
-            'Y': { width: 80, paths: ["M15 50 L40 110", "M65 50 L40 110", "M40 110 L40 170"] },
+            'Y': { width: 80, paths: ["M15 50 L40 110 L65 50", "M40 110 L40 170"] },
             'Z': { width: 70, paths: ["M15 50 L65 50 L15 170 L65 170"] },
 
             // 标点符号 (Punctuation)
@@ -657,8 +543,7 @@
 
                 const btn = document.createElement('button');
                 btn.className = 'btn-replay';
-                btn.dataset.word = word;
-                btn.innerText = `${i18n[currentLang].replay}: ${word}`;
+                btn.innerText = `点击书写: ${word}`;
                 btn.onclick = () => replayWord(wordIndex);
 
                 wrapper.appendChild(paper);
@@ -685,55 +570,8 @@
             });
         }
 
-        // window.onload = renderContent;
+        window.onload = renderContent;
     </script>
-
-    <script>
-        let currentLang = 'zh';
-        const i18n = {
-            zh: {
-                title: "英文点读互动书写板",
-                speed: "书写速度 (慢 ←→ 快)：",
-                gen: "生成互动单词卡",
-                print1: "打印字帖",
-                print2: "打印单词练习",
-                replay: "点击书写"
-            },
-            en: {
-                title: "English Handwriting Board",
-                speed: "Writing Speed (Slow ←→ Fast):",
-                gen: "Generate Cards",
-                print1: "Print Handwriting Sheet",
-                print2: "Print Word Practice",
-                replay: "Replay"
-            }
-        };
-
-        function setLang(lang) {
-            currentLang = lang;
-            document.title = i18n[lang].title;
-            document.getElementById('speedText').innerText = i18n[lang].speed;
-            document.getElementById('btnGen').innerText = i18n[lang].gen;
-            document.getElementById('btnPrint1').innerText = i18n[lang].print1;
-            document.getElementById('btnPrint2').innerText = i18n[lang].print2;
-
-            document.querySelectorAll('.btn-replay').forEach(btn => {
-                const word = btn.dataset.word;
-                btn.innerText = `${i18n[currentLang].replay}: ${word}`;
-            });
-        }
-
-        const userLang = navigator.language.includes('zh') ? 'zh' : 'en';
-
-        window.onload = function () {
-            setLang(userLang);
-            renderContent();
-        };
-    </script>
-
-    <div class="last-updated">
-        Last Updated at: 23/02/2026 V1
-    </div>
 </body>
 
 </html>
