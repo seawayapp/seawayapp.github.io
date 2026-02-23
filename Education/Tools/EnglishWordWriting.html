@@ -220,31 +220,57 @@
                 width: 100%;
             }
 
+            /* 字帖高度 */
             .paper-word {
                 height: 200px;
                 /* 原来 250px -> 200px */
+                max-width: 100%;
+                overflow-x: auto;
+                /* 单词过长时允许横向滚动 */
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                /* iOS 更顺 */
+                position: relative;
             }
 
+            /* 关键：让 guidelines 跟着内容宽度走 */
+            .paper-word .guidelines {
+                width: max-content;
+                min-width: 100%;
+            }
+
+            /* 线条也跟着铺满内容宽度 */
+            .paper-word .line {
+                width: 100%;
+            }
+
+            /* 四条线：百分比定位，适配缩放后的高度 */
             .line.top {
                 top: 20%;
             }
 
-            /* 50 * 0.8 */
             .line.middle {
                 top: 44%;
             }
 
-            /* 110 * 0.8 */
             .line.bottom {
                 top: 68%;
             }
 
-            /* 170 * 0.8 */
             .line.descender {
                 top: 88%;
             }
 
-            /* 220 * 0.8 */
+            /* SVG 保持原始宽度，不被压缩 */
+            .paper-word svg {
+                width: auto;
+                min-width: max-content;
+            }
+
+            /* 每个单词一行显示 */
+            .word-wrapper {
+                width: 100%;
+            }
 
             #display-container {
                 gap: 20px 10px;
@@ -252,6 +278,16 @@
 
             input[type="range"] {
                 width: 100%;
+            }
+
+            /* （可选）滚动条美化 */
+            .paper-word::-webkit-scrollbar {
+                height: 6px;
+            }
+
+            .paper-word::-webkit-scrollbar-thumb {
+                background: #cbd5e1;
+                border-radius: 4px;
             }
         }
     </style>
@@ -307,7 +343,7 @@
             'h': { width: 60, paths: ["M15 50 L15 170", "M15 130 Q15 110, 30 110 Q45 110, 45 130 L45 170"] },
             'i': { width: 25, paths: ["M12 110 L12 170", "M12 85 L12 90"] },
             'j': { width: 30, paths: ["M20 110 L20 200 Q20 220, 5 220", "M20 85 L20 90"] },
-            'k': { width: 60, paths: ["M15 50 L15 170", "M48 110 L15 145", "M25 135 L50 170"] },
+            'k': { width: 60, paths: ["M15 50 L15 170", "M50 110 L15 140", "M15 140 L50 170"] },
             'l': { width: 25, paths: ["M12 50 L12 170"] },
             'm': { width: 90, paths: ["M15 110 L15 170", "M15 130 Q15 110, 30 110 Q45 110, 45 130 L45 170", "M45 130 Q45 110, 60 110 Q75 110, 75 130 L75 170"] },
             'n': { width: 60, paths: ["M15 110 L15 170", "M15 130 Q15 110, 30 110 Q45 110, 45 130 L45 170"] },
@@ -329,8 +365,8 @@
             'B': { width: 75, paths: ["M20 50 L20 170", "M20 50 L45 50 Q65 50, 65 80 Q65 110, 45 110 L20 110", "M20 110 L50 110 Q70 110, 70 140 Q70 170, 50 170 L20 170"] },
             'C': { width: 75, paths: ["M65 80 Q65 50, 40 50 Q15 50, 15 110 Q15 170, 40 170 Q65 170, 65 140"] },
             'D': { width: 80, paths: ["M20 50 L20 170", "M20 50 Q75 50, 75 110 Q75 170, 20 170"] },
-            'E': { width: 70, paths: ["M20 50 L60 50", "M20 50 L20 170", "M20 110 L50 110", "M20 170 L60 170"] },
-            'F': { width: 65, paths: ["M20 50 L60 50", "M20 50 L20 170", "M20 110 L50 110"] },
+            'E': { width: 70, paths: ["M20 50 L20 170", "M20 50 L60 50", "M20 110 L50 110", "M20 170 L60 170"] },
+            'F': { width: 65, paths: ["M20 50 L20 170", "M20 50 L60 50", "M20 110 L50 110"] },
             'G': { width: 85, paths: ["M75 80 Q75 50, 45 50 Q15 50, 15 110 Q15 170, 45 170 Q75 170, 75 115", "M55 115 L75 115 L75 170"] },
             'H': { width: 80, paths: ["M20 50 L20 170", "M20 110 L60 110", "M60 50 L60 170"] },
             'I': { width: 40, paths: ["M5 50 L35 50", "M20 50 L20 170", "M5 170 L35 170"] },
@@ -732,7 +768,7 @@
     </script>
 
     <div class="last-updated">
-        Last Updated at: 23/02/2026 V1
+        Last Updated at: 23/02/2026 V2
     </div>
 </body>
 
