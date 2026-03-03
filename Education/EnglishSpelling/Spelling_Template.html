@@ -1020,33 +1020,49 @@
 
         // Play word audio
         function playWordAudio(word) {
-            const cleanWord = word.toLowerCase().replace(/[^a-z]/g, '');
-            audioPlayer.src = `./audio/${cleanWord}.mp3`;
+            text = word.trim();
+            const isSentence = text.includes(" ") || /[.,!?]/.test(text);
 
-            audioPlayer.play().catch(e => {
-                // console.error("Audio playback failed:", e);
-                console.warn("Local audio failed, falling back to Youdao audio...");
-                // Construct Youdao audio URL
-                const youdaoUrl = `https://dict.youdao.com/dictvoice?type=1&audio=${encodeURIComponent(cleanWord)}`;
+            if (isSentence) {
+                // 用浏览器 TTS
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = "en-GB";
+                utterance.rate = 1;   // 慢一点
+                utterance.pitch = 1;    // 音调正常
+                speechSynthesis.speak(utterance);
+            } else {
+            const cleanWord = word.toLowerCase();
+                        //.replace(/[^a-z]/g, '');
+                        audioPlayer.src = `./audio/${cleanWord}.mp3`;
+                        //console.log("cleanWord:" + cleanWord + ":")
 
-                // Create new Audio object for fallback
-                const fallbackAudio = new Audio(youdaoUrl);
+                        audioPlayer.play().catch(e => {
+                            // console.error("Audio playback failed:", e);
+                            console.warn("Local audio failed, falling back to Youdao audio...");
+                            // Construct Youdao audio URL
+                            const youdaoUrl = `https://dict.youdao.com/dictvoice?type=1&audio=${encodeURIComponent(cleanWord)}`;
 
-                // Optionally, handle if even Youdao audio fails
-                fallbackAudio.onerror = function () {
-                    console.error("Youdao audio also failed.");
-                };
+                            // Create new Audio object for fallback
+                            const fallbackAudio = new Audio(youdaoUrl);
 
-                fallbackAudio.play().catch(err => {
-                    console.error("Failed to play fallback audio:", err);
-                });
+                            // Optionally, handle if even Youdao audio fails
+                            fallbackAudio.onerror = function () {
+                                console.error("Youdao audio also failed.");
+                            };
 
-                // if (window.speechSynthesis) {
-                //     const utterance = new SpeechSynthesisUtterance(word);
-                //     utterance.lang = 'en-US';
-                //     speechSynthesis.speak(utterance);
-                // }
-            });
+                            fallbackAudio.play().catch(err => {
+                                console.error("Failed to play fallback audio:", err);
+                            });
+
+                            // if (window.speechSynthesis) {
+                            //     const utterance = new SpeechSynthesisUtterance(word);
+                            //     utterance.lang = 'en-US';
+                            //     speechSynthesis.speak(utterance);
+                            // }
+                        });
+            }
+
+            
         }
 
         // Close modal

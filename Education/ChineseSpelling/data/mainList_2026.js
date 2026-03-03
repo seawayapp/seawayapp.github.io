@@ -28,5 +28,11 @@ const mainList = [
     subtitle: "第四课",
     testdate: "",
     filename: "AY2026_P2_ChineseSpelling_04"
+  },
+  {
+    title: "P2 第五课，(HsZ)",
+    subtitle: "第五课",
+    testdate: "",
+    filename: "AY2026_P2_ChineseSpelling_05"
   }
 ];
