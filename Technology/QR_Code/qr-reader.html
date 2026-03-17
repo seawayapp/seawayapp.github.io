@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QR Code Reader</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="./jsQR.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #eef2ff, #f8fafc);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      margin: 0 0 15px;
+      font-size: 22px;
+      text-align: center;
+    }
+
+    .upload-box {
+      border: 2px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 28px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 14px;
+      color: #444;
+      line-height: 1.6;
+      min-height: 110px;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .upload-box:hover {
+      border-color: #6366f1;
+      background: #f8fafc;
+    }
+
+    input {
+      display: none;
+    }
+
+.preview {
+  display: block;        /* 关键 */
+  margin: 12px auto 0;   /* 自动左右居中 */
+  max-width: 100%;
+  border-radius: 10px;
+}
+
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-top: 15px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      padding: 10px;
+      resize: none;
+      font-size: 14px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-primary {
+      background: #6366f1;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #4f46e5;
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+    }
+
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+
+    .status {
+      margin-top: 10px;
+      font-size: 13px;
+      text-align: center;
+      min-height: 18px;
+    }
+
+    canvas {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="card">
+    <h2>📷 QR Code Reader</h2>
+
+    <label class="upload-box" id="dropArea">
+      <div><b>Click / Drag & Drop / Paste</b></div>
+      <div style="font-size:12px; color:#777; margin-top:4px;">
+        (Ctrl + V to paste QR image)
+      </div>
+      <input type="file" id="fileInput" accept="image/*">
+    </label>
+
+    <img id="preview" class="preview" />
+
+    <canvas id="canvas"></canvas>
+
+    <textarea id="result" placeholder="Decoded text will appear here..."></textarea>
+
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="copyText()">📋 Copy</button>
+      <button class="btn btn-secondary" onclick="resetAll()">🔄 Reset</button>
+    </div>
+
+    <div id="status" class="status"></div>
+  </div>
+</div>
+
+<script>
+  const fileInput = document.getElementById('fileInput');
+  const dropArea = document.getElementById('dropArea');
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const result = document.getElementById('result');
+  const preview = document.getElementById('preview');
+  const status = document.getElementById('status');
+
+  function processFile(file) {
+    const img = new Image();
+    const reader = new FileReader();
+
+    reader.onload = e => img.src = e.target.result;
+
+    img.onload = function () {
+      preview.src = img.src;
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const code = jsQR(imageData.data, canvas.width, canvas.height);
+
+      if (code) {
+        result.value = code.data;
+        status.textContent = "✅ QR code detected!";
+      } else {
+        result.value = "";
+        status.textContent = "❌ No QR code found.";
+      }
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  // 上传
+  fileInput.addEventListener('change', e => {
+    if (e.target.files[0]) processFile(e.target.files[0]);
+  });
+
+  // 点击上传
+  dropArea.addEventListener('click', () => fileInput.click());
+
+  // 拖拽
+  dropArea.addEventListener('dragover', e => {
+    e.preventDefault();
+    dropArea.style.borderColor = "#6366f1";
+  });
+
+  dropArea.addEventListener('dragleave', () => {
+    dropArea.style.borderColor = "#cbd5e1";
+  });
+
+  dropArea.addEventListener('drop', e => {
+    e.preventDefault();
+    dropArea.style.borderColor = "#cbd5e1";
+    const file = e.dataTransfer.files[0];
+    if (file) processFile(file);
+  });
+
+  // 粘贴
+  document.addEventListener('paste', event => {
+    const items = event.clipboardData.items;
+    for (let item of items) {
+      if (item.type.includes('image')) {
+        const file = item.getAsFile();
+        processFile(file);
+      }
+    }
+  });
+
+  function copyText() {
+    if (!result.value) return;
+    navigator.clipboard.writeText(result.value);
+    status.textContent = "📋 Copied!";
+  }
+
+  function resetAll() {
+    preview.src = "";
+    result.value = "";
+    status.textContent = "";
+    fileInput.value = "";
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+</script>
+
+</body>
+</html>

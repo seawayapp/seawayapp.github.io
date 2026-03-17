@@ -1031,35 +1031,35 @@
                 utterance.pitch = 1;    // 音调正常
                 speechSynthesis.speak(utterance);
             } else {
-            const cleanWord = word.toLowerCase();
-                        //.replace(/[^a-z]/g, '');
-                        audioPlayer.src = `./audio/${cleanWord}.mp3`;
-                        //console.log("cleanWord:" + cleanWord + ":")
+                const cleanWord = word.toLowerCase();
+                //.replace(/[^a-z]/g, '');
+                audioPlayer.src = `./audio/${cleanWord}.mp3`;
+                //console.log("cleanWord:" + cleanWord + ":")
 
-                        audioPlayer.play().catch(e => {
-                            // console.error("Audio playback failed:", e);
-                            console.warn("Local audio failed, falling back to Youdao audio...");
-                            // Construct Youdao audio URL
-                            const youdaoUrl = `https://dict.youdao.com/dictvoice?type=1&audio=${encodeURIComponent(cleanWord)}`;
+                audioPlayer.play().catch(e => {
+                    // console.error("Audio playback failed:", e);
+                    console.warn("Local audio failed, falling back to Youdao audio...");
+                    // Construct Youdao audio URL
+                    const youdaoUrl = `https://dict.youdao.com/dictvoice?type=1&audio=${encodeURIComponent(cleanWord)}`;
 
-                            // Create new Audio object for fallback
-                            const fallbackAudio = new Audio(youdaoUrl);
+                    // Create new Audio object for fallback
+                    const fallbackAudio = new Audio(youdaoUrl);
 
-                            // Optionally, handle if even Youdao audio fails
-                            fallbackAudio.onerror = function () {
-                                console.error("Youdao audio also failed.");
-                            };
+                    // Optionally, handle if even Youdao audio fails
+                    fallbackAudio.onerror = function () {
+                        console.error("Youdao audio also failed.");
+                    };
 
-                            fallbackAudio.play().catch(err => {
-                                console.error("Failed to play fallback audio:", err);
-                            });
+                    fallbackAudio.play().catch(err => {
+                        console.error("Failed to play fallback audio:", err);
+                    });
 
-                            // if (window.speechSynthesis) {
-                            //     const utterance = new SpeechSynthesisUtterance(word);
-                            //     utterance.lang = 'en-US';
-                            //     speechSynthesis.speak(utterance);
-                            // }
-                        });
+                    // if (window.speechSynthesis) {
+                    //     const utterance = new SpeechSynthesisUtterance(word);
+                    //     utterance.lang = 'en-US';
+                    //     speechSynthesis.speak(utterance);
+                    // }
+                });
             }
 
             
