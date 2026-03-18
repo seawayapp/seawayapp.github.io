@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="maintitle"></title>
+    <style>
+        :root {
+            --header-green: #92D050;
+            --header-purple: #7030A0;
+            --btn-green: #5cb85c;
+            --btn-green-hover: #4cae4c;
+            --border-color: #92D050;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft YaHei", sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide-container {
+            width: 95vw;
+            height: 90vh;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            height: 60px;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .header-left {
+            background-color: var(--header-green);
+            flex: 5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header-right {
+            background-color: var(--header-purple);
+            flex: 1.2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+        }
+
+        /* 内容区域 */
+        .content {
+            flex: 1;
+            padding: 25px 40px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background-color: #fff;
+            scroll-behavior: smooth;
+        }
+
+        .box-original {
+            border: 2px solid var(--border-color);
+            padding: 20px;
+            font-size: 1.25rem;
+            line-height: 1.7;
+            background-color: #fafdfa;
+            flex-shrink: 0;
+        }
+
+        .box-explanation {
+            border: 2px dashed var(--border-color);
+            padding: 20px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            white-space: pre-wrap;
+        }
+
+        .label-check {
+            color: #2e7d32;
+            font-weight: bold;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 封面模式 */
+        .chapter-cover {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .chapter-cover h1 {
+            font-size: clamp(40px, 8vw, 80px);
+            margin: 0;
+            font-family: "Kaiti", "STKaiti", serif;
+            font-weight: normal;
+            letter-spacing: 10px;
+        }
+
+        .chapter-cover h2 {
+            font-size: 24px;
+            margin-top: 20px;
+            color: #666;
+            font-weight: normal;
+        }
+
+        /* Footer */
+        footer {
+            height: 70px;
+            padding: 0 30px;
+            border-top: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            background: #fff;
+            flex-shrink: 0;
+        }
+
+        .btn-nav {
+            background-color: var(--btn-green);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.2s;
+        }
+
+        .btn-nav:hover {
+            background-color: var(--btn-green-hover);
+        }
+
+        .page-counter-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #666;
+            font-size: 16px;
+            font-family: serif;
+        }
+
+        .right-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .select-slide {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            min-width: 110px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="slide-container">
+        <header id="mainHeader">
+            <div class="header-left" id="displayTitle"></div>
+            <div class="header-right" id="displayPersonContainer">
+                <span id="displayPerson"></span>
+            </div>
+        </header>
+
+        <main class="content" id="scrollContainer">
+            <div id="contentMode" style="display: none; flex-direction: column; gap: 20px; min-height: 100%;">
+                <div class="box-original" id="displayOriginal"></div>
+                <div class="box-explanation">
+                    <span class="label-check">✅ 消文</span>
+                    <div id="displayExplanation"></div>
+                </div>
+            </div>
+            <div id="titleMode" class="chapter-cover">
+                <h1 id="bigTitle"></h1>
+                <h2 id="subTitle"></h2>
+            </div>
+        </main>
+
+        <footer>
+            <button class="btn-nav" onclick="changePage(-1)"><span>◀</span> 上一页</button>
+            <div class="page-counter-center"><span id="currentNum">1</span> of <span id="totalNum">1</span></div>
+            <div class="right-group">
+                <select class="select-slide" id="slideSelector" onchange="jumpToPage()"></select>
+                <button class="btn-nav" onclick="changePage(1)">下一页 <span>▶</span></button>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        let slideData = [];
+
+        let currentIndex = 0;
+
+        // Function to load script dynamically
+        function loadScript(fileName) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = fileName;
+                script.type = 'text/javascript';
+                script.onload = () => {
+                    if (typeof mainData !== 'undefined') {
+                        resolve(mainData);
+                    } else {
+                        reject(new Error('No data found in the loaded script.'));
+                    }
+                };
+                script.onerror = () => reject(new Error(`Failed to load script: ${fileName}`));
+                document.body.appendChild(script);
+            });
+        }
+
+        // Get script parameter from URL
+        function getScriptParam() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('input');
+        }
+
+        // Initialize application
+        async function init() {
+            try {
+                const scriptFile = getScriptParam();
+                if (!scriptFile) throw new Error('No JS file specified.');
+
+                const fileName = `./data/${scriptFile}.js`;
+                const mainData = await loadScript(fileName);
+                document.getElementById("maintitle").innerHTML = mainData.title + " " + mainData.subtitle;
+
+                slideData = mainData.paragraph;
+
+
+                document.getElementById('totalNum').innerText = slideData.length;
+                const selector = document.getElementById('slideSelector');
+                selector.innerHTML = "";
+                slideData.forEach((item, index) => {
+                    let opt = document.createElement('option');
+                    opt.value = index;
+
+                    if (item.category === "title") {
+                        // 标题页显示格式：[章节名]
+                        opt.innerHTML = `[${item.mainTitle}]`;
+                    } else {
+                        // 内容页显示格式：标题 (负责人) 或 仅标题
+                        const person = (item.personInCharge && item.personInCharge.trim() !== "")
+                            ? `${item.personInCharge}`
+                            : "";
+                        opt.innerHTML = `${index + 1}: ${item.pageTitle} - ${person}`;
+                    }
+                    selector.appendChild(opt);
+                });
+                renderSlide();
+            } catch (error) {
+                console.error('Initialization error:', error);
+                // elements.wordCardsContainer.textContent = 'Error loading data. Please try again later.';
+            }
+        }
+
+        function renderSlide() {
+            const data = slideData[currentIndex];
+            const header = document.getElementById('mainHeader');
+            const personContainer = document.getElementById('displayPersonContainer');
+            const personText = document.getElementById('displayPerson');
+            const contentMode = document.getElementById('contentMode');
+            const titleMode = document.getElementById('titleMode');
+            const originalBox = document.getElementById('displayOriginal');
+            const scrollContainer = document.getElementById('scrollContainer');
+
+            scrollContainer.scrollTop = 0;
+
+            if (data.category === "title") {
+                contentMode.style.display = "none";
+                titleMode.style.display = "flex";
+                header.style.visibility = "hidden";
+                document.getElementById('bigTitle').innerText = data.mainTitle;
+                document.getElementById('subTitle').innerText = data.subTitle + "\n" + mainData.title;
+            } else {
+                contentMode.style.display = "flex";
+                titleMode.style.display = "none";
+                header.style.visibility = "visible";
+                document.getElementById('displayTitle').innerText = data.pageTitle || "";
+
+                // --- 负责人逻辑处理 ---
+                const name = data.personInCharge ? data.personInCharge.trim() : "";
+                personText.innerText = name;
+
+                if (name === "") {
+                    // 如果为空，背景设为绿色 (#92D050)
+                    personContainer.style.backgroundColor = "var(--header-green)";
+                } else {
+                    // 如果不为空，还原为紫色 (#7030A0)
+                    personContainer.style.backgroundColor = "var(--header-purple)";
+                }
+
+                // 原文显示逻辑
+                if (!data.originalText || data.originalText.trim() === "") {
+                    originalBox.style.display = "none";
+                } else {
+                    originalBox.style.display = "block";
+                    originalBox.innerText = data.originalText;
+                }
+                document.getElementById('displayExplanation').innerText = data.explanation;
+            }
+
+            document.getElementById('currentNum').innerText = currentIndex + 1;
+            document.getElementById('slideSelector').value = currentIndex;
+        }
+
+        // 核心修改：无限循环逻辑
+        function changePage(delta) {
+            currentIndex += delta;
+            const total = slideData.length;
+
+            if (currentIndex < 0) {
+                currentIndex = total - 1; // 如果在第一页点 Previous，跳到最后一页
+            } else if (currentIndex >= total) {
+                currentIndex = 0; // 如果在最后一页点 Next，回到第一页
+            }
+
+            renderSlide();
+        }
+
+        function jumpToPage() {
+            currentIndex = parseInt(document.getElementById('slideSelector').value);
+            renderSlide();
+        }
+
+        // --- 新增：键盘监听逻辑 ---
+        document.addEventListener('keydown', (event) => {
+            // 如果用户正在下拉框选择，则不触发翻页，避免冲突
+            if (document.activeElement.tagName === 'SELECT') return;
+
+            if (event.key === 'ArrowLeft') {
+                changePage(-1);
+            } else if (event.key === 'ArrowRight') {
+                changePage(1);
+            }
+        });
+
+        // Initialize on load
+        window.addEventListener('load', init);
+    </script>
+
+</body>
+
+</html>
