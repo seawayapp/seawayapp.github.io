@@ -17,20 +17,19 @@ document.addEventListener("DOMContentLoaded", function () {
     tableHTML += `
             <tr>
                 <td>${index + 1}</td>
-                <td>`;
-    if (item.category == "file_slide") {
-      tableHTML += `<a href="./template_textslide.html?input=${item.filename}" 
-            target="_blank" 
-            aria-label="查看 ${item.title}">
-            ${item.title}
-        </a>`;
-    } else {
-      tableHTML += `<a href="./GL_Template.html?pageNo=${index}&input=${item.filename}" 
-            target="_blank" 
-            aria-label="查看 ${item.title}">
-            ${item.title}
-        </a>`;
-    }
+                <td style="text-align: left;">`;
+
+    const routeMap = {
+      file_slide: `./template_textslide.html?input=${item.filename}`,
+      file_slide_v2: `./template_textslide_v2.html?input=${item.filename}`,
+      default: `./GL_Template.html?pageNo=${index}&input=${item.filename}`
+    };
+    const url = routeMap[item.category] || routeMap["default"];
+
+    tableHTML += `
+    <a href="${url}" target="_blank" aria-label="查看 ${item.title}">
+        ${item.title}
+    </a>`;
 
     tableHTML += `                
                 </td>
