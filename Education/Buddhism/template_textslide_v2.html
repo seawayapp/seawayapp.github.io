@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="maintitle"></title>
+    <title id="maintitle">加载中...</title>
     <style>
         :root {
             --header-green: #92D050;
@@ -25,14 +25,18 @@
             background-color: #f0f2f5;
             display: flex;
             justify-content: center;
-            align-items: center;
+            /* --- 修改点 1: 从 center 改为 flex-start 让容器靠上 --- */
+            align-items: flex-start;
+            /* --- 修改点 2: 增加顶部间距，避免完全贴死屏幕边缘 --- */
+            padding-top: 10px;
             height: 100vh;
             overflow: hidden;
         }
 
         .slide-container {
             width: 95vw;
-            height: 90vh;
+            /* --- 修改点 3: 增加高度比例，进一步利用空间 --- */
+            height: 96vh;
             background-color: white;
             display: flex;
             flex-direction: column;
@@ -57,6 +61,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            text-align: center;
+            padding: 0 10px;
         }
 
         .header-right {
@@ -66,23 +72,25 @@
             justify-content: center;
             align-items: center;
             font-size: 18px;
+            transition: background-color 0.3s;
+            /* 平滑颜色切换 */
         }
 
         /* 内容区域 */
         .content {
             flex: 1;
-            padding: 25px 40px;
+            padding: 20px 30px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 10px;
             background-color: #fff;
             scroll-behavior: smooth;
         }
 
         .box-original {
             border: 2px solid var(--border-color);
-            padding: 20px;
+            padding: 10px;
             font-size: 1.25rem;
             line-height: 1.7;
             background-color: #fafdfa;
@@ -91,8 +99,9 @@
 
         .box-explanation {
             border: 2px dashed var(--border-color);
-            padding: 20px;
-            font-size: 1.1rem;
+            padding: 10px;
+            font-family: "Kaiti", "STKaiti", "楷体", "楷体_GB2312", serif;
+            font-size: 1.2rem;
             line-height: 1.8;
             flex-grow: 1;
             display: flex;
@@ -135,9 +144,38 @@
             font-weight: normal;
         }
 
+        [class^="hl"] {
+            padding: 0 4px;
+            /* 稍微增加了一点侧边间距，呼吸感更好 */
+            border-radius: 3px;
+            /* 稍微圆润一点，更现代 */
+            display: inline;
+            /* 确保不会断行 */
+        }
+
+        /* 特性样式：只负责颜色 */
+        .hl1 {
+            color: red;
+            background-color: yellow;
+            font-weight: bold;
+        }
+
+        /* 红字黄底 */
+        .hl2 {
+            color: red;
+            font-weight: bold;
+        }
+
+        /* 仅红字 */
+        .hl3 {
+            background-color: yellow;
+        }
+
+        /* 仅黄底 */
+
         /* Footer */
         footer {
-            height: 70px;
+            height: 60px;
             padding: 0 30px;
             border-top: 1px solid #eee;
             display: flex;
@@ -159,7 +197,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: opacity 0.2s;
+            transition: background-color 0.2s;
         }
 
         .btn-nav:hover {
@@ -186,6 +224,146 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             min-width: 110px;
+        }
+
+        /* =========================================
+           MOBILE 移动端适配
+           ========================================= */
+        @media (max-width: 600px) {
+            body {
+                padding-top: 5px;
+                /* 手机上顶部间距更小 */
+            }
+
+            .slide-container {
+                width: 98vw;
+                /* 手机上尽量占满宽度 */
+                height: 98vh;
+                /* 手机上尽量占满高度 */
+            }
+
+            header {
+                height: 50px;
+                font-size: 16px;
+            }
+
+            .content {
+                padding: 20px 20px;
+            }
+
+            /* 1. 隐藏中间页码计数 */
+            .page-counter-center {
+                display: none;
+            }
+
+            /* 2. 隐藏按钮文字 */
+            .btn-nav .btn-text {
+                display: none;
+            }
+
+            .btn-nav {
+                padding: 12px 18px;
+                z-index: 10;
+            }
+
+            /* 3. 下拉框在 Footer 居中 */
+            footer {
+                display: flex;
+                justify-content: space-between;
+                /* 按钮分居两侧 */
+                height: 50px;
+                padding: 0 10px;
+            }
+
+            .right-group {
+                display: contents;
+                /* 让子元素直接参与 footer 的 flex 布局 */
+            }
+
+            .select-slide {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                /* 完美的绝对居中 */
+                min-width: 120px;
+                max-width: 150px;
+                font-size: 13px;
+                z-index: 5;
+            }
+        }
+
+        /* =========================================
+            打印专用样式 (PDF 导出)
+            ========================================= */
+        @media print {
+
+            /* 强制颜色显示 */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            @page {
+                size: A4 landscape;
+                margin: 0;
+                /* 设为0，由内容控制边距 */
+            }
+
+            /* 2. 彻底清理 body */
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+                width: 100% !important;
+                height: auto !important;
+                overflow: visible !important;
+                display: block !important;
+            }
+
+            /* 打印时的每一页容器 */
+            .print-page {
+                position: relative;
+                /* 为页码绝对定位做准备 */
+                width: 297mm;
+                height: 210mm;
+                page-break-after: always;
+                break-after: page;
+                display: flex;
+                flex-direction: column;
+                background: white;
+            }
+
+            /* 页码样式 */
+            .print-footer-page {
+                position: absolute;
+                bottom: 10mm;
+                right: 15mm;
+                font-size: 14px;
+                color: #666;
+                font-family: serif;
+            }
+
+            /* 调整打印时的字体大小，确保能放下更多内容 */
+            .box-original {
+                font-size: 1.1rem !important;
+                padding: 15px !important;
+            }
+
+            .box-explanation {
+                font-size: 1.1rem !important;
+                padding: 15px !important;
+                flex: 1;
+            }
+
+            /* 隐藏所有 UI */
+            footer,
+            .btn-nav,
+            .page-counter-center,
+            .select-slide,
+            #mainHeader {
+                display: none !important;
+            }
         }
     </style>
 </head>
@@ -215,21 +393,28 @@
         </main>
 
         <footer>
-            <button class="btn-nav" onclick="changePage(-1)"><span>◀</span> 上一页</button>
-            <div class="page-counter-center"><span id="currentNum">1</span> of <span id="totalNum">1</span></div>
+            <button class="btn-nav" onclick="changePage(-1)">
+                <span>◀</span> <span class="btn-text">上一页</span>
+            </button>
+
+            <div class="page-counter-center">
+                <span id="currentNum">1</span> of <span id="totalNum">1</span>
+            </div>
+
             <div class="right-group">
                 <select class="select-slide" id="slideSelector" onchange="jumpToPage()"></select>
-                <button class="btn-nav" onclick="changePage(1)">下一页 <span>▶</span></button>
+                <button class="btn-nav" onclick="changePage(1)">
+                    <span class="btn-text">下一页</span> <span>▶</span>
+                </button>
             </div>
         </footer>
     </div>
 
     <script>
         let slideData = [];
-
         let currentIndex = 0;
+        let mainDataCache = null;
 
-        // Function to load script dynamically
         function loadScript(fileName) {
             return new Promise((resolve, reject) => {
                 const script = document.createElement('script');
@@ -247,13 +432,11 @@
             });
         }
 
-        // Get script parameter from URL
         function getScriptParam() {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get('input');
         }
 
-        // Initialize application
         async function init() {
             try {
                 const scriptFile = getScriptParam();
@@ -261,38 +444,39 @@
 
                 const fileName = `./data/${scriptFile}.js`;
                 const mainData = await loadScript(fileName);
+                mainDataCache = mainData; // 存入缓存
+
                 document.getElementById("maintitle").innerHTML = mainData.title + " " + mainData.subtitle;
-
                 slideData = mainData.paragraph;
-
 
                 document.getElementById('totalNum').innerText = slideData.length;
                 const selector = document.getElementById('slideSelector');
                 selector.innerHTML = "";
+
                 slideData.forEach((item, index) => {
                     let opt = document.createElement('option');
                     opt.value = index;
 
                     if (item.category === "title") {
-                        // 标题页显示格式：[章节名]
-                        opt.innerHTML = `[${item.mainTitle}]`;
+                        opt.innerHTML = `${index + 1}: [${item.mainTitle}]`;
                     } else {
-                        // 内容页显示格式：标题 (负责人) 或 仅标题
-                        const person = (item.personInCharge && item.personInCharge.trim() !== "")
-                            ? `${item.personInCharge}`
+                        // 包含标题与负责人的下拉索引
+                        const name = (item.personInCharge && item.personInCharge.trim() !== "")
+                            ? ` ${item.personInCharge}`
                             : "";
-                        opt.innerHTML = `${index + 1}: ${item.pageTitle} - ${person}`;
+                        opt.innerHTML = `${index + 1}: ${item.pageTitle} - ${name}`;
                     }
                     selector.appendChild(opt);
                 });
                 renderSlide();
             } catch (error) {
                 console.error('Initialization error:', error);
-                // elements.wordCardsContainer.textContent = 'Error loading data. Please try again later.';
             }
         }
 
         function renderSlide() {
+            if (!slideData || slideData.length === 0) return;
+
             const data = slideData[currentIndex];
             const header = document.getElementById('mainHeader');
             const personContainer = document.getElementById('displayPersonContainer');
@@ -309,49 +493,39 @@
                 titleMode.style.display = "flex";
                 header.style.visibility = "hidden";
                 document.getElementById('bigTitle').innerText = data.mainTitle;
-                document.getElementById('subTitle').innerText = data.subTitle + "\n" + mainData.title;
+                document.getElementById('subTitle').innerText = (data.subTitle || "") + "\n" + (mainDataCache ? mainDataCache.title : "");
             } else {
                 contentMode.style.display = "flex";
                 titleMode.style.display = "none";
                 header.style.visibility = "visible";
                 document.getElementById('displayTitle').innerText = data.pageTitle || "";
 
-                // --- 负责人逻辑处理 ---
+                // 负责人逻辑与背景色动态切换
                 const name = data.personInCharge ? data.personInCharge.trim() : "";
                 personText.innerText = name;
+                personContainer.style.backgroundColor = (name === "") ? "var(--header-green)" : "var(--header-purple)";
 
-                if (name === "") {
-                    // 如果为空，背景设为绿色 (#92D050)
-                    personContainer.style.backgroundColor = "var(--header-green)";
-                } else {
-                    // 如果不为空，还原为紫色 (#7030A0)
-                    personContainer.style.backgroundColor = "var(--header-purple)";
-                }
-
-                // 原文显示逻辑
+                // 原文显示控制
                 if (!data.originalText || data.originalText.trim() === "") {
                     originalBox.style.display = "none";
                 } else {
                     originalBox.style.display = "block";
-                    originalBox.innerText = data.originalText;
+                    originalBox.innerHTML = data.originalText;
                 }
-                document.getElementById('displayExplanation').innerText = data.explanation;
+                document.getElementById('displayExplanation').innerHTML = data.explanation;
             }
 
             document.getElementById('currentNum').innerText = currentIndex + 1;
             document.getElementById('slideSelector').value = currentIndex;
         }
 
-        // 核心修改：无限循环逻辑
         function changePage(delta) {
-            currentIndex += delta;
             const total = slideData.length;
+            if (total === 0) return;
 
-            if (currentIndex < 0) {
-                currentIndex = total - 1; // 如果在第一页点 Previous，跳到最后一页
-            } else if (currentIndex >= total) {
-                currentIndex = 0; // 如果在最后一页点 Next，回到第一页
-            }
+            currentIndex += delta;
+            if (currentIndex < 0) currentIndex = total - 1;
+            else if (currentIndex >= total) currentIndex = 0;
 
             renderSlide();
         }
@@ -361,22 +535,80 @@
             renderSlide();
         }
 
-        // --- 新增：键盘监听逻辑 ---
-        document.addEventListener('keydown', (event) => {
-            // 如果用户正在下拉框选择，则不触发翻页，避免冲突
+        // 全量打印函数
+        function doFullPrint() {
+            const originalBody = document.body.innerHTML;
+            const totalPages = slideData.length;
+
+            // 使用数组 push 最后 join('')，比 += 字符串拼接更干净，不容易产生多余空行
+            let htmlArray = [];
+
+            slideData.forEach((item, index) => {
+                const isTitle = item.category === "title";
+                const person = item.personInCharge ? item.personInCharge.trim() : "";
+                const personBg = (person === "") ? "var(--header-green)" : "var(--header-purple)";
+                const currentPage = index + 1;
+
+                // 注意：模板字符串紧贴左侧，防止产生多余空白节点
+                htmlArray.push(`<div class="print-page">
+            <header style="display: flex; height: 60px; color: white; visibility: ${isTitle ? 'hidden' : 'visible'}">
+                <div style="background-color: var(--header-green); flex: 5; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 20px;">
+                    ${item.pageTitle || ""}
+                </div>
+                <div style="background-color: ${personBg}; flex: 1.2; display: flex; justify-content: center; align-items: center; font-size: 16px;">
+                    ${person}
+                </div>
+            </header>
+            
+            
+            <div style="flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 15px;">
+                ${isTitle ? `
+                    <div style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                        <h1 style="font-size: 60px; font-family: 'Kaiti', serif; margin: 0;">${item.mainTitle}</h1>
+                        <h2 style="font-size: 24px; color: #666; font-weight: normal; margin-top: 20px;">${(item.subTitle || "") + "<br>" + (mainDataCache ? mainDataCache.title : "")}</h2>
+                    </div>
+                ` : `
+                    <div class="box-original" style="display: ${!item.originalText ? 'none' : 'block'}">
+                        ${item.originalText || ""}
+                    </div>
+                    <div class="box-explanation" style="font-family: 'Kaiti', 'STKaiti', serif;">
+                        <span class="label-check">✅ 消文</span>
+                        <div style="margin-top: 10px;">${item.explanation}</div>
+                    </div>
+                `}
+            </div>
+            <div class="print-footer-page">Page ${currentPage} of ${totalPages}</div>
+        </div>`);
+            });
+
+            // 替换 body
+            document.body.innerHTML = htmlArray.join('');
+
+            setTimeout(() => {
+                window.print();
+                document.body.innerHTML = originalBody;
+                window.location.reload();
+            }, 500);
+        }
+
+        // 键盘翻页监听
+        document.addEventListener('keydown', (e) => {
             if (document.activeElement.tagName === 'SELECT') return;
 
-            if (event.key === 'ArrowLeft') {
+            // 拦截 Ctrl + P (Mac 上是 Command + P)
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                e.preventDefault();
+                doFullPrint();
+            }
+            if (e.key === 'ArrowLeft') {
                 changePage(-1);
-            } else if (event.key === 'ArrowRight') {
+            } else if (e.key === 'ArrowRight') {
                 changePage(1);
             }
         });
 
-        // Initialize on load
         window.addEventListener('load', init);
     </script>
-
 </body>
 
 </html>
