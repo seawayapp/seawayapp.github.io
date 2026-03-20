@@ -351,7 +351,7 @@
             }
 
             .box-explanation {
-                font-size: 1.1rem !important;
+                font-size: 1.2rem !important;
                 padding: 15px !important;
                 flex: 1;
             }
@@ -549,6 +549,12 @@
                 const personBg = (person === "") ? "var(--header-green)" : "var(--header-purple)";
                 const currentPage = index + 1;
 
+                const textLength = (item.explanation || "").length + (item.originalText || "").length;
+                let dynamicFontSize = "1.4rem"; // 默认字号
+
+                //if (textLength > 600) dynamicFontSize = "0.9rem"; // 字多，缩小
+                //if (textLength > 1000) dynamicFontSize = "0.7rem"; // 字非常多，大幅缩小
+
                 // 注意：模板字符串紧贴左侧，防止产生多余空白节点
                 htmlArray.push(`<div class="print-page">
             <header style="display: flex; height: 60px; color: white; visibility: ${isTitle ? 'hidden' : 'visible'}">
@@ -571,7 +577,7 @@
                     <div class="box-original" style="display: ${!item.originalText ? 'none' : 'block'}">
                         ${item.originalText || ""}
                     </div>
-                    <div class="box-explanation" style="font-family: 'Kaiti', 'STKaiti', serif;">
+                    <div class="box-explanation" style="font-family: 'Kaiti', 'STKaiti', serif; line-height: 1.6;">
                         <span class="label-check">✅ 消文</span>
                         <div style="margin-top: 10px;">${item.explanation}</div>
                     </div>
