@@ -11,7 +11,7 @@ var mainData = {
     {
       category: "content",
       pageTitle: "P77L8 - P77L9 (手抄)",
-      personInCharge: "LL",
+      personInCharge: "AL",
       originalText:
         "第四如何修念死者谓应由于三种根本九种因相三种决断门中修习此中有三 一思决定死 二思惟死无定期 三思惟死时除法而外余皆无益",
       explanation:
