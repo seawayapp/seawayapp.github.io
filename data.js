@@ -7,11 +7,11 @@ const data = {
     },
     {
       date: "2026-01-07",
-      name: "<a href='Education/ChineseSpelling/index26.html' target='_blank' rel='noopener'>华文听写 2026 (P5)</a>"
+      name: "<a href='Education/ChineseSpelling/index26.html' target='_blank' rel='noopener'>华文听写 2026 (P2 & P5)</a>"
     },
     {
       date: "2026-01-07",
-      name: "<a href='Education/EnglishSpelling/index26.html' target='_blank' rel='noopener'>English Spelling 2026 (P5)</a>"
+      name: "<a href='Education/EnglishSpelling/index26.html' target='_blank' rel='noopener'>English Spelling 2026 (P2 & P5)</a>"
     },
     {
       date: "2025-02-01",

@@ -7,7 +7,6 @@ const mainData = [
     group: [
       "识读词语",
       "识读词语",
-      "识读词语",
       "识写字词",
       "识写字词",
       "识写字词",
@@ -22,7 +21,6 @@ const mainData = [
       "识写字词"
     ],
     pronunciation: [
-      "huáng shū zé",
       "nín hǎo",
       "xué yè",
       "shēn tǐ",
@@ -41,7 +39,6 @@ const mainData = [
       "gǔ"
     ],
     sentences: [
-      "黄书泽",
       "您好",
       "学业",
       "身体",
