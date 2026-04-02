@@ -1,138 +1,235 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <!-- Input Data -->
-    <script src="data/A_index_EnglishSpelling26.js"></script>
-    <title>Education - English Spelling 2026</title>
-    <style type="text/css">
-      body {
-        font-family: "Book Antiqua";
-      }
+<html lang="en">
 
-      body {
-        background: #eaeaea;
-      }
-
-      .wrap {
-        margin: 0 auto;
-        width: 1000px;
-      }
-
-      .logo {
-        text-align: center;
-        margin-top: 200px;
-      }
-
-      .logo img {
-        width: 350px;
-      }
-
-      .logo p {
-        color: #272727;
-        font-size: 40px;
-        margin-top: 1px;
-      }
-
-      .logo p span {
-        color: lightgreen;
-      }
-
-      .sub a {
-        color: #fff;
-        background: #272727;
-        text-decoration: none;
-        padding: 10px 20px;
-        font-size: 13px;
-        font-family: arial, serif;
-        font-weight: bold;
-        -webkit-border-radius: 0.5em;
-        -moz-border-radius: 0.5em;
-        -border-radius: 0.5em;
-      }
-
-      .footer {
-        color: black;
-        position: absolute;
-        right: 10px;
-        bottom: 10px;
-      }
-
-      .footer a {
-        color: rgb(114, 173, 38);
-      }
-
-      table,
-      th,
-      td {
-        border: 1px solid black;
-        font-size: 30px;
-      }
-
-      .center {
-        margin-left: auto;
-        margin-right: auto;
-      }
-    </style>
-  </head>
-
-  <body>
-    <!---728x90--->
-    <div class="wrap">
-      <div class="logo">
-        <h1>English Spelling 2026</h1>
-        <div id="mainContent"></div>
-      </div>
-    </div>
-  </body>
-  <script>
-    let inputJSON = mainData;
-
-    let text = `<table class="center">
-    <tr>
-        <th>SN</th>
-        <th>Week</th>
-        <th>Date</th>
-    </tr>`;
-    for (var i = 0; i < inputJSON.length; i++) {
-      let index = i + 1;
-      let type = "paragraph" + i;
-      let title = inputJSON[i].title || "";
-      let subTitle = inputJSON[i].subtitle || "";
-      let testDate = inputJSON[i].testdate || "";
-
-      if (inputJSON[i].category == "file") {
-        text += `
-                <tr>
-                    <td>${index}</td>
-                    <td><a href="./Spelling_Template.html?input=${inputJSON[i].filename}" target="_blank">&nbsp;${inputJSON[i].title}&nbsp;&nbsp;${inputJSON[i].subtitle}&nbsp;</a></td>
-                    <td>&nbsp;${testDate}&nbsp;</td>    
-            `;
-      }
-
-      if (inputJSON[i].category == "file_slide") {
-        text += `
-                <tr>
-                    <td>${index}</td>
-                    <td><a href="./template_textslide.html?input=${inputJSON[i].filename}" target="_blank">&nbsp;${inputJSON[i].title}&nbsp;&nbsp;${inputJSON[i].subtitle}&nbsp;</a></td>
-                    <td>&nbsp;${testDate}&nbsp;</td>    
-            `;
-      }
-
-      if (inputJSON[i].category == "folder") {
-        text += `
-                <tr>
-                    <td>${index}</td>
-                    <td><a href="./${inputJSON[i].filename}" target="_blank">&nbsp;${inputJSON[i].title}&nbsp;&nbsp;${inputJSON[i].subtitle}&nbsp;</a></td>
-                    <td>&nbsp;${testDate}&nbsp;</td>    
-            `;
-      }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Spelling 2026</title>
+  <script src="../../nav-top.js"></script>
+  <!-- Input Data -->
+  <script src="data/A_index_EnglishSpelling26.js"></script>
+  <style>
+    :root {
+      --green:      #92d050;
+      --green-dark: #6aaa2a;
+      --green-dim:  rgba(146,208,80,0.12);
+      --text:       #1e293b;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+      --bg:         #f8fafc;
+      --surface:    #ffffff;
+      --border:     #e2e8f0;
+      --radius:     12px;
+      --shadow:     0 2px 12px rgba(0,0,0,0.07);
+      --font:       "Inter", "Segoe UI", system-ui, sans-serif;
     }
 
-    text += `
-</table>
-    `;
-    document.getElementById("mainContent").innerHTML = text;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .page-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 36px 20px 60px;
+    }
+
+    /* ── Page header ── */
+    .page-header { margin-bottom: 28px; }
+
+    .page-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--green-dark);
+      background: var(--green-dim);
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+
+    .page-title {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
+
+    .page-count {
+      margin-top: 6px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Card list ── */
+    .lesson-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .lesson-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      text-decoration: none;
+      color: var(--text);
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+      cursor: pointer;
+    }
+
+    .lesson-card:hover {
+      border-color: var(--green);
+      box-shadow: 0 4px 20px rgba(146,208,80,0.18);
+      transform: translateX(4px);
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .lesson-num {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--green-dim);
+      color: var(--green-dark);
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .lesson-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .lesson-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .lesson-subtitle {
+      margin-top: 3px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .lesson-date {
+      margin-top: 3px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .lesson-date.has-date { color: var(--green-dark); font-weight: 500; }
+
+    .lesson-arrow {
+      color: var(--text-light);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      transition: transform 0.2s, color 0.2s;
+    }
+
+    .lesson-card:hover .lesson-arrow {
+      transform: translateX(4px);
+      color: var(--green-dark);
+    }
+
+    .state-msg {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 480px) {
+      .page-wrap { padding: 24px 14px 48px; }
+      .lesson-card { padding: 14px 16px; gap: 12px; }
+      .lesson-title { font-size: 0.92rem; }
+      .lesson-num { width: 32px; height: 32px; font-size: 0.78rem; border-radius: 8px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-wrap">
+
+    <div class="page-header">
+      <div class="page-eyebrow">🔤 English Spelling</div>
+      <h1 class="page-title">English Spelling 2026</h1>
+      <p class="page-count" id="pageCount"></p>
+    </div>
+
+    <div class="lesson-list" id="mainContent">
+      <div class="state-msg">Loading...</div>
+    </div>
+
+  </div>
+
+  <script>
+    function getHref(item) {
+      if (item.category === "file")       return `./Spelling_Template.html?input=${item.filename}`;
+      if (item.category === "file_slide") return `./template_textslide.html?input=${item.filename}`;
+      if (item.category === "folder")     return `./${item.filename}`;
+      return "#";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      try {
+        const container = document.getElementById("mainContent");
+        container.innerHTML = "";
+
+        document.getElementById("pageCount").textContent =
+          `${mainData.length} unit${mainData.length !== 1 ? "s" : ""}`;
+
+        mainData.forEach((item, index) => {
+          const card = document.createElement("a");
+          card.className = "lesson-card";
+          card.href = getHref(item);
+
+          const title    = item.title    || "";
+          const subtitle = item.subtitle || "";
+          const dateText = item.testdate ? item.testdate : "";
+          const dateClass = item.testdate ? "lesson-date has-date" : "lesson-date";
+
+          card.innerHTML = `
+            <div class="lesson-num">${index + 1}</div>
+            <div class="lesson-body">
+              <div class="lesson-title">${title}</div>
+              ${subtitle ? `<div class="lesson-subtitle">${subtitle}</div>` : ""}
+              ${dateText ? `<div class="${dateClass}">🗓 ${dateText}</div>` : ""}
+            </div>
+            <span class="lesson-arrow">→</span>`;
+
+          container.appendChild(card);
+        });
+      } catch (error) {
+        console.error("Failed to load data:", error);
+        document.getElementById("mainContent").innerHTML =
+          '<div class="state-msg">Error loading data. Please refresh.</div>';
+      }
+    });
   </script>
+</body>
+
 </html>

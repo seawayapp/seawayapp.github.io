@@ -1,62 +1,111 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Function to sort releases by date
-  function sortByDateAscending(releases) {
-    return releases.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  /* ── Helpers ── */
+
+  // Parse the HTML anchor in data.name to get href + text
+  function parseLink(html) {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    const a = div.querySelector("a");
+    return {
+      href: a ? a.getAttribute("href") : "#",
+      text: a ? a.textContent.trim() : html
+    };
   }
 
-  // Function to sort releases by date
-  function sortByDateAscending(releases) {
-    return releases.sort((a, b) => new Date(a.date) - new Date(b.date));
+  // Pick an emoji icon based on title keywords
+  function iconFor(text) {
+    const t = text.toLowerCase();
+    if (t.includes("buddhism") || t.includes("佛"))          return "🙏";
+    if (t.includes("taekwondo") || t.includes("grading"))    return "🥋";
+    if (t.includes("chinese") || t.includes("华文") || t.includes("中文")) return "🀄";
+    if (t.includes("pinyin") || t.includes("拼音"))           return "🗣️";
+    if (t.includes("english spelling") || t.includes("spelling")) return "🔤";
+    if (t.includes("english"))                                return "📝";
+    if (t.includes("phonics"))                                return "🔊";
+    if (t.includes("vocabulary"))                             return "📖";
+    if (t.includes("exam") || t.includes("paper"))           return "📋";
+    if (t.includes("game") || t.includes("cariboo"))         return "🎮";
+    if (t.includes("joke") || t.includes("幽默"))             return "😄";
+    if (t.includes("song"))                                   return "🎵";
+    if (t.includes("technology") || t.includes("network"))   return "💻";
+    if (t.includes("base64") || t.includes("json") || t.includes("crypto")) return "🔧";
+    if (t.includes("甲骨文"))                                 return "🏛️";
+    if (t.includes("古文"))                                   return "📜";
+    if (t.includes("reading") || t.includes("book"))         return "📚";
+    if (t.includes("education"))                              return "🎓";
+    if (t.includes("writing"))                                return "✏️";
+    if (t.includes("presentation"))                           return "📊";
+    if (t.includes("image"))                                  return "🖼️";
+    if (t.includes("mandarin"))                               return "🇨🇳";
+    return "🔗";
   }
 
-  function sortByDateDescending(releases) {
-    return releases.sort((a, b) => new Date(b.date) - new Date(a.date));
+  function sortDesc(arr) {
+    return [...arr].sort((a, b) => new Date(b.date) - new Date(a.date));
   }
 
-  // Function to set table column widths
-  function setTableColumnWidths(tableSelector) {
-    const table = document.querySelector(tableSelector);
-    if (table) {
-      const thElements = table.querySelectorAll("th");
-      thElements.forEach((th) => (th.style.width = "50%"));
-
-      const tdElements = table.querySelectorAll("td");
-      tdElements.forEach((td) => (td.style.width = "50%"));
-    }
+  function sortAsc(arr) {
+    return [...arr].sort((a, b) => new Date(a.date) - new Date(b.date));
   }
 
-  // Populate Pin Releases Table
-  const pinTableBody = document.querySelector("#pin-table tbody");
-  const sortedPinReleases = sortByDateAscending(data.pinReleases);
-  sortedPinReleases.forEach((release) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `<td>${release.date}</td><td>${release.name}</td>`;
-    pinTableBody.appendChild(row);
+  /* ── Recent — timeline list ── */
+  const recentList = document.getElementById("recent-list");
+  sortDesc(data.recentReleases).forEach(item => {
+    const { href, text } = parseLink(item.name);
+    const icon = iconFor(text);
+
+    const el = document.createElement("a");
+    el.className = "release-item";
+    el.href = href;
+    el.innerHTML = `
+      <div class="release-icon">${icon}</div>
+      <div class="release-body">
+        <div class="release-name">${text}</div>
+        <div class="release-date">${item.date}</div>
+      </div>
+      <span class="release-arrow">→</span>`;
+    recentList.appendChild(el);
   });
 
-  // Populate Recent Releases Table
-  const recentTableBody = document.querySelector("#recent-table tbody");
-  const sortedRecentReleases = sortByDateAscending(data.recentReleases);
-  sortedRecentReleases.forEach((release) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `<td>${release.date}</td><td>${release.name}</td>`;
-    recentTableBody.appendChild(row);
+  /* ── Pinned — card grid ── */
+  const pinGrid = document.getElementById("pin-grid");
+  sortAsc(data.pinReleases).forEach(item => {
+    const { href, text } = parseLink(item.name);
+    const icon = iconFor(text);
+
+    const el = document.createElement("a");
+    el.className = "pin-card";
+    el.href = href;
+    el.innerHTML = `
+      <div class="pin-card-icon">${icon}</div>
+      <div class="pin-card-name">${text}</div>
+      <div class="pin-card-date">${item.date}</div>`;
+    pinGrid.appendChild(el);
   });
 
-  // Populate Archive Releases Table
-  const archiveTableBody = document.querySelector("#archive-table tbody");
-  const sortedArchiveReleases = sortByDateDescending(data.archiveReleases);
-  sortedArchiveReleases.forEach((release) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `<td>${release.date}</td><td>${release.name}</td>`;
-    archiveTableBody.appendChild(row);
+  /* ── Archive — compact collapsible list ── */
+  const archiveList = document.getElementById("archive-list");
+  const sorted = sortDesc(data.archiveReleases);
+
+  document.getElementById("archiveCount").textContent = sorted.length;
+  document.getElementById("archiveToggle").innerHTML =
+    `Show all ${sorted.length} ▾`;
+
+  sorted.forEach(item => {
+    const { href, text } = parseLink(item.name);
+    const icon = iconFor(text);
+
+    const el = document.createElement("a");
+    el.className = "archive-item";
+    el.href = href;
+    el.innerHTML = `
+      <span class="archive-item-icon">${icon}</span>
+      <span class="archive-item-name">${text}</span>
+      <span class="archive-item-date">${item.date}</span>`;
+    archiveList.appendChild(el);
   });
 
-  // Set column widths
-  setTableColumnWidths("#pin-table");
-  setTableColumnWidths("#recent-table");
-  setTableColumnWidths("#archive-table");
-
-  // Set Last Updated Date
+  /* ── Last Updated ── */
   document.getElementById("last-updated").textContent = data.lastUpdated;
 });

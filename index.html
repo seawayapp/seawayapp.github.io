@@ -2,65 +2,118 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="Main page for educational resources and tools">
-	<link rel="icon" href="./favicon.png">
-	<link rel="stylesheet" href="styles.css">
-	<title>Welcome to Main Page</title>
-	<script defer src="data.js"></script>
-	<script defer src="script.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SeawayApp — Educational resources and tools">
+  <link rel="icon" href="./favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <title>SeawayApp</title>
+  <script defer src="data.js"></script>
+  <script defer src="script.js"></script>
 </head>
 
 <body>
-	<main class="wrap">
-		<header class="logo">
-			<h1>Welcome to Main Page</h1>
-		</header>
 
-		<section class="recent-releases">
-			<h2>Recent Releases</h2>
-			<table id="recent-table">
-				<thead>
-					<tr>
-						<th>Release Date</th>
-						<th>Module Name</th>
-					</tr>
-				</thead>
-				<tbody></tbody>
-			</table>
-		</section>
+  <!-- ── Navbar ── -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a class="nav-brand" href="#">
+        <span class="brand-dot"></span>
+        SeawayApp
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#recent"  class="nav-link">Recent</a></li>
+        <li><a href="#pinned" class="nav-link">Pinned</a></li>
+        <li><a href="#archive" class="nav-link">Archive</a></li>
+      </ul>
+    </div>
+  </nav>
 
-		<section class="pin-releases">
-			<h2>Pin Releases</h2>
-			<table id="pin-table">
-				<thead>
-					<tr>
-						<th>Release Date</th>
-						<th>Module Name</th>
-					</tr>
-				</thead>
-				<tbody></tbody>
-			</table>
-		</section>
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="hero-eyebrow">Welcome to</p>
+      <h1 class="hero-title">SeawayApp</h1>
+      <p class="hero-sub">Educational resources, language tools &amp; more — all in one place.</p>
+      <div class="hero-actions">
+        <a href="#recent"  class="btn btn-primary">What's New</a>
+        <a href="#pinned" class="btn btn-ghost">Browse All</a>
+      </div>
+    </div>
+    <div class="hero-bg-grid" aria-hidden="true"></div>
+  </section>
 
-		<section class="archive-releases">
-			<h2>Archive Releases</h2>
-			<table id="archive-table">
-				<thead>
-					<tr>
-						<th>Release Date</th>
-						<th>Module Name</th>
-					</tr>
-				</thead>
-				<tbody></tbody>
-			</table>
-		</section>
+  <!-- ── Main ── -->
+  <main class="wrap">
 
-		<footer>
-			<p>Last updated on <span id="last-updated"></span></p>
-		</footer>
-	</main>
+    <!-- Recent -->
+    <section class="content-section" id="recent">
+      <div class="section-header">
+        <div class="section-label">Latest</div>
+        <h2 class="section-title">Recent Releases</h2>
+      </div>
+      <div class="release-list" id="recent-list"></div>
+    </section>
+
+    <!-- Pinned -->
+    <section class="content-section" id="pinned">
+      <div class="section-header">
+        <div class="section-label">Featured</div>
+        <h2 class="section-title">Pinned Modules</h2>
+      </div>
+      <div class="card-grid" id="pin-grid"></div>
+    </section>
+
+    <!-- Archive -->
+    <section class="content-section" id="archive">
+      <div class="section-header">
+        <div class="section-label">History</div>
+        <h2 class="section-title">Archive</h2>
+        <button class="toggle-archive" id="archiveToggle" onclick="toggleArchive()">
+          Show all <span id="archiveCount"></span> ▾
+        </button>
+      </div>
+      <div class="archive-list" id="archive-list"></div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span class="footer-brand">SeawayApp</span>
+      <span class="footer-sep">·</span>
+      <span>Last updated: <span id="last-updated"></span></span>
+    </div>
+  </footer>
+
+  <script>
+    // Hamburger
+    document.getElementById("navToggle").addEventListener("click", () => {
+      document.getElementById("navLinks").classList.toggle("open");
+    });
+    document.querySelectorAll(".nav-link").forEach(l =>
+      l.addEventListener("click", () =>
+        document.getElementById("navLinks").classList.remove("open")
+      )
+    );
+
+    // Archive toggle
+    let archiveExpanded = false;
+    function toggleArchive() {
+      archiveExpanded = !archiveExpanded;
+      document.getElementById("archive-list").classList.toggle("expanded", archiveExpanded);
+      document.getElementById("archiveToggle").innerHTML = archiveExpanded
+        ? "Show less ▴"
+        : `Show all <span id="archiveCount">${document.querySelectorAll(".archive-item").length}</span> ▾`;
+    }
+  </script>
+
 </body>
-
 </html>

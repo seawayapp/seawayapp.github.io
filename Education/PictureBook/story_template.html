@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>绘本故事</title>
+  <style>
+    /* =========================================
+       THEME — tweak text styles here
+       ========================================= */
+    :root {
+      /* English text */
+      --en-font:    "Georgia", "Times New Roman", serif;
+      --en-size:    clamp(13px, 2vw, 22px);
+      --en-color:   #ffffff;
+      --en-style:   italic;
+      --en-weight:  normal;
+      --en-bg:      transparent;
+
+      /* Chinese text */
+      --cn-font:    "Kaiti", "STKaiti", "楷体", "楷体_GB2312", serif;
+      --cn-size:    clamp(17px, 2.8vw, 30px);
+      --cn-color:   #FFD700;
+      --cn-style:   normal;
+      --cn-weight:  bold;
+      --cn-bg:      transparent;
+
+      /* Panel (the shared backdrop) */
+      --panel-bg:      linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.45) 100%);
+      --panel-padding: clamp(10px, 2vw, 20px) clamp(14px, 3vw, 32px);
+      --panel-gap:     6px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Microsoft YaHei", sans-serif;
+      background: #000;
+      overflow: hidden;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Slide wrapper ── */
+    .slide-container {
+      position: relative;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .slide-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      background: #fff;
+    }
+
+    /* ── Text panel ──
+       Position is set by JS (CONFIG.panel.position).
+       Default: bottom */
+    .text-panel {
+      position: absolute;
+      left: 0;
+      right: 0;
+      background: var(--panel-bg);
+      padding: var(--panel-padding);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--panel-gap);
+      text-align: center;
+    }
+
+    .text-panel.pos-bottom { bottom: 0; border-radius: 0 0 0 0; }
+    .text-panel.pos-top    { top: 0;    border-radius: 0 0 0 0; }
+
+    /* ── English ── */
+    .text-en {
+      font-family:  var(--en-font);
+      font-size:    var(--en-size);
+      color:        var(--en-color);
+      font-style:   var(--en-style);
+      font-weight:  var(--en-weight);
+      background:   var(--en-bg);
+      line-height:  1.5;
+      cursor:       pointer;
+      padding:      2px 6px;
+      border-radius: 4px;
+      transition:   opacity 0.2s;
+    }
+
+    /* ── Chinese ── */
+    .text-cn {
+      font-family:  var(--cn-font);
+      font-size:    var(--cn-size);
+      color:        var(--cn-color);
+      font-style:   var(--cn-style);
+      font-weight:  var(--cn-weight);
+      background:   var(--cn-bg);
+      line-height:  1.5;
+      cursor:       pointer;
+      padding:      2px 6px;
+      border-radius: 4px;
+      transition:   opacity 0.2s;
+    }
+
+    .text-en:hover, .text-cn:hover { opacity: 0.75; }
+
+    /* ── Hidden state ── */
+    .text-en.hidden { display: none; }
+    .text-cn.hidden { display: none; }
+
+    /* ── Nav arrows ── */
+    .nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: clamp(28px, 5vw, 48px);
+      background: rgba(0,0,0,0.35);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      border-radius: 50%;
+      width:  clamp(40px, 6vw, 60px);
+      height: clamp(40px, 6vw, 60px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      z-index: 10;
+    }
+
+    .nav-btn:hover { background: rgba(0,0,0,0.6); }
+    .nav-prev { left:  clamp(6px, 1.5vw, 16px); }
+    .nav-next { right: clamp(6px, 1.5vw, 16px); }
+
+    /* ── Control bar (top) ── */
+    .controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .ctrl-btn {
+      padding: 6px 12px;
+      border: none;
+      background: rgba(0,0,0,0.55);
+      color: #fff;
+      cursor: pointer;
+      border-radius: 20px;
+      font-size: clamp(11px, 1.5vw, 14px);
+      transition: background 0.2s;
+    }
+
+    .ctrl-btn:hover     { background: rgba(0,0,0,0.8); }
+    .ctrl-btn.active    { background: rgba(92,184,92,0.85); }
+
+    /* ── Page counter ── */
+    .page-counter {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      color: #fff;
+      font-size: clamp(11px, 1.6vw, 15px);
+      background: rgba(0,0,0,0.45);
+      padding: 4px 10px;
+      border-radius: 20px;
+      z-index: 10;
+    }
+
+    /* ── Tablet ── */
+    @media (max-width: 768px) {
+      :root {
+        --panel-gap: 4px;
+      }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 480px) {
+      .controls { gap: 6px; }
+      .ctrl-btn  { padding: 5px 9px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="slide-container">
+    <img id="img" class="slide-image" alt="story image" />
+
+    <!-- Text panel: position controlled by CONFIG below -->
+    <div class="text-panel pos-bottom" id="textPanel">
+      <div class="text-en" id="en"></div>
+      <div class="text-cn" id="cn"></div>
+    </div>
+
+    <div class="controls">
+      <button class="ctrl-btn" id="btnPlay"    onclick="togglePlay()">▶ 自动播放</button>
+      <button class="ctrl-btn" id="btnToggleEN" onclick="toggleText('en')">EN 隐藏</button>
+      <button class="ctrl-btn" id="btnToggleCN" onclick="toggleText('cn')">中 隐藏</button>
+    </div>
+
+    <button class="nav-btn nav-prev" onclick="change(-1)">◀</button>
+    <button class="nav-btn nav-next" onclick="change(1)">▶</button>
+
+    <div class="page-counter" id="page"></div>
+  </div>
+
+  <script>
+    /* =========================================
+       CONFIG — adjust text panel behaviour here
+       ========================================= */
+    const CONFIG = {
+      panel: {
+        position: "bottom",   // "top" | "bottom"
+      },
+      autoPlay: {
+        intervalMs: 5000,     // ms per slide in auto-play
+        speakDelay: 1500,     // ms gap between EN and CN speech
+      },
+    };
+
+    /* =========================================
+       State
+       ========================================= */
+    let data      = [];
+    let index     = 0;
+    let playing   = false;
+    let timer     = null;
+    let showEN    = true;
+    let showCN    = true;
+
+    /* =========================================
+       Init
+       ========================================= */
+    function loadScript(file) {
+      return new Promise((resolve, reject) => {
+        const s = document.createElement("script");
+        s.src = file;
+        s.onload  = () => resolve(mainData);
+        s.onerror = () => reject(new Error("Failed to load: " + file));
+        document.body.appendChild(s);
+      });
+    }
+
+    async function init() {
+      // Apply panel position from CONFIG
+      const panel = document.getElementById("textPanel");
+      panel.classList.remove("pos-top", "pos-bottom");
+      panel.classList.add("pos-" + CONFIG.panel.position);
+
+      const file = new URLSearchParams(location.search).get("input");
+      if (!file) return;
+
+      const d = await loadScript("./data/" + file + ".js");
+      document.title = d.title || "绘本故事";
+      data = d.paragraph;
+      render();
+    }
+
+    /* =========================================
+       Render
+       ========================================= */
+    function render() {
+      const item = data[index];
+      document.getElementById("img").src = item.image;
+      document.getElementById("en").innerText = item.english || "";
+      document.getElementById("cn").innerText = item.chinese  || "";
+      document.getElementById("page").innerText = (index + 1) + " / " + data.length;
+
+      if (playing) speakSlide(item);
+    }
+
+    /* =========================================
+       Navigation
+       ========================================= */
+    function change(step) {
+      index = (index + step + data.length) % data.length;
+      render();
+    }
+
+    /* =========================================
+       Toggle text visibility
+       ========================================= */
+    function toggleText(lang) {
+      if (lang === "en") {
+        showEN = !showEN;
+        document.getElementById("en").classList.toggle("hidden", !showEN);
+        document.getElementById("btnToggleEN").textContent = showEN ? "EN 隐藏" : "EN 显示";
+      } else {
+        showCN = !showCN;
+        document.getElementById("cn").classList.toggle("hidden", !showCN);
+        document.getElementById("btnToggleCN").textContent = showCN ? "中 隐藏" : "中 显示";
+      }
+    }
+
+    /* =========================================
+       Auto-play
+       ========================================= */
+    function togglePlay() {
+      playing = !playing;
+      const btn = document.getElementById("btnPlay");
+      if (playing) {
+        btn.textContent = "⏸ 暂停";
+        btn.classList.add("active");
+        timer = setInterval(() => change(1), CONFIG.autoPlay.intervalMs);
+        speakSlide(data[index]);
+      } else {
+        btn.textContent = "▶ 自动播放";
+        btn.classList.remove("active");
+        clearInterval(timer);
+        speechSynthesis.cancel();
+      }
+    }
+
+    /* =========================================
+       Speech
+       ========================================= */
+    function speak(text, lang) {
+      if (!text) return;
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = lang;
+      speechSynthesis.speak(u);
+    }
+
+    function speakSlide(item) {
+      speak(item.english, "en-US");
+      setTimeout(() => speak(item.chinese, "zh-CN"), CONFIG.autoPlay.speakDelay);
+    }
+
+    // Click-to-speak
+    document.getElementById("en").addEventListener("click", () => {
+      speak(data[index]?.english, "en-US");
+    });
+    document.getElementById("cn").addEventListener("click", () => {
+      speak(data[index]?.chinese, "zh-CN");
+    });
+
+    /* =========================================
+       Keyboard
+       ========================================= */
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft")  change(-1);
+      if (e.key === "ArrowRight") change(1);
+      if (e.key === " ")          { e.preventDefault(); togglePlay(); }
+    });
+
+    /* =========================================
+       Touch swipe
+       ========================================= */
+    let touchStartX = 0;
+    document.addEventListener("touchstart", (e) => {
+      touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+    document.addEventListener("touchend", (e) => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 40) change(dx < 0 ? 1 : -1);
+    }, { passive: true });
+
+    window.addEventListener("load", init);
+  </script>
+
+</body>
+</html>
