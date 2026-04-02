@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="./data/A_index.js"></script>
+  <title>Picture Books</title>
+  <style>
+    :root {
+      --accent: #5cb85c;
+      --accent-hover: #4cae4c;
+      --bg: #f0f2f5;
+      --card-bg: #fff;
+      --card-radius: 8px;
+      --card-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 20px 16px 40px;
+      font-family: "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.6rem;
+      color: #333;
+      margin: 0 0 24px;
+    }
+
+    /* ── Grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .card:hover, .card:focus {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      outline: none;
+    }
+
+    .card-cover {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      background: #e0e0e0;
+      display: block;
+    }
+
+    /* Placeholder when no cover */
+    .card-cover-placeholder {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: #dce8dc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+    }
+
+    .card-body {
+      padding: 10px 12px 14px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: #222;
+      line-height: 1.3;
+    }
+
+    .card-subtitle {
+      font-size: 0.78rem;
+      color: #888;
+    }
+
+    .card-btn {
+      margin-top: auto;
+      padding-top: 8px;
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    /* ── Mobile: 2 columns minimum ── */
+    @media (max-width: 400px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>📚 Picture Books</h1>
+  <div class="grid" id="bookGrid"></div>
+
+  <script>
+    const grid = document.getElementById("bookGrid");
+
+    mainData.forEach((item) => {
+      const a = document.createElement("a");
+      a.className = "card";
+      a.href = `story_template.html?input=${encodeURIComponent(item.filename)}`;
+      a.target = "_blank";
+      a.rel = "noopener";
+
+      const coverHTML = item.cover
+        ? `<img class="card-cover" src="${item.cover}" alt="${item.title}" loading="lazy" />`
+        : `<div class="card-cover-placeholder">📖</div>`;
+
+      a.innerHTML = `
+        ${coverHTML}
+        <div class="card-body">
+          <div class="card-title">${item.title}</div>
+          <div class="card-subtitle">${item.subtitle || ""}</div>
+          <div class="card-btn">阅读 ▶</div>
+        </div>`;
+
+      grid.appendChild(a);
+    });
+  </script>
+</body>
+
+</html>

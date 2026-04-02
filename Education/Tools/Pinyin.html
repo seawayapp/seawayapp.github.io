@@ -5,73 +5,108 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>中文转拼音</title>
+    <script src="../../nav-top.js"></script>
     <script src="./js/pinyin-pro.js"></script>
     <style>
+        :root {
+            --green:      #92d050;
+            --green-dark: #72a83e;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: "Book Antiqua";
-            margin: 20px;
+            font-family: "Book Antiqua", Georgia, serif;
+            background: #f4f4f4;
+        }
+
+        .page-wrap {
+            max-width: 700px;
+            margin: 32px auto;
+            padding: 0 16px 40px;
+        }
+
+        h1 {
             text-align: center;
+            font-size: 1.6rem;
+            margin-bottom: 24px;
+            color: #333;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
         }
 
         textarea {
-            width: 400px;
-            padding: 10px;
-            font-size: 16px;
-            margin-bottom: 10px;
-            font-family: "Book Antiqua";
+            width: 100%;
+            max-width: 500px;
+            padding: 12px;
+            font-size: 15px;
+            font-family: inherit;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            resize: vertical;
         }
 
         #output {
-            width: 600px;
+            max-width: 620px;
+            background: #fff;
         }
 
         button {
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 10px 28px;
+            font-size: 15px;
+            font-family: inherit;
             cursor: pointer;
+            background: var(--green);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        button:hover { background: var(--green-dark); }
+
+        @media (max-width: 480px) {
+            textarea { font-size: 14px; }
+            h1 { font-size: 1.3rem; }
         }
     </style>
 </head>
 
 <body>
-    <h1>中文转拼音</h1>
-    <textarea id="inputArray" rows="5" placeholder='请输入数组，例如：["扔掉", "推倒"]'></textarea>
-    <br>
-    <button onclick="generatePinyin()">生成拼音</button>
-    <br><br>
-    <textarea id="output" rows="15" readonly></textarea>
+    <div class="page-wrap">
+        <h1>中文转拼音</h1>
+        <div class="form-group">
+            <textarea id="inputArray" rows="5" placeholder='请输入数组，例如：["扔掉", "推倒"]'></textarea>
+            <button onclick="generatePinyin()">生成拼音</button>
+            <textarea id="output" rows="15" readonly></textarea>
+        </div>
+    </div>
 
     <script>
         function generatePinyin() {
-            // 获取用户输入的数组
             const inputArrayText = document.getElementById('inputArray').value;
             let words;
             try {
-                words = JSON.parse(inputArrayText); // 将输入的字符串解析为数组
-                if (!Array.isArray(words)) {
-                    throw new Error("输入的不是有效的数组");
-                }
+                words = JSON.parse(inputArrayText);
+                if (!Array.isArray(words)) throw new Error("输入的不是有效的数组");
             } catch (error) {
                 document.getElementById('output').value = "请输入有效的数组格式，例如：[\"扔掉\", \"推倒\"]";
                 return;
             }
 
-            // 将每个词语转换为拼音，并替换顿号 `、` 为逗号 `,`
             const pronunciation = words.map(word => {
                 const pinyinResult = pinyinPro.pinyin(word, { toneType: 'symbol' });
                 return pinyinResult.replace(/、/g, ',');
             });
 
-            // 构造结果对象
-            const result = {
-                sentences: words,
-                pronunciation: pronunciation
-            };
-
-            // 将结果放入 textarea
+            const result = { sentences: words, pronunciation: pronunciation };
             document.getElementById('output').value = JSON.stringify(result, null, 4);
         }
     </script>
 </body>
-
 </html>

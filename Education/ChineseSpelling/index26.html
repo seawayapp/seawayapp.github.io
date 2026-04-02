@@ -4,102 +4,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Education - 华文听写 2026</title>
+    <title>华文听写 2026</title>
+    <script src="../../nav-top.js"></script>
     <!-- Input Data -->
     <script src="./data/mainList_2026.js"></script>
     <style>
+        :root {
+            --green:      #92d050;
+            --green-dark: #6aaa2a;
+            --green-dim:  rgba(146,208,80,0.12);
+            --navy:       #0f172a;
+            --text:       #1e293b;
+            --text-muted: #64748b;
+            --text-light: #94a3b8;
+            --bg:         #f8fafc;
+            --surface:    #ffffff;
+            --border:     #e2e8f0;
+            --radius:     12px;
+            --shadow:     0 2px 12px rgba(0,0,0,0.07);
+            --font:       "Inter", "Segoe UI", system-ui, sans-serif;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: 'Book Antiqua';
-            background: #eaeaea;
-            text-align: center;
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
         }
 
-        .wrap {
-            width: 80%;
-            margin: auto;
-            max-width: 1000px;
+        /* ── Page wrapper ── */
+        .page-wrap {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 36px 20px 60px;
         }
 
-        h1 {
-            color: #272727;
-            font-size: 40px;
+        /* ── Page header ── */
+        .page-header {
+            margin-bottom: 28px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #fff;
+        .page-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--green-dark);
+            background: var(--green-dim);
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 10px;
         }
 
-        th,
-        td {
-            border: 1px solid black;
-            padding: 10px;
-            font-size: 20px;
-            text-align: center;
+        .page-title {
+            font-size: clamp(1.6rem, 4vw, 2.2rem);
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.5px;
+            line-height: 1.2;
         }
 
-        th {
-            background: #272727;
-            color: #fff;
+        .page-count {
+            margin-top: 6px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
         }
 
-        td a {
+        /* ── Card list ── */
+        .lesson-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .lesson-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 20px;
             text-decoration: none;
-            color: #007bff;
-            font-weight: bold;
-            display: block;
+            color: var(--text);
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+            cursor: pointer;
         }
 
-        td a:hover {
-            color: #0056b3;
-            text-decoration: underline;
+        .lesson-card:hover {
+            border-color: var(--green);
+            box-shadow: 0 4px 20px rgba(146,208,80,0.18);
+            transform: translateX(4px);
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        /* Number badge */
+        .lesson-num {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: var(--green-dim);
+            color: var(--green-dark);
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* Text body */
+        .lesson-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .lesson-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .lesson-date {
+            margin-top: 3px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .lesson-date.has-date { color: var(--green-dark); font-weight: 500; }
+
+        /* Arrow */
+        .lesson-arrow {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            transition: transform 0.2s, color 0.2s;
+        }
+
+        .lesson-card:hover .lesson-arrow {
+            transform: translateX(4px);
+            color: var(--green-dark);
+        }
+
+        /* ── Empty / loading ── */
+        .state-msg {
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ── Mobile ── */
+        @media (max-width: 480px) {
+            .page-wrap { padding: 24px 14px 48px; }
+            .lesson-card { padding: 14px 16px; gap: 12px; }
+            .lesson-title { font-size: 0.92rem; }
+            .lesson-num { width: 32px; height: 32px; font-size: 0.78rem; border-radius: 8px; }
         }
     </style>
 </head>
 
 <body>
+    <div class="page-wrap">
 
-    <div class="wrap">
-        <h1>华文听写 2026</h1>
-        <div id="mainContent">Loading...</div>
+        <div class="page-header">
+            <div class="page-eyebrow">📚 华文听写</div>
+            <h1 class="page-title">华文听写 2026</h1>
+            <p class="page-count" id="pageCount"></p>
+        </div>
+
+        <div class="lesson-list" id="mainContent">
+            <div class="state-msg">加载中…</div>
+        </div>
+
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", async () => {
+        document.addEventListener("DOMContentLoaded", () => {
             try {
-                const tableHTML = `
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>目录</th>
-                                <th>科目</th>
-                                <th>日期</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${mainList.map((item, index) => `
-                                <tr>
-                                    <td>${index + 1}</td>
-                                    <td style="text-align: left;">
-                                        <a href="./CS_Template26.html?input=${item.filename}&pageno=${index}" target="_blank">
-                                            &nbsp;${item.title}&nbsp;
-                                        </a>
-                                    </td>
-                                    <td>${item.testdate}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>`;
+                const container = document.getElementById("mainContent");
+                container.innerHTML = "";
 
-                document.getElementById("mainContent").innerHTML = tableHTML;
+                document.getElementById("pageCount").textContent =
+                    `共 ${mainList.length} 个课程`;
+
+                mainList.forEach((item, index) => {
+                    const card = document.createElement("a");
+                    card.className = "lesson-card";
+                    card.href = `./CS_Template26.html?input=${item.filename}&pageno=${index}`;
+
+                    const dateText = item.testdate ? item.testdate : "日期待定";
+                    const dateClass = item.testdate ? "lesson-date has-date" : "lesson-date";
+
+                    card.innerHTML = `
+                        <div class="lesson-num">${index + 1}</div>
+                        <div class="lesson-body">
+                            <div class="lesson-title">${item.title}</div>
+                            <div class="${dateClass}">🗓 ${dateText}</div>
+                        </div>
+                        <span class="lesson-arrow">→</span>`;
+
+                    container.appendChild(card);
+                });
             } catch (error) {
                 console.error("Failed to load main list:", error);
-                document.getElementById("mainContent").innerHTML = "<p>Error loading data.</p>";
+                document.getElementById("mainContent").innerHTML =
+                    '<div class="state-msg">加载失败，请刷新重试。</div>';
             }
         });
     </script>
-
 </body>
 
 </html>

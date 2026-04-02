@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="maintitlePage"></title>
+    <script src="../../nav-top.js"></script>
     <style>
         :root {
             --primary-color: #E25624;
@@ -159,7 +160,7 @@
             right: 0;
             bottom: 0;
             background-color: #ffffff;
-            z-index: 1000;
+            z-index: 10000; /* above nav-top.js (9999) */
             overflow: auto;
             padding: 20px;
         }
@@ -211,11 +212,23 @@
         }
 
         .modal-word {
-            font-size: 90px;
+            font-size: clamp(42px, 10vw, 90px);
             font-weight: bold;
             margin: 0 20px;
             flex-grow: 1;
             color: var(--text-color);
+            cursor: pointer;
+        }
+
+        .modal-word:hover { color: var(--primary-color); }
+
+        /* Progress indicator */
+        .modal-progress {
+            text-align: center;
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
         }
 
         .modal-syllables {
@@ -390,12 +403,20 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            background: none;
+            background: rgba(0,0,0,0.06);
             border: none;
-            font-size: 36px;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            font-size: 24px;
+            line-height: 1;
             cursor: pointer;
             color: var(--text-lighter);
-            z-index: 1001;
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, color 0.2s;
         }
 
         .close-btn:hover {
@@ -671,6 +692,7 @@
     <div class="lesson-header">
         <h1 class="lesson-title" id="maintitle"></h1>
         <p class="lesson-subtitle" id="subtitle"></p>
+        <p class="lesson-subtitle" id="wordCount" style="font-size:14px;color:#aaa;margin-top:4px;"></p>
     </div>
 
     <div id="wordCardsContainer" class="loading">Loading vocabulary data...</div>
@@ -687,14 +709,7 @@
                 <div class="modal-card-index" id="modalCardIndex">01</div>
                 <div class="modal-pronunciation-display" id="modalPronunciationDisplay"></div>
             </div>
-
-            <!-- 新增导航按钮行 -->
-            <!-- <div class="modal-nav-top">
-                <button class="modal-arrow modal-word-prev" id="modalPrevWord" aria-label="Previous word">←</button>
-                <button class="modal-arrow modal-word-next" id="modalNextWord" aria-label="Next word">→</button>
-            </div> -->
-
-            <!-- 修改后的内容区域 -->
+            <div class="modal-progress" id="modalProgress"></div>
 
             <div class="modal-word-container">
                 <button class="modal-arrow modal-word-prev" id="modalPrevWord">←</button>
@@ -742,6 +757,8 @@
             maintitlePage: document.getElementById('maintitlePage'),
             mainTitle: document.getElementById('maintitle'),
             subTitle: document.getElementById('subtitle'),
+            wordCount: document.getElementById('wordCount'),
+            modalProgress: document.getElementById('modalProgress'),
             wordCardsContainer: document.getElementById('wordCardsContainer'),
             wordModal: document.getElementById('wordModal'),
             modalWord: document.getElementById('modalWord'),
@@ -808,6 +825,7 @@
 
             wordData.length = 0; // Clear array
             wordData.push(...mainDataInput.wordData);
+            elements.wordCount.textContent = `${wordData.length} words`;
 
             renderWordCards();
             setupEventListeners();
@@ -910,6 +928,16 @@
                 }
             });
 
+            // Touch swipe in modal
+            let touchStartX = 0;
+            elements.wordModal.addEventListener('touchstart', (e) => {
+                touchStartX = e.touches[0].clientX;
+            }, { passive: true });
+            elements.wordModal.addEventListener('touchend', (e) => {
+                const dx = e.changedTouches[0].clientX - touchStartX;
+                if (Math.abs(dx) > 50) dx < 0 ? showNextWord() : showPrevWord();
+            }, { passive: true });
+
             // Phonetic click to play audio
             elements.modalFullPhonetic.addEventListener('click', () => {
                 playWordAudio(wordData[currentIndex].word);
@@ -991,6 +1019,7 @@
                 sentencesContainer.style.display = 'none';
             }
 
+            elements.modalProgress.textContent = `${index + 1} / ${wordData.length}`;
             elements.wordModal.classList.add('active');
 
             const img_modal = elements.wordModal.querySelector('img.modal-word-image');
