@@ -36,6 +36,15 @@
   const TITLE   = cfg.title || document.title || "SeawayApp";
   const NAV_H   = 56;
 
+  /* ── Inject favicon if not already set ── */
+  if (!document.querySelector("link[rel~='icon']")) {
+    const favicon = document.createElement("link");
+    favicon.rel  = "icon";
+    favicon.type = "image/png";
+    favicon.href = ROOT + "favicon.png";
+    document.head.appendChild(favicon);
+  }
+
   /* ── Inject CSS ── */
   const style = document.createElement("style");
   style.textContent = `

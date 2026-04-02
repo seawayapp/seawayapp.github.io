@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>汉字书写练习</title>
+  <script src="../../nav-top.js"></script>
+  <script src="./js/pinyin-pro.js"></script>
+  <style>
+    :root {
+      --green: #92d050;
+      --green-dark: #6aaa2a;
+      --green-dim: rgba(146, 208, 80, 0.12);
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --radius: 16px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+      --font: "Inter", "Segoe UI", system-ui, sans-serif;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .page-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 36px 20px 60px;
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      margin-bottom: 28px;
+    }
+
+    .page-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--green-dark);
+      background: var(--green-dim);
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+
+    .page-title {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
+
+    .page-subtitle {
+      margin-top: 6px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Input section ── */
+    .input-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 28px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      letter-spacing: 0.3px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .char-input {
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 1.6rem;
+      font-family: "楷体", "KaiTi", "STKaiti", serif;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: var(--bg);
+      color: var(--text);
+      letter-spacing: 6px;
+    }
+
+    .char-input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px var(--green-dim);
+    }
+
+    .char-input.error {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    .generate-btn {
+      padding: 12px 28px;
+      background: var(--green-dark);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .generate-btn:hover {
+      background: #559020;
+      transform: translateY(-1px);
+    }
+
+    /* 新增：重置按钮样式 */
+    .reset-btn {
+      padding: 12px 20px;
+      background: #e2e8f0;
+      color: var(--text-muted);
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .reset-btn:hover {
+      background: #cbd5e1;
+      color: var(--text);
+    }
+
+    .generate-btn:active,
+    .reset-btn:active {
+      transform: translateY(0);
+    }
+
+    .input-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .input-hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .input-hint.error-msg {
+      color: #ef4444;
+      font-weight: 500;
+    }
+
+    .char-counter {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .char-counter .count-num {
+      font-weight: 700;
+      color: var(--green-dark);
+    }
+
+    .char-counter.over .count-num {
+      color: #ef4444;
+    }
+
+    /* ── Cards grid ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 16px;
+    }
+
+    .char-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 20px 12px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 20, 30, 0.05);
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.2s, box-shadow 0.2s;
+      position: relative;
+      user-select: none;
+    }
+
+    .char-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--green);
+      box-shadow: 0 8px 24px rgba(146, 208, 80, 0.22);
+    }
+
+    .char-card:active {
+      transform: translateY(-1px);
+    }
+
+    .card-hanzi {
+      font-size: 3rem;
+      line-height: 1.2;
+      color: #1f3a5f;
+      font-family: "楷体", "KaiTi", "STKaiti", serif;
+      margin-bottom: 10px;
+    }
+
+    .card-pinyin {
+      background: #e6eff9;
+      padding: 6px 14px;
+      border-radius: 40px;
+      color: #0b3954;
+      font-size: 1.05rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      border: 1px solid #bbd0e4;
+    }
+
+    .card-tap-hint {
+      position: absolute;
+      bottom: 8px;
+      right: 10px;
+      font-size: 0.6rem;
+      color: var(--green-dark);
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+
+    .char-card:hover .card-tap-hint {
+      opacity: 1;
+    }
+
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center;
+      padding: 56px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+      line-height: 1;
+    }
+
+    .empty-state p {
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    /* ── Modal overlay ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(2px);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    /* ── Writer modal ── */
+    .writer-modal {
+      background: #fff;
+      border-radius: 24px;
+      padding: 32px 28px 24px;
+      width: min(460px, 92vw);
+      position: relative;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      animation: modalIn 0.2s ease;
+    }
+
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: scale(0.94) translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: #f1f5f9;
+      color: var(--text-muted);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, color 0.2s;
+      z-index: 10001;
+      line-height: 1;
+    }
+
+    .modal-close-btn:hover {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+
+    .modal-char-label {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text);
+      font-family: "楷体", "KaiTi", "STKaiti", serif;
+      margin-top: 4px;
+    }
+
+    .modal-pinyin-label {
+      background: #e6eff9;
+      padding: 5px 18px;
+      border-radius: 40px;
+      color: #0b3954;
+      font-size: 1.1rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      border: 1px solid #bbd0e4;
+    }
+
+    #hanziWriterTarget {
+      width: 300px;
+      height: 300px;
+    }
+
+    .modal-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .close-bottom-btn {
+      padding: 10px 40px;
+      background: var(--green-dark);
+      color: #fff;
+      border: none;
+      border-radius: 40px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 4px;
+    }
+
+    .close-bottom-btn:hover {
+      background: #559020;
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 480px) {
+      .page-wrap {
+        padding: 24px 14px 48px;
+      }
+
+      .input-row {
+        flex-direction: column;
+      }
+
+      .generate-btn,
+      .reset-btn {
+        width: 100%;
+      }
+
+      .cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        gap: 12px;
+      }
+
+      .card-hanzi {
+        font-size: 2.4rem;
+      }
+
+      .writer-modal {
+        padding: 24px 16px 20px;
+      }
+
+      #hanziWriterTarget {
+        width: 240px;
+        height: 240px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-wrap">
+
+    <div class="page-header">
+      <div class="page-eyebrow">✏️ 汉字书写</div>
+      <h1 class="page-title">汉字书写练习</h1>
+      <p class="page-subtitle">输入最多 10 个汉字，查看拼音并点击字卡观看笔顺动画</p>
+    </div>
+
+    <div class="input-section">
+      <label class="input-label" for="charInput">输入汉字（最多 10 个）</label>
+      <div class="input-row">
+        <input type="text" id="charInput" class="char-input" placeholder="例如：春夏秋冬" autocomplete="off"
+          spellcheck="false" />
+        <button class="generate-btn" onclick="generate()">生成</button>
+        <button class="reset-btn" onclick="resetInput()">重置</button>
+      </div>
+      <div class="input-footer">
+        <span class="input-hint" id="inputHint">仅接受汉字，其他字符将自动过滤</span>
+        <span class="char-counter" id="charCounter"><span class="count-num">0</span> / 10</span>
+      </div>
+    </div>
+
+    <div id="outputSection">
+      <div class="empty-state">
+        <div class="empty-icon">🖊️</div>
+        <p>输入汉字后点击「生成」<br>字卡将显示在此处，点击字卡查看笔顺</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="writer-modal">
+      <button class="modal-close-btn" onclick="closeModal()" title="关闭">✕</button>
+      <div class="modal-char-label" id="modalChar"></div>
+      <div class="modal-pinyin-label" id="modalPinyin"></div>
+      <div id="hanziWriterTarget"></div>
+      <p class="modal-hint">笔顺动画循环播放中 · 点击空白处关闭</p>
+      <button class="close-bottom-btn" onclick="closeModal()">关闭</button>
+    </div>
+  </div>
+
+  <script src="../lib/js/hanzi-writer.min.js"></script>
+  <script>
+    /* ── Input helpers ── */
+    const isChinese = ch => /[\u4e00-\u9fff\u3400-\u4dbf\u{20000}-\u{2a6df}]/u.test(ch);
+
+    function filterChinese(str) {
+      return [...str].filter(isChinese).join('');
+    }
+
+    const inputEl = document.getElementById('charInput');
+    const hintEl = document.getElementById('inputHint');
+    const counterEl = document.getElementById('charCounter');
+    const numEl = counterEl.querySelector('.count-num');
+    const outputSection = document.getElementById('outputSection');
+
+    function updateCounter(n) {
+      numEl.textContent = n;
+      counterEl.classList.toggle('over', n > 10);
+    }
+
+    inputEl.addEventListener('input', () => {
+      const clean = filterChinese(inputEl.value);
+      updateCounter(clean.length);
+      hintEl.textContent = '仅接受汉字，其他字符将自动过滤';
+      hintEl.className = 'input-hint';
+      inputEl.classList.remove('error');
+    });
+
+    inputEl.addEventListener('keydown', e => {
+      if (e.key === 'Enter') generate();
+    });
+
+    /* ── Generate ── */
+    function generate() {
+      const cleaned = filterChinese(inputEl.value);
+
+      if (cleaned.length === 0) {
+        hintEl.textContent = '⚠️ 请输入至少 1 个汉字';
+        hintEl.className = 'input-hint error-msg';
+        inputEl.classList.add('error');
+        inputEl.focus();
+        return;
+      }
+
+      const chars = [...cleaned].slice(0, 10);
+      inputEl.value = chars.join('');
+      updateCounter(chars.length);
+      hintEl.textContent = '仅接受汉字，其他字符将自动过滤';
+      hintEl.className = 'input-hint';
+      inputEl.classList.remove('error');
+
+      renderCards(chars);
+    }
+
+    /* ── 新增：重置逻辑 ── */
+    function resetInput() {
+      // 1. 清空输入框
+      inputEl.value = '';
+      // 2. 重置计数器
+      updateCounter(0);
+      // 3. 恢复提示文本
+      hintEl.textContent = '仅接受汉字，其他字符将自动过滤';
+      hintEl.className = 'input-hint';
+      inputEl.classList.remove('error');
+      // 4. 清除生成的字卡，恢复空状态 HTML
+      outputSection.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">🖊️</div>
+          <p>输入汉字后点击「生成」<br>字卡将显示在此处，点击字卡查看笔顺</p>
+        </div>
+      `;
+      // 5. 焦点回到输入框
+      inputEl.focus();
+    }
+
+    /* ── Pinyin ── */
+    function getPinyin(char) {
+      if (window.pinyinPro) {
+        try { return pinyinPro.pinyin(char, { toneType: 'symbol' }); }
+        catch (e) { }
+      }
+      return '—';
+    }
+
+    /* ── Render cards ── */
+    function renderCards(chars) {
+      const section = document.getElementById('outputSection');
+      let html = '<div class="cards-grid">';
+      chars.forEach(ch => {
+        const py = getPinyin(ch);
+        // Escape single quotes inside onclick
+        const safeChar = ch.replace(/'/g, "\\'");
+        const safePy = py.replace(/'/g, "\\'");
+        html += `
+          <div class="char-card" onclick="openModal('${safeChar}','${safePy}')" title="点击查看笔顺">
+            <div class="card-hanzi">${ch}</div>
+            <div class="card-pinyin">${py}</div>
+            <span class="card-tap-hint">笔顺 ▶</span>
+          </div>`;
+      });
+      html += '</div>';
+      section.innerHTML = html;
+    }
+
+    /* ── Modal / HanziWriter ── */
+    let writerInst = null;
+
+    function openModal(char, pinyin) {
+      document.getElementById('modalChar').textContent = char;
+      document.getElementById('modalPinyin').textContent = pinyin;
+
+      const target = document.getElementById('hanziWriterTarget');
+      target.innerHTML = '';
+
+      // Responsive size
+      const size = Math.min(300, Math.floor(window.innerWidth * 0.72));
+      target.style.width = size + 'px';
+      target.style.height = size + 'px';
+
+      document.getElementById('modalOverlay').classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      writerInst = HanziWriter.create('hanziWriterTarget', char, {
+        width: size,
+        height: size,
+        showCharacter: false,
+        showOutline: true,
+        strokeAnimationSpeed: 1,
+        delayBetweenStrokes: 300,
+        padding: 12,
+        delayBetweenLoops: 2000
+      });
+      writerInst.loopCharacterAnimation();
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+      document.getElementById('hanziWriterTarget').innerHTML = '';
+      writerInst = null;
+    }
+
+    // Close on overlay background click
+    document.getElementById('modalOverlay').addEventListener('click', function (e) {
+      if (e.target === this) closeModal();
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+</body>
+
+</html>
