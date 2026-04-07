@@ -5,13 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="maintitle"></title>
+    <script src="../../nav-top.js"></script>
     <style>
+        /* Breadcrumb links inside the nav bar title slot */
+        #__snavTitle a { color: rgba(255,255,255,0.6); text-decoration: none; }
+        #__snavTitle a:hover { color: #fff; }
+        #__snavTitle .bc-sep { color: rgba(255,255,255,0.3); margin: 0 4px; }
+        #__snavTitle .bc-cur { color: #fff; font-weight: 600; }
+
         body {
             font-family: 'Book Antiqua', '楷体';
             display: flex;
             flex-direction: column;
             height: 100vh;
             margin: 0;
+            padding-top: 56px;
+            box-sizing: border-box;
             background-color: #f8f9fa;
         }
 
@@ -260,6 +269,29 @@
             return urlParams.get('input');
         }
 
+        // Build breadcrumb into the nav bar title slot based on ?from= param
+        function buildBreadcrumb(currentLabel) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const from = urlParams.get('from') || '';
+
+            const parents = {
+                LL: { label: 'LL', href: './index_LL.html' },
+            };
+
+            let html = `<a href="../../index.html">Home</a><span class="bc-sep">›</span>`
+                     + `<a href="./index_NewConcept.html">New Concept English</a>`;
+
+            if (from && parents[from]) {
+                const p = parents[from];
+                html += `<span class="bc-sep">›</span><a href="${p.href}">${p.label}</a>`;
+            }
+
+            html += `<span class="bc-sep">›</span><span class="bc-cur">${currentLabel}</span>`;
+
+            const t = document.getElementById('__snavTitle');
+            if (t) t.innerHTML = html;
+        }
+
         // Initialize application
         async function init() {
             try {
@@ -270,8 +302,12 @@
                 const mainData = await loadScript(fileName);
                 title = mainData.subtitle;
                 sentences = mainData.paragraph;
-                // processData(mainData);
                 document.getElementById("maintitle").innerHTML = mainData.title + " " + mainData.subtitle;
+
+                // Build breadcrumb with loaded title
+                const currentLabel = [mainData.title, mainData.subtitle].filter(Boolean).join(' — ');
+                buildBreadcrumb(currentLabel);
+
                 // Initialize
                 initSlideSelect();
                 showSlide(0);
