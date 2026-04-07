@@ -1,189 +1,171 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Generate Calendar</title>
-    <style type="text/css">
-        body {
-            font-family: 'Book Antiqua';
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generate Calendar</title>
+  <script src="../../nav-top.js"></script>
+  <style>
+    /* Breadcrumb links inside the nav bar title slot */
+    #__snavTitle a { color: rgba(255,255,255,0.6); text-decoration: none; }
+    #__snavTitle a:hover { color: #fff; }
+    #__snavTitle .bc-sep { color: rgba(255,255,255,0.3); margin: 0 4px; }
+    #__snavTitle .bc-cur { color: #fff; font-weight: 600; }
+  </style>
+  <style>
+    :root {
+      --green:      #92d050;
+      --green-dark: #6aaa2a;
+      --green-dim:  rgba(146,208,80,0.12);
+      --text:       #1e293b;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+      --bg:         #f8fafc;
+      --surface:    #ffffff;
+      --border:     #e2e8f0;
+      --radius:     12px;
+      --shadow:     0 2px 12px rgba(0,0,0,0.07);
+      --font:       "Inter", "Segoe UI", system-ui, sans-serif;
+    }
 
-        body {
-            background: #eaeaea;
-        }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .wrap {
-            margin: 0 auto;
-            width: 1000px;
-        }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
 
-        .logo {
-            text-align: center;
-            margin-top: 200px;
-        }
+    .page-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 36px 20px 60px;
+    }
 
-        .logo img {
-            width: 350px;
-        }
+    .page-header { margin-bottom: 28px; }
 
-        .logo p {
-            color: #272727;
-            font-size: 40px;
-            margin-top: 1px;
-        }
+    .page-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--green-dark);
+      background: var(--green-dim);
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
 
-        .logo p span {
-            color: lightgreen;
-        }
+    .page-title {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
 
-        .sub a {
-            color: #fff;
-            background: #272727;
-            text-decoration: none;
-            padding: 10px 20px;
-            font-size: 13px;
-            font-family: arial, serif;
-            font-weight: bold;
-            -webkit-border-radius: .5em;
-            -moz-border-radius: .5em;
-            -border-radius: .5em;
-        }
+    .page-count {
+      margin-top: 6px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
 
-        .footer {
-            color: black;
-            position: absolute;
-            right: 10px;
-            bottom: 10px;
-        }
+    /* Year grid */
+    .year-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 10px;
+    }
 
-        .footer a {
-            color: rgb(114, 173, 38);
-        }
+    .year-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 10px;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s, background 0.15s;
+    }
 
-        .center {
-            margin-left: auto;
-            margin-right: auto;
-        }
+    .year-card:hover {
+      border-color: var(--green);
+      background: var(--green-dim);
+      box-shadow: 0 4px 20px rgba(146,208,80,0.18);
+      transform: translateY(-2px);
+      color: var(--green-dark);
+      text-decoration: none;
+    }
 
-        table,
-        th,
-        td {
-            border: 1px solid black;
-            font-size: 30px;
-        }
+    .year-card.current-year {
+      border-color: var(--green);
+      background: var(--green-dim);
+      color: var(--green-dark);
+    }
 
-        .center {
-            margin-left: auto;
-            margin-right: auto;
-        }
-    </style>
+    .page-footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    @media (max-width: 480px) {
+      .page-wrap { padding: 24px 14px 48px; }
+      .year-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 8px; }
+      .year-card { padding: 14px 8px; font-size: 1rem; }
+    }
+  </style>
 </head>
 
 <body>
-
-    <!---728x90--->
-    <div class="wrap">
-        <div class="logo">
-            <h1>Generate Calendar 年历</h1>
-            <div id="mainContent"></div>
-        </div>
+  <div class="page-wrap">
+    <div class="page-header">
+      <div class="page-eyebrow">📅 Technology</div>
+      <h1 class="page-title">Generate Calendar 年历</h1>
+      <p class="page-count" id="pageCount"></p>
     </div>
 
+    <div class="year-grid" id="yearGrid"></div>
+
+    <div class="page-footer">Last updated on 01/01/2025</div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Breadcrumb
+      const t = document.getElementById('__snavTitle');
+      if (t) t.innerHTML = `<a href="../../index.html">Home</a><span class="bc-sep">›</span>`
+          + `<a href="../index.html">Technology</a><span class="bc-sep">›</span>`
+          + `<span class="bc-cur">Generate Calendar</span>`;
+
+      // Build year grid
+      const currentYear = new Date().getFullYear();
+      const grid = document.getElementById('yearGrid');
+      const years = [];
+      for (let y = 2016; y <= 2045; y++) years.push(y);
+
+      document.getElementById('pageCount').textContent = `${years.length} years`;
+
+      years.forEach(y => {
+        const a = document.createElement('a');
+        a.className = 'year-card' + (y === currentYear ? ' current-year' : '');
+        a.href = `./Calendar_Template_Landscape.html?year=${y}`;
+        a.textContent = y;
+        grid.appendChild(a);
+      });
+    });
+  </script>
 </body>
-<script>
-    mainData = []
-    for (i = 2016; i < 2046; i++) {
-        mainData.push({ "year": i })
-    }
-    let inputJSON = mainData;
-
-    let text = `<table class="center">
-    <tr>
-        <th>目录M</th>
-        <th>目录N</th>
-        <th>年份</th>
-        <th></th>
-        <th>目录M</th>
-        <th>目录N</th>
-        <th>年份</th>
-        <th></th>
-        <th>目录M</th>
-        <th>目录N</th>
-        <th>年份</th>        
-    </tr>`;
-    let rows = Math.ceil(inputJSON.length / 3)
-    // console.log(`rows is ${rows}`)
-    for (var i = 0; i < rows; i++) {
-        let i1 = i * 3
-        let index1 = i * 3 + 1
-        let i2 = i * 3 + 1
-        let index2 = i * 3 + 2
-        let i3 = i * 3 + 2
-        let index3 = i * 3 + 3
-
-        let nIndex1 = index1 - 3;
-        let nIndex2 = index2 - 3;
-        let nIndex3 = index3 - 3;
-        if (nIndex1 < 1) {
-            nIndex1 = ""
-        }
-        if (nIndex2 < 1) {
-            nIndex2 = ""
-        }
-        if (nIndex3 < 1) {
-            nIndex3 = ""
-        }
-
-        text += `
-            <tr>
-                <td>${index1}</td>
-                <td>${nIndex1}</td>
-                <td><a href="./Calendar_Template_Landscape.html?year=${inputJSON[i1].year}" target="_blank">&nbsp;${inputJSON[i1].year}&nbsp;</a></td>
-                <td></td>
-            `
-
-        if (inputJSON[i2]) {
-            //console.log(inputJSON[i2].category)
-            text += `
-                <td>${index2}</td>
-                <td>${nIndex2}</td>
-                <td><a href="./Calendar_Template_Landscape.html?year=${inputJSON[i2].year}" target="_blank">&nbsp;${inputJSON[i2].year}&nbsp;</a></td>
-                <td></td>
-                `
-        } else {
-            text += `
-                <td></td>
-                <td></td>
-                <td></td>
-            `
-        }
-
-        if (inputJSON[i3]) {
-            text += `
-                <td>${index3}</td>
-                <td>${nIndex3}</td>
-                <td><a href="./Calendar_Template_Landscape.html?year=${inputJSON[i3].year}" target="_blank">&nbsp;${inputJSON[i3].year}&nbsp;</a></td>
-                `
-        } else {
-            text += `
-                <td></td>
-                <td></td>
-            `
-        }
-
-        text += `
-            </tr>`
-    }
-
-    text += `
-        </table>
-    `
-    document.getElementById("mainContent").innerHTML = text;
-</script>
-
-
-<div style="text-align: center;margin-top: 40px"> Last updated on 01/01/2025</div>
 
 </html>

@@ -1,117 +1,200 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel=icon href=./favicon.png>
-    <title>Technology</title>
-    <style type="text/css">
-        body {
-            font-family: 'Book Antiqua';
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Technology</title>
+  <script src="../nav-top.js"></script>
+  <style>
+    /* Breadcrumb links inside the nav bar title slot */
+    #__snavTitle a { color: rgba(255,255,255,0.6); text-decoration: none; }
+    #__snavTitle a:hover { color: #fff; }
+    #__snavTitle .bc-sep { color: rgba(255,255,255,0.3); margin: 0 4px; }
+    #__snavTitle .bc-cur { color: #fff; font-weight: 600; }
+  </style>
+  <style>
+    :root {
+      --green:      #92d050;
+      --green-dark: #6aaa2a;
+      --green-dim:  rgba(146,208,80,0.12);
+      --text:       #1e293b;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+      --bg:         #f8fafc;
+      --surface:    #ffffff;
+      --border:     #e2e8f0;
+      --radius:     12px;
+      --shadow:     0 2px 12px rgba(0,0,0,0.07);
+      --font:       "Inter", "Segoe UI", system-ui, sans-serif;
+    }
 
-        body {
-            background: #eaeaea;
-        }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .wrap {
-            margin: 0 auto;
-            width: 1000px;
-        }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
 
-        .logo {
-            text-align: center;
-            margin-top: 200px;
-        }
+    .page-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 36px 20px 60px;
+    }
 
-        .logo img {
-            width: 350px;
-        }
+    .page-header { margin-bottom: 28px; }
 
-        .logo p {
-            color: #272727;
-            font-size: 40px;
-            margin-top: 1px;
-        }
+    .page-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--green-dark);
+      background: var(--green-dim);
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
 
-        .logo p span {
-            color: lightgreen;
-        }
+    .page-title {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
 
-        .sub a {
-            color: #fff;
-            background: #272727;
-            text-decoration: none;
-            padding: 10px 20px;
-            font-size: 13px;
-            font-family: arial, serif;
-            font-weight: bold;
-            -webkit-border-radius: .5em;
-            -moz-border-radius: .5em;
-            -border-radius: .5em;
-        }
+    .page-count {
+      margin-top: 6px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
 
-        .footer {
-            color: black;
-            position: absolute;
-            right: 10px;
-            bottom: 10px;
-        }
+    .lesson-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-        .footer a {
-            color: rgb(114, 173, 38);
-        }
+    .lesson-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      text-decoration: none;
+      color: var(--text);
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+    }
 
-        table,
-        th,
-        td {
-            border: 1px solid black;
-            font-size: 30px;
-        }
+    .lesson-card:hover {
+      border-color: var(--green);
+      box-shadow: 0 4px 20px rgba(146,208,80,0.18);
+      transform: translateX(4px);
+      text-decoration: none;
+      color: var(--text);
+    }
 
-        .center {
-            margin-left: auto;
-            margin-right: auto;
-        }
-    </style>
+    .lesson-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: var(--green-dim);
+      color: var(--green-dark);
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .lesson-body { flex: 1; min-width: 0; }
+
+    .lesson-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .lesson-subtitle {
+      margin-top: 3px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .lesson-arrow {
+      color: var(--text-light);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      transition: transform 0.2s, color 0.2s;
+    }
+
+    .lesson-card:hover .lesson-arrow {
+      transform: translateX(4px);
+      color: var(--green-dark);
+    }
+
+    @media (max-width: 480px) {
+      .page-wrap { padding: 24px 14px 48px; }
+      .lesson-card { padding: 14px 16px; gap: 12px; }
+      .lesson-icon { width: 36px; height: 36px; font-size: 1.1rem; }
+    }
+  </style>
 </head>
 
 <body>
-
-    <!---728x90--->
-    <div class="wrap">
-        <div class="logo">
-            <p>Welcome to Technology Main Page</p>
-
-            <table class="center">
-                <tr>
-                    <th>Release Date</th>
-                    <th>Module Name</th>
-                    <th>Release Date</th>
-                    <th>Module Name</th>
-                </tr>
-
-                <tr>
-                    <td>2024-10-28</td>
-                    <td><a href="Generate_QR_Code/index.html" target="_blank">Generate QR Code</a></td>
-                    <td>2025-01-01</td>
-                    <td><a href="Generate_Calendar/index.html" target="_blank">Generate Calendar</a></td>
-                </tr>
-
-                <tr>
-                    <td>2026-03-17</td>
-                    <td><a href="QR_Code/qr-reader.html" target="_blank">Read QR Code</a></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-
-            </table>
-
-
-        </div>
+  <div class="page-wrap">
+    <div class="page-header">
+      <div class="page-eyebrow">🛠 Technology</div>
+      <h1 class="page-title">Technology</h1>
+      <p class="page-count">3 tools</p>
     </div>
 
+    <div class="lesson-list">
+      <a class="lesson-card" href="Generate_QR_Code/index.html">
+        <div class="lesson-icon">🔲</div>
+        <div class="lesson-body">
+          <div class="lesson-title">Generate QR Code</div>
+          <div class="lesson-subtitle">Released 2024-10-28</div>
+        </div>
+        <span class="lesson-arrow">→</span>
+      </a>
+
+      <a class="lesson-card" href="QR_Code/qr-reader.html">
+        <div class="lesson-icon">📷</div>
+        <div class="lesson-body">
+          <div class="lesson-title">Read QR Code</div>
+          <div class="lesson-subtitle">Released 2026-03-17</div>
+        </div>
+        <span class="lesson-arrow">→</span>
+      </a>
+
+      <a class="lesson-card" href="Generate_Calendar/index.html">
+        <div class="lesson-icon">📅</div>
+        <div class="lesson-body">
+          <div class="lesson-title">Generate Calendar</div>
+          <div class="lesson-subtitle">Released 2025-01-01</div>
+        </div>
+        <span class="lesson-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const t = document.getElementById('__snavTitle');
+      if (t) t.innerHTML = `<a href="../index.html">Home</a><span class="bc-sep">›</span>`
+          + `<span class="bc-cur">Technology</span>`;
+    });
+  </script>
 </body>
 
 </html>

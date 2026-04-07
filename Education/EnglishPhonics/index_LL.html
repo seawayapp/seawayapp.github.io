@@ -1,172 +1,247 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!-- Input Data -->
-    <script src="./data/A_index_LL.js"></script>
-    <title>TLL</title>
-    <style type="text/css">
-        body {
-            font-family: 'Book Antiqua';
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LL</title>
+  <script src="../../nav-top.js"></script>
+  <!-- Input Data -->
+  <script src="./data/A_index_LL.js"></script>
+  <style>
+    :root {
+      --green:      #92d050;
+      --green-dark: #6aaa2a;
+      --green-dim:  rgba(146,208,80,0.12);
+      --text:       #1e293b;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+      --bg:         #f8fafc;
+      --surface:    #ffffff;
+      --border:     #e2e8f0;
+      --radius:     12px;
+      --shadow:     0 2px 12px rgba(0,0,0,0.07);
+      --font:       "Inter", "Segoe UI", system-ui, sans-serif;
+    }
 
-        body {
-            background: #eaeaea;
-        }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .wrap {
-            margin: 0 auto;
-            width: 1000px;
-        }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
 
-        .logo {
-            text-align: center;
-            margin-top: 200px;
-        }
+    /* Breadcrumb links inside the nav bar title slot */
+    #__snavTitle a { color: rgba(255,255,255,0.6); text-decoration: none; }
+    #__snavTitle a:hover { color: #fff; }
+    #__snavTitle .bc-sep { color: rgba(255,255,255,0.3); margin: 0 4px; }
+    #__snavTitle .bc-cur { color: #fff; font-weight: 600; }
 
-        .logo img {
-            width: 350px;
-        }
+    .page-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 36px 20px 60px;
+    }
 
-        .logo p {
-            color: #272727;
-            font-size: 40px;
-            margin-top: 1px;
-        }
+    /* ── Page header ── */
+    .page-header { margin-bottom: 28px; }
 
-        .logo p span {
-            color: lightgreen;
-        }
+    .page-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--green-dark);
+      background: var(--green-dim);
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
 
-        .sub a {
-            color: #fff;
-            background: #272727;
-            text-decoration: none;
-            padding: 10px 20px;
-            font-size: 13px;
-            font-family: arial, serif;
-            font-weight: bold;
-            -webkit-border-radius: .5em;
-            -moz-border-radius: .5em;
-            -border-radius: .5em;
-        }
+    .page-title {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
 
-        .footer {
-            color: black;
-            position: absolute;
-            right: 10px;
-            bottom: 10px;
-        }
+    .page-count {
+      margin-top: 6px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
 
-        .footer a {
-            color: rgb(114, 173, 38);
-        }
+    /* ── Card list ── */
+    .lesson-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-        table,
-        th,
-        td {
-            border: 1px solid black;
-            font-size: 30px;
-        }
+    .lesson-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      text-decoration: none;
+      color: var(--text);
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+      cursor: pointer;
+    }
 
-        .center {
-            margin-left: auto;
-            margin-right: auto;
-        }
-    </style>
+    .lesson-card:hover {
+      border-color: var(--green);
+      box-shadow: 0 4px 20px rgba(146,208,80,0.18);
+      transform: translateX(4px);
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .lesson-num {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--green-dim);
+      color: var(--green-dark);
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .lesson-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .lesson-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .lesson-subtitle {
+      margin-top: 3px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .lesson-arrow {
+      color: var(--text-light);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      transition: transform 0.2s, color 0.2s;
+    }
+
+    .lesson-card:hover .lesson-arrow {
+      transform: translateX(4px);
+      color: var(--green-dark);
+    }
+
+    .state-msg {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .page-footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    @media (max-width: 480px) {
+      .page-wrap { padding: 24px 14px 48px; }
+      .lesson-card { padding: 14px 16px; gap: 12px; }
+      .lesson-title { font-size: 0.92rem; }
+      .lesson-num { width: 32px; height: 32px; font-size: 0.78rem; border-radius: 8px; }
+    }
+  </style>
 </head>
 
 <body>
+  <div class="page-wrap">
 
-    <!---728x90--->
-    <div class="wrap">
-        <div class="logo">
-            <h1>LL</h1>
-            <div id="mainContent"></div>
-        </div>
+    <div class="page-header">
+      <div class="page-eyebrow">📖 English Phonics</div>
+      <h1 class="page-title">LL</h1>
+      <p class="page-count" id="pageCount"></p>
     </div>
 
-</body>
-<script>
-    let inputJSON = mainData;
+    <div class="lesson-list" id="mainContent">
+      <div class="state-msg">Loading...</div>
+    </div>
 
-    let text = `    <table>
-    <tr>
-        <th>Lesson</th>
-        <th>Title</th>
-        <th></th>
-        <th>Lesson</th>
-        <th>Title</th>
-    </tr>`;
-    let rows = Math.ceil(inputJSON.length / 2)
-    console.log(`rows is ${rows}`)
-    for (var i = 0; i < rows; i++) {
-        let i1 = i * 2
-        let index1 = i * 2 + 1
-        let i2 = i * 2 + 1
-        let index2 = i * 2 + 2
-        let type = "paragraph" + i
+    <div class="page-footer">咖啡先生的英语课 · Last updated on 23/07/2025</div>
 
-        if (inputJSON[i1].category == "file") {
-            text += `
-                <tr>
-                    <td>${index1}</td>
-                    <td><a href="./NewConcept_Template.html?input=${inputJSON[i1].filename}" target="_blank">&nbsp;${inputJSON[i1].title}&nbsp;&nbsp;${inputJSON[i1].subtitle}&nbsp;</a></td>
-                    <td></td>    
-            `
-        }
+  </div>
 
-        if (inputJSON[i1].category == "file_slide") {
-            text += `
-                <tr>
-                    <td>${index1}</td>
-                    <td><a href="./template_textslide.html?input=${inputJSON[i1].filename}" target="_blank">&nbsp;${inputJSON[i1].title}&nbsp;&nbsp;${inputJSON[i1].subtitle}&nbsp;</a></td>
-                    <td></td>    
-            `
-        }
+  <script>
+    // Inject breadcrumb into nav bar title slot
+    document.addEventListener("DOMContentLoaded", function () {
+      const t = document.getElementById('__snavTitle');
+      if (t) t.innerHTML = `<a href="../../index.html">Home</a><span class="bc-sep">›</span>`
+          + `<a href="./index_NewConcept.html">New Concept English</a><span class="bc-sep">›</span>`
+          + `<span class="bc-cur">LL</span>`;
+    });
 
-
-        if (inputJSON[i2]) {
-
-            if (inputJSON[i2].category == "file") {
-                text += `
-                <td>${index2}</td>    
-                <td><a href="./NewConcept_Template.html?&input=${inputJSON[i2].filename}" target="_blank">&nbsp;${inputJSON[i2].title}&nbsp;&nbsp;${inputJSON[i2].subtitle}&nbsp;</a></td>
-                `
-            }
-
-            if (inputJSON[i2].category == "file_slide") {
-                text += `
-                <td>${index2}</td>    
-                <td><a href="./template_textslide.html?&input=${inputJSON[i2].filename}" target="_blank">&nbsp;${inputJSON[i2].title}&nbsp;&nbsp;${inputJSON[i2].subtitle}&nbsp;</a></td>
-                `
-            }
-
-            if (inputJSON[i2].category == "folder") {
-                text += `
-                <td>${index2}</td>
-                <td><a href="./${inputJSON[i2].filename}" target="_blank">&nbsp;${inputJSON[i2].title}&nbsp;&nbsp;${inputJSON[i2].subtitle}&nbsp;</a></td>
-                `
-            }
-        } else {
-            text += `
-                <td></td>
-                <td></td>
-            `
-        }
-        text += `
-            </tr>`
+    function getHref(item) {
+      if (item.category === "file")       return `./NewConcept_Template.html?input=${item.filename}`;
+      if (item.category === "file_slide") return `./template_textslide.html?input=${item.filename}&from=LL`;
+      if (item.category === "folder")     return `./${item.filename}`;
+      return "#";
     }
 
-    text += `
-        </table>
-    `
-    document.getElementById("mainContent").innerHTML = text;
-</script>
+    document.addEventListener("DOMContentLoaded", () => {
+      try {
+        const container = document.getElementById("mainContent");
+        container.innerHTML = "";
 
+        document.getElementById("pageCount").textContent =
+          `${mainData.length} item${mainData.length !== 1 ? "s" : ""}`;
 
-<div style="text-align: center;margin-top: 40px"> 咖啡先生的英语课<br>Last updated on 23/07/2025</div>
+        mainData.forEach((item, index) => {
+          const card = document.createElement("a");
+          card.className = "lesson-card";
+          card.href = getHref(item);
+
+          const title    = item.title    || "";
+          const subtitle = item.subtitle || "";
+
+          card.innerHTML = `
+            <div class="lesson-num">${index + 1}</div>
+            <div class="lesson-body">
+              <div class="lesson-title">${title}</div>
+              ${subtitle ? `<div class="lesson-subtitle">${subtitle}</div>` : ""}
+            </div>
+            <span class="lesson-arrow">→</span>`;
+
+          container.appendChild(card);
+        });
+      } catch (error) {
+        console.error("Failed to load data:", error);
+        document.getElementById("mainContent").innerHTML =
+          '<div class="state-msg">Error loading data. Please refresh.</div>';
+      }
+    });
+  </script>
+</body>
 
 </html>
