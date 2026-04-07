@@ -19,5 +19,12 @@ var mainData = [
     category: "file_slide",
     filename: "RN_What_It_Takes",
     foldername: ""
+  },
+  {
+    title: "A Philosopher's Last Lesson",
+    subtitle: "哲学家的最后一课",
+    category: "file_slide",
+    filename: "RN_A_Philosopher_Last_Lesson",
+    foldername: ""
   }
 ];
