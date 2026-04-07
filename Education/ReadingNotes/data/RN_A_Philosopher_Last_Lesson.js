@@ -1,6 +1,6 @@
 var mainData = {
-  title: "Focus on Yourself & Stay Silent",
-  subtitle: "专注自己，保持沉默",
+  title: "A Philosopher's Last Lesson",
+  subtitle: "哲学家的最后一课",
   paragraph: [
     {
       en: "Sometimes, the best move is no move at all. When you shift your focus inward and stay silent, amazing things start to happen.",
