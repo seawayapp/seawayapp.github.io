@@ -10,6 +10,11 @@
  *     window.NAV_CONFIG = {
  *       title:    "Page Title",   // shown in the bar (defaults to <title>)
  *       rootPath: "../../",       // override if auto-detect is wrong
+ *       breadcrumbs: [            // colored chevron trail inside the nav bar
+ *         { label: "Home",      href: "../../index.html" },
+ *         { label: "Section",   href: "../index.html" },
+ *         { label: "This Page" }  // last item = current page (no link)
+ *       ]
  *     };
  *   </script>
  *
@@ -32,9 +37,10 @@
     return parts.length === 0 ? "./" : "../".repeat(parts.length);
   }
 
-  const ROOT    = autoRootPath();
-  const TITLE   = cfg.title || document.title || "SeawayApp";
-  const NAV_H   = 56;
+  const ROOT   = autoRootPath();
+  const TITLE  = cfg.title || document.title || "SeawayApp";
+  const CRUMBS = cfg.breadcrumbs || null;   // array of {label, href?, icon?}
+  const NAV_H  = 56;
 
   /* ── Inject favicon if not already set ── */
   if (!document.querySelector("link[rel~='icon']")) {
@@ -135,18 +141,91 @@
       box-shadow: 0 0 7px #92d050;
       flex-shrink: 0;
     }
+
+    /* ── Breadcrumb chevrons (inside the nav bar) ── */
+    .__snav-crumbs {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+    }
+    .__snav-crumb {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      height: 30px;
+      padding: 0 16px 0 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #fff;
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-right: -1px;
+      clip-path: polygon(12px 0%, 100% 0%, calc(100% + 12px) 50%, 100% 100%, 0% 100%, 12px 100%, 0% 50%);
+      transition: filter 0.18s;
+    }
+    .__snav-crumb:first-child {
+      padding-left: 14px;
+      border-radius: 6px 0 0 6px;
+      clip-path: polygon(0% 0%, 100% 0%, calc(100% + 12px) 50%, 100% 100%, 0% 100%);
+    }
+    .__snav-crumb:last-child {
+      clip-path: polygon(12px 0%, 100% 0%, 100% 100%, 0% 100%, 12px 100%, 0% 50%);
+      margin-right: 0;
+    }
+    .__snav-crumb:only-child {
+      clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+    }
+    .__snav-crumb:not([href]) { cursor: default; opacity: 0.88; }
+    .__snav-crumb[href]:hover { filter: brightness(1.2); text-decoration: none; }
+    .__snav-crumb svg {
+      width: 12px; height: 12px;
+      stroke: currentColor; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
     @media (max-width: 480px) {
       .__snav { padding: 0 12px; gap: 8px; }
       .__snav-home span { display: none; }
       .__snav-back span { display: none; }
+      .__snav-crumb { font-size: 0.7rem; padding: 0 10px 0 14px; height: 26px; }
     }
   `;
   document.head.appendChild(style);
+
+  /* ── Breadcrumb colors ── */
+  const CRUMB_COLORS = ["#2563eb","#16a34a","#7c3aed","#d97706","#dc2626","#0891b2"];
+  const HOME_SVG = `<svg viewBox="0 0 24 24"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg>`;
+
+  function buildCrumbsEl() {
+    if (!CRUMBS || !CRUMBS.length) return null;
+    const wrap = document.createElement("div");
+    wrap.className = "__snav-crumbs";
+    wrap.setAttribute("aria-label", "Breadcrumb");
+    CRUMBS.forEach(function(item, i) {
+      const el = item.href ? document.createElement("a") : document.createElement("span");
+      el.className = "__snav-crumb";
+      el.style.background = CRUMB_COLORS[i % CRUMB_COLORS.length];
+      if (item.href) el.href = item.href;
+      if (i === CRUMBS.length - 1) el.setAttribute("aria-current", "page");
+      const icon = item.icon || (i === 0 ? HOME_SVG : "");
+      el.innerHTML = (icon || "") + (item.label || "");
+      wrap.appendChild(el);
+    });
+    return wrap;
+  }
 
   /* ── Build nav HTML ── */
   const nav = document.createElement("nav");
   nav.className = "__snav";
   nav.setAttribute("aria-label", "Site navigation");
+
+  const titleSlot = CRUMBS ? buildCrumbsEl() : null;
+
   nav.innerHTML = `
     <a class="__snav-home" href="${ROOT}index.html" title="Home">
       <span class="__snav-brand-dot"></span>
@@ -158,8 +237,10 @@
       <span>Back</span>
     </button>
     <div class="__snav-dot" aria-hidden="true"></div>
-    <div class="__snav-title" id="__snavTitle">${TITLE}</div>
+    ${CRUMBS ? "" : `<div class="__snav-title" id="__snavTitle">${TITLE}</div>`}
   `;
+
+  if (titleSlot) nav.appendChild(titleSlot);
 
   /* ── Inject into DOM ── */
   function inject() {
@@ -171,7 +252,7 @@
       document.body.style.paddingTop = (existing + NAV_H) + "px";
     }
 
-    // Back button logic
+    // Back-button logic
     document.getElementById("__snavBack").addEventListener("click", function () {
       if (history.length > 1) {
         history.back();
@@ -181,7 +262,7 @@
     });
 
     // Sync title if page title changed after load (e.g. set by JS)
-    if (!cfg.title) {
+    if (!cfg.title && !CRUMBS) {
       const observer = new MutationObserver(() => {
         document.getElementById("__snavTitle").textContent = document.title;
       });
