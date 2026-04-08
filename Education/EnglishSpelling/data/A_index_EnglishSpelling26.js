@@ -68,5 +68,12 @@ var mainData = [
     category: "file",
     filename: "EnglishSpelling2026-P5-Unit-04-2",
     foldername: ""
+  },
+  {
+    title: "P5 EL Oral Practice",
+    subtitle: "",
+    category: "folder",
+    filename: "P5_EL_Oral_Practice.html",
+    foldername: ""
   }
 ];

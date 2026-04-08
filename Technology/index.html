@@ -5,14 +5,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Technology</title>
+  <script>
+    window.NAV_CONFIG = {
+      breadcrumbs: [
+        { label: "Home",       href: "../index.html" },
+        { label: "Technology" }
+      ]
+    };
+  </script>
   <script src="../nav-top.js"></script>
-  <style>
-    /* Breadcrumb links inside the nav bar title slot */
-    #__snavTitle a { color: rgba(255,255,255,0.6); text-decoration: none; }
-    #__snavTitle a:hover { color: #fff; }
-    #__snavTitle .bc-sep { color: rgba(255,255,255,0.3); margin: 0 4px; }
-    #__snavTitle .bc-cur { color: #fff; font-weight: 600; }
-  </style>
   <style>
     :root {
       --green:      #92d050;
@@ -188,13 +189,6 @@
     </div>
   </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const t = document.getElementById('__snavTitle');
-      if (t) t.innerHTML = `<a href="../index.html">Home</a><span class="bc-sep">›</span>`
-          + `<span class="bc-cur">Technology</span>`;
-    });
-  </script>
 </body>
 
 </html>
