@@ -75,5 +75,20 @@ var mainData = [
     testdate: "04/04/2026",
     category: "file_slide_v2",
     filename: "gl_data_P81L4_P84L4"
+  },
+  {
+    title: "P84L5 - P85L11	第三思惟死时除法而外---如是了",
+    subtitle: "",
+    testdate: "11/04/2026",
+    category: "file_slide_v2",
+    filename: "gl_data_P84L5_P85L11"
+  },
+
+  {
+    title: "P86L10 - P98L3	以是因缘---应当思惟",
+    subtitle: "",
+    testdate: "28/04/2026",
+    category: "file_slide_v2",
+    filename: "gl_data_P86L10_P98L3"
   }
 ];
