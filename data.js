@@ -71,6 +71,10 @@ const data = {
     {
       date: "2024-10-13",
       name: "<a href='Education/Jokes/index.html'>Jokes 幽默笑话</a>"
+    },
+    {
+      date: "2026-04-11",
+      name: "<a href='Books/index.html'>Books 书籍</a>"
     }
   ],
   archiveReleases: [

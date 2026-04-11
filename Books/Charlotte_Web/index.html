@@ -4,22 +4,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Books - 书籍</title>
+  <title>Charlotte's Web - 夏洛特的网</title>
   <script>
     window.NAV_CONFIG = {
       breadcrumbs: [
-        { label: "Home",  href: "../index.html" },
-        { label: "Books" }
+        { label: "Home",   href: "../../index.html" },
+        { label: "Books",  href: "../index.html" },
+        { label: "Charlotte's Web" }
       ]
     };
   </script>
-  <script src="../nav-top.js"></script>
-  <script src="./data/booklist.js" defer></script>
+  <script src="../../nav-top.js"></script>
   <style>
     :root {
-      --accent:      #2563eb;
-      --accent-dark: #1d4ed8;
-      --accent-dim:  rgba(37,99,235,0.10);
+      --accent:      #7c3aed;
+      --accent-dark: #6d28d9;
+      --accent-dim:  rgba(124,58,237,0.10);
       --text:        #1e293b;
       --text-muted:  #64748b;
       --text-light:  #94a3b8;
@@ -71,19 +71,26 @@
       line-height: 1.2;
     }
 
+    .page-subtitle {
+      margin-top: 4px;
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
     .page-count {
       margin-top: 6px;
       font-size: 0.85rem;
       color: var(--text-muted);
     }
 
-    .book-list {
+    .chapter-list {
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
 
-    .book-card {
+    .chapter-card {
       display: flex;
       align-items: center;
       gap: 16px;
@@ -98,15 +105,15 @@
       cursor: pointer;
     }
 
-    .book-card:hover {
+    .chapter-card:hover {
       border-color: var(--accent);
-      box-shadow: 0 4px 20px rgba(37,99,235,0.15);
+      box-shadow: 0 4px 20px rgba(124,58,237,0.15);
       transform: translateX(4px);
       text-decoration: none;
       color: var(--text);
     }
 
-    .book-num {
+    .chapter-num {
       width: 38px;
       height: 38px;
       border-radius: 10px;
@@ -120,12 +127,12 @@
       flex-shrink: 0;
     }
 
-    .book-body {
+    .chapter-body {
       flex: 1;
       min-width: 0;
     }
 
-    .book-title {
+    .chapter-title {
       font-size: 1rem;
       font-weight: 600;
       color: var(--text);
@@ -134,36 +141,29 @@
       text-overflow: ellipsis;
     }
 
-    .book-subtitle {
+    .chapter-subtitle {
       margin-top: 3px;
       font-size: 0.78rem;
       color: var(--text-muted);
     }
 
-    .book-arrow {
+    .chapter-arrow {
       color: var(--text-light);
       font-size: 1.1rem;
       flex-shrink: 0;
       transition: transform 0.2s, color 0.2s;
     }
 
-    .book-card:hover .book-arrow {
+    .chapter-card:hover .chapter-arrow {
       transform: translateX(4px);
       color: var(--accent-dark);
     }
 
-    .state-msg {
-      text-align: center;
-      padding: 48px 20px;
-      color: var(--text-muted);
-      font-size: 0.95rem;
-    }
-
     @media (max-width: 480px) {
       .page-wrap { padding: 24px 14px 48px; }
-      .book-card { padding: 14px 16px; gap: 12px; }
-      .book-title { font-size: 0.92rem; }
-      .book-num { width: 32px; height: 32px; font-size: 0.78rem; border-radius: 8px; }
+      .chapter-card { padding: 14px 16px; gap: 12px; }
+      .chapter-title { font-size: 0.92rem; }
+      .chapter-num { width: 32px; height: 32px; font-size: 0.78rem; border-radius: 8px; }
     }
   </style>
 </head>
@@ -172,48 +172,43 @@
   <div class="page-wrap">
 
     <div class="page-header">
-      <div class="page-eyebrow">📚 Books</div>
-      <h1 class="page-title">Books - 书籍</h1>
+      <div class="page-eyebrow">📖 Charlotte's Web</div>
+      <h1 class="page-title">Charlotte's Web</h1>
+      <p class="page-subtitle">夏洛特的网 · E·B·怀特 [美]</p>
       <p class="page-count" id="pageCount"></p>
     </div>
 
-    <div class="book-list" id="mainContent">
-      <div class="state-msg">Loading...</div>
-    </div>
+    <div class="chapter-list" id="mainContent"></div>
 
   </div>
 
   <script>
+    const chapters = [
+      { num: 1, title: "Chapter 1 — Before Breakfast", subtitle: "第一章 · 早饭前", href: "charlottes_web_ch1_bilingual.html" },
+      { num: 2, title: "Chapter 2 — Wilbur", subtitle: "第二章 · 威伯", href: "charlottes_web_ch2_bilingual.html" },
+    ];
+
     document.addEventListener("DOMContentLoaded", () => {
-      try {
-        const container = document.getElementById("mainContent");
-        container.innerHTML = "";
+      const container = document.getElementById("mainContent");
 
-        document.getElementById("pageCount").textContent =
-          `${mainData.length} book${mainData.length !== 1 ? "s" : ""}`;
+      document.getElementById("pageCount").textContent =
+        `${chapters.length} chapter${chapters.length !== 1 ? "s" : ""}`;
 
-        mainData.forEach((item, index) => {
-          const card = document.createElement("a");
-          card.className = "book-card";
-          card.href = item.category === "file"
-            ? `./Book_Template.html?input=${item.filename}`
-            : `./${item.filename}`;
+      chapters.forEach((ch) => {
+        const card = document.createElement("a");
+        card.className = "chapter-card";
+        card.href = ch.href;
 
-          card.innerHTML = `
-            <div class="book-num">${index + 1}</div>
-            <div class="book-body">
-              <div class="book-title">${item.title || ""}</div>
-              ${item.subtitle ? `<div class="book-subtitle">${item.subtitle}</div>` : ""}
-            </div>
-            <span class="book-arrow">→</span>`;
+        card.innerHTML = `
+          <div class="chapter-num">${ch.num}</div>
+          <div class="chapter-body">
+            <div class="chapter-title">${ch.title}</div>
+            ${ch.subtitle ? `<div class="chapter-subtitle">${ch.subtitle}</div>` : ""}
+          </div>
+          <span class="chapter-arrow">→</span>`;
 
-          container.appendChild(card);
-        });
-      } catch (error) {
-        console.error("Failed to load data:", error);
-        document.getElementById("mainContent").innerHTML =
-          '<div class="state-msg">Error loading data. Please refresh.</div>';
-      }
+        container.appendChild(card);
+      });
     });
   </script>
 </body>
