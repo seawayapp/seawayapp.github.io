@@ -10,5 +10,11 @@ var mainData = [
     subtitle: "E·B·怀特 [美]",
     category: "folder",
     filename: "Charlotte_Web/index.html"
+  },
+  {
+    title: "The Four Books 四書",
+    subtitle: "大学 / 中庸 / 论语 / 孟子",
+    category: "folder",
+    filename: "The_Four_Books/index.html"
   }
 ];
