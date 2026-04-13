@@ -75,6 +75,10 @@ const data = {
     {
       date: "2026-04-11",
       name: "<a href='Books/index.html'>Books 书籍</a>"
+    },
+    {
+      date: "2026-04-14",
+      name: "<a href='Math/index.html'>Math 数学</a>"
     }
   ],
   archiveReleases: [
