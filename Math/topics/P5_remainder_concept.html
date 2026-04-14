@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>P5 Math — The Remainder Concept</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@700&display=swap"
+    rel="stylesheet">
+  <script>
+    window.NAV_CONFIG = {
+      breadcrumbs: [
+        { label: "Home", href: "../../index.html" },
+        { label: "Math", href: "../index.html" },
+        { label: "P5 Remainder Concept" }
+      ]
+    };
+  </script>
+  <script src="../../nav-top.js"></script>
+  <style>
+    :root {
+      --bg: #fef9f0;
+      --navy: #1a2744;
+      --teal: #0d9488;
+      --teal-light: #ccfbf1;
+      --amber: #f59e0b;
+      --amber-light: #fef3c7;
+      --rose: #e11d48;
+      --rose-light: #ffe4e6;
+      --slate: #475569;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --shadow: 0 4px 24px rgba(26, 39, 68, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--navy);
+      min-height: 100vh;
+      padding: 0 0 60px 0;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 28px 24px 24px;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: var(--amber-light);
+      color: #92400e;
+      font-weight: 800;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 99px;
+      margin-bottom: 14px;
+      border: 1.5px solid #fcd34d;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: #04342C;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--slate);
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 60%;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    @media (max-width: 700px) {
+      .container {
+        max-width: 100%;
+      }
+    }
+
+    /* ── SECTION LABELS ── */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 40px 0 16px;
+    }
+
+    .section-label .badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .badge-teal {
+      background: var(--teal);
+      color: white;
+    }
+
+    .badge-amber {
+      background: var(--amber);
+      color: var(--navy);
+    }
+
+    .badge-navy {
+      background: var(--navy);
+      color: white;
+    }
+
+    .badge-rose {
+      background: var(--rose);
+      color: white;
+    }
+
+    .section-label h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      border: 1.5px solid var(--border);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    /* ── KEY CONCEPT ── */
+    .concept-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 4px;
+    }
+
+    @media(max-width:520px) {
+      .concept-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .concept-item {
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .concept-item.teal {
+      background: var(--teal-light);
+      border: 1.5px solid #99f6e4;
+    }
+
+    .concept-item.amber {
+      background: var(--amber-light);
+      border: 1.5px solid #fde68a;
+    }
+
+    .concept-item .icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .concept-item h3 {
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    .concept-item p {
+      font-size: 0.92rem;
+      line-height: 1.5;
+      color: var(--slate);
+    }
+
+    /* ── QUESTION ── */
+    .question-box {
+      background: linear-gradient(135deg, #1a2744 0%, #2d4a8a 100%);
+      color: white;
+      border-radius: 14px;
+      padding: 22px 24px;
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .question-box strong {
+      color: var(--amber);
+    }
+
+    /* ── FRACTIONS helper ── */
+    .frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      font-weight: 800;
+      font-size: 0.88em;
+      line-height: 1.15;
+      margin: 0 3px;
+      vertical-align: middle;
+    }
+
+    .frac .num {
+      display: block;
+      text-align: center;
+    }
+
+    .frac .den {
+      display: block;
+      text-align: center;
+      border-top: 2px solid currentColor;
+      padding-top: 1px;
+    }
+
+    /* inside question-box (white color) */
+    .question-box .frac .den {
+      border-top-color: white;
+    }
+
+    /* ── MODEL METHOD ── */
+    .method-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .method-pill {
+      display: inline-block;
+      padding: 4px 16px;
+      border-radius: 99px;
+      font-weight: 800;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .pill-teal {
+      background: var(--teal);
+      color: white;
+    }
+
+    .pill-amber {
+      background: var(--amber);
+      color: var(--navy);
+    }
+
+    /* Bar model */
+    .bar-wrap {
+      margin: 18px 0 24px;
+    }
+
+    .bar-label-row {
+      display: flex;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--slate);
+      margin-bottom: 4px;
+      gap: 0;
+    }
+
+    .bar-label-row .lbl-bb {
+      width: 20%;
+      text-align: center;
+    }
+
+    .bar-label-row .lbl-rem {
+      width: 80%;
+      text-align: center;
+    }
+
+    .bar-outer {
+      display: flex;
+      height: 44px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid var(--navy);
+    }
+
+    .bar-seg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.78rem;
+      color: white;
+      border-right: 2px solid var(--navy);
+      transition: opacity 0.3s;
+      height: 100%;
+      user-select: none;
+    }
+
+    .bar-seg:last-child {
+      border-right: none;
+    }
+
+    .seg-bb {
+      background: #1a2744;
+      width: 10%;
+    }
+
+    /* 1 unit basketball */
+    .seg-bad {
+      background: #0d9488;
+    }
+
+    /* 3 units badminton */
+    .seg-tt {
+      background: #f59e0b;
+    }
+
+    /* 5 units table tennis */
+    /* width set inline */
+    .bar-anno {
+      display: flex;
+      margin-top: 6px;
+      font-size: 0.8rem;
+      color: var(--slate);
+      gap: 0;
+    }
+
+    .anno-item {
+      text-align: center;
+      font-weight: 700;
+    }
+
+    /* Step boxes */
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .step {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      background: #f8fafc;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .step-num.t {
+      background: var(--teal);
+      color: white;
+    }
+
+    .step-num.a {
+      background: var(--amber);
+      color: var(--navy);
+    }
+
+    .step p {
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .step .eq {
+      margin-top: 6px;
+      background: white;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.93rem;
+      font-weight: 700;
+      color: var(--navy);
+      display: inline-block;
+    }
+
+    .hl-teal {
+      color: var(--teal);
+      font-weight: 800;
+    }
+
+    .hl-amber {
+      color: #b45309;
+      font-weight: 800;
+    }
+
+    .hl-rose {
+      color: var(--rose);
+      font-weight: 800;
+    }
+
+    /* ── BRANCH METHOD ── */
+    .branch-diagram {
+      margin: 18px 0 24px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .branch-svg {
+      width: 100%;
+      max-width: 520px;
+    }
+
+    /* ── ANSWER BOX ── */
+    .answer-box {
+      background: linear-gradient(135deg, var(--teal) 0%, #0f766e 100%);
+      color: white;
+      border-radius: 14px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .answer-box .icon {
+      font-size: 2rem;
+    }
+
+    .answer-box p {
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .answer-box strong {
+      font-size: 1.3rem;
+    }
+
+    /* ── SUMMARY ── */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 4px;
+    }
+
+    @media(max-width:520px) {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .sum-card {
+      border-radius: 12px;
+      padding: 18px;
+      border: 1.5px solid;
+    }
+
+    .sum-card.teal {
+      background: var(--teal-light);
+      border-color: #5eead4;
+    }
+
+    .sum-card.amber {
+      background: var(--amber-light);
+      border-color: #fcd34d;
+    }
+
+    .sum-card h3 {
+      font-size: 0.95rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .sum-card ul {
+      padding-left: 16px;
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: var(--slate);
+    }
+
+    .tip-box {
+      border-left: 4px solid var(--rose);
+      background: var(--rose-light);
+      border-radius: 0 12px 12px 0;
+      padding: 14px 18px;
+      font-size: 0.93rem;
+      line-height: 1.6;
+      color: #9f1239;
+      margin-top: 16px;
+    }
+
+    .tip-box strong {
+      color: var(--rose);
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center;
+      margin-top: 48px;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      letter-spacing: 0.05em;
+    }
+
+    /* animations */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card,
+    .question-box {
+      animation: fadeUp 0.5s ease both;
+    }
+
+    @page {
+      size: A4 portrait;
+      margin: 2.54cm 3.5cm;
+    }
+
+    @media print {
+
+      /* Hide navigation */
+      nav,
+      header,
+      [class*="nav"],
+      [id*="nav"] {
+        display: none !important;
+      }
+
+      body {
+        background: #fff;
+        color: #000;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 100%;
+        padding: 0 2.5cm;
+        margin: 0;
+      }
+
+      .hero h1 {
+        font-size: 24pt;
+        color: #04342C;
+      }
+
+      .hero p {
+        font-size: 11pt;
+      }
+
+      .card {
+        box-shadow: none;
+        border: 1.5px solid var(--border);
+        break-inside: avoid;
+      }
+
+      .question-box {
+        break-inside: avoid;
+      }
+
+      .step {
+        break-inside: avoid;
+      }
+
+      .answer-box {
+        break-inside: avoid;
+      }
+
+      .sum-card {
+        break-inside: avoid;
+      }
+
+      .tip-box {
+        break-inside: avoid;
+      }
+
+      .section-label {
+        break-inside: avoid;
+      }
+
+      .footer {
+        font-size: 8pt;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      /* Disable animations for print */
+      .card,
+      .question-box {
+        animation: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">Primary 5 Mathematics</div>
+    <h1>The Remainder Concept</h1>
+    <p>Fractions of fractions — understanding what happens to the <em>rest</em></p>
+  </div>
+
+  <div class="container">
+
+    <!-- ① KEY CONCEPT -->
+    <div class="section-label">
+      <div class="badge badge-teal">①</div>
+      <h2>Key Concept</h2>
+    </div>
+
+    <div class="card">
+      <div class="concept-grid">
+        <div class="concept-item teal">
+          <div class="icon">🔢</div>
+          <div>
+            <h3>Part-Whole</h3>
+            <p>The whole is divided into parts. Each part is a fraction of the <strong>whole</strong>.</p>
+          </div>
+        </div>
+        <div class="concept-item amber">
+          <div class="icon">➗</div>
+          <div>
+            <h3>Remainder Fraction</h3>
+            <p>A second fraction is taken of the <strong>remainder</strong> — the leftover part — not the whole.</p>
+          </div>
+        </div>
+      </div>
+      <div
+        style="margin-top:16px; padding:14px 16px; background:#f1f5f9; border-radius:10px; font-size:0.93rem; line-height:1.7; color:var(--slate);">
+        <strong style="color:var(--navy);">Key Idea:</strong> When the problem says <em>" ⅜ of the <u>remaining</u>
+          students"</em>, it means
+        <span class="hl-teal">⅜ × (the remainder)</span>, <strong>not</strong> ⅜ × (the whole class).
+        The remainder is whatever is <span class="hl-amber">left after the first group</span> is removed.
+      </div>
+    </div>
+
+    <!-- ② QUESTION -->
+    <div class="section-label">
+      <div class="badge badge-amber">②</div>
+      <h2>Example Question</h2>
+    </div>
+
+    <div class="question-box">
+      <span class="frac" style="color:white"><span class="num">1</span><span class="den">5</span></span>
+      of the students in a class like <strong>basketball</strong>.
+      <span class="frac" style="color:white; margin-left:6px;"><span class="num">3</span><span
+          class="den">8</span></span>
+      of the <strong>remaining students</strong> like <strong>badminton</strong> and the rest like <strong>table
+        tennis</strong>.
+      <br><br>
+      Given that <strong>12 students</strong> like badminton, how many students are there in the class?
+    </div>
+
+    <!-- ③ METHOD 1: MODEL -->
+    <div class="section-label">
+      <div class="badge badge-navy">③</div>
+      <h2>Method 1 — Model (Bar) Method</h2>
+    </div>
+
+    <div class="card">
+      <div class="method-header">
+        <span class="method-pill pill-teal">Step-by-Step with a Bar Model</span>
+      </div>
+
+      <p style="font-size:0.92rem; color:var(--slate); margin-bottom:10px;">
+        Draw the whole class as a bar divided into <strong>10 equal units</strong>
+        (LCM of 5 and 8 after adjustment → denominator 5 × 2 = 10 works cleanly).
+      </p>
+
+      <!-- BAR DIAGRAM -->
+      <div class="bar-wrap">
+        <div class="bar-label-row">
+          <div class="lbl-bb" style="width:20%">← Basketball →</div>
+          <div class="lbl-rem" style="width:80%">← Remainder (8 units) →</div>
+        </div>
+        <div class="bar-outer">
+          <!-- Basketball: 2 units = 20% -->
+          <div class="bar-seg seg-bb" style="width:10%;">1u</div>
+          <div class="bar-seg seg-bb" style="width:10%;">1u</div>
+          <!-- Badminton: 3 units = 30% -->
+          <div class="bar-seg seg-bad" style="width:10%;">1u</div>
+          <div class="bar-seg seg-bad" style="width:10%;">1u</div>
+          <div class="bar-seg seg-bad" style="width:10%;">1u</div>
+          <!-- Table tennis: 5 units = 50% -->
+          <div class="bar-seg seg-tt" style="width:10%;">1u</div>
+          <div class="bar-seg seg-tt" style="width:10%;">1u</div>
+          <div class="bar-seg seg-tt" style="width:10%;">1u</div>
+          <div class="bar-seg seg-tt" style="width:10%;">1u</div>
+          <div class="bar-seg seg-tt" style="width:10%;">1u</div>
+        </div>
+        <div class="bar-anno">
+          <div class="anno-item" style="width:20%; color:#1a2744;"><span class="frac" style="color:#1a2744"><span
+                class="num">1</span><span class="den">5</span></span> of class<br>(2 units)</div>
+          <div class="anno-item" style="width:30%; color:#0d9488;">Badminton<br>(3 units)</div>
+          <div class="anno-item" style="width:50%; color:#b45309;">Table tennis<br>(5 units)</div>
+        </div>
+      </div>
+
+      <div class="steps-list">
+        <div class="step">
+          <div class="step-num t">1</div>
+          <div>
+            <p>The whole class = <strong>10 units</strong> (use 10 so <span class="frac"><span class="num">1</span><span
+                  class="den">5</span></span> = 2 units and <span class="frac"><span class="num">3</span><span
+                  class="den">8</span></span> of remainder works out to whole units).</p>
+            <div class="eq"><span class="frac"><span class="num">1</span><span class="den">5</span></span> × 10 = <span
+                class="hl-teal">2 units</span> → Basketball</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num t">2</div>
+          <div>
+            <p>Remainder after basketball = 10 − 2 = <span class="hl-teal">8 units</span>.</p>
+            <div class="eq"><span class="frac"><span class="num">3</span><span class="den">8</span></span> × 8 = <span
+                class="hl-teal">3 units</span> → Badminton</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num t">3</div>
+          <div>
+            <p>We know <span class="hl-rose">3 units = 12 students</span>.</p>
+            <div class="eq">1 unit = 12 ÷ 3 = <span class="hl-amber">4 students</span></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num t">4</div>
+          <div>
+            <p>Total students in class:</p>
+            <div class="eq">10 × 4 = <span class="hl-teal">40 students</span> ✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ④ METHOD 2: BRANCH -->
+    <div class="section-label">
+      <div class="badge badge-navy">④</div>
+      <h2>Method 2 — Branch (Fraction Tree) Method</h2>
+    </div>
+
+    <div class="card">
+      <div class="method-header">
+        <span class="method-pill pill-amber">Multiply Fractions Along Each Branch</span>
+      </div>
+
+      <!-- SVG branch diagram -->
+      <div class="branch-diagram">
+        <svg class="branch-svg" viewBox="0 0 520 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- trunk -->
+          <text x="18" y="115" font-family="Nunito" font-weight="800" font-size="17" fill="#1a2744">Class</text>
+
+          <!-- upper branch → basketball -->
+          <line x1="95" y1="108" x2="175" y2="62" stroke="#1a2744" stroke-width="2.5" />
+          <polygon points="170,60 180,66 174,70" fill="#1a2744" />
+
+          <!-- lower branch → remainder -->
+          <line x1="95" y1="118" x2="175" y2="160" stroke="#1a2744" stroke-width="2.5" />
+          <polygon points="170,162 180,156 176,164" fill="#1a2744" />
+
+          <!-- basketball label -->
+          <rect x="180" y="44" width="118" height="46" rx="8" fill="#e0f2fe" stroke="#1a2744" stroke-width="1.5" />
+          <text x="239" y="61" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="14"
+            fill="#1a2744">1</text>
+          <line x1="220" y1="65" x2="258" y2="65" stroke="#1a2744" stroke-width="2" />
+          <text x="239" y="79" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="14"
+            fill="#1a2744">5</text>
+          <text x="300" y="69" text-anchor="middle" font-family="Nunito" font-size="12" fill="#475569">Basketball</text>
+
+          <!-- remainder label -->
+          <rect x="180" y="144" width="118" height="46" rx="8" fill="#fef9c3" stroke="#b45309" stroke-width="1.5" />
+          <text x="239" y="161" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="14"
+            fill="#b45309">4</text>
+          <line x1="220" y1="165" x2="258" y2="165" stroke="#b45309" stroke-width="2" />
+          <text x="239" y="179" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="14"
+            fill="#b45309">5</text>
+          <text x="300" y="173" text-anchor="middle" font-family="Nunito" font-size="12" fill="#475569">Remainder</text>
+
+          <!-- from remainder → badminton -->
+          <line x1="298" y1="154" x2="370" y2="110" stroke="#0d9488" stroke-width="2.5" />
+          <polygon points="364,107 374,112 368,118" fill="#0d9488" />
+
+          <!-- from remainder → table tennis -->
+          <line x1="298" y1="170" x2="370" y2="198" stroke="#f59e0b" stroke-width="2.5" />
+          <polygon points="365,197 374,193 373,202" fill="#f59e0b" />
+
+          <!-- badminton label -->
+          <rect x="376" y="82" width="140" height="56" rx="8" fill="#ccfbf1" stroke="#0d9488" stroke-width="1.5" />
+          <text x="420" y="99" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="13"
+            fill="#0d9488">3</text>
+          <line x1="405" y1="103" x2="435" y2="103" stroke="#0d9488" stroke-width="2" />
+          <text x="420" y="117" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="13"
+            fill="#0d9488">8</text>
+          <text x="446" y="100" text-anchor="start" font-family="Nunito" font-weight="800" font-size="12"
+            fill="#0d9488">×</text>
+          <text x="460" y="99" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="13"
+            fill="#0d9488">4</text>
+          <line x1="448" y1="103" x2="474" y2="103" stroke="#0d9488" stroke-width="2" />
+          <text x="460" y="117" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="13"
+            fill="#0d9488">5</text>
+          <text x="478" y="100" text-anchor="start" font-family="Nunito" font-weight="800" font-size="12"
+            fill="#0d9488">=</text>
+          <text x="494" y="99" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="13"
+            fill="#0d9488">3</text>
+          <line x1="484" y1="103" x2="506" y2="103" stroke="#0d9488" stroke-width="2" />
+          <text x="494" y="117" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="13"
+            fill="#0d9488">10</text>
+          <text x="446" y="131" text-anchor="middle" font-family="Nunito" font-size="12" fill="#475569">Badminton</text>
+
+          <!-- table tennis label -->
+          <rect x="376" y="178" width="140" height="56" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5" />
+          <text x="420" y="195" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="13"
+            fill="#b45309">5</text>
+          <line x1="405" y1="199" x2="435" y2="199" stroke="#b45309" stroke-width="2" />
+          <text x="420" y="213" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="13"
+            fill="#b45309">8</text>
+          <text x="446" y="196" text-anchor="start" font-family="Nunito" font-weight="800" font-size="12"
+            fill="#b45309">×</text>
+          <text x="460" y="195" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="13"
+            fill="#b45309">4</text>
+          <line x1="448" y1="199" x2="474" y2="199" stroke="#b45309" stroke-width="2" />
+          <text x="460" y="213" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="13"
+            fill="#b45309">5</text>
+          <text x="478" y="196" text-anchor="start" font-family="Nunito" font-weight="800" font-size="12"
+            fill="#b45309">=</text>
+          <text x="494" y="195" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="13"
+            fill="#b45309">1</text>
+          <line x1="484" y1="199" x2="506" y2="199" stroke="#b45309" stroke-width="2" />
+          <text x="494" y="213" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="13"
+            fill="#b45309">2</text>
+          <text x="446" y="227" text-anchor="middle" font-family="Nunito" font-size="12" fill="#475569">Table
+            Tennis</text>
+        </svg>
+      </div>
+
+      <div class="steps-list">
+        <div class="step">
+          <div class="step-num a">1</div>
+          <div>
+            <p>Find the remainder fraction: after <span class="frac"><span class="num">1</span><span
+                  class="den">5</span></span> play basketball, the remainder is:</p>
+            <div class="eq">1 − <span class="frac"><span class="num">1</span><span class="den">5</span></span> = <span
+                class="hl-amber"><span class="frac" style="color:#b45309"><span class="num">4</span><span
+                    class="den">5</span></span></span> of the class</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num a">2</div>
+          <div>
+            <p>Multiply along the <span class="hl-teal">badminton branch</span> (<span class="frac"
+                style="color:#0d9488"><span class="num">3</span><span class="den">8</span></span> of the
+              <em>remainder</em>):
+            </p>
+            <div class="eq"><span class="frac"><span class="num">3</span><span class="den">8</span></span> × <span
+                class="frac"><span class="num">4</span><span class="den">5</span></span> = <span class="hl-teal"><span
+                  class="frac" style="color:#0d9488"><span class="num">12</span><span class="den">40</span></span> =
+                <span class="frac" style="color:#0d9488"><span class="num">3</span><span
+                    class="den">10</span></span></span> of the whole class</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num a">3</div>
+          <div>
+            <p>Multiply along the <span class="hl-amber">table tennis branch</span> (<span class="frac"
+                style="color:#b45309"><span class="num">5</span><span class="den">8</span></span> of the
+              <em>remainder</em>):
+            </p>
+            <div class="eq"><span class="frac"><span class="num">5</span><span class="den">8</span></span> × <span
+                class="frac"><span class="num">4</span><span class="den">5</span></span> = <span class="hl-amber"><span
+                  class="frac" style="color:#b45309"><span class="num">20</span><span class="den">40</span></span> =
+                <span class="frac" style="color:#b45309"><span class="num">1</span><span
+                    class="den">2</span></span></span> of the whole class</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num a">4</div>
+          <div>
+            <p>Badminton = <span class="frac" style="color:#0d9488"><span class="num">3</span><span
+                  class="den">10</span></span> of class = 12 students.</p>
+            <div class="eq"><span class="frac"><span class="num">1</span><span class="den">10</span></span> of class =
+              12 ÷ 3 = 4 → Whole class = 10 × 4 = <span class="hl-teal">40 students</span> ✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑤ ANSWER -->
+    <div class="answer-box">
+      <div class="icon">🏆</div>
+      <div>
+        <p>There are <strong>40 students</strong> in the class.</p>
+        <p style="font-weight:400; opacity:0.85; font-size:0.9rem;">Both methods give the same answer — choose the one
+          that suits you!</p>
+      </div>
+    </div>
+
+    <!-- ⑤ SUMMARY -->
+    <div class="section-label" style="margin-top:40px;">
+      <div class="badge badge-rose">⑤</div>
+      <h2>Summary</h2>
+    </div>
+
+    <div class="card">
+      <div class="summary-grid">
+        <div class="sum-card teal">
+          <h3>🟩 Model (Bar) Method</h3>
+          <ul>
+            <li>Draw a bar with a common denominator as total units</li>
+            <li>Label each group's units clearly</li>
+            <li>Use the known group to find 1 unit</li>
+            <li>Multiply to get the total</li>
+            <li>Best for: visual learners</li>
+          </ul>
+        </div>
+        <div class="sum-card amber">
+          <h3>🌿 Branch (Tree) Method</h3>
+          <ul>
+            <li>Split class into fractions at each branch</li>
+            <li>Multiply fractions along each path</li>
+            <li>Find the fraction of the whole for each group</li>
+            <li>Work backwards from the known value</li>
+            <li>Best for: algebraic thinkers</li>
+          </ul>
+        </div>
+      </div>
+
+      <div
+        style="margin-top:18px; padding:16px; background:#f8fafc; border-radius:12px; font-size:0.93rem; color:var(--slate);">
+        <strong style="color:var(--navy);">Both methods confirm:</strong>
+        &nbsp;Basketball = <span class="frac"><span class="num">1</span><span class="den">5</span></span> × 40 =
+        <strong>8</strong> &nbsp;|&nbsp;
+        Badminton = <span class="frac"><span class="num">3</span><span class="den">10</span></span> × 40 =
+        <strong>12</strong> &nbsp;|&nbsp;
+        Table Tennis = <span class="frac"><span class="num">1</span><span class="den">2</span></span> × 40 =
+        <strong>20</strong> &nbsp;|&nbsp;
+        Total = 8 + 12 + 20 = <strong>40</strong> ✓
+      </div>
+
+      <div class="tip-box">
+        <strong>⚠️ Common Mistake to Avoid:</strong>
+        Do <em>not</em> take <span class="frac"><span class="num">3</span><span class="den">8</span></span> of the
+        <em>whole</em> class. The word
+        <strong>"remaining"</strong> tells you to first subtract the basketball group,
+        then apply the fraction to what is left. Always read carefully!
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">P5 Mathematics · Fractions — The Remainder Concept</div>
+
+  <script>
+    document.addEventListener('keydown', function (e) {
+      if (e.ctrlKey && e.key === 'p') {
+        e.preventDefault();
+        window.print();
+      }
+    });
+  </script>
+
+</body>
+
+</html>
