@@ -8,7 +8,7 @@
   <script>
     window.NAV_CONFIG = {
       breadcrumbs: [
-        { label: "Home",  href: "../index.html" },
+        { label: "Home", href: "../index.html" },
         { label: "Math" }
       ]
     };
@@ -16,21 +16,27 @@
   <script src="../nav-top.js"></script>
   <style>
     :root {
-      --accent:      #059669;
+      --accent: #059669;
       --accent-dark: #047857;
-      --accent-dim:  rgba(5,150,105,0.10);
-      --text:        #1e293b;
-      --text-muted:  #64748b;
-      --text-light:  #94a3b8;
-      --bg:          #f8fafc;
-      --surface:     #ffffff;
-      --border:      #e2e8f0;
-      --radius:      12px;
-      --shadow:      0 2px 12px rgba(0,0,0,0.07);
-      --font:        "Inter", "Segoe UI", system-ui, sans-serif;
+      --accent-dim: rgba(5, 150, 105, 0.10);
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+      --font: "Inter", "Segoe UI", system-ui, sans-serif;
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       font-family: var(--font);
@@ -45,7 +51,9 @@
       padding: 36px 20px 60px;
     }
 
-    .page-header { margin-bottom: 28px; }
+    .page-header {
+      margin-bottom: 28px;
+    }
 
     .page-eyebrow {
       display: inline-flex;
@@ -99,7 +107,7 @@
 
     .topic-card:hover {
       border-color: var(--accent);
-      box-shadow: 0 4px 20px rgba(5,150,105,0.15);
+      box-shadow: 0 4px 20px rgba(5, 150, 105, 0.15);
       transform: translateX(4px);
       text-decoration: none;
       color: var(--text);
@@ -152,10 +160,25 @@
     }
 
     @media (max-width: 480px) {
-      .page-wrap { padding: 24px 14px 48px; }
-      .topic-card { padding: 14px 16px; gap: 12px; }
-      .topic-title { font-size: 0.92rem; }
-      .topic-num { width: 32px; height: 32px; font-size: 0.78rem; border-radius: 8px; }
+      .page-wrap {
+        padding: 24px 14px 48px;
+      }
+
+      .topic-card {
+        padding: 14px 16px;
+        gap: 12px;
+      }
+
+      .topic-title {
+        font-size: 0.92rem;
+      }
+
+      .topic-num {
+        width: 32px;
+        height: 32px;
+        font-size: 0.78rem;
+        border-radius: 8px;
+      }
     }
   </style>
 </head>
@@ -179,6 +202,11 @@
         title: "P5 Supposition",
         subtitle: "Primary 5 · Supposition Method",
         href: "./topics/P5_supposition_final.html"
+      },
+      {
+        title: "P5 Remainder Concept",
+        subtitle: "Primary 5 · Remainder Concept",
+        href: "./topics/P5_remainder_concept.html"
       }
     ];
 

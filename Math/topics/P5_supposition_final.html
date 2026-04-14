@@ -51,7 +51,7 @@
     }
 
     .page {
-      max-width: 80%;
+      max-width: 60%;
       margin: 0 auto;
       padding: 16px 12px 40px;
     }
@@ -395,56 +395,147 @@
 
     @page {
       size: A4 portrait;
-      margin: 2.54cm 3.5cm; /* top/bottom: 1 inch, left/right: wider */
+      margin: 2.54cm 3.5cm;
+      /* top/bottom: 1 inch, left/right: wider */
     }
 
     @media print {
+
       /* Hide navigation and non-content chrome */
-      nav, header, [class*="nav"], [id*="nav"] { display: none !important; }
+      nav,
+      header,
+      [class*="nav"],
+      [id*="nav"] {
+        display: none !important;
+      }
 
       /* Reset to full-width, enforce side padding directly on the container */
-      body { background: #fff; color: #000; }
-      .page { max-width: 100%; padding: 0 2.5cm; margin: 0; }
+      body {
+        background: #fff;
+        color: #000;
+      }
+
+      .page {
+        max-width: 100%;
+        padding: 0 2cm;
+        margin: 0;
+      }
 
       /* Restore all font sizes to fixed px for predictable print output */
-      .hero h1        { font-size: 24pt; color: #04342C; }
-      .hero p         { font-size: 11pt; }
-      .concept-box h2 { font-size: 9pt; }
-      .concept-box p  { font-size: 11pt; }
-      .pb             { font-size: 10pt; }
-      .prob           { font-size: 12pt; }
-      .step-label     { font-size: 10pt; }
-      .step-body      { font-size: 10pt; }
-      .chip           { font-size: 10pt; }
-      .chip-r         { font-size: 10pt; }
-      .eq             { font-size: 10pt; }
-      .ans-n          { font-size: 22pt; }
-      .ans-l          { font-size: 9pt; }
-      .verify         { font-size: 10pt; }
-      .tip            { font-size: 10pt; }
-      .summary-box li { font-size: 11pt; }
-      .sec-title      { font-size: 13pt; }
-      .last-updated   { font-size: 8pt; }
+      .hero h1 {
+        font-size: 24pt;
+        color: #04342C;
+      }
+
+      .hero p {
+        font-size: 11pt;
+      }
+
+      .concept-box h2 {
+        font-size: 9pt;
+      }
+
+      .concept-box p {
+        font-size: 11pt;
+      }
+
+      .pb {
+        font-size: 10pt;
+      }
+
+      .prob {
+        font-size: 12pt;
+      }
+
+      .step-label {
+        font-size: 10pt;
+      }
+
+      .step-body {
+        font-size: 10pt;
+      }
+
+      .chip {
+        font-size: 10pt;
+      }
+
+      .chip-r {
+        font-size: 10pt;
+      }
+
+      .eq {
+        font-size: 10pt;
+      }
+
+      .ans-n {
+        font-size: 22pt;
+      }
+
+      .ans-l {
+        font-size: 9pt;
+      }
+
+      .verify {
+        font-size: 10pt;
+      }
+
+      .tip {
+        font-size: 10pt;
+      }
+
+      .summary-box li {
+        font-size: 11pt;
+      }
+
+      .sec-title {
+        font-size: 13pt;
+      }
+
+      .last-updated {
+        font-size: 8pt;
+      }
 
       /* Keep colours on print (browsers strip backgrounds by default) */
-      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
 
       /* Prevent cards / boxes from splitting across pages */
-      .concept-box, .prob, .step-row, .ans-card,
-      .verify, .tip, .summary-box, .sec-header { break-inside: avoid; }
+      .concept-box,
+      .prob,
+      .step-row,
+      .ans-card,
+      .verify,
+      .tip,
+      .summary-box,
+      .sec-header {
+        break-inside: avoid;
+      }
 
       /* Keep step number with its content */
-      .step-row { page-break-inside: avoid; }
+      .step-row {
+        page-break-inside: avoid;
+      }
 
       /* Section starts on a new page if it would otherwise be orphaned */
-      .sec-header { break-before: auto; }
+      .sec-header {
+        break-before: auto;
+      }
 
       /* Hide the scenario picker buttons — only the rendered content matters */
-      .picker { display: none; }
+      .picker {
+        display: none;
+      }
 
       /* Tighten spacing for paper */
-      .steps-wrap { gap: 14px; }
-      .divider    { margin: 16px 0; }
+      .steps-wrap {
+        gap: 14px;
+      }
+
+      .divider {
+        margin: 16px 0;
+      }
     }
   </style>
 </head>
