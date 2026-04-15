@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minimum of PE + PD — Geometric Proof</title>
+<script>
+  window.NAV_CONFIG = {
+    breadcrumbs: [
+      { label: "Home", href: "../../index.html" },
+      { label: "Math", href: "../index.html" },
+      { label: "Interesting Questions", href: "./index.html" },
+      { label: "Minimum of PE + PD" }
+    ]
+  };
+</script>
+<script src="../../nav-top.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&family=Lato:wght@300;400;700&display=swap');
+
+  :root {
+    --bg: #f4f6fb;
+    --surface: #ffffff;
+    --border: #dde2ee;
+    --accent: #c47f00;
+    --accent2: #1a9e97;
+    --accent3: #d94f4f;
+    --text: #1e2333;
+    --muted: #6b7389;
+    --line-reflection: #7c5cbf;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Lato', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 16px 64px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 4vw, 2.3rem);
+    font-weight: 700;
+    color: var(--accent);
+  }
+  header p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-top: 4px;
+    font-weight: 300;
+  }
+
+  /* ── Question card ── */
+  .question-card {
+    width: 100%;
+    max-width: 1100px;
+    background: #fff;
+    border: 1.5px solid #dde2ee;
+    border-left: 5px solid var(--accent2);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 26px;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.07);
+  }
+  .q-number {
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    width: 30px; height: 30px;
+    background: #1e2333;
+    color: #fff;
+    border-radius: 50%;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem; font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .q-inner {
+    display: flex;
+    gap: 28px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .q-body { flex: 1; min-width: 260px; }
+  .q-text {
+    font-size: 0.97rem;
+    color: var(--text);
+    line-height: 1.75;
+    margin-bottom: 14px;
+  }
+  .q-conditions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .q-cond {
+    flex: 1; min-width: 170px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 13px;
+  }
+  .cond-label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 6px;
+  }
+  .q-cond ul { list-style: none; padding: 0; margin: 0; }
+  .q-cond ul li {
+    font-size: 0.84rem; color: var(--muted);
+    line-height: 1.7; padding-left: 13px; position: relative;
+  }
+  .q-cond ul li::before {
+    content: '▸'; position: absolute; left: 0;
+    color: var(--accent2); font-size: 0.68rem; top: 4px;
+  }
+
+  /* ── Original diagram panel ── */
+  .q-diagram {
+    flex-shrink: 0;
+    width: 220px;
+    text-align: center;
+  }
+  .q-diagram svg {
+    width: 100%; height: auto;
+    background: #fff;
+    border: 1px solid #e0e4ef;
+    border-radius: 8px;
+  }
+  .diag-caption {
+    font-size: 0.7rem; color: var(--muted);
+    margin-top: 5px; font-style: italic;
+  }
+
+  /* ── Main grid ── */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    width: 100%; max-width: 1100px;
+  }
+  @media (max-width: 760px) {
+    .main-grid { grid-template-columns: 1fr; }
+    .q-diagram { width: 100%; max-width: 240px; margin: 0 auto; }
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .panel h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.08rem; color: var(--accent2);
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 9px;
+  }
+
+  /* ── Canvas ── */
+  #canvas-wrap { position: relative; width: 100%; aspect-ratio: 1; }
+  canvas {
+    width: 100%; height: 100%;
+    border-radius: 8px; cursor: pointer;
+    display: block; background: #fafbff;
+  }
+
+  /* ── Slider ── */
+  .slider-row { margin-top: 13px; display: flex; align-items: center; gap: 10px; }
+  .slider-row label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem; color: var(--muted); white-space: nowrap;
+  }
+  input[type=range] {
+    flex: 1; -webkit-appearance: none;
+    height: 4px; background: var(--border);
+    border-radius: 2px; outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--accent); cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 0 7px rgba(196,127,0,0.4);
+  }
+  #t-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem; color: var(--accent);
+    min-width: 34px; text-align: right;
+  }
+
+  /* ── Stats ── */
+  .stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .stat-box {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 9px; text-align: center;
+  }
+  .stat-box .label {
+    font-size: 0.67rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px;
+  }
+  .stat-box .value { font-family: 'JetBrains Mono', monospace; font-size: 0.92rem; font-weight: 600; }
+  .stat-box.pe .value  { color: var(--accent3); }
+  .stat-box.pd .value  { color: var(--accent2); }
+  .stat-box.sum .value { color: var(--accent); }
+  .stat-box.sum { border-color: var(--accent); }
+  .min-badge {
+    display: none; font-size: 0.6rem;
+    background: var(--accent); color: #000;
+    border-radius: 4px; padding: 1px 5px;
+    margin-top: 3px; font-weight: 700; letter-spacing: 0.05em;
+  }
+  .min-badge.show { display: inline-block; }
+
+  /* ── Steps ── */
+  .steps { display: flex; flex-direction: column; gap: 15px; }
+  .step { display: flex; gap: 11px; align-items: flex-start; }
+  .step-num {
+    flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: #000;
+    font-family: 'JetBrains Mono', monospace; font-weight: 700;
+    font-size: 0.77rem; display: flex; align-items: center; justify-content: center;
+  }
+  .step-body h3 { font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .step-body p  { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+  .step-body .formula {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 6px; padding: 7px 10px;
+    margin-top: 6px; font-size: 0.79rem; color: var(--accent);
+  }
+
+  .tag {
+    display: inline-block; padding: 1px 6px; border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600;
+  }
+  .tag.orange { background: rgba(196,127,0,0.12);  color: var(--accent); }
+  .tag.teal   { background: rgba(26,158,151,0.12); color: var(--accent2); }
+  .tag.red    { background: rgba(217,79,79,0.12);  color: var(--accent3); }
+  .tag.purple { background: rgba(124,92,191,0.12); color: var(--line-reflection); }
+
+  .answer-box {
+    margin-top: 16px;
+    background: linear-gradient(135deg, rgba(196,127,0,0.07), rgba(26,158,151,0.07));
+    border: 1.5px solid var(--accent); border-radius: 10px;
+    padding: 13px 16px; text-align: center;
+  }
+  .answer-box .label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+  .answer-box .big { font-family: 'Playfair Display', serif; font-size: 1.65rem; color: var(--accent); font-weight: 700; margin: 4px 0 2px; }
+  .answer-box .sub { font-size: 0.76rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+
+  @keyframes flash {
+    0%,100% { box-shadow: 0 0 0 rgba(196,127,0,0); }
+    50%      { box-shadow: 0 0 18px rgba(196,127,0,0.45); }
+  }
+  .stat-box.sum.is-min { animation: flash 0.6s ease; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Minimum of PE + PD</h1>
+  <p>An interactive geometric proof</p>
+</header>
+
+<!-- ══════════════ QUESTION CARD ══════════════ -->
+<div class="question-card">
+  <div class="q-number">20</div>
+  <div class="q-inner">
+
+    <div class="q-body">
+      <p class="q-text">
+        In the figure below, <em>P</em> is a point on diagonal <em>AC</em> of square <em>ABCD</em>.
+        <em>E</em> lies on <em>AD</em> such that <strong>AE = 3 cm</strong> and <strong>ED = 1 cm</strong>.
+        Find the <strong>minimum value</strong> of <em>PD + PE</em>.
+      </p>
+      <div class="q-conditions">
+        <div class="q-cond">
+          <span class="cond-label">Given</span>
+          <ul>
+            <li>Square <em>ABCD</em>, side = <strong>4 cm</strong> (AE + ED = 3+1)</li>
+            <li><em>P</em> moves freely along diagonal <em>AC</em></li>
+            <li>AE = <strong>3 cm</strong>,&nbsp; ED = <strong>1 cm</strong></li>
+          </ul>
+        </div>
+        <div class="q-cond">
+          <span class="cond-label">Find</span>
+          <ul>
+            <li>The <strong>minimum</strong> value of <em>PD + PE</em></li>
+            <li>Position of <em>P</em> at the minimum</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Original diagram (faithful to question image) ── -->
+    <!-- Layout from image: B=top-left, C=top-right, A=bottom-left, D=bottom-right -->
+    <!-- Diagonal from A(bottom-left) to C(top-right) -->
+    <!-- E on AD bottom edge;  P shown on diagonal near upper-right -->
+    <div class="q-diagram">
+      <svg viewBox="0 0 240 255" xmlns="http://www.w3.org/2000/svg">
+        <!-- Square corners: B=(32,28) C=(208,28) A=(32,208) D=(208,208) -->
+        <rect x="32" y="28" width="176" height="180" fill="#f8faff" stroke="#1a1a1a" stroke-width="2.2"/>
+
+        <!-- Diagonal A→C -->
+        <line x1="32" y1="208" x2="208" y2="28" stroke="#333" stroke-width="1.6"/>
+
+        <!-- P at roughly t=0.48 along AC from A:
+             x=32+0.48*176=116.5, y=208-0.48*180=121.6 => (117,122) -->
+        <!-- PE: P(117,122) → E(164,208)  [E at AE=3/4 of bottom: 32+3/4*176=164] -->
+        <line x1="117" y1="122" x2="164" y2="208" stroke="#1a1a1a" stroke-width="1.6"/>
+        <!-- PD: P(117,122) → D(208,208) -->
+        <line x1="117" y1="122" x2="208" y2="208" stroke="#1a1a1a" stroke-width="1.6"/>
+
+        <!-- Corner vertices -->
+        <circle cx="32"  cy="28"  r="3.5" fill="#111"/>
+        <circle cx="208" cy="28"  r="3.5" fill="#111"/>
+        <circle cx="32"  cy="208" r="3.5" fill="#111"/>
+        <circle cx="208" cy="208" r="3.5" fill="#111"/>
+
+        <!-- E on AD bottom edge -->
+        <circle cx="164" cy="208" r="3.5" fill="#333"/>
+        <!-- P on diagonal -->
+        <circle cx="117" cy="122" r="4.5" fill="#444"/>
+
+        <!-- Corner labels (italic serif, matching original) -->
+        <text x="16"  y="23"  font-size="15" font-family="serif" font-style="italic" fill="#111" font-weight="bold">B</text>
+        <text x="210" y="23"  font-size="15" font-family="serif" font-style="italic" fill="#111" font-weight="bold">C</text>
+        <text x="16"  y="224" font-size="15" font-family="serif" font-style="italic" fill="#111" font-weight="bold">A</text>
+        <text x="210" y="224" font-size="15" font-family="serif" font-style="italic" fill="#111" font-weight="bold">D</text>
+
+        <!-- E and P labels -->
+        <text x="158" y="226" font-size="13" font-family="serif" font-style="italic" fill="#333">E</text>
+        <text x="121" y="118" font-size="13" font-family="serif" font-style="italic" fill="#333">P</text>
+
+        <!-- Dimension line below square -->
+        <!-- AE: from x=32 to x=164, at y=220 -->
+        <line x1="32"  y1="222" x2="164" y2="222" stroke="#888" stroke-width="1"/>
+        <line x1="32"  y1="218" x2="32"  y2="226" stroke="#888" stroke-width="1"/>
+        <line x1="164" y1="218" x2="164" y2="226" stroke="#888" stroke-width="1"/>
+        <!-- ED: from x=164 to x=208, at y=220 -->
+        <line x1="164" y1="222" x2="208" y2="222" stroke="#888" stroke-width="1"/>
+        <line x1="208" y1="218" x2="208" y2="226" stroke="#888" stroke-width="1"/>
+
+        <text x="72"  y="237" font-size="10" font-family="'JetBrains Mono',monospace" fill="#555">AE = 3 cm</text>
+        <text x="162" y="237" font-size="10" font-family="'JetBrains Mono',monospace" fill="#555">ED=1</text>
+      </svg>
+      <p class="diag-caption">Original figure</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ MAIN GRID ══════════════ -->
+<div class="main-grid">
+
+  <!-- LEFT: Interactive diagram -->
+  <div class="panel">
+    <h2>Interactive Diagram</h2>
+    <div id="canvas-wrap">
+      <canvas id="geo" width="460" height="460"></canvas>
+    </div>
+    <div class="slider-row">
+      <label>P along AC</label>
+      <input type="range" id="slider" min="0" max="1" step="0.002" value="0.5">
+      <span id="t-val">0.50</span>
+    </div>
+    <div class="stats">
+      <div class="stat-box pe">
+        <div class="label">PE</div>
+        <div class="value" id="val-pe">—</div>
+      </div>
+      <div class="stat-box pd">
+        <div class="label">PD</div>
+        <div class="value" id="val-pd">—</div>
+      </div>
+      <div class="stat-box sum" id="sum-box">
+        <div class="label">PE + PD</div>
+        <div class="value" id="val-sum">—</div>
+        <div class="min-badge" id="min-badge">MINIMUM!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Solution -->
+  <div class="panel">
+    <h2>Step-by-Step Solution</h2>
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Set up coordinates</h3>
+          <p>Place A at the origin. AD = AE + ED = 3 + 1 = 4 cm, so side = 4 cm.</p>
+          <div class="formula">A=(0,0) B=(0,4) C=(4,4) D=(4,0)<br>E=(3,0)  ← AE=3cm along AD</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Rotate E around A by 90°</h3>
+          <p>Rotate <span class="tag red">E=(3,0)</span> anticlockwise 90° around A.<br>
+          This maps E to <span class="tag purple">E′=(0,3)</span> on side AB.</p>
+          <p style="margin-top:6px">Rotation preserves distance, so for any P on AC:</p>
+          <div class="formula">PE = PE′</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Apply the straight-line principle</h3>
+          <div class="formula">PE + PD = PE′ + PD ≥ E′D</div>
+          <p style="margin-top:6px">Minimum when P lies on the straight line from
+          <span class="tag purple">E′</span> to <span class="tag teal">D</span>.
+          Minimum value = <span class="tag orange">E′D</span>.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Calculate E′D — 3-4-5 triangle!</h3>
+          <div class="formula">E′=(0,3),  D=(4,0)<br><br>E′D = √(4² + 3²) = √(16+9) = √25 = <strong>5 cm</strong></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h3>Verify P lies on diagonal AC</h3>
+          <div class="formula">Point on E′D: (4t, 3−3t). Set x=y:<br>4t = 3−3t → t = 3/7<br>P = (12/7, 12/7) ✓ inside square</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="answer-box">
+      <div class="label">Minimum value of PE + PD</div>
+      <div class="big">5 cm</div>
+      <div class="sub">√(4² + 3²) = √25 = 5 &nbsp;·&nbsp; 3-4-5 right triangle</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const canvas   = document.getElementById('geo');
+const ctx      = canvas.getContext('2d');
+const slider   = document.getElementById('slider');
+const tVal     = document.getElementById('t-val');
+const valPE    = document.getElementById('val-pe');
+const valPD    = document.getElementById('val-pd');
+const valSum   = document.getElementById('val-sum');
+const minBadge = document.getElementById('min-badge');
+const sumBox   = document.getElementById('sum-box');
+
+const SZ=4, PAD=46;
+let W,H,scale,ox,oy;
+
+function resize(){
+  const wrap=document.getElementById('canvas-wrap');
+  const sz=wrap.clientWidth;
+  canvas.width=sz*devicePixelRatio; canvas.height=sz*devicePixelRatio;
+  canvas.style.width=sz+'px'; canvas.style.height=sz+'px';
+  W=canvas.width; H=canvas.height;
+  scale=(W-PAD*2*devicePixelRatio)/SZ;
+  ox=PAD*devicePixelRatio; oy=PAD*devicePixelRatio;
+}
+
+function tc(x,y){ return [ox+x*scale, H-oy-y*scale]; }
+function dist(ax,ay,bx,by){ return Math.hypot(bx-ax,by-ay); }
+
+let t=0.5, prevSum=null;
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  const dpr=devicePixelRatio;
+  ctx.save();
+
+  const A=[0,0],B=[0,SZ],C=[SZ,SZ],D=[SZ,0];
+  const E=[3,0],Ep=[0,3];
+  const P=[t*SZ,t*SZ];
+
+  // Square
+  ctx.beginPath();
+  ctx.moveTo(...tc(...A)); ctx.lineTo(...tc(...B));
+  ctx.lineTo(...tc(...C)); ctx.lineTo(...tc(...D)); ctx.closePath();
+  ctx.fillStyle='rgba(26,158,151,0.05)'; ctx.fill();
+  ctx.strokeStyle='#9aa5c0'; ctx.lineWidth=2*dpr; ctx.stroke();
+
+  // Diagonal AC
+  ctx.beginPath(); ctx.moveTo(...tc(...A)); ctx.lineTo(...tc(...C));
+  ctx.strokeStyle='rgba(26,158,151,0.4)'; ctx.lineWidth=1.5*dpr;
+  ctx.setLineDash([6*dpr,4*dpr]); ctx.stroke(); ctx.setLineDash([]);
+
+  // E'D line (orange)
+  ctx.beginPath(); ctx.moveTo(...tc(...Ep)); ctx.lineTo(...tc(...D));
+  ctx.strokeStyle='#c47f00'; ctx.lineWidth=2.5*dpr; ctx.globalAlpha=0.72;
+  ctx.stroke(); ctx.globalAlpha=1;
+
+  // PE PD PE'
+  const [px,py]=tc(...P);
+  ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(...tc(...E));
+  ctx.strokeStyle='#d94f4f'; ctx.lineWidth=2*dpr; ctx.stroke();
+
+  ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(...tc(...D));
+  ctx.strokeStyle='#1a9e97'; ctx.lineWidth=2*dpr; ctx.stroke();
+
+  ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(...tc(...Ep));
+  ctx.strokeStyle='#7c5cbf'; ctx.lineWidth=2*dpr;
+  ctx.setLineDash([5*dpr,3*dpr]); ctx.stroke(); ctx.setLineDash([]);
+
+  // Rotation arc
+  const [aax,aay]=tc(0,0);
+  ctx.beginPath(); ctx.arc(aax,aay,30*dpr,-Math.PI/2,0,false);
+  ctx.strokeStyle='rgba(124,92,191,0.42)'; ctx.lineWidth=1.5*dpr;
+  ctx.setLineDash([3*dpr,3*dpr]); ctx.stroke(); ctx.setLineDash([]);
+
+  // Dots
+  function dot(mx,my,fill,r=5){
+    const [cx,cy]=tc(mx,my);
+    ctx.beginPath(); ctx.arc(cx,cy,r*dpr,0,Math.PI*2);
+    ctx.fillStyle=fill; ctx.fill();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=1.5*dpr; ctx.stroke();
+  }
+  dot(...A,'#111',5); dot(...B,'#111',5);
+  dot(...C,'#111',5); dot(...D,'#1a9e97',6);
+  dot(...E,'#d94f4f',6); dot(...Ep,'#7c5cbf',6); dot(...P,'#c47f00',7);
+
+  // Labels
+  function lbl(text,mx,my,ox2,oy2,color='#111',sz=14){
+    const [lx,ly]=tc(mx,my);
+    ctx.font=`bold ${sz*dpr}px 'JetBrains Mono',monospace`;
+    ctx.fillStyle=color;
+    ctx.fillText(text,lx+ox2*dpr,ly+oy2*dpr);
+  }
+  lbl('A',0,0,-20,20); lbl('B',0,SZ,-20,-10);
+  lbl('C',SZ,SZ,9,-10); lbl('D',SZ,0,9,20);
+  lbl('E',3,0,5,20,'#d94f4f',12);
+  lbl("E'",0,3,-34,4,'#7c5cbf',12);
+  lbl('P',t*SZ,t*SZ,11,-7,'#c47f00',12);
+
+  // Distance labels with cm
+  const peLen=dist(...P,...E), pdLen=dist(...P,...D), sum=peLen+pdLen;
+
+  function midLbl(text,x1,y1,x2,y2,color){
+    const mx=(x1+x2)/2, my=(y1+y2)/2;
+    const [cx2,cy2]=tc(mx,my);
+    ctx.font=`${10*dpr}px 'JetBrains Mono',monospace`;
+    ctx.fillStyle=color;
+    ctx.fillText(text,cx2+6*dpr,cy2-5*dpr);
+  }
+  midLbl(peLen.toFixed(2)+' cm',...P,...E,'#d94f4f');
+  midLbl(pdLen.toFixed(2)+' cm',...P,...D,'#1a9e97');
+
+  // Static AE / ED dimension marks
+  const [axPx,ayPx]=tc(0,0);
+  const [exPx,]=tc(3,0);
+  const [dxPx,]=tc(4,0);
+  const dimY=ayPx+20*dpr;
+  ctx.strokeStyle='#bbb'; ctx.lineWidth=1*dpr;
+  ctx.beginPath(); ctx.moveTo(axPx,dimY); ctx.lineTo(exPx,dimY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(axPx,dimY-5*dpr); ctx.lineTo(axPx,dimY+5*dpr); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(exPx,dimY-5*dpr); ctx.lineTo(exPx,dimY+5*dpr); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(exPx,dimY); ctx.lineTo(dxPx,dimY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(dxPx,dimY-5*dpr); ctx.lineTo(dxPx,dimY+5*dpr); ctx.stroke();
+
+  ctx.font=`${9*dpr}px 'JetBrains Mono',monospace`; ctx.fillStyle='#999';
+  ctx.fillText('AE=3cm', axPx+(exPx-axPx)/2-22*dpr, dimY+13*dpr);
+  ctx.fillText('ED=1',   exPx+(dxPx-exPx)/2-12*dpr, dimY+13*dpr);
+
+  ctx.restore();
+
+  tVal.textContent=t.toFixed(2);
+  valPE.textContent=peLen.toFixed(3)+' cm';
+  valPD.textContent=pdLen.toFixed(3)+' cm';
+  valSum.textContent=sum.toFixed(3)+' cm';
+
+  const isMin=Math.abs(sum-5)<0.018;
+  minBadge.classList.toggle('show',isMin);
+  if(isMin && prevSum!==null && Math.abs(prevSum-5)>=0.018){
+    sumBox.classList.add('is-min');
+    setTimeout(()=>sumBox.classList.remove('is-min'),700);
+  }
+  prevSum=sum;
+}
+
+slider.addEventListener('input',()=>{ t=parseFloat(slider.value); draw(); });
+window.addEventListener('resize',()=>{ resize(); draw(); });
+resize(); draw();
+
+let animT=0,animDir=1,animating=true,animFrame;
+function animate(){
+  if(!animating) return;
+  animT+=0.004*animDir;
+  if(animT>=1){animT=1;animDir=-1;}
+  if(animT<=0){animT=0;animDir=1;}
+  t=animT; slider.value=t; draw();
+  animFrame=requestAnimationFrame(animate);
+}
+animate();
+slider.addEventListener('mousedown',()=>{ animating=false; cancelAnimationFrame(animFrame); });
+slider.addEventListener('touchstart',()=>{ animating=false; cancelAnimationFrame(animFrame); });
+</script>
+</body>
+</html>
