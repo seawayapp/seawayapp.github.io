@@ -119,6 +119,7 @@ body.sidebar-open  #sidebar-toggle span:nth-child(3) { transform: translateY(-7p
 #layout {
   display: flex;
   height: 100vh;
+  height: 100dvh;
   padding-top: var(--offset);
   position: relative;
   overflow: hidden;
@@ -357,6 +358,7 @@ body.sidebar-open #sidebar {
     position: fixed;
     top: var(--offset); left: 0;
     height: calc(100vh - var(--offset));
+    height: calc(100dvh - var(--offset));
     margin-right: 0 !important;
     z-index: 150;
   }
@@ -370,8 +372,8 @@ body.sidebar-open #sidebar {
   #topbar .title-sub { display: none; }
   #progress-text { font-size: 10px; }
 
-  /* Compact scroll area */
-  #scroll-area { padding: 16px 14px 80px; }
+  /* Compact scroll area — extra bottom space for iOS browser chrome + home indicator */
+  #scroll-area { padding: 16px 14px calc(100px + env(safe-area-inset-bottom, 0px)); }
 
   /* Ctrl bar wraps gracefully */
   #ctrl-bar { padding: 6px 10px; min-height: auto; row-gap: 5px; }
