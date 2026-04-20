@@ -6,6 +6,12 @@ var mainData = [
     filename: "index_BoRe.html"
   },
   {
+    title: "菩提道次第广论-简体原文",
+    subtitle: "检索",
+    category: "file_index",
+    filename: "guanglun_reader_v2.html"
+  },
+  {
     title: "菩提道次第广论",
     subtitle: "宗喀巴大师",
     category: "folder",
