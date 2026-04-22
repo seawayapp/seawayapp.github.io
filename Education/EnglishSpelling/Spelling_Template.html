@@ -924,6 +924,10 @@
                         case 'Escape':
                             closeModal();
                             break;
+                        case 'p':
+                        case 'P':
+                            playWordAudio(wordData[currentIndex].word);
+                            break;
                     }
                 }
             });
