@@ -292,6 +292,31 @@
       background: rgba(0, 0, 0, 0.55);
       padding: 1px 0 2px;
     }
+
+    /* ── TABLET / SMALL SCREEN: compact arrows ── */
+    @media (max-width: 1024px) {
+      .side-arrow {
+        top: 50%;
+        bottom: auto;
+        transform: translateY(-50%);
+        width: 52px;
+        height: 64px;
+        border-radius: 4px;
+      }
+
+      .side-arrow:hover {
+        background: transparent;
+      }
+
+      .arrow-circle {
+        width: 48px;
+        height: 48px;
+        background: rgba(0, 0, 0, 0.25);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+      }
+    }
   </style>
 </head>
 
