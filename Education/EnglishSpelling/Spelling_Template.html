@@ -5,6 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="maintitlePage"></title>
+    <script>
+        (function () {
+            const input = new URLSearchParams(window.location.search).get('input') || '';
+            const m = input.match(/(\d{4})/);
+            const indexHref = m ? 'index' + m[1].slice(2) + '.html' : 'index.html';
+            window.NAV_CONFIG = {
+                breadcrumbs: [
+                    { label: "Home", href: "../../index.html" },
+                    { label: "Education", href: "../index.html" },
+                    { label: "English Spelling", href: indexHref },
+                    { label: "..." }
+                ]
+            };
+        })();
+    </script>
     <script src="../../nav-top.js"></script>
     <style>
         :root {
@@ -160,7 +175,8 @@
             right: 0;
             bottom: 0;
             background-color: #ffffff;
-            z-index: 10000; /* above nav-top.js (9999) */
+            z-index: 10000;
+            /* above nav-top.js (9999) */
             overflow: auto;
             padding: 20px;
         }
@@ -220,7 +236,9 @@
             cursor: pointer;
         }
 
-        .modal-word:hover { color: var(--primary-color); }
+        .modal-word:hover {
+            color: var(--primary-color);
+        }
 
         /* Progress indicator */
         .modal-progress {
@@ -403,7 +421,7 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            background: rgba(0,0,0,0.06);
+            background: rgba(0, 0, 0, 0.06);
             border: none;
             border-radius: 50%;
             width: 44px;
@@ -823,6 +841,10 @@
             elements.mainTitle.textContent = mainDataInput.title;
             elements.subTitle.textContent = mainDataInput.subtitle;
 
+            // Sync the last nav breadcrumb to the real data title
+            const lastCrumb = document.querySelector('.__snav-crumb[aria-current="page"]');
+            if (lastCrumb) lastCrumb.textContent = mainDataInput.title + " " + mainDataInput.subtitle;
+
             wordData.length = 0; // Clear array
             wordData.push(...mainDataInput.wordData);
             elements.wordCount.textContent = `${wordData.length} words`;
@@ -1095,7 +1117,7 @@
                 });
             }
 
-            
+
         }
 
         // Close modal

@@ -157,6 +157,7 @@
         const a = document.createElement('a');
         a.className = 'year-card' + (y === currentYear ? ' current-year' : '');
         a.href = `./Calendar_Template_Landscape.html?year=${y}`;
+        a.target = '_blank';
         a.textContent = y;
         grid.appendChild(a);
       });
