@@ -1,8 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
+    <script src="../../nav-top.js"></script>
     <title>Picture Dictionary</title>
     <style>
         body {
@@ -129,7 +130,7 @@
                 row.innerHTML = `
       <td>${word.word}</td>
       <td>${word.phonetic || ""}</td>
-      <td><img src="./images/${word.word}.jpg" alt="${word.word}"></td>
+      <td><img src="./images/${word.word}.jpg" alt="${word.word}" loading="lazy"></td>
       <td><audio controls src="$./audio/{word.word}.mp3"></audio></td>
       <td>${word.translation}</td>
     `;
