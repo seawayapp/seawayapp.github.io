@@ -1,9 +1,21 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        window.NAV_CONFIG = {
+            breadcrumbs: [
+                { label: "Home", href: "../../index.html" },
+                { label: "Education", href: "../index.html" },
+                { label: "Buddhism", href: "index.html" },
+                { label: "大般若经", href: "index_BoRe.html" },
+                { label: "..." }
+            ]
+        };
+    </script>
+    <script src="../../nav-top.js"></script>
     <title id="maintitle"></title>
 
     <link media="screen" rel="stylesheet" href="./css/bootstrap.min.css">
@@ -178,6 +190,10 @@
             if (inputJSON.title != "") {
                 maintitle = maintitle + " " + inputJSON.subtitle
             }
+
+            // Sync the last nav breadcrumb to the real data title
+            const lastCrumb = document.querySelector('.__snav-crumb[aria-current="page"]');
+            if (lastCrumb) lastCrumb.textContent = maintitle;
 
             document.getElementById("maintitle").innerHTML = maintitle;
 

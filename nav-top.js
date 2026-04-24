@@ -194,6 +194,50 @@
       .__snav-back span { display: none; }
       .__snav-crumb { font-size: 0.7rem; padding: 0 10px 0 14px; height: 26px; }
     }
+
+    /* ── Slot mode: integrates into a host topbar ── */
+    .__snav-slot-wrap {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+    .__snav-slot-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.78rem;
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      cursor: pointer;
+      padding: 5px 9px;
+      border-radius: 5px;
+      transition: background 0.18s, color 0.18s;
+      white-space: nowrap;
+      text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .__snav-slot-btn:hover {
+      background: rgba(255,255,255,0.09);
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+    }
+    .__snav-slot-btn svg {
+      width: 13px; height: 13px;
+      stroke: currentColor; fill: none;
+      stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+    .__snav-slot-sep {
+      width: 1px; height: 18px;
+      background: rgba(255,255,255,0.14);
+      flex-shrink: 0;
+    }
+    @media (max-width: 480px) {
+      .__snav-slot-btn span { display: none; }
+    }
   `;
   document.head.appendChild(style);
 
@@ -271,9 +315,52 @@
     }
   }
 
-  if (document.body) {
-    inject();
+  /* ── Slot mode: inject Back + Home into an existing host element ── */
+  const BACK_SVG2  = `<svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>`;
+  const HOME2_SVG  = `<svg viewBox="0 0 24 24"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg>`;
+
+  function injectSlot() {
+    const container = document.getElementById(cfg.slot);
+    if (!container) return;
+
+    const wrap = document.createElement("div");
+    wrap.className = "__snav-slot-wrap";
+
+    const homeEl = document.createElement("a");
+    homeEl.className = "__snav-slot-btn";
+    homeEl.href = ROOT + "index.html";
+    homeEl.title = "SeawayApp Home";
+    homeEl.innerHTML = HOME2_SVG + "<span>Home</span>";
+
+    const sep1 = document.createElement("div");
+    sep1.className = "__snav-slot-sep";
+
+    const backEl = document.createElement("button");
+    backEl.className = "__snav-slot-btn";
+    backEl.id = "__snavBack";
+    backEl.title = "Go back";
+    backEl.innerHTML = BACK_SVG2 + "<span>Back</span>";
+    backEl.addEventListener("click", function () {
+      if (history.length > 1) history.back();
+      else location.href = ROOT + "index.html";
+    });
+
+    const sep2 = document.createElement("div");
+    sep2.className = "__snav-slot-sep";
+    sep2.style.marginLeft = "4px";
+
+    wrap.appendChild(homeEl);
+    wrap.appendChild(sep1);
+    wrap.appendChild(backEl);
+    wrap.appendChild(sep2);
+    container.appendChild(wrap);
+  }
+
+  if (cfg.slot) {
+    if (document.body) injectSlot();
+    else document.addEventListener("DOMContentLoaded", injectSlot);
   } else {
-    document.addEventListener("DOMContentLoaded", inject);
+    if (document.body) inject();
+    else document.addEventListener("DOMContentLoaded", inject);
   }
 })();

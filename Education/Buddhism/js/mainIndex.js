@@ -1,56 +1,26 @@
-function generateTable(data) {
-  const tableHTML = `
-        <table>
-            <tr>
-                <th>目录</th>
-                <th>经名</th>
-                <th>作者/译师</th>
-                <th></th>
-                <th>目录</th>
-                <th>经名</th>
-                <th>作者/译师</th>
-            </tr>
-            ${data
-              .map((item, i) => {
-                if (i % 2 === 0) {
-                  const nextItem = data[i + 1];
-                  return `
-                        <tr>
-                            ${generateRow(item, i + 1)}
-                            <td></td>
-                            ${
-                              nextItem
-                                ? generateRow(nextItem, i + 2)
-                                : "<td></td><td></td>"
-                            }
-                        </tr>
-                    `;
-                }
-                return "";
-              })
-              .join("")}
-        </table>
-    `;
-  document.getElementById("mainContent").innerHTML = tableHTML;
-}
+function generateCards(data) {
+  const cards = data
+    .map((item, i) => {
+      const link =
+        item.category === "file"
+          ? `./BU_Template.html?${item.filename.includes("pageNo") ? "" : "pageNo=" + Math.floor((i + 1) / 2)}&input=${item.filename}`
+          : `./${item.filename}`;
 
-function generateRow(item, index) {
-  const link =
-    item.category === "file"
-      ? `./BU_Template.html?${
-          item.filename.includes("pageNo")
-            ? ""
-            : "pageNo=" + Math.floor(index / 2)
-        }&input=${item.filename}`
-      : `./${item.filename}`;
+      return `<a class="bu-card" href="${link}">
+      <span class="bu-card-num">${i + 1}</span>
+      <span class="bu-card-body">
+        <span class="bu-card-title">${item.title}</span>
+        <span class="bu-card-sub">${item.subtitle}</span>
+      </span>
+      <span class="bu-card-arrow">→</span>
+    </a>`;
+    })
+    .join("");
 
-  return `
-        <td>${index}</td>
-        <td><a href="${link}" target="_blank">&nbsp;${item.title}&nbsp;</a></td>
-        <td>&nbsp;${item.subtitle}&nbsp;</td>
-    `;
+  document.getElementById("mainContent").innerHTML =
+    `<div class="bu-grid">${cards}</div>`;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  generateTable(mainData);
+  generateCards(mainData);
 });

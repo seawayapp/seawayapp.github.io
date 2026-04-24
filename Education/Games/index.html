@@ -1,8 +1,9 @@
-<!DOCTYPE html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="en">
 
 <head>
 	<meta charset="UTF-8">
+    <script src="../../nav-top.js"></script>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel=icon href=./favicon.png>
 	<title>Welcome</title>
@@ -145,7 +146,7 @@
 			for (var j = 0; j < xData.length; j++) {
 				if (xData[j] != "") {
 					text += `<td
-				onclick="playSound('${xData[j]}','${i}${j}')" id="${i}${j}"><img src="./img/${xData[j]}.png"><br>${xData[j]}
+				onclick="playSound('${xData[j]}','${i}${j}')" id="${i}${j}"><img src="./img/${xData[j]}.png" loading="lazy"><br>${xData[j]}
 				<audio id="audio_${xData[j]}" src="./mp3/${xData[j]}.mp3"></audio>
 				</td>`
 				} else {

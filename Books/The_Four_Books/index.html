@@ -1,931 +1,1339 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-Hans">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>四书背诵 · Sìshū Study</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet">
-<style>
-/* ══════════════════════════════════════
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>window.NAV_CONFIG = { slot: 'topbar-back-nav' };</script>
+  <script src="../../nav-top.js"></script>
+  <title>四书背诵 · Sìshū Study</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ══════════════════════════════════════
    DESIGN TOKENS
 ══════════════════════════════════════ */
-:root {
-  --ink:         #1a1208;
-  --ink-mid:     #3d2e14;
-  --ink-light:   #7a6240;
-  --paper:       #f7f3eb;
-  --paper-warm:  #ede8dc;
-  --paper-deep:  #e0d9ca;
-  --gold:        #b8860b;
-  --gold-light:  #d4a942;
-  --red:         #8b1a1a;
-  --blue-en:     #1e4d8c;
-  --rule:        rgba(90,60,20,.18);
-  --shadow:      rgba(30,15,0,.14);
-  --sidebar-w:   260px;
-  --topbar-h:    52px;
-  --progress-h:  3px;
-  --offset:      calc(var(--topbar-h) + var(--progress-h));
-  --trans:       .28s cubic-bezier(.4,0,.2,1);
-}
+    :root {
+      --ink: #1a1208;
+      --ink-mid: #3d2e14;
+      --ink-light: #7a6240;
+      --paper: #f7f3eb;
+      --paper-warm: #ede8dc;
+      --paper-deep: #e0d9ca;
+      --gold: #b8860b;
+      --gold-light: #d4a942;
+      --red: #8b1a1a;
+      --blue-en: #1e4d8c;
+      --rule: rgba(90, 60, 20, .18);
+      --shadow: rgba(30, 15, 0, .14);
+      --sidebar-w: 260px;
+      --topbar-h: 52px;
+      --progress-h: 3px;
+      --offset: calc(var(--topbar-h) + var(--progress-h));
+      --trans: .28s cubic-bezier(.4, 0, .2, 1);
+    }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body {
-  height: 100%; overflow: hidden;
-  background: var(--paper);
-  color: var(--ink);
-  font-family: 'Noto Serif SC', serif;
-  font-size: 15px;
-  line-height: 1.7;
-}
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 2px; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-/* ══════════════════════════════════════
+    html,
+    body {
+      height: 100%;
+      overflow: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Noto Serif SC', serif;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--rule);
+      border-radius: 2px;
+    }
+
+    /* ══════════════════════════════════════
    TOP BAR
 ══════════════════════════════════════ */
-#topbar {
-  position: fixed; top: 0; left: 0; right: 0;
-  height: var(--topbar-h);
-  background: var(--ink);
-  display: flex; align-items: center;
-  padding: 0 12px 0 8px;
-  z-index: 200;
-  box-shadow: 0 2px 10px rgba(0,0,0,.35);
-  gap: 8px;
-}
+    #topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--topbar-h);
+      background: var(--ink);
+      display: flex;
+      align-items: center;
+      padding: 0 12px 0 8px;
+      z-index: 200;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .35);
+      gap: 8px;
+    }
 
-/* ── hamburger toggle ── */
-#sidebar-toggle {
-  width: 38px; height: 38px;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 5px;
-  background: transparent; border: none;
-  cursor: pointer; border-radius: 6px;
-  transition: background var(--trans);
-  flex-shrink: 0; padding: 0;
-}
-#sidebar-toggle:hover,
-#sidebar-toggle:focus-visible { background: rgba(255,255,255,.09); outline: none; }
-#sidebar-toggle span {
-  display: block;
-  width: 20px; height: 2px;
-  background: rgba(255,255,255,.78);
-  border-radius: 1px;
-  transition: transform var(--trans), opacity var(--trans), width var(--trans);
-  transform-origin: center;
-}
-body.sidebar-open  #sidebar-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-body.sidebar-open  #sidebar-toggle span:nth-child(2) { opacity: 0; width: 0; }
-body.sidebar-open  #sidebar-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    /* ── hamburger toggle ── */
+    #sidebar-toggle {
+      width: 38px;
+      height: 38px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background var(--trans);
+      flex-shrink: 0;
+      padding: 0;
+    }
 
-#topbar .title-main {
-  font-family: 'Noto Serif SC', serif;
-  font-size: 16px; font-weight: 700;
-  color: var(--gold-light);
-  letter-spacing: .12em;
-  flex: 1;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-#topbar .title-sub {
-  font-family: 'EB Garamond', serif;
-  font-size: 12px; color: rgba(255,255,255,.36);
-  font-style: italic; letter-spacing: .04em;
-  white-space: nowrap;
-}
-#progress-text {
-  font-size: 11px; color: rgba(255,255,255,.42);
-  font-family: 'EB Garamond', serif; font-style: italic;
-  white-space: nowrap;
-}
+    #sidebar-toggle:hover,
+    #sidebar-toggle:focus-visible {
+      background: rgba(255, 255, 255, .09);
+      outline: none;
+    }
 
-/* progress strip */
-#progress-bar-wrap {
-  position: fixed; top: var(--topbar-h); left: 0; right: 0;
-  height: var(--progress-h); background: rgba(0,0,0,.2); z-index: 200;
-}
-#progress-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--gold), var(--gold-light));
-  transition: width .5s ease; width: 0%;
-}
+    #sidebar-toggle span {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: rgba(255, 255, 255, .78);
+      border-radius: 1px;
+      transition: transform var(--trans), opacity var(--trans), width var(--trans);
+      transform-origin: center;
+    }
 
-/* ══════════════════════════════════════
+    body.sidebar-open #sidebar-toggle span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    body.sidebar-open #sidebar-toggle span:nth-child(2) {
+      opacity: 0;
+      width: 0;
+    }
+
+    body.sidebar-open #sidebar-toggle span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    #topbar .title-main {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--gold-light);
+      letter-spacing: .12em;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    #topbar .title-sub {
+      font-family: 'EB Garamond', serif;
+      font-size: 12px;
+      color: rgba(255, 255, 255, .36);
+      font-style: italic;
+      letter-spacing: .04em;
+      white-space: nowrap;
+    }
+
+    #progress-text {
+      font-size: 11px;
+      color: rgba(255, 255, 255, .42);
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+      white-space: nowrap;
+    }
+
+    /* progress strip */
+    #progress-bar-wrap {
+      position: fixed;
+      top: var(--topbar-h);
+      left: 0;
+      right: 0;
+      height: var(--progress-h);
+      background: rgba(0, 0, 0, .2);
+      z-index: 200;
+    }
+
+    #progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      transition: width .5s ease;
+      width: 0%;
+    }
+
+    /* ══════════════════════════════════════
    LAYOUT
 ══════════════════════════════════════ */
-#layout {
-  display: flex;
-  height: 100vh;
-  height: 100dvh;
-  padding-top: var(--offset);
-  position: relative;
-  overflow: hidden;
-}
+    #layout {
+      display: flex;
+      height: 100vh;
+      height: 100dvh;
+      padding-top: var(--offset);
+      position: relative;
+      overflow: hidden;
+    }
 
-/* ══════════════════════════════════════
+    /* ══════════════════════════════════════
    BACKDROP (mobile overlay)
 ══════════════════════════════════════ */
-#sidebar-backdrop {
-  display: none;
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,.48);
-  z-index: 149;
-  opacity: 0;
-  transition: opacity var(--trans);
-  pointer-events: none;
-}
-body.sidebar-open  #sidebar-backdrop { opacity: 1; pointer-events: auto; }
-body.sidebar-closed #sidebar-backdrop { opacity: 0; pointer-events: none; }
+    #sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .48);
+      z-index: 149;
+      opacity: 0;
+      transition: opacity var(--trans);
+      pointer-events: none;
+    }
 
-/* ══════════════════════════════════════
+    body.sidebar-open #sidebar-backdrop {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    body.sidebar-closed #sidebar-backdrop {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* ══════════════════════════════════════
    SIDEBAR
 ══════════════════════════════════════ */
-#sidebar {
-  width: var(--sidebar-w);
-  flex-shrink: 0;
-  background: var(--ink);
-  overflow-y: auto; overflow-x: hidden;
-  padding: 8px 0 80px;
-  position: relative; z-index: 150;
-  transition: transform var(--trans), margin-right var(--trans);
-}
+    #sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      background: var(--ink);
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 8px 0 80px;
+      position: relative;
+      z-index: 150;
+      transition: transform var(--trans), margin-right var(--trans);
+    }
 
-/* Desktop closed — slide left, reclaim space via negative margin */
-body.sidebar-closed #sidebar {
-  transform: translateX(calc(-1 * var(--sidebar-w)));
-  margin-right: calc(-1 * var(--sidebar-w));
-}
-body.sidebar-open #sidebar {
-  transform: translateX(0);
-  margin-right: 0;
-  box-shadow: none;
-}
+    /* Desktop closed — slide left, reclaim space via negative margin */
+    body.sidebar-closed #sidebar {
+      transform: translateX(calc(-1 * var(--sidebar-w)));
+      margin-right: calc(-1 * var(--sidebar-w));
+    }
 
-/* Book groups */
-.book-header {
-  display: flex; align-items: center;
-  padding: 10px 14px 9px;
-  cursor: pointer; user-select: none;
-  border-bottom: 1px solid rgba(255,255,255,.06);
-  transition: background .15s;
-}
-.book-header:hover { background: rgba(255,255,255,.05); }
-.book-name { font-size: 14px; font-weight: 700; color: var(--gold-light); letter-spacing: .1em; flex: 1; }
-.book-label { font-family: 'EB Garamond', serif; font-size: 11px; font-style: italic; color: rgba(255,255,255,.28); }
-.book-arrow { font-size: 9px; color: rgba(255,255,255,.28); margin-left: 7px; transition: transform .22s; }
-.book-group.open .book-arrow { transform: rotate(90deg); }
-.chapter-list { display: none; background: rgba(0,0,0,.22); padding: 3px 0; }
-.book-group.open .chapter-list { display: block; }
+    body.sidebar-open #sidebar {
+      transform: translateX(0);
+      margin-right: 0;
+      box-shadow: none;
+    }
 
-.ch-btn {
-  display: flex; align-items: center;
-  width: 100%; border: none; background: transparent;
-  padding: 7px 14px 7px 22px;
-  cursor: pointer; text-align: left; gap: 8px;
-  transition: background .15s;
-  -webkit-tap-highlight-color: transparent;
-}
-.ch-btn:active, .ch-btn:hover { background: rgba(255,255,255,.06); }
-.ch-btn.active { background: rgba(184,134,11,.16); }
-.ch-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  border: 1.5px solid rgba(255,255,255,.2); flex-shrink: 0;
-  transition: background .2s, border-color .2s;
-}
-.ch-btn.memorized .ch-dot { background: var(--gold); border-color: var(--gold); }
-.ch-btn.partial    .ch-dot { background: rgba(184,134,11,.5); border-color: var(--gold); }
-.ch-name { font-size: 13px; color: rgba(255,255,255,.72); flex: 1; }
-.ch-btn.active .ch-name { color: var(--gold-light); }
-.ch-sub {
-  font-size: 10px; color: rgba(255,255,255,.28);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  max-width: 76px; font-style: italic; font-family: 'EB Garamond', serif;
-}
+    /* Book groups */
+    .book-header {
+      display: flex;
+      align-items: center;
+      padding: 10px 14px 9px;
+      cursor: pointer;
+      user-select: none;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+      transition: background .15s;
+    }
 
-/* ══════════════════════════════════════
+    .book-header:hover {
+      background: rgba(255, 255, 255, .05);
+    }
+
+    .book-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gold-light);
+      letter-spacing: .1em;
+      flex: 1;
+    }
+
+    .book-label {
+      font-family: 'EB Garamond', serif;
+      font-size: 11px;
+      font-style: italic;
+      color: rgba(255, 255, 255, .28);
+    }
+
+    .book-arrow {
+      font-size: 9px;
+      color: rgba(255, 255, 255, .28);
+      margin-left: 7px;
+      transition: transform .22s;
+    }
+
+    .book-group.open .book-arrow {
+      transform: rotate(90deg);
+    }
+
+    .chapter-list {
+      display: none;
+      background: rgba(0, 0, 0, .22);
+      padding: 3px 0;
+    }
+
+    .book-group.open .chapter-list {
+      display: block;
+    }
+
+    .ch-btn {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      border: none;
+      background: transparent;
+      padding: 7px 14px 7px 22px;
+      cursor: pointer;
+      text-align: left;
+      gap: 8px;
+      transition: background .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .ch-btn:active,
+    .ch-btn:hover {
+      background: rgba(255, 255, 255, .06);
+    }
+
+    .ch-btn.active {
+      background: rgba(184, 134, 11, .16);
+    }
+
+    .ch-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, .2);
+      flex-shrink: 0;
+      transition: background .2s, border-color .2s;
+    }
+
+    .ch-btn.memorized .ch-dot {
+      background: var(--gold);
+      border-color: var(--gold);
+    }
+
+    .ch-btn.partial .ch-dot {
+      background: rgba(184, 134, 11, .5);
+      border-color: var(--gold);
+    }
+
+    .ch-name {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .72);
+      flex: 1;
+    }
+
+    .ch-btn.active .ch-name {
+      color: var(--gold-light);
+    }
+
+    .ch-sub {
+      font-size: 10px;
+      color: rgba(255, 255, 255, .28);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 76px;
+      font-style: italic;
+      font-family: 'EB Garamond', serif;
+    }
+
+    /* ══════════════════════════════════════
    MAIN
 ══════════════════════════════════════ */
-#main {
-  flex: 1; display: flex; flex-direction: column;
-  overflow: hidden; background: var(--paper);
-  min-width: 0;
-}
+    #main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--paper);
+      min-width: 0;
+    }
 
-/* Control bar */
-#ctrl-bar {
-  display: flex; align-items: center;
-  padding: 0 14px;
-  min-height: 44px;
-  background: var(--paper-warm);
-  border-bottom: 1px solid var(--rule);
-  gap: 5px; flex-shrink: 0;
-  flex-wrap: wrap; row-gap: 0;
-}
-.mode-label {
-  font-size: 11px; color: var(--ink-light);
-  font-family: 'EB Garamond', serif; font-style: italic;
-}
-.ctrl-group {
-  display: flex; border: 1px solid var(--rule); border-radius: 4px; overflow: hidden;
-}
-.ctrl-btn {
-  border: none; background: transparent;
-  padding: 5px 9px; font-size: 12px;
-  font-family: 'Noto Serif SC', serif; color: var(--ink-mid);
-  cursor: pointer; transition: background .15s, color .15s;
-  white-space: nowrap; -webkit-tap-highlight-color: transparent; line-height: 1.4;
-}
-.ctrl-btn + .ctrl-btn { border-left: 1px solid var(--rule); }
-.ctrl-btn:active, .ctrl-btn:hover { background: var(--paper-deep); }
-.ctrl-btn.on { background: var(--ink); color: var(--paper); }
-.ctrl-sep { width: 1px; background: var(--rule); margin: 6px 3px; flex-shrink: 0; }
+    /* Control bar */
+    #ctrl-bar {
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      min-height: 44px;
+      background: var(--paper-warm);
+      border-bottom: 1px solid var(--rule);
+      gap: 5px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      row-gap: 0;
+    }
 
-/* Scroll area */
-#scroll-area {
-  flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
-  padding: 28px 40px 80px;
-}
-#scroll-inner { max-width: 740px; margin: 0 auto; }
+    .mode-label {
+      font-size: 11px;
+      color: var(--ink-light);
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+    }
 
-/* chapter heading */
-#ch-title-block { margin-bottom: 28px; padding-bottom: 16px; border-bottom: 1px solid var(--rule); }
-#ch-title-block h2 { font-size: 21px; font-weight: 700; letter-spacing: .14em; color: var(--ink); }
-#ch-title-block .ch-subtitle {
-  font-size: 13px; color: var(--ink-light); margin-top: 4px;
-  font-style: italic; font-family: 'EB Garamond', serif; letter-spacing: .05em;
-}
+    .ctrl-group {
+      display: flex;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      overflow: hidden;
+    }
 
-/* sentence card */
-.s-card {
-  margin-bottom: 20px; border: 1px solid var(--rule); border-radius: 6px;
-  background: var(--paper); overflow: hidden; transition: box-shadow .2s;
-}
-.s-card:hover { box-shadow: 0 2px 12px var(--shadow); }
-.s-main { padding: 14px 18px 10px; }
-.s-pinyin {
-  font-size: 12px; color: var(--ink-light); letter-spacing: .06em;
-  margin-bottom: 5px; font-family: 'EB Garamond', serif; line-height: 1.6;
-}
-.s-text {
-  font-size: 19px; line-height: 1.9; letter-spacing: .06em;
-  color: var(--ink); position: relative; user-select: none;
-}
+    .ctrl-btn {
+      border: none;
+      background: transparent;
+      padding: 5px 9px;
+      font-size: 12px;
+      font-family: 'Noto Serif SC', serif;
+      color: var(--ink-mid);
+      cursor: pointer;
+      transition: background .15s, color .15s;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+      line-height: 1.4;
+    }
 
-/* cover modes */
-.mode-word .s-text .zh-char {
-  background: var(--ink); color: var(--ink);
-  border-radius: 2px; cursor: pointer; transition: color .12s; display: inline-block;
-}
-.mode-word .s-text .zh-char.revealed { color: var(--paper); }
-.mode-full .s-text::after {
-  content: ''; position: absolute; inset: -2px -4px;
-  background: var(--ink); border-radius: 3px; cursor: pointer;
-}
-.mode-full .s-text.revealed::after { display: none; }
+    .ctrl-btn+.ctrl-btn {
+      border-left: 1px solid var(--rule);
+    }
 
-.s-en {
-  font-family: 'Book Antiqua', 'Palatino Linotype', Palatino, serif;
-  font-style: normal;
-  font-size: 16px; color: var(--blue-en); margin-top: 10px;
-  line-height: 1.6; padding-top: 10px;
-  border-top: 1px dashed rgba(30,77,140,.15);
-  transition: opacity .2s;
-}
-.s-note {
-  font-size: 12px; color: var(--ink-light); background: var(--paper-warm);
-  padding: 8px 18px; border-top: 1px solid var(--rule); line-height: 1.7;
-}
-.s-foot {
-  display: flex; justify-content: flex-end; align-items: center;
-  padding: 6px 12px; background: var(--paper-warm); border-top: 1px solid var(--rule);
-}
-.mem-btn {
-  border: 1px solid var(--rule); background: transparent;
-  padding: 4px 12px; border-radius: 20px; font-size: 11px; cursor: pointer;
-  font-family: 'Noto Serif SC', serif; color: var(--ink-light);
-  transition: all .15s; -webkit-tap-highlight-color: transparent; min-height: 30px;
-}
-.mem-btn:active, .mem-btn:hover { border-color: var(--gold); color: var(--gold); }
-.mem-btn.done { background: var(--gold); border-color: var(--gold); color: #fff; }
+    .ctrl-btn:active,
+    .ctrl-btn:hover {
+      background: var(--paper-deep);
+    }
 
-/* chapter nav */
-#ch-nav {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 22px 0 0; border-top: 1px solid var(--rule); margin-top: 8px;
-}
-.nav-btn {
-  border: 1px solid var(--rule); background: var(--paper-warm);
-  padding: 8px 16px; border-radius: 4px; font-size: 13px; cursor: pointer;
-  font-family: 'Noto Serif SC', serif; color: var(--ink-mid);
-  transition: all .15s; min-height: 36px; -webkit-tap-highlight-color: transparent;
-}
-.nav-btn:active, .nav-btn:hover { background: var(--ink); color: var(--paper); }
-.nav-btn:disabled { opacity: .3; cursor: default; }
-#ch-nav-info { font-size: 12px; color: var(--ink-light); font-family: 'EB Garamond', serif; font-style: italic; }
+    .ctrl-btn.on {
+      background: var(--ink);
+      color: var(--paper);
+    }
 
-/* welcome */
-#welcome {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  height: 100%; padding: 40px 24px; text-align: center; color: var(--ink-light);
-}
-#welcome h1 { font-size: 30px; letter-spacing: .2em; color: var(--ink); margin-bottom: 10px; }
-#welcome .sub { font-family: 'EB Garamond', serif; font-style: italic; font-size: 15px; letter-spacing: .05em; margin-bottom: 28px; }
-#welcome .desc { font-size: 13px; line-height: 2; max-width: 380px; }
+    .ctrl-sep {
+      width: 1px;
+      background: var(--rule);
+      margin: 6px 3px;
+      flex-shrink: 0;
+    }
 
-/* loading */
-#loading-msg {
-  display: none; text-align: center; padding: 60px 20px; color: var(--ink-light);
-  font-size: 14px; font-family: 'EB Garamond', serif; font-style: italic;
-}
+    /* Scroll area */
+    #scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 28px 40px 80px;
+    }
 
-/* visibility toggles */
-.hide-pinyin .s-pinyin { display: none; }
-.hide-en     .s-en     { display: none; }
-.hide-note   .s-note   { display: none; }
+    #scroll-inner {
+      max-width: 740px;
+      margin: 0 auto;
+    }
 
-/* ══════════════════════════════════════
+    /* chapter heading */
+    #ch-title-block {
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    #ch-title-block h2 {
+      font-size: 21px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      color: var(--ink);
+    }
+
+    #ch-title-block .ch-subtitle {
+      font-size: 13px;
+      color: var(--ink-light);
+      margin-top: 4px;
+      font-style: italic;
+      font-family: 'EB Garamond', serif;
+      letter-spacing: .05em;
+    }
+
+    /* sentence card */
+    .s-card {
+      margin-bottom: 20px;
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      background: var(--paper);
+      overflow: hidden;
+      transition: box-shadow .2s;
+    }
+
+    .s-card:hover {
+      box-shadow: 0 2px 12px var(--shadow);
+    }
+
+    .s-main {
+      padding: 14px 18px 10px;
+    }
+
+    .s-pinyin {
+      font-size: 12px;
+      color: var(--ink-light);
+      letter-spacing: .06em;
+      margin-bottom: 5px;
+      font-family: 'EB Garamond', serif;
+      line-height: 1.6;
+    }
+
+    .s-text {
+      font-size: 19px;
+      line-height: 1.9;
+      letter-spacing: .06em;
+      color: var(--ink);
+      position: relative;
+      user-select: none;
+    }
+
+    /* cover modes */
+    .mode-word .s-text .zh-char {
+      background: var(--ink);
+      color: var(--ink);
+      border-radius: 2px;
+      cursor: pointer;
+      transition: color .12s;
+      display: inline-block;
+    }
+
+    .mode-word .s-text .zh-char.revealed {
+      color: var(--paper);
+    }
+
+    .mode-full .s-text::after {
+      content: '';
+      position: absolute;
+      inset: -2px -4px;
+      background: var(--ink);
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .mode-full .s-text.revealed::after {
+      display: none;
+    }
+
+    .s-en {
+      font-family: 'Book Antiqua', 'Palatino Linotype', Palatino, serif;
+      font-style: normal;
+      font-size: 16px;
+      color: var(--blue-en);
+      margin-top: 10px;
+      line-height: 1.6;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(30, 77, 140, .15);
+      transition: opacity .2s;
+    }
+
+    .s-note {
+      font-size: 12px;
+      color: var(--ink-light);
+      background: var(--paper-warm);
+      padding: 8px 18px;
+      border-top: 1px solid var(--rule);
+      line-height: 1.7;
+    }
+
+    .s-foot {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 6px 12px;
+      background: var(--paper-warm);
+      border-top: 1px solid var(--rule);
+    }
+
+    .mem-btn {
+      border: 1px solid var(--rule);
+      background: transparent;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: 'Noto Serif SC', serif;
+      color: var(--ink-light);
+      transition: all .15s;
+      -webkit-tap-highlight-color: transparent;
+      min-height: 30px;
+    }
+
+    .mem-btn:active,
+    .mem-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .mem-btn.done {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #fff;
+    }
+
+    /* chapter nav */
+    #ch-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 0 0;
+      border-top: 1px solid var(--rule);
+      margin-top: 8px;
+    }
+
+    .nav-btn {
+      border: 1px solid var(--rule);
+      background: var(--paper-warm);
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: 'Noto Serif SC', serif;
+      color: var(--ink-mid);
+      transition: all .15s;
+      min-height: 36px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .nav-btn:active,
+    .nav-btn:hover {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .nav-btn:disabled {
+      opacity: .3;
+      cursor: default;
+    }
+
+    #ch-nav-info {
+      font-size: 12px;
+      color: var(--ink-light);
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+    }
+
+    /* welcome */
+    #welcome {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 40px 24px;
+      text-align: center;
+      color: var(--ink-light);
+    }
+
+    #welcome h1 {
+      font-size: 30px;
+      letter-spacing: .2em;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+
+    #welcome .sub {
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+      font-size: 15px;
+      letter-spacing: .05em;
+      margin-bottom: 28px;
+    }
+
+    #welcome .desc {
+      font-size: 13px;
+      line-height: 2;
+      max-width: 380px;
+    }
+
+    /* loading */
+    #loading-msg {
+      display: none;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--ink-light);
+      font-size: 14px;
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+    }
+
+    /* visibility toggles */
+    .hide-pinyin .s-pinyin {
+      display: none;
+    }
+
+    .hide-en .s-en {
+      display: none;
+    }
+
+    .hide-note .s-note {
+      display: none;
+    }
+
+    /* ══════════════════════════════════════
    MOBILE  ≤ 600px
    Sidebar floats over content as overlay
 ══════════════════════════════════════ */
-@media (max-width: 600px) {
-  :root { --topbar-h: 48px; --sidebar-w: min(82vw, 280px); }
+    @media (max-width: 600px) {
+      :root {
+        --topbar-h: 48px;
+        --sidebar-w: min(82vw, 280px);
+      }
 
-  /* Sidebar becomes a fixed overlay, never pushes layout */
-  #sidebar {
-    position: fixed;
-    top: var(--offset); left: 0;
-    height: calc(100vh - var(--offset));
-    height: calc(100dvh - var(--offset));
-    margin-right: 0 !important;
-    z-index: 150;
-  }
-  body.sidebar-open  #sidebar { transform: translateX(0); box-shadow: 6px 0 28px rgba(0,0,0,.45); }
-  body.sidebar-closed #sidebar { transform: translateX(calc(-1 * var(--sidebar-w))); }
+      /* Sidebar becomes a fixed overlay, never pushes layout */
+      #sidebar {
+        position: fixed;
+        top: var(--offset);
+        left: 0;
+        height: calc(100vh - var(--offset));
+        height: calc(100dvh - var(--offset));
+        margin-right: 0 !important;
+        z-index: 150;
+      }
 
-  /* Backdrop shown on mobile */
-  #sidebar-backdrop { display: block; }
+      body.sidebar-open #sidebar {
+        transform: translateX(0);
+        box-shadow: 6px 0 28px rgba(0, 0, 0, .45);
+      }
 
-  /* Compact topbar */
-  #topbar .title-sub { display: none; }
-  #progress-text { font-size: 10px; }
+      body.sidebar-closed #sidebar {
+        transform: translateX(calc(-1 * var(--sidebar-w)));
+      }
 
-  /* Compact scroll area — extra bottom space for iOS browser chrome + home indicator */
-  #scroll-area { padding: 16px 14px calc(100px + env(safe-area-inset-bottom, 0px)); }
+      /* Backdrop shown on mobile */
+      #sidebar-backdrop {
+        display: block;
+      }
 
-  /* Ctrl bar wraps gracefully */
-  #ctrl-bar { padding: 6px 10px; min-height: auto; row-gap: 5px; }
-  .ctrl-sep { display: none; }
-  .mode-label { display: none; }
+      /* Compact topbar */
+      #topbar .title-sub {
+        display: none;
+      }
 
-  .s-text { font-size: 17px; }
-  .s-main { padding: 12px 14px 8px; }
-  .s-en   { font-size: 13px; }
-  #ch-title-block h2 { font-size: 18px; }
-  .nav-btn { padding: 7px 12px; font-size: 12px; }
-}
+      #progress-text {
+        font-size: 10px;
+      }
 
-/* ══════════════════════════════════════
+      /* Compact scroll area — extra bottom space for iOS browser chrome + home indicator */
+      #scroll-area {
+        padding: 16px 14px calc(100px + env(safe-area-inset-bottom, 0px));
+      }
+
+      /* Ctrl bar wraps gracefully */
+      #ctrl-bar {
+        padding: 6px 10px;
+        min-height: auto;
+        row-gap: 5px;
+      }
+
+      .ctrl-sep {
+        display: none;
+      }
+
+      .mode-label {
+        display: none;
+      }
+
+      .s-text {
+        font-size: 17px;
+      }
+
+      .s-main {
+        padding: 12px 14px 8px;
+      }
+
+      .s-en {
+        font-size: 13px;
+      }
+
+      #ch-title-block h2 {
+        font-size: 18px;
+      }
+
+      .nav-btn {
+        padding: 7px 12px;
+        font-size: 12px;
+      }
+    }
+
+    /* ══════════════════════════════════════
    TABLET  601–900px
    Sidebar closed by default, overlays content
 ══════════════════════════════════════ */
-@media (min-width: 601px) and (max-width: 900px) {
-  :root { --sidebar-w: 248px; }
+    @media (min-width: 601px) and (max-width: 900px) {
+      :root {
+        --sidebar-w: 248px;
+      }
 
-  #sidebar {
-    position: fixed;
-    top: var(--offset); left: 0;
-    height: calc(100vh - var(--offset));
-    margin-right: 0 !important;
-  }
-  body.sidebar-open  #sidebar { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,.35); }
-  body.sidebar-closed #sidebar { transform: translateX(calc(-1 * var(--sidebar-w))); }
+      #sidebar {
+        position: fixed;
+        top: var(--offset);
+        left: 0;
+        height: calc(100vh - var(--offset));
+        margin-right: 0 !important;
+      }
 
-  #sidebar-backdrop { display: block; }
-  #topbar .title-sub { display: none; }
-  #scroll-area { padding: 22px 26px 80px; }
-}
+      body.sidebar-open #sidebar {
+        transform: translateX(0);
+        box-shadow: 4px 0 24px rgba(0, 0, 0, .35);
+      }
 
-/* ══════════════════════════════════════
+      body.sidebar-closed #sidebar {
+        transform: translateX(calc(-1 * var(--sidebar-w)));
+      }
+
+      #sidebar-backdrop {
+        display: block;
+      }
+
+      #topbar .title-sub {
+        display: none;
+      }
+
+      #scroll-area {
+        padding: 22px 26px 80px;
+      }
+    }
+
+    /* ══════════════════════════════════════
    DESKTOP ≥ 901px
    Sidebar pushes layout (default behaviour)
    Backdrop not needed
 ══════════════════════════════════════ */
-@media (min-width: 901px) {
-  #sidebar-backdrop { display: none !important; }
-}
-</style>
+    @media (min-width: 901px) {
+      #sidebar-backdrop {
+        display: none !important;
+      }
+    }
+  </style>
 </head>
+
 <body class="sidebar-open">
 
-<div id="sidebar-backdrop" onclick="closeSidebar()"></div>
+  <div id="sidebar-backdrop" onclick="closeSidebar()"></div>
 
-<!-- TOP BAR -->
-<div id="topbar">
-  <button id="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle navigation">
-    <span></span><span></span><span></span>
-  </button>
-  <div class="title-main">四書 · 背誦</div>
-  <div id="progress-text"></div>
-  <div class="title-sub">Sìshū Recitation</div>
-</div>
-<div id="progress-bar-wrap">
-  <div id="progress-bar-fill"></div>
-</div>
+  <!-- TOP BAR -->
+  <div id="topbar">
+    <div id="topbar-back-nav"></div>
+    <button id="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="title-main">四書 · 背誦</div>
+    <div id="progress-text"></div>
+    <div class="title-sub">Sìshū Recitation</div>
+  </div>
+  <div id="progress-bar-wrap">
+    <div id="progress-bar-fill"></div>
+  </div>
 
-<!-- LAYOUT -->
-<div id="layout">
-  <nav id="sidebar"></nav>
+  <!-- LAYOUT -->
+  <div id="layout">
+    <nav id="sidebar"></nav>
 
-  <div id="main">
-    <!-- CTRL BAR -->
-    <div id="ctrl-bar">
-      <span class="mode-label">模式</span>
-      <div class="ctrl-group">
-        <button class="ctrl-btn on" data-mode="read" onclick="setMode('read')">阅读</button>
-        <button class="ctrl-btn" data-mode="word" onclick="setMode('word')">逐字</button>
-        <button class="ctrl-btn" data-mode="full" onclick="setMode('full')">整句</button>
+    <div id="main">
+      <!-- CTRL BAR -->
+      <div id="ctrl-bar">
+        <span class="mode-label">模式</span>
+        <div class="ctrl-group">
+          <button class="ctrl-btn on" data-mode="read" onclick="setMode('read')">阅读</button>
+          <button class="ctrl-btn" data-mode="word" onclick="setMode('word')">逐字</button>
+          <button class="ctrl-btn" data-mode="full" onclick="setMode('full')">整句</button>
+        </div>
+        <div class="ctrl-sep"></div>
+        <div class="ctrl-group">
+          <button class="ctrl-btn" id="btn-pinyin" onclick="toggleViz('pinyin')">拼音</button>
+          <button class="ctrl-btn" id="btn-note" onclick="toggleViz('note')">注释</button>
+          <button class="ctrl-btn" id="btn-en" onclick="toggleViz('en')">EN</button>
+        </div>
+        <div class="ctrl-sep"></div>
+        <button class="ctrl-btn" onclick="markAllChapter()">全章已背</button>
+        <button class="ctrl-btn" onclick="clearAllMem()" style="color:var(--red)">清除</button>
       </div>
-      <div class="ctrl-sep"></div>
-      <div class="ctrl-group">
-        <button class="ctrl-btn" id="btn-pinyin" onclick="toggleViz('pinyin')">拼音</button>
-        <button class="ctrl-btn" id="btn-note"   onclick="toggleViz('note')">注释</button>
-        <button class="ctrl-btn" id="btn-en"     onclick="toggleViz('en')">EN</button>
-      </div>
-      <div class="ctrl-sep"></div>
-      <button class="ctrl-btn" onclick="markAllChapter()">全章已背</button>
-      <button class="ctrl-btn" onclick="clearAllMem()" style="color:var(--red)">清除</button>
-    </div>
 
-    <!-- SCROLL -->
-    <div id="scroll-area">
-      <div id="scroll-inner">
-        <div id="welcome">
-          <h1>四書</h1>
-          <div class="sub">Dàxué · Zhōngyōng · Lúnyǔ · Mèngzǐ</div>
-          <div class="desc">
-            点击左上角 <strong>☰</strong> 展开目录，选择章节开始学习。<br>
-            三种模式：阅读 / 逐字遮盖 / 整句遮盖。<br>
-            ← → 键可切换章节。<br>
-            <br>
-            <em style="font-family:'EB Garamond',serif;opacity:.65">
-              Tap ☰ to open the chapter list.
-            </em>
+      <!-- SCROLL -->
+      <div id="scroll-area">
+        <div id="scroll-inner">
+          <div id="welcome">
+            <h1>四書</h1>
+            <div class="sub">Dàxué · Zhōngyōng · Lúnyǔ · Mèngzǐ</div>
+            <div class="desc">
+              点击左上角 <strong>☰</strong> 展开目录，选择章节开始学习。<br>
+              三种模式：阅读 / 逐字遮盖 / 整句遮盖。<br>
+              ← → 键可切换章节。<br>
+              <br>
+              <em style="font-family:'EB Garamond',serif;opacity:.65">
+                Tap ☰ to open the chapter list.
+              </em>
+            </div>
           </div>
-        </div>
-        <div id="loading-msg">加载中…</div>
-        <div id="ch-title-block" style="display:none">
-          <h2 id="ch-h2"></h2>
-          <div class="ch-subtitle" id="ch-sub"></div>
-        </div>
-        <div id="sentences-wrap"></div>
-        <div id="ch-nav" style="display:none">
-          <button class="nav-btn" id="btn-prev-ch" onclick="navChapter(-1)">← 上一章</button>
-          <span id="ch-nav-info"></span>
-          <button class="nav-btn" id="btn-next-ch" onclick="navChapter(1)">下一章 →</button>
+          <div id="loading-msg">加载中…</div>
+          <div id="ch-title-block" style="display:none">
+            <h2 id="ch-h2"></h2>
+            <div class="ch-subtitle" id="ch-sub"></div>
+          </div>
+          <div id="sentences-wrap"></div>
+          <div id="ch-nav" style="display:none">
+            <button class="nav-btn" id="btn-prev-ch" onclick="navChapter(-1)">← 上一章</button>
+            <span id="ch-nav-info"></span>
+            <button class="nav-btn" id="btn-next-ch" onclick="navChapter(1)">下一章 →</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<script>
-/* ════════════════════════════════════════
-   BOOKS DIRECTORY
-════════════════════════════════════════ */
-const BOOKS = [
-  {
-    id: 'daxue', name: '大学', label: 'Dàxué', file: 'daxue.js',
-    chapters: [
-      { id: 'dx_jing',    name: '经文',  subtitle: '三纲八目' },
-      { id: 'dx_zhuan1',  name: '传一',  subtitle: '释明明德' },
-      { id: 'dx_zhuan2',  name: '传二',  subtitle: '释亲民' },
-      { id: 'dx_zhuan3',  name: '传三',  subtitle: '释止于至善' },
-      { id: 'dx_zhuan4',  name: '传四',  subtitle: '释本末' },
-      { id: 'dx_zhuan5',  name: '传五',  subtitle: '释格物致知' },
-      { id: 'dx_zhuan6',  name: '传六',  subtitle: '释诚意' },
-      { id: 'dx_zhuan7',  name: '传七',  subtitle: '释正心修身' },
-      { id: 'dx_zhuan8',  name: '传八',  subtitle: '释修身齐家' },
-      { id: 'dx_zhuan9',  name: '传九',  subtitle: '释齐家治国' },
-      { id: 'dx_zhuan10', name: '传十',  subtitle: '释治国平天下' },
-    ]
-  },
-  {
-    id: 'zhongyong', name: '中庸', label: 'Zhōngyōng', file: 'zhongyong.js',
-    chapters: [
-      { id: 'zy_1',  name: '第一章',    subtitle: '天命之谓性' },
-      { id: 'zy_2',  name: '第二章',    subtitle: '仲尼论中庸' },
-      { id: 'zy_3',  name: '第三章',    subtitle: '中庸之难' },
-      { id: 'zy_4',  name: '第四章',    subtitle: '道之不行' },
-      { id: 'zy_5',  name: '第五章',    subtitle: '道其不行' },
-      { id: 'zy_6',  name: '第六章',    subtitle: '舜之智' },
-      { id: 'zy_7',  name: '第七章',    subtitle: '颜回与中庸' },
-      { id: 'zy_8',  name: '第八章',    subtitle: '颜回得一善' },
-      { id: 'zy_9',  name: '第九章',    subtitle: '天下国家可均' },
-      { id: 'zy_10', name: '第十章',    subtitle: '子路问强' },
-      { id: 'zy_11', name: '第十一章',  subtitle: '索隐行怪' },
-      { id: 'zy_12', name: '第十二章',  subtitle: '费而隐' },
-      { id: 'zy_13', name: '第十三章',  subtitle: '道不远人' },
-      { id: 'zy_14', name: '第十四章',  subtitle: '素其位而行' },
-      { id: 'zy_15', name: '第十五章',  subtitle: '行远自迩' },
-      { id: 'zy_16', name: '第十六章',  subtitle: '鬼神之为德' },
-      { id: 'zy_17', name: '第十七章',  subtitle: '大德者必受命' },
-      { id: 'zy_18', name: '第十八章',  subtitle: '文武周公之孝' },
-      { id: 'zy_19', name: '第十九章',  subtitle: '父母之丧' },
-      { id: 'zy_20', name: '第二十章',  subtitle: '哀公问政' },
-      { id: 'zy_21', name: '第二十一章',subtitle: '自诚明谓之性' },
-      { id: 'zy_22', name: '第二十二章',subtitle: '至诚尽性' },
-      { id: 'zy_23', name: '第二十三章',subtitle: '其次致曲' },
-      { id: 'zy_24', name: '第二十四章',subtitle: '至诚如神' },
-      { id: 'zy_25', name: '第二十五章',subtitle: '诚者自成' },
-      { id: 'zy_26', name: '第二十六章',subtitle: '至诚无息' },
-      { id: 'zy_27', name: '第二十七章',subtitle: '大哉圣人之道' },
-      { id: 'zy_28', name: '第二十八章',subtitle: '愚而好自用' },
-      { id: 'zy_29', name: '第二十九章',subtitle: '王天下三重' },
-      { id: 'zy_30', name: '第三十章',  subtitle: '仲尼祖述尧舜' },
-      { id: 'zy_31', name: '第三十一章',subtitle: '至圣' },
-      { id: 'zy_32', name: '第三十二章',subtitle: '至诚经纶' },
-      { id: 'zy_33', name: '第三十三章',subtitle: '无声无臭' },
-    ]
-  },
-  {
-    id: 'lunyu', name: '论语', label: 'Lúnyǔ', file: 'lunyu.js',
-    chapters: [
-      { id: 'ly_01', name: '学而篇',   subtitle: '第一篇' },
-      { id: 'ly_02', name: '为政篇',   subtitle: '第二篇' },
-      { id: 'ly_03', name: '八佾篇',   subtitle: '第三篇' },
-      { id: 'ly_04', name: '里仁篇',   subtitle: '第四篇' },
-      { id: 'ly_05', name: '公冶长篇', subtitle: '第五篇' },
-      { id: 'ly_06', name: '雍也篇',   subtitle: '第六篇' },
-      { id: 'ly_07', name: '述而篇',   subtitle: '第七篇' },
-      { id: 'ly_08', name: '泰伯篇',   subtitle: '第八篇' },
-      { id: 'ly_09', name: '子罕篇',   subtitle: '第九篇' },
-      { id: 'ly_10', name: '乡党篇',   subtitle: '第十篇' },
-      { id: 'ly_11', name: '先进篇',   subtitle: '第十一篇' },
-      { id: 'ly_12', name: '颜渊篇',   subtitle: '第十二篇' },
-      { id: 'ly_13', name: '子路篇',   subtitle: '第十三篇' },
-      { id: 'ly_14', name: '宪问篇',   subtitle: '第十四篇' },
-      { id: 'ly_15', name: '卫灵公篇', subtitle: '第十五篇' },
-      { id: 'ly_16', name: '季氏篇',   subtitle: '第十六篇' },
-      { id: 'ly_17', name: '阳货篇',   subtitle: '第十七篇' },
-      { id: 'ly_18', name: '微子篇',   subtitle: '第十八篇' },
-      { id: 'ly_19', name: '子张篇',   subtitle: '第十九篇' },
-      { id: 'ly_20', name: '尧曰篇',   subtitle: '第二十篇' },
-    ]
-  },
-  {
-    id: 'mengzi', name: '孟子', label: 'Mèngzǐ', file: 'mengzi.js',
-    chapters: [
-      { id: 'mz_liang_shang',  name: '梁惠王上', subtitle: '第一篇上' },
-      { id: 'mz_liang_xia',   name: '梁惠王下', subtitle: '第一篇下' },
-      { id: 'mz_gongsun_shang',name:'公孙丑上',  subtitle: '第二篇上' },
-      { id: 'mz_gongsun_xia', name: '公孙丑下', subtitle: '第二篇下' },
-      { id: 'mz_tengwen_shang',name:'滕文公上',  subtitle: '第三篇上' },
-      { id: 'mz_tengwen_xia', name: '滕文公下', subtitle: '第三篇下' },
-      { id: 'mz_lilou_shang',  name: '离娄上',   subtitle: '第四篇上' },
-      { id: 'mz_lilou_xia',   name: '离娄下',   subtitle: '第四篇下' },
-      { id: 'mz_wanzhang_shang',name:'万章上',   subtitle: '第五篇上' },
-      { id: 'mz_wanzhang_xia', name:'万章下',   subtitle: '第五篇下' },
-      { id: 'mz_gaozi_shang',  name: '告子上',   subtitle: '第六篇上' },
-      { id: 'mz_gaozi_xia',   name: '告子下',   subtitle: '第六篇下' },
-      { id: 'mz_jinxin_shang', name: '尽心上',   subtitle: '第七篇上' },
-      { id: 'mz_jinxin_xia',  name: '尽心下',   subtitle: '第七篇下' },
-    ]
-  },
-];
+  <script>
+    /* ════════════════════════════════════════
+       BOOKS DIRECTORY
+    ════════════════════════════════════════ */
+    const BOOKS = [
+      {
+        id: 'daxue', name: '大学', label: 'Dàxué', file: 'daxue.js',
+        chapters: [
+          { id: 'dx_jing', name: '经文', subtitle: '三纲八目' },
+          { id: 'dx_zhuan1', name: '传一', subtitle: '释明明德' },
+          { id: 'dx_zhuan2', name: '传二', subtitle: '释亲民' },
+          { id: 'dx_zhuan3', name: '传三', subtitle: '释止于至善' },
+          { id: 'dx_zhuan4', name: '传四', subtitle: '释本末' },
+          { id: 'dx_zhuan5', name: '传五', subtitle: '释格物致知' },
+          { id: 'dx_zhuan6', name: '传六', subtitle: '释诚意' },
+          { id: 'dx_zhuan7', name: '传七', subtitle: '释正心修身' },
+          { id: 'dx_zhuan8', name: '传八', subtitle: '释修身齐家' },
+          { id: 'dx_zhuan9', name: '传九', subtitle: '释齐家治国' },
+          { id: 'dx_zhuan10', name: '传十', subtitle: '释治国平天下' },
+        ]
+      },
+      {
+        id: 'zhongyong', name: '中庸', label: 'Zhōngyōng', file: 'zhongyong.js',
+        chapters: [
+          { id: 'zy_1', name: '第一章', subtitle: '天命之谓性' },
+          { id: 'zy_2', name: '第二章', subtitle: '仲尼论中庸' },
+          { id: 'zy_3', name: '第三章', subtitle: '中庸之难' },
+          { id: 'zy_4', name: '第四章', subtitle: '道之不行' },
+          { id: 'zy_5', name: '第五章', subtitle: '道其不行' },
+          { id: 'zy_6', name: '第六章', subtitle: '舜之智' },
+          { id: 'zy_7', name: '第七章', subtitle: '颜回与中庸' },
+          { id: 'zy_8', name: '第八章', subtitle: '颜回得一善' },
+          { id: 'zy_9', name: '第九章', subtitle: '天下国家可均' },
+          { id: 'zy_10', name: '第十章', subtitle: '子路问强' },
+          { id: 'zy_11', name: '第十一章', subtitle: '索隐行怪' },
+          { id: 'zy_12', name: '第十二章', subtitle: '费而隐' },
+          { id: 'zy_13', name: '第十三章', subtitle: '道不远人' },
+          { id: 'zy_14', name: '第十四章', subtitle: '素其位而行' },
+          { id: 'zy_15', name: '第十五章', subtitle: '行远自迩' },
+          { id: 'zy_16', name: '第十六章', subtitle: '鬼神之为德' },
+          { id: 'zy_17', name: '第十七章', subtitle: '大德者必受命' },
+          { id: 'zy_18', name: '第十八章', subtitle: '文武周公之孝' },
+          { id: 'zy_19', name: '第十九章', subtitle: '父母之丧' },
+          { id: 'zy_20', name: '第二十章', subtitle: '哀公问政' },
+          { id: 'zy_21', name: '第二十一章', subtitle: '自诚明谓之性' },
+          { id: 'zy_22', name: '第二十二章', subtitle: '至诚尽性' },
+          { id: 'zy_23', name: '第二十三章', subtitle: '其次致曲' },
+          { id: 'zy_24', name: '第二十四章', subtitle: '至诚如神' },
+          { id: 'zy_25', name: '第二十五章', subtitle: '诚者自成' },
+          { id: 'zy_26', name: '第二十六章', subtitle: '至诚无息' },
+          { id: 'zy_27', name: '第二十七章', subtitle: '大哉圣人之道' },
+          { id: 'zy_28', name: '第二十八章', subtitle: '愚而好自用' },
+          { id: 'zy_29', name: '第二十九章', subtitle: '王天下三重' },
+          { id: 'zy_30', name: '第三十章', subtitle: '仲尼祖述尧舜' },
+          { id: 'zy_31', name: '第三十一章', subtitle: '至圣' },
+          { id: 'zy_32', name: '第三十二章', subtitle: '至诚经纶' },
+          { id: 'zy_33', name: '第三十三章', subtitle: '无声无臭' },
+        ]
+      },
+      {
+        id: 'lunyu', name: '论语', label: 'Lúnyǔ', file: 'lunyu.js',
+        chapters: [
+          { id: 'ly_01', name: '学而篇', subtitle: '第一篇' },
+          { id: 'ly_02', name: '为政篇', subtitle: '第二篇' },
+          { id: 'ly_03', name: '八佾篇', subtitle: '第三篇' },
+          { id: 'ly_04', name: '里仁篇', subtitle: '第四篇' },
+          { id: 'ly_05', name: '公冶长篇', subtitle: '第五篇' },
+          { id: 'ly_06', name: '雍也篇', subtitle: '第六篇' },
+          { id: 'ly_07', name: '述而篇', subtitle: '第七篇' },
+          { id: 'ly_08', name: '泰伯篇', subtitle: '第八篇' },
+          { id: 'ly_09', name: '子罕篇', subtitle: '第九篇' },
+          { id: 'ly_10', name: '乡党篇', subtitle: '第十篇' },
+          { id: 'ly_11', name: '先进篇', subtitle: '第十一篇' },
+          { id: 'ly_12', name: '颜渊篇', subtitle: '第十二篇' },
+          { id: 'ly_13', name: '子路篇', subtitle: '第十三篇' },
+          { id: 'ly_14', name: '宪问篇', subtitle: '第十四篇' },
+          { id: 'ly_15', name: '卫灵公篇', subtitle: '第十五篇' },
+          { id: 'ly_16', name: '季氏篇', subtitle: '第十六篇' },
+          { id: 'ly_17', name: '阳货篇', subtitle: '第十七篇' },
+          { id: 'ly_18', name: '微子篇', subtitle: '第十八篇' },
+          { id: 'ly_19', name: '子张篇', subtitle: '第十九篇' },
+          { id: 'ly_20', name: '尧曰篇', subtitle: '第二十篇' },
+        ]
+      },
+      {
+        id: 'mengzi', name: '孟子', label: 'Mèngzǐ', file: 'mengzi.js',
+        chapters: [
+          { id: 'mz_liang_shang', name: '梁惠王上', subtitle: '第一篇上' },
+          { id: 'mz_liang_xia', name: '梁惠王下', subtitle: '第一篇下' },
+          { id: 'mz_gongsun_shang', name: '公孙丑上', subtitle: '第二篇上' },
+          { id: 'mz_gongsun_xia', name: '公孙丑下', subtitle: '第二篇下' },
+          { id: 'mz_tengwen_shang', name: '滕文公上', subtitle: '第三篇上' },
+          { id: 'mz_tengwen_xia', name: '滕文公下', subtitle: '第三篇下' },
+          { id: 'mz_lilou_shang', name: '离娄上', subtitle: '第四篇上' },
+          { id: 'mz_lilou_xia', name: '离娄下', subtitle: '第四篇下' },
+          { id: 'mz_wanzhang_shang', name: '万章上', subtitle: '第五篇上' },
+          { id: 'mz_wanzhang_xia', name: '万章下', subtitle: '第五篇下' },
+          { id: 'mz_gaozi_shang', name: '告子上', subtitle: '第六篇上' },
+          { id: 'mz_gaozi_xia', name: '告子下', subtitle: '第六篇下' },
+          { id: 'mz_jinxin_shang', name: '尽心上', subtitle: '第七篇上' },
+          { id: 'mz_jinxin_xia', name: '尽心下', subtitle: '第七篇下' },
+        ]
+      },
+    ];
 
-/* ════════════════════════════════════════
-   STATE
-════════════════════════════════════════ */
-const DATA_PATH = './data/';
-const MEM_KEY   = 'sishu_mem_v2';
-let bookCache        = {};
-let currentMode      = 'read';
-let currentBookId    = null;
-let currentChapterId = null;
-let mem              = {};
+    /* ════════════════════════════════════════
+       STATE
+    ════════════════════════════════════════ */
+    const DATA_PATH = './data/';
+    const MEM_KEY = 'sishu_mem_v2';
+    let bookCache = {};
+    let currentMode = 'read';
+    let currentBookId = null;
+    let currentChapterId = null;
+    let mem = {};
 
-const ALL_CHAPTERS = BOOKS.flatMap(b =>
-  b.chapters.map(c => ({ bookId: b.id, chapterId: c.id }))
-);
+    const ALL_CHAPTERS = BOOKS.flatMap(b =>
+      b.chapters.map(c => ({ bookId: b.id, chapterId: c.id }))
+    );
 
-function loadMem()   { try { mem = JSON.parse(localStorage.getItem(MEM_KEY) || '{}'); } catch { mem = {}; } }
-function saveMem()   { localStorage.setItem(MEM_KEY, JSON.stringify(mem)); }
-function uid(b,c,i)  { return `${b}:${c}:${i}`; }
-function isMobile()  { return window.innerWidth <= 600; }
-function isTablet()  { return window.innerWidth <= 900; }
+    function loadMem() { try { mem = JSON.parse(localStorage.getItem(MEM_KEY) || '{}'); } catch { mem = {}; } }
+    function saveMem() { localStorage.setItem(MEM_KEY, JSON.stringify(mem)); }
+    function uid(b, c, i) { return `${b}:${c}:${i}`; }
+    function isMobile() { return window.innerWidth <= 600; }
+    function isTablet() { return window.innerWidth <= 900; }
 
-/* ════════════════════════════════════════
-   SIDEBAR TOGGLE
-════════════════════════════════════════ */
-function toggleSidebar() {
-  document.body.classList.contains('sidebar-open') ? closeSidebar() : openSidebar();
-}
-function openSidebar() {
-  document.body.classList.replace('sidebar-closed','sidebar-open') ||
-  document.body.classList.add('sidebar-open');
-  document.body.classList.remove('sidebar-closed');
-  if (!isTablet()) localStorage.setItem('sishu_sidebar','1');
-}
-function closeSidebar() {
-  document.body.classList.replace('sidebar-open','sidebar-closed') ||
-  document.body.classList.add('sidebar-closed');
-  document.body.classList.remove('sidebar-open');
-  if (!isTablet()) localStorage.setItem('sishu_sidebar','0');
-}
+    /* ════════════════════════════════════════
+       SIDEBAR TOGGLE
+    ════════════════════════════════════════ */
+    function toggleSidebar() {
+      document.body.classList.contains('sidebar-open') ? closeSidebar() : openSidebar();
+    }
+    function openSidebar() {
+      document.body.classList.replace('sidebar-closed', 'sidebar-open') ||
+        document.body.classList.add('sidebar-open');
+      document.body.classList.remove('sidebar-closed');
+      if (!isTablet()) localStorage.setItem('sishu_sidebar', '1');
+    }
+    function closeSidebar() {
+      document.body.classList.replace('sidebar-open', 'sidebar-closed') ||
+        document.body.classList.add('sidebar-closed');
+      document.body.classList.remove('sidebar-open');
+      if (!isTablet()) localStorage.setItem('sishu_sidebar', '0');
+    }
 
-/* ════════════════════════════════════════
-   SCRIPT LOADER
-════════════════════════════════════════ */
-function loadScript(filePath) {
-  return new Promise((resolve, reject) => {
-    window.chapterData = undefined;
-    const s = document.createElement('script');
-    s.src = filePath; s.type = 'text/javascript';
-    s.onload = () => typeof chapterData !== 'undefined'
-      ? resolve(chapterData)
-      : reject(new Error('chapterData not found in ' + filePath));
-    s.onerror = () => reject(new Error('Failed to load: ' + filePath));
-    document.body.appendChild(s);
-  });
-}
+    /* ════════════════════════════════════════
+       SCRIPT LOADER
+    ════════════════════════════════════════ */
+    function loadScript(filePath) {
+      return new Promise((resolve, reject) => {
+        window.chapterData = undefined;
+        const s = document.createElement('script');
+        s.src = filePath; s.type = 'text/javascript';
+        s.onload = () => typeof chapterData !== 'undefined'
+          ? resolve(chapterData)
+          : reject(new Error('chapterData not found in ' + filePath));
+        s.onerror = () => reject(new Error('Failed to load: ' + filePath));
+        document.body.appendChild(s);
+      });
+    }
 
-async function getChapterData(bookId, chapterId) {
-  if (!bookCache[bookId]) {
-    const book = BOOKS.find(b => b.id === bookId);
-    if (!book) throw new Error('Unknown book: ' + bookId);
-    bookCache[bookId] = await loadScript(DATA_PATH + book.file);
-  }
-  return bookCache[bookId].chapters.find(c => c.id === chapterId) || null;
-}
+    async function getChapterData(bookId, chapterId) {
+      if (!bookCache[bookId]) {
+        const book = BOOKS.find(b => b.id === bookId);
+        if (!book) throw new Error('Unknown book: ' + bookId);
+        bookCache[bookId] = await loadScript(DATA_PATH + book.file);
+      }
+      return bookCache[bookId].chapters.find(c => c.id === chapterId) || null;
+    }
 
-/* ════════════════════════════════════════
-   SIDEBAR BUILD
-════════════════════════════════════════ */
-function buildSidebar() {
-  const nav = document.getElementById('sidebar');
-  nav.innerHTML = '';
-  BOOKS.forEach(book => {
-    const grp = document.createElement('div');
-    grp.className = 'book-group'; grp.id = 'grp-' + book.id;
+    /* ════════════════════════════════════════
+       SIDEBAR BUILD
+    ════════════════════════════════════════ */
+    function buildSidebar() {
+      const nav = document.getElementById('sidebar');
+      nav.innerHTML = '';
+      BOOKS.forEach(book => {
+        const grp = document.createElement('div');
+        grp.className = 'book-group'; grp.id = 'grp-' + book.id;
 
-    const hdr = document.createElement('div');
-    hdr.className = 'book-header';
-    hdr.innerHTML = `<span class="book-name">${book.name}</span>
+        const hdr = document.createElement('div');
+        hdr.className = 'book-header';
+        hdr.innerHTML = `<span class="book-name">${book.name}</span>
       <span class="book-label">${book.label}</span>
       <span class="book-arrow">▶</span>`;
-    hdr.onclick = () => grp.classList.toggle('open');
+        hdr.onclick = () => grp.classList.toggle('open');
 
-    const list = document.createElement('div');
-    list.className = 'chapter-list'; list.id = 'chlist-' + book.id;
+        const list = document.createElement('div');
+        list.className = 'chapter-list'; list.id = 'chlist-' + book.id;
 
-    book.chapters.forEach(ch => {
-      const btn = document.createElement('button');
-      btn.className = 'ch-btn'; btn.id = 'chbtn-' + ch.id;
-      btn.innerHTML = `<span class="ch-dot"></span>
+        book.chapters.forEach(ch => {
+          const btn = document.createElement('button');
+          btn.className = 'ch-btn'; btn.id = 'chbtn-' + ch.id;
+          btn.innerHTML = `<span class="ch-dot"></span>
         <span class="ch-name">${ch.name}</span>
         <span class="ch-sub">${ch.subtitle}</span>`;
-      btn.onclick = () => {
-        loadChapter(book.id, ch.id);
-        if (isTablet()) closeSidebar();
-      };
-      list.appendChild(btn);
+          btn.onclick = () => {
+            loadChapter(book.id, ch.id);
+            if (isTablet()) closeSidebar();
+          };
+          list.appendChild(btn);
+        });
+
+        grp.appendChild(hdr);
+        grp.appendChild(list);
+        nav.appendChild(grp);
+      });
+    }
+
+    /* ════════════════════════════════════════
+       LOAD CHAPTER
+    ════════════════════════════════════════ */
+    async function loadChapter(bookId, chapterId) {
+      currentBookId = bookId; currentChapterId = chapterId;
+
+      document.querySelectorAll('.ch-btn').forEach(b => b.classList.remove('active'));
+      const ab = document.getElementById('chbtn-' + chapterId);
+      if (ab) {
+        ab.classList.add('active');
+        document.getElementById('grp-' + bookId)?.classList.add('open');
+        ab.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+
+      document.getElementById('welcome').style.display = 'none';
+      document.getElementById('loading-msg').style.display = 'block';
+      document.getElementById('ch-title-block').style.display = 'none';
+      document.getElementById('sentences-wrap').innerHTML = '';
+      document.getElementById('ch-nav').style.display = 'none';
+
+      let chapter;
+      try { chapter = await getChapterData(bookId, chapterId); }
+      catch (e) { document.getElementById('loading-msg').textContent = '加载失败：' + e.message; return; }
+
+      document.getElementById('loading-msg').style.display = 'none';
+      if (!chapter) {
+        document.getElementById('loading-msg').style.display = 'block';
+        document.getElementById('loading-msg').textContent = '章节数据未找到';
+        return;
+      }
+      renderChapter(bookId, chapter);
+    }
+
+    function renderChapter(bookId, chapter) {
+      document.getElementById('ch-title-block').style.display = 'block';
+      document.getElementById('ch-h2').textContent = chapter.name;
+      document.getElementById('ch-sub').textContent = chapter.subtitle || '';
+
+      const wrap = document.getElementById('sentences-wrap');
+      wrap.innerHTML = '';
+      chapter.sentences.forEach((s, idx) =>
+        wrap.appendChild(buildCard(s, uid(bookId, chapter.id, idx), bookId, chapter.id, idx))
+      );
+
+      renderNav(bookId, chapter.id);
+      updateProgress();
+      updateSidebarDots();
+      document.getElementById('scroll-area').scrollTop = 0;
+    }
+
+    /* ── sentence card ── */
+    function buildCard(s, uidStr, bookId, chapterId, idx) {
+      const card = document.createElement('div');
+      card.className = 's-card';
+      card.id = 'card-' + uidStr.replace(/:/g, '-');
+      const isDone = !!mem[uidStr];
+
+      const main = document.createElement('div');
+      main.className = 's-main';
+
+      if (s.pinyin) {
+        const py = document.createElement('div');
+        py.className = 's-pinyin'; py.textContent = s.pinyin;
+        main.appendChild(py);
+      }
+
+      const td = document.createElement('div');
+      td.className = 's-text';
+      td.innerHTML = wrapChars(s.text);
+      td.addEventListener('click', e => {
+        if (currentMode === 'word') e.target.closest('.zh-char')?.classList.toggle('revealed');
+        else if (currentMode === 'full') td.classList.toggle('revealed');
+      });
+      main.appendChild(td);
+
+      if (s.en) {
+        const en = document.createElement('div');
+        en.className = 's-en'; en.textContent = s.en;
+        main.appendChild(en);
+      }
+      card.appendChild(main);
+
+      if (s.note) {
+        const note = document.createElement('div');
+        note.className = 's-note'; note.textContent = s.note;
+        card.appendChild(note);
+      }
+
+      const foot = document.createElement('div');
+      foot.className = 's-foot';
+      const mb = document.createElement('button');
+      mb.className = 'mem-btn' + (isDone ? ' done' : '');
+      mb.textContent = isDone ? '✓ 已背' : '标记已背';
+      mb.onclick = () => toggleMem(uidStr, mb, bookId, chapterId);
+      foot.appendChild(mb);
+      card.appendChild(foot);
+      return card;
+    }
+
+    function wrapChars(text) {
+      return [...text].map(ch =>
+        /[\u4e00-\u9fff\u3400-\u4dbf]/.test(ch)
+          ? `<span class="zh-char">${ch}</span>` : ch
+      ).join('');
+    }
+
+    /* ════════════════════════════════════════
+       MEMORY
+    ════════════════════════════════════════ */
+    function toggleMem(uidStr, btn, bookId, chapterId) {
+      if (mem[uidStr]) { delete mem[uidStr]; btn.className = 'mem-btn'; btn.textContent = '标记已背'; }
+      else { mem[uidStr] = true; btn.className = 'mem-btn done'; btn.textContent = '✓ 已背'; }
+      saveMem(); updateProgress(); updateSidebarDots();
+    }
+    function markAllChapter() {
+      if (!currentBookId || !currentChapterId) return;
+      document.querySelectorAll('.s-card').forEach((card, idx) => {
+        const u = uid(currentBookId, currentChapterId, idx);
+        mem[u] = true;
+        const b = card.querySelector('.mem-btn');
+        if (b) { b.className = 'mem-btn done'; b.textContent = '✓ 已背'; }
+      });
+      saveMem(); updateProgress(); updateSidebarDots();
+    }
+    function clearAllMem() {
+      if (!confirm('确定要清除所有背诵记录吗？')) return;
+      mem = {}; saveMem();
+      document.querySelectorAll('.mem-btn').forEach(b => { b.className = 'mem-btn'; b.textContent = '标记已背'; });
+      updateProgress(); updateSidebarDots();
+    }
+    function countMemCh(bId, cId, total) {
+      let n = 0;
+      for (let i = 0; i < total; i++) if (mem[uid(bId, cId, i)]) n++;
+      return n;
+    }
+    function updateProgress() {
+      const done = Object.keys(mem).length;
+      let total = 0;
+      BOOKS.forEach(b => {
+        if (bookCache[b.id]) total += bookCache[b.id].chapters.reduce((s, c) => s + c.sentences.length, 0);
+      });
+      const pct = total > 0 ? Math.round(done / total * 100) : 0;
+      document.getElementById('progress-bar-fill').style.width = pct + '%';
+      document.getElementById('progress-text').textContent = total > 0 ? `${done}/${total} · ${pct}%` : '';
+    }
+    function updateSidebarDots() {
+      BOOKS.forEach(book => {
+        if (!bookCache[book.id]) return;
+        book.chapters.forEach(ch => {
+          const total = bookCache[book.id].chapters.find(c => c.id === ch.id)?.sentences.length || 0;
+          const done = countMemCh(book.id, ch.id, total);
+          const btn = document.getElementById('chbtn-' + ch.id);
+          if (!btn) return;
+          btn.classList.remove('memorized', 'partial');
+          if (total > 0 && done === total) btn.classList.add('memorized');
+          else if (done > 0) btn.classList.add('partial');
+        });
+      });
+    }
+
+    /* ════════════════════════════════════════
+       NAVIGATION
+    ════════════════════════════════════════ */
+    function renderNav(bookId, chapterId) {
+      const nav = document.getElementById('ch-nav');
+      nav.style.display = 'flex';
+      const idx = ALL_CHAPTERS.findIndex(c => c.bookId === bookId && c.chapterId === chapterId);
+      document.getElementById('btn-prev-ch').disabled = idx <= 0;
+      document.getElementById('btn-next-ch').disabled = idx >= ALL_CHAPTERS.length - 1;
+      document.getElementById('ch-nav-info').textContent = `${idx + 1} / ${ALL_CHAPTERS.length}`;
+    }
+    function navChapter(delta) {
+      const idx = ALL_CHAPTERS.findIndex(c => c.bookId === currentBookId && c.chapterId === currentChapterId);
+      const next = idx + delta;
+      if (next < 0 || next >= ALL_CHAPTERS.length) return;
+      loadChapter(ALL_CHAPTERS[next].bookId, ALL_CHAPTERS[next].chapterId);
+    }
+
+    /* ════════════════════════════════════════
+       MODE & VIZ
+    ════════════════════════════════════════ */
+    function setMode(mode) {
+      currentMode = mode;
+      document.querySelectorAll('.ctrl-btn[data-mode]').forEach(b => b.classList.toggle('on', b.dataset.mode === mode));
+      document.querySelectorAll('.zh-char').forEach(c => c.classList.remove('revealed'));
+      document.querySelectorAll('.s-text').forEach(t => t.classList.remove('revealed'));
+      const wrap = document.getElementById('sentences-wrap');
+      wrap.classList.remove('mode-word', 'mode-full');
+      if (mode === 'word') wrap.classList.add('mode-word');
+      if (mode === 'full') wrap.classList.add('mode-full');
+    }
+    const VIZ = { pinyin: { btn: 'btn-pinyin', cls: 'hide-pinyin' }, note: { btn: 'btn-note', cls: 'hide-note' }, en: { btn: 'btn-en', cls: 'hide-en' } };
+    function toggleViz(key) {
+      const { btn, cls } = VIZ[key];
+      const on = document.getElementById(btn).classList.toggle('on');
+      document.getElementById('scroll-area').classList.toggle(cls, !on);
+    }
+
+    /* ════════════════════════════════════════
+       KEYBOARD
+    ════════════════════════════════════════ */
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft') navChapter(-1);
+      if (e.key === 'ArrowRight') navChapter(1);
+      if (e.key === '\\') toggleSidebar();
     });
 
-    grp.appendChild(hdr);
-    grp.appendChild(list);
-    nav.appendChild(grp);
-  });
-}
+    /* ════════════════════════════════════════
+       INIT
+    ════════════════════════════════════════ */
+    loadMem();
+    buildSidebar();
+    updateProgress();
 
-/* ════════════════════════════════════════
-   LOAD CHAPTER
-════════════════════════════════════════ */
-async function loadChapter(bookId, chapterId) {
-  currentBookId = bookId; currentChapterId = chapterId;
+    // VIZ buttons start off → apply hide classes immediately
+    document.getElementById('scroll-area').classList.add('hide-pinyin', 'hide-note', 'hide-en');
 
-  document.querySelectorAll('.ch-btn').forEach(b => b.classList.remove('active'));
-  const ab = document.getElementById('chbtn-' + chapterId);
-  if (ab) {
-    ab.classList.add('active');
-    document.getElementById('grp-' + bookId)?.classList.add('open');
-    ab.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-  }
-
-  document.getElementById('welcome').style.display        = 'none';
-  document.getElementById('loading-msg').style.display    = 'block';
-  document.getElementById('ch-title-block').style.display = 'none';
-  document.getElementById('sentences-wrap').innerHTML     = '';
-  document.getElementById('ch-nav').style.display         = 'none';
-
-  let chapter;
-  try { chapter = await getChapterData(bookId, chapterId); }
-  catch(e) { document.getElementById('loading-msg').textContent = '加载失败：' + e.message; return; }
-
-  document.getElementById('loading-msg').style.display = 'none';
-  if (!chapter) {
-    document.getElementById('loading-msg').style.display = 'block';
-    document.getElementById('loading-msg').textContent   = '章节数据未找到';
-    return;
-  }
-  renderChapter(bookId, chapter);
-}
-
-function renderChapter(bookId, chapter) {
-  document.getElementById('ch-title-block').style.display = 'block';
-  document.getElementById('ch-h2').textContent  = chapter.name;
-  document.getElementById('ch-sub').textContent = chapter.subtitle || '';
-
-  const wrap = document.getElementById('sentences-wrap');
-  wrap.innerHTML = '';
-  chapter.sentences.forEach((s, idx) =>
-    wrap.appendChild(buildCard(s, uid(bookId, chapter.id, idx), bookId, chapter.id, idx))
-  );
-
-  renderNav(bookId, chapter.id);
-  updateProgress();
-  updateSidebarDots();
-  document.getElementById('scroll-area').scrollTop = 0;
-}
-
-/* ── sentence card ── */
-function buildCard(s, uidStr, bookId, chapterId, idx) {
-  const card = document.createElement('div');
-  card.className = 's-card';
-  card.id = 'card-' + uidStr.replace(/:/g,'-');
-  const isDone = !!mem[uidStr];
-
-  const main = document.createElement('div');
-  main.className = 's-main';
-
-  if (s.pinyin) {
-    const py = document.createElement('div');
-    py.className = 's-pinyin'; py.textContent = s.pinyin;
-    main.appendChild(py);
-  }
-
-  const td = document.createElement('div');
-  td.className = 's-text';
-  td.innerHTML = wrapChars(s.text);
-  td.addEventListener('click', e => {
-    if (currentMode === 'word') e.target.closest('.zh-char')?.classList.toggle('revealed');
-    else if (currentMode === 'full') td.classList.toggle('revealed');
-  });
-  main.appendChild(td);
-
-  if (s.en) {
-    const en = document.createElement('div');
-    en.className = 's-en'; en.textContent = s.en;
-    main.appendChild(en);
-  }
-  card.appendChild(main);
-
-  if (s.note) {
-    const note = document.createElement('div');
-    note.className = 's-note'; note.textContent = s.note;
-    card.appendChild(note);
-  }
-
-  const foot = document.createElement('div');
-  foot.className = 's-foot';
-  const mb = document.createElement('button');
-  mb.className = 'mem-btn' + (isDone ? ' done' : '');
-  mb.textContent = isDone ? '✓ 已背' : '标记已背';
-  mb.onclick = () => toggleMem(uidStr, mb, bookId, chapterId);
-  foot.appendChild(mb);
-  card.appendChild(foot);
-  return card;
-}
-
-function wrapChars(text) {
-  return [...text].map(ch =>
-    /[\u4e00-\u9fff\u3400-\u4dbf]/.test(ch)
-      ? `<span class="zh-char">${ch}</span>` : ch
-  ).join('');
-}
-
-/* ════════════════════════════════════════
-   MEMORY
-════════════════════════════════════════ */
-function toggleMem(uidStr, btn, bookId, chapterId) {
-  if (mem[uidStr]) { delete mem[uidStr]; btn.className='mem-btn'; btn.textContent='标记已背'; }
-  else             { mem[uidStr]=true;   btn.className='mem-btn done'; btn.textContent='✓ 已背'; }
-  saveMem(); updateProgress(); updateSidebarDots();
-}
-function markAllChapter() {
-  if (!currentBookId || !currentChapterId) return;
-  document.querySelectorAll('.s-card').forEach((card, idx) => {
-    const u = uid(currentBookId, currentChapterId, idx);
-    mem[u] = true;
-    const b = card.querySelector('.mem-btn');
-    if (b) { b.className='mem-btn done'; b.textContent='✓ 已背'; }
-  });
-  saveMem(); updateProgress(); updateSidebarDots();
-}
-function clearAllMem() {
-  if (!confirm('确定要清除所有背诵记录吗？')) return;
-  mem = {}; saveMem();
-  document.querySelectorAll('.mem-btn').forEach(b => { b.className='mem-btn'; b.textContent='标记已背'; });
-  updateProgress(); updateSidebarDots();
-}
-function countMemCh(bId, cId, total) {
-  let n=0;
-  for (let i=0;i<total;i++) if (mem[uid(bId,cId,i)]) n++;
-  return n;
-}
-function updateProgress() {
-  const done = Object.keys(mem).length;
-  let total  = 0;
-  BOOKS.forEach(b => {
-    if (bookCache[b.id]) total += bookCache[b.id].chapters.reduce((s,c)=>s+c.sentences.length,0);
-  });
-  const pct = total>0 ? Math.round(done/total*100) : 0;
-  document.getElementById('progress-bar-fill').style.width = pct+'%';
-  document.getElementById('progress-text').textContent = total>0 ? `${done}/${total} · ${pct}%` : '';
-}
-function updateSidebarDots() {
-  BOOKS.forEach(book => {
-    if (!bookCache[book.id]) return;
-    book.chapters.forEach(ch => {
-      const total = bookCache[book.id].chapters.find(c=>c.id===ch.id)?.sentences.length||0;
-      const done  = countMemCh(book.id, ch.id, total);
-      const btn   = document.getElementById('chbtn-'+ch.id);
-      if (!btn) return;
-      btn.classList.remove('memorized','partial');
-      if (total>0 && done===total) btn.classList.add('memorized');
-      else if (done>0)             btn.classList.add('partial');
-    });
-  });
-}
-
-/* ════════════════════════════════════════
-   NAVIGATION
-════════════════════════════════════════ */
-function renderNav(bookId, chapterId) {
-  const nav = document.getElementById('ch-nav');
-  nav.style.display = 'flex';
-  const idx = ALL_CHAPTERS.findIndex(c=>c.bookId===bookId&&c.chapterId===chapterId);
-  document.getElementById('btn-prev-ch').disabled = idx<=0;
-  document.getElementById('btn-next-ch').disabled = idx>=ALL_CHAPTERS.length-1;
-  document.getElementById('ch-nav-info').textContent = `${idx+1} / ${ALL_CHAPTERS.length}`;
-}
-function navChapter(delta) {
-  const idx  = ALL_CHAPTERS.findIndex(c=>c.bookId===currentBookId&&c.chapterId===currentChapterId);
-  const next = idx+delta;
-  if (next<0||next>=ALL_CHAPTERS.length) return;
-  loadChapter(ALL_CHAPTERS[next].bookId, ALL_CHAPTERS[next].chapterId);
-}
-
-/* ════════════════════════════════════════
-   MODE & VIZ
-════════════════════════════════════════ */
-function setMode(mode) {
-  currentMode = mode;
-  document.querySelectorAll('.ctrl-btn[data-mode]').forEach(b=>b.classList.toggle('on',b.dataset.mode===mode));
-  document.querySelectorAll('.zh-char').forEach(c=>c.classList.remove('revealed'));
-  document.querySelectorAll('.s-text').forEach(t=>t.classList.remove('revealed'));
-  const wrap = document.getElementById('sentences-wrap');
-  wrap.classList.remove('mode-word','mode-full');
-  if (mode==='word') wrap.classList.add('mode-word');
-  if (mode==='full') wrap.classList.add('mode-full');
-}
-const VIZ = { pinyin:{btn:'btn-pinyin',cls:'hide-pinyin'}, note:{btn:'btn-note',cls:'hide-note'}, en:{btn:'btn-en',cls:'hide-en'} };
-function toggleViz(key) {
-  const {btn,cls} = VIZ[key];
-  const on = document.getElementById(btn).classList.toggle('on');
-  document.getElementById('scroll-area').classList.toggle(cls, !on);
-}
-
-/* ════════════════════════════════════════
-   KEYBOARD
-════════════════════════════════════════ */
-document.addEventListener('keydown', e => {
-  if (e.key==='ArrowLeft')  navChapter(-1);
-  if (e.key==='ArrowRight') navChapter(1);
-  if (e.key==='\\')         toggleSidebar();
-});
-
-/* ════════════════════════════════════════
-   INIT
-════════════════════════════════════════ */
-loadMem();
-buildSidebar();
-updateProgress();
-
-// VIZ buttons start off → apply hide classes immediately
-document.getElementById('scroll-area').classList.add('hide-pinyin','hide-note','hide-en');
-
-// Sidebar initial state
-if (isTablet()) {
-  closeSidebar();  // mobile & tablet start closed
-} else {
-  // Desktop: restore last preference
-  const pref = localStorage.getItem('sishu_sidebar');
-  if (pref === '0') closeSidebar();
-  // else stays open (body.sidebar-open from HTML)
-}
-</script>
+    // Sidebar initial state
+    if (isTablet()) {
+      closeSidebar();  // mobile & tablet start closed
+    } else {
+      // Desktop: restore last preference
+      const pref = localStorage.getItem('sishu_sidebar');
+      if (pref === '0') closeSidebar();
+      // else stays open (body.sidebar-open from HTML)
+    }
+  </script>
 </body>
+
 </html>

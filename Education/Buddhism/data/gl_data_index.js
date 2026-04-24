@@ -3,49 +3,49 @@ var mainData = [
     title: "P2L9_P3L4 由是菩提道次引导分四",
     subtitle: "",
     testdate: "18/01/2025",
-    category: "file",
+    category: "file_page",
     filename: "gl_data_P2L9_P3L4"
   },
   {
     title: "P6L7_P8L6 藏中所作事理者",
     subtitle: "",
     testdate: "08/03/2025",
-    category: "file",
+    category: "file_page",
     filename: "gl_data_P6L7_P8L6"
   },
   {
     title: "P8L7_P8L9 显示法殊胜中",
     subtitle: "",
     testdate: "05/04/2025",
-    category: "file",
+    category: "file_page",
     filename: "gl_data_P8L7_P8L9"
   },
   {
     title: "P10L4_P11L12 设作是云",
     subtitle: "",
     testdate: "12/04/2025",
-    category: "file",
+    category: "file_page",
     filename: "gl_data_P10L4_P11L12"
   },
   {
     title: "P12L13_P14L4 大瑜伽师菩提宝云",
     subtitle: "",
     testdate: "17/05/2025",
-    category: "file",
+    category: "file_page",
     filename: "gl_data_P12L13_P14L4"
   },
   {
     title: "P21L9_P22L6 以何意乐加行而说",
     subtitle: "",
     testdate: "03/07/2025",
-    category: "file",
+    category: "file_page",
     filename: "gl_data_P21L9_P22L6"
   },
   {
     title: "P22L7_P23L10 于何等境应说不说",
     subtitle: "",
     testdate: "19/07/2025",
-    category: "file",
+    category: "file_page",
     filename: "gl_data_P22L7_P23L10"
   },
   {
