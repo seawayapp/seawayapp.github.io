@@ -3,20 +3,12 @@
 
 <head>
 	<meta charset="UTF-8">
+	<script src="../../nav-config.js"></script>
 	<script>
 		window.NAV_CONFIG = {
 			breadcrumbs: [
-				{ label: "Home", href: "../../index.html", children: [
-					{ label: "🎓 Education",   href: "../../Education/index.html" },
-					{ label: "🎮 Games",       href: "../../Games/index.html" },
-					{ label: "💻 Technology",  href: "../../Technology/index.html" },
-					{ label: "➕ Math 数学",   href: "../../Math/index.html" },
-					{ label: "📚 Books 书籍",  href: "../../Books/index.html" }
-				]},
-				{ label: "Games", href: "../index.html", children: [
-					{ label: "🃏 Card Game",        href: "../Card_Game/index.html" },
-					{ label: "🌟 Sentence Builder",  href: "../Sentence_Builder/index.html" }
-				]},
+				{ label: "Home",  href: "../../index.html", children: NAV_MENUS.site() },
+				{ label: "Games", href: "../index.html",    children: NAV_MENUS.games() },
 				{ label: "Card Games" }
 			]
 		};

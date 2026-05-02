@@ -4,12 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="SeawayApp Math — Interesting math problems, visual proofs, and topic-based practice for primary and secondary students.">
+  <meta name="description"
+    content="SeawayApp Math — Interesting math problems, visual proofs, and topic-based practice for primary and secondary students.">
   <title>Math - 数学</title>
+  <script src="../nav-config.js"></script>
   <script>
     window.NAV_CONFIG = {
       breadcrumbs: [
-        { label: "Home", href: "../index.html" },
+        { label: "Home", href: "../index.html", children: NAV_MENUS.site() },
         { label: "Math" }
       ]
     };
