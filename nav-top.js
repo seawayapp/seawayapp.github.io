@@ -149,8 +149,16 @@
       gap: 0;
       flex: 1;
       min-width: 0;
-      overflow: hidden;
+      overflow: visible;
     }
+    .__snav-crumb-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      margin-right: -1px;
+    }
+    .__snav-crumb-wrap:last-child { margin-right: 0; }
     .__snav-crumb {
       display: flex;
       align-items: center;
@@ -163,29 +171,95 @@
       text-decoration: none;
       white-space: nowrap;
       flex-shrink: 0;
-      margin-right: -1px;
       clip-path: polygon(12px 0%, 100% 0%, calc(100% + 12px) 50%, 100% 100%, 0% 100%, 12px 100%, 0% 50%);
       transition: filter 0.18s;
+      cursor: pointer;
     }
-    .__snav-crumb:first-child {
+    .__snav-crumb-wrap:first-child > .__snav-crumb {
       padding-left: 14px;
       border-radius: 6px 0 0 6px;
       clip-path: polygon(0% 0%, 100% 0%, calc(100% + 12px) 50%, 100% 100%, 0% 100%);
     }
-    .__snav-crumb:last-child {
+    .__snav-crumb-wrap:last-child > .__snav-crumb {
       clip-path: polygon(12px 0%, 100% 0%, 100% 100%, 0% 100%, 12px 100%, 0% 50%);
-      margin-right: 0;
     }
-    .__snav-crumb:only-child {
+    .__snav-crumb-wrap:only-child > .__snav-crumb {
       clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
     }
-    .__snav-crumb:not([href]) { cursor: default; opacity: 0.88; }
-    .__snav-crumb[href]:hover { filter: brightness(1.2); text-decoration: none; }
+    .__snav-crumb:not([href]):not(.has-dd) { cursor: default; opacity: 0.88; }
+    .__snav-crumb[href]:hover,
+    .__snav-crumb.has-dd:hover { filter: brightness(1.2); text-decoration: none; }
     .__snav-crumb svg {
       width: 12px; height: 12px;
       stroke: currentColor; fill: none;
       stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
       flex-shrink: 0;
+    }
+    /* ── Breadcrumb dropdown ── */
+    .__snav-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      background: #1e293b;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.5);
+      min-width: 200px;
+      z-index: 10001;
+      overflow: hidden;
+      padding: 5px 0;
+      animation: __snavDdIn 0.15s ease;
+    }
+    @keyframes __snavDdIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .__snav-dropdown.open { display: block; }
+    .__snav-dropdown a {
+      display: block;
+      padding: 10px 18px;
+      color: rgba(255,255,255,0.82);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 500;
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      white-space: nowrap;
+      transition: background 0.14s, color 0.14s;
+    }
+    .__snav-dropdown a:hover {
+      background: rgba(255,255,255,0.09);
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .__snav-fs {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1.5px solid #38bdf8;
+      border-radius: 8px;
+      color: #38bdf8;
+      cursor: pointer;
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+      transition: background 0.18s, color 0.18s, border-color 0.18s, box-shadow 0.18s;
+      padding: 0;
+    }
+    .__snav-fs:hover {
+      background: rgba(56, 189, 248, 0.28);
+      color: #7dd3fc;
+      border-color: #7dd3fc;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+    }
+    .__snav-fs svg {
+      width: 16px; height: 16px;
+      stroke: currentColor; fill: none;
+      stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+      pointer-events: none;
     }
 
     @media (max-width: 480px) {
@@ -245,22 +319,53 @@
   const CRUMB_COLORS = ["#2563eb","#16a34a","#7c3aed","#d97706","#dc2626","#0891b2"];
   const HOME_SVG = `<svg viewBox="0 0 24 24"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg>`;
 
+  const DD_CHEVRON = `<svg style="margin-left:3px;flex-shrink:0" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
+
   function buildCrumbsEl() {
     if (!CRUMBS || !CRUMBS.length) return null;
-    const wrap = document.createElement("div");
-    wrap.className = "__snav-crumbs";
-    wrap.setAttribute("aria-label", "Breadcrumb");
+    const container = document.createElement("div");
+    container.className = "__snav-crumbs";
+    container.setAttribute("aria-label", "Breadcrumb");
     CRUMBS.forEach(function(item, i) {
-      const el = item.href ? document.createElement("a") : document.createElement("span");
-      el.className = "__snav-crumb";
+      const wrapEl = document.createElement("div");
+      wrapEl.className = "__snav-crumb-wrap";
+
+      const hasDD = !!(item.children && item.children.length);
+      const el = (item.href || hasDD) ? document.createElement("a") : document.createElement("span");
+      el.className = "__snav-crumb" + (hasDD ? " has-dd" : "");
       el.style.background = CRUMB_COLORS[i % CRUMB_COLORS.length];
-      if (item.href) el.href = item.href;
+      if (item.href && !hasDD) el.href = item.href;
       if (i === CRUMBS.length - 1) el.setAttribute("aria-current", "page");
       const icon = item.icon || (i === 0 ? HOME_SVG : "");
-      el.innerHTML = (icon || "") + (item.label || "");
-      wrap.appendChild(el);
+      el.innerHTML = (icon || "") + (item.label || "") + (hasDD ? DD_CHEVRON : "");
+
+      if (hasDD) {
+        const dd = document.createElement("div");
+        dd.className = "__snav-dropdown";
+        item.children.forEach(function(child) {
+          const a = document.createElement("a");
+          a.href = child.href;
+          a.textContent = child.label;
+          dd.appendChild(a);
+        });
+        el.addEventListener("click", function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          const isOpen = dd.classList.contains("open");
+          document.querySelectorAll(".__snav-dropdown.open").forEach(function(d) {
+            d.classList.remove("open");
+          });
+          if (!isOpen) dd.classList.add("open");
+        });
+        wrapEl.appendChild(el);
+        wrapEl.appendChild(dd);
+      } else {
+        wrapEl.appendChild(el);
+      }
+
+      container.appendChild(wrapEl);
     });
-    return wrap;
+    return container;
   }
 
   /* ── Build nav HTML ── */
@@ -269,6 +374,9 @@
   nav.setAttribute("aria-label", "Site navigation");
 
   const titleSlot = CRUMBS ? buildCrumbsEl() : null;
+
+  const ICON_EXPAND   = `<svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>`;
+  const ICON_COMPRESS = `<svg viewBox="0 0 24 24"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="10" y1="14" x2="3" y2="21"/><line x1="21" y1="3" x2="14" y2="10"/></svg>`;
 
   nav.innerHTML = `
     <a class="__snav-home" href="${ROOT}index.html" title="Home">
@@ -285,6 +393,14 @@
   `;
 
   if (titleSlot) nav.appendChild(titleSlot);
+
+  /* Fullscreen button — always last so it sits at the far right */
+  const fsBtn = document.createElement("button");
+  fsBtn.className = "__snav-fs";
+  fsBtn.id = "__snavFs";
+  fsBtn.title = "Enter full screen";
+  fsBtn.innerHTML = ICON_EXPAND;
+  nav.appendChild(fsBtn);
 
   /* ── Inject into DOM ── */
   function inject() {
@@ -313,6 +429,37 @@
       const titleEl = document.querySelector("title");
       if (titleEl) observer.observe(titleEl, { childList: true });
     }
+
+    // Fullscreen toggle
+    function updateFsIcon() {
+      const inFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      fsBtn.innerHTML = inFs ? ICON_COMPRESS : ICON_EXPAND;
+      fsBtn.title = inFs ? "Exit full screen" : "Enter full screen";
+    }
+
+    fsBtn.addEventListener("click", function () {
+      const inFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      if (!inFs) {
+        const el = document.documentElement;
+        if (el.requestFullscreen) el.requestFullscreen();
+        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      }
+    });
+
+    document.addEventListener("fullscreenchange", updateFsIcon);
+    document.addEventListener("webkitfullscreenchange", updateFsIcon);
+
+    // Close dropdowns when clicking outside the nav
+    document.addEventListener("click", function(e) {
+      if (!e.target.closest(".__snav-crumb-wrap")) {
+        document.querySelectorAll(".__snav-dropdown.open").forEach(function(d) {
+          d.classList.remove("open");
+        });
+      }
+    });
   }
 
   /* ── Slot mode: inject Back + Home into an existing host element ── */

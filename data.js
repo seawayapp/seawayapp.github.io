@@ -79,6 +79,10 @@ const data = {
     {
       date: "2026-04-14",
       name: "<a href='Math/index.html'>Math 数学</a>"
+    },
+    {
+      date: "2026-05-02",
+      name: "<a href='Games/index.html'>Games 游戏</a>"
     }
   ],
   archiveReleases: [
