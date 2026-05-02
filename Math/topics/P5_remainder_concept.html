@@ -10,11 +10,13 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@700&display=swap"
     rel="stylesheet">
+
+  <script src="../../nav-config.js"></script>
   <script>
     window.NAV_CONFIG = {
       breadcrumbs: [
-        { label: "Home", href: "../../index.html" },
-        { label: "Math", href: "../index.html" },
+        { label: "Home", href: "../../index.html", children: NAV_MENUS.site() },
+        { label: "Math", href: "../index.html", children: NAV_MENUS.math() },
         { label: "P5 Remainder Concept" }
       ]
     };
