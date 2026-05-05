@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我爸爸 - 朗读练习</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  font-family:'Nunito','PingFang SC','Hiragino Sans GB',sans-serif;
+  min-height:100vh;padding:20px 16px 48px;overflow-x:hidden;
+  background:#F8F6FF;position:relative;
+}
+
+body::before{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 55% 30% at 5% 10%,rgba(255,100,80,0.10) 0%,transparent 65%),
+    radial-gradient(ellipse 45% 28% at 90% 20%,rgba(80,120,255,0.09) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 30% at 50% 90%,rgba(255,180,0,0.09) 0%,transparent 65%);
+  pointer-events:none;z-index:0;
+}
+
+.floater{position:fixed;font-size:1.6rem;opacity:0.09;pointer-events:none;z-index:0;animation:flt 8s ease-in-out infinite;}
+@keyframes flt{0%,100%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-14px) rotate(6deg);}}
+
+.con{max-width:760px;margin:0 auto;position:relative;z-index:1;}
+
+/* ── HERO ── */
+.hero{text-align:center;padding:14px 0 16px;}
+.dad-row{display:flex;justify-content:center;align-items:flex-end;gap:14px;margin-bottom:12px;}
+.dad-figure{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  animation:dadBob 2.4s ease-in-out infinite;
+}
+.dad-figure:nth-child(1){animation-delay:0s;}
+.dad-figure:nth-child(2){animation-delay:0.5s;}
+.dad-figure:nth-child(3){animation-delay:1s;}
+@keyframes dadBob{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+.dad-emoji{font-size:2.8rem;filter:drop-shadow(2px 4px 6px rgba(0,0,0,0.15));}
+.dad-name{font-size:0.65rem;font-weight:900;padding:2px 8px;border-radius:10px;color:white;}
+
+h1{font-size:2rem;font-weight:900;color:#4A3080;text-shadow:2px 3px 0 rgba(255,255,255,0.9);letter-spacing:3px;margin-bottom:3px;}
+.subtitle{font-size:0.85rem;font-weight:800;color:#8878C0;letter-spacing:2px;margin-bottom:18px;}
+
+/* ── STARS ── */
+.star-row{display:flex;align-items:center;justify-content:center;gap:3px;margin-bottom:12px;}
+.spip{font-size:1.4rem;filter:grayscale(1) opacity(0.22);transition:filter 0.3s;}
+.spip.lit{filter:none;animation:sPop 0.4s ease;}
+@keyframes sPop{0%{transform:scale(1);}50%{transform:scale(1.7) rotate(18deg);}100%{transform:scale(1);}}
+#slbl{font-size:0.8rem;font-weight:800;color:#8878C0;margin-left:6px;}
+
+/* ── PROGRESS ── */
+.prog-wrap{background:#E8E0FF;border-radius:50px;height:12px;margin-bottom:16px;overflow:hidden;border:2px solid #D0C0F8;}
+.prog-fill{height:100%;background:linear-gradient(90deg,#E53935,#1565C0,#F9A825);border-radius:50px;width:0%;transition:width 0.6s cubic-bezier(.4,0,.2,1);}
+
+/* ── CONTROLS ── */
+.controls{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.btn{border:none;border-radius:50px;padding:9px 17px;font-size:0.86rem;font-weight:800;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;font-family:inherit;display:flex;align-items:center;gap:5px;}
+.btn:active{transform:scale(0.93)!important;}
+.btn-a{background:#4A3080;color:#fff;box-shadow:0 4px 0 #2A1860;}
+.btn-a:hover{transform:translateY(-2px);box-shadow:0 6px 0 #2A1860;}
+.btn-b{background:#E53935;color:#fff;box-shadow:0 4px 0 #B71C1C;}
+.btn-b:hover{transform:translateY(-2px);box-shadow:0 6px 0 #B71C1C;}
+.btn-c{background:#1565C0;color:#fff;box-shadow:0 4px 0 #0D47A1;}
+.btn-c:hover{transform:translateY(-2px);box-shadow:0 6px 0 #0D47A1;}
+.btn-d{background:#2E7D32;color:#fff;box-shadow:0 4px 0 #1B5E20;}
+.btn-d:hover{transform:translateY(-2px);box-shadow:0 6px 0 #1B5E20;}
+
+/* ── SPEED ── */
+.spd-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:16px;font-size:0.8rem;font-weight:800;color:#8878C0;}
+.spd-btn{background:white;border:2px solid #D0C0F8;border-radius:20px;padding:3px 11px;font-size:0.77rem;font-weight:800;color:#4A3080;cursor:pointer;font-family:inherit;transition:all 0.15s;}
+.spd-btn.active{background:#4A3080;color:white;border-color:#4A3080;}
+.spd-btn:hover{transform:scale(1.06);}
+
+/* ── KEYWORD BAR ── */
+.kw-bar{background:linear-gradient(135deg,#F3EFFF,#EEF2FF);border:2px dashed #B0A0E8;border-radius:18px;padding:12px 15px;margin-bottom:14px;}
+.kw-title{font-size:0.77rem;font-weight:900;color:#4A3080;margin-bottom:8px;display:flex;align-items:center;gap:5px;}
+.kw-chips{display:flex;flex-wrap:wrap;gap:7px;}
+.kw-chip{background:white;border:2px solid #B0A0E8;border-radius:20px;padding:4px 12px;font-size:0.86rem;font-weight:800;color:#4A3080;cursor:pointer;transition:all 0.15s;font-family:inherit;}
+.kw-chip .kp{display:block;font-size:0.58rem;color:#8878C0;font-weight:700;line-height:1.2;margin-bottom:1px;}
+.kw-chip:hover{background:#4A3080;color:white;border-color:#4A3080;transform:scale(1.05);}
+.kw-chip:hover .kp{color:rgba(255,255,255,0.7);}
+.kw-chip:active{transform:scale(0.94);}
+
+/* ── JOB MATCH GAME ── */
+.job-game{background:white;border-radius:22px;padding:18px 20px;margin-bottom:14px;box-shadow:0 4px 18px rgba(74,48,128,0.09);border:2px solid #D0C0F8;}
+.jg-title{font-size:0.8rem;font-weight:900;color:#4A3080;margin-bottom:12px;display:flex;align-items:center;gap:5px;}
+
+.jg-instr{font-size:0.82rem;font-weight:800;color:#8878C0;text-align:center;margin-bottom:10px;min-height:20px;transition:color 0.3s;}
+.jg-instr.ok{color:#2E7D32;}.jg-instr.bad{color:#C62828;}.jg-instr.info{color:#4A3080;}
+
+/* Three job columns */
+.jobs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;}
+
+.job-col{
+  border-radius:16px;padding:12px 10px;text-align:center;
+  border:3px dashed #E0E0E0;background:#FAFAFA;
+  transition:all 0.3s;cursor:pointer;
+}
+.job-col.selected{border-style:solid;box-shadow:0 0 0 3px rgba(74,48,128,0.2);}
+.job-col.matched{border-style:solid;border-color:#2E7D32;}
+.job-col .jc-icon{font-size:2rem;display:block;margin-bottom:5px;}
+.job-col .jc-role{font-size:0.8rem;font-weight:900;margin-bottom:3px;}
+.job-col .jc-tool{font-size:1.2rem;display:block;margin-bottom:3px;}
+.job-col .jc-kid{font-size:0.7rem;font-weight:800;color:#999;min-height:16px;}
+.job-col .jc-check{font-size:1rem;display:none;margin-top:3px;}
+.job-col.matched .jc-check{display:block;}
+
+/* Kid name buttons */
+.kid-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:10px;}
+.kid-btn{
+  border:none;border-radius:50px;padding:7px 16px;font-size:0.88rem;font-weight:800;
+  cursor:pointer;font-family:inherit;color:white;transition:all 0.15s;
+}
+.kid-btn:hover{transform:scale(1.06);}
+.kid-btn.selected{box-shadow:0 0 0 4px rgba(255,255,255,0.4),0 0 0 6px rgba(0,0,0,0.2);}
+.kid-btn.used{opacity:0.35;pointer-events:none;}
+.kid-btn:active{transform:scale(0.94);}
+
+.jg-fb{font-size:0.82rem;font-weight:800;text-align:center;min-height:18px;margin-bottom:6px;}
+.jg-fb.ok{color:#2E7D32;}.jg-fb.bad{color:#C62828;}
+.jg-reset{background:none;border:2px solid #D0C0F8;border-radius:20px;padding:5px 14px;font-size:0.77rem;font-weight:800;color:#8878C0;cursor:pointer;font-family:inherit;transition:all 0.15s;display:block;margin:4px auto 0;}
+.jg-reset:hover{border-color:#4A3080;color:#4A3080;}
+
+/* ── THREE STORY CARDS ── */
+/* Each dad gets a themed card */
+.story-section{margin-bottom:8px;}
+
+.story-card{
+  border-radius:22px;padding:0;margin-bottom:13px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.08);
+  border:3px solid transparent;
+  transition:border-color 0.3s,transform 0.2s,box-shadow 0.3s;
+  cursor:pointer;overflow:hidden;
+}
+.story-card.active{transform:translateY(-2px);}
+.story-card.done .sc-body{opacity:1;}
+
+/* Header banner per card */
+.sc-banner{
+  padding:14px 18px 10px;
+  display:flex;align-items:center;gap:12px;
+}
+.sc-big-icon{font-size:2.4rem;filter:drop-shadow(2px 3px 4px rgba(0,0,0,0.2));}
+.sc-info{flex:1;}
+.sc-title{font-size:1rem;font-weight:900;color:white;margin-bottom:2px;text-shadow:1px 1px 2px rgba(0,0,0,0.2);}
+.sc-author{font-size:0.72rem;font-weight:800;color:rgba(255,255,255,0.8);}
+.sc-done-tick{font-size:1.3rem;display:none;animation:pop 0.35s ease;color:white;}
+@keyframes pop{0%{transform:scale(0) rotate(-20deg);}70%{transform:scale(1.3) rotate(5deg);}100%{transform:scale(1);}}
+.story-card.done .sc-done-tick{display:block;}
+
+/* Card body */
+.sc-body{background:white;padding:16px 18px 12px;line-height:2.6;}
+
+.read-hint{font-size:0.7rem;color:#CCC;margin-top:7px;text-align:right;font-weight:800;}
+
+/* ── RUBY ── */
+ruby{display:inline-flex;flex-direction:column-reverse;align-items:center;margin:0 1px;vertical-align:bottom;}
+ruby rt{font-size:0.57em;font-weight:800;color:#4A3080;line-height:1.2;user-select:none;transition:opacity 0.3s;font-family:'Nunito',sans-serif;}
+ruby rb{font-size:1.32rem;font-weight:700;color:#1A1040;cursor:pointer;display:inline-block;padding:2px 3px;border-radius:6px;transition:background 0.15s,transform 0.1s;}
+ruby:hover rb{background:#EDE0FF;transform:scale(1.13);}
+ruby.hl rb{background:#FFE082;border-radius:6px;}
+.punc{font-size:1.32rem;font-weight:700;color:#BDBDBD;margin:0 1px;}
+body.pin-off ruby rt{opacity:0;}
+
+/* ── QUIZ ── */
+.quiz-card{background:linear-gradient(135deg,#F3EFFF,#EEF2FF);border:2px solid #B0A0E8;border-radius:20px;padding:16px 20px;margin-bottom:14px;}
+.quiz-hdr{font-size:0.8rem;font-weight:900;color:#4A3080;margin-bottom:9px;display:flex;align-items:center;gap:5px;}
+.quiz-q{font-size:0.98rem;font-weight:800;color:#2A1860;margin-bottom:11px;}
+.ans-grid{display:flex;flex-wrap:wrap;gap:7px;}
+.ans-btn{background:white;border:2px solid #B0A0E8;border-radius:12px;padding:7px 14px;font-size:0.86rem;font-weight:800;color:#4A3080;cursor:pointer;transition:all 0.15s;font-family:inherit;}
+.ans-btn:hover:not(:disabled){background:#F3EFFF;transform:scale(1.04);}
+.ans-btn.correct{background:#2E7D32;color:white;border-color:#1B5E20;}
+.ans-btn.wrong{background:#E53935;color:white;border-color:#B71C1C;}
+.quiz-fb{font-size:0.86rem;font-weight:800;margin-top:7px;min-height:20px;}
+.quiz-fb.ok{color:#1B5E20;}.quiz-fb.bad{color:#B71C1C;}
+
+/* ── MY DAD BOX ── */
+.my-dad-box{
+  background:white;border-radius:22px;padding:18px 20px;
+  margin-bottom:14px;
+  box-shadow:0 4px 18px rgba(74,48,128,0.08);
+  border:2px dashed #B0A0E8;
+}
+.mdb-title{font-size:0.8rem;font-weight:900;color:#4A3080;margin-bottom:12px;display:flex;align-items:center;gap:5px;}
+.mdb-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
+.mdb-job-btn{
+  background:white;border:2px solid #D0C0F8;border-radius:20px;
+  padding:7px 14px;font-size:0.88rem;font-weight:800;color:#4A3080;
+  cursor:pointer;font-family:inherit;transition:all 0.15s;
+  display:flex;align-items:center;gap:5px;
+}
+.mdb-job-btn:hover{background:#4A3080;color:white;border-color:#4A3080;transform:scale(1.04);}
+.mdb-response{font-size:0.92rem;font-weight:800;color:#2A1860;min-height:28px;padding:6px 0;line-height:1.5;}
+.mdb-response span{color:#E53935;}
+
+/* ── CELEBRATE ── */
+.cel-card{display:none;text-align:center;background:white;border-radius:24px;padding:26px 20px;box-shadow:0 10px 40px rgba(74,48,128,0.14);border:3px solid #B0A0E8;margin-bottom:20px;}
+.cel-card.show{display:block;animation:riseUp 0.5s ease;}
+@keyframes riseUp{from{opacity:0;transform:translateY(22px) scale(0.95);}to{opacity:1;transform:translateY(0) scale(1);}}
+.cel-emoji{font-size:3.6rem;display:block;margin-bottom:10px;}
+.cel-title{font-size:1.4rem;font-weight:900;color:#4A3080;letter-spacing:2px;margin-bottom:5px;}
+.cel-sub{font-size:0.9rem;color:#8878C0;font-weight:700;}
+
+.conf-host{position:fixed;top:0;left:0;width:100%;height:0;pointer-events:none;z-index:999;overflow:visible;}
+.cp{position:absolute;width:10px;height:10px;border-radius:2px;animation:cpFly 1.5s ease-out forwards;}
+@keyframes cpFly{0%{transform:translate(var(--sx),var(--sy)) rotate(0deg);opacity:1;}100%{transform:translate(var(--ex),var(--ey)) rotate(540deg);opacity:0;}}
+
+@media(max-width:480px){
+  h1{font-size:1.6rem;}
+  .jobs-grid{grid-template-columns:repeat(3,1fr);}
+  ruby rb,.punc{font-size:1.12rem;}
+}
+</style>
+<script>
+  window.NAV_CONFIG = {
+    breadcrumbs: [
+      { label: "Home",               href: "../../index.html" },
+      { label: "Education",          href: "../index.html" },
+      { label: "Chinese Reading Aloud", href: "index.html" },
+      { label: "我爸爸" }
+    ]
+  };
+</script>
+<script src="../../nav-top.js"></script>
+</head>
+<body>
+
+<div class="floater" style="top:8%;left:3%;animation-delay:0s">🚒</div>
+<div class="floater" style="top:22%;right:4%;animation-delay:2s">👮</div>
+<div class="floater" style="top:55%;left:2%;animation-delay:4s">🏗️</div>
+<div class="floater" style="top:75%;right:3%;animation-delay:1.5s">⭐</div>
+
+<div class="con">
+
+  <div class="hero">
+    <div class="dad-row">
+      <div class="dad-figure">
+        <span class="dad-emoji">👨‍🚒</span>
+        <span class="dad-name" style="background:#E53935;">消防员爸爸</span>
+      </div>
+      <div class="dad-figure">
+        <span class="dad-emoji">👮‍♂️</span>
+        <span class="dad-name" style="background:#1565C0;">警察爸爸</span>
+      </div>
+      <div class="dad-figure">
+        <span class="dad-emoji">👷</span>
+        <span class="dad-name" style="background:#F57F17;">建筑师爸爸</span>
+      </div>
+    </div>
+    <h1>我 爸 爸</h1>
+    <div class="subtitle">第八课 · 朗读练习 · 二年级</div>
+  </div>
+
+  <div class="star-row">
+    <span class="spip" id="sp0">⭐</span>
+    <span class="spip" id="sp1">⭐</span>
+    <span class="spip" id="sp2">⭐</span>
+    <span class="spip" id="sp3">⭐</span>
+    <span class="spip" id="sp4">⭐</span>
+    <span class="spip" id="sp5">⭐</span>
+    <span class="spip" id="sp6">⭐</span>
+    <span id="slbl">0 / 7</span>
+  </div>
+
+  <div class="prog-wrap"><div class="prog-fill" id="pFill"></div></div>
+
+  <div class="controls">
+    <button class="btn btn-a" onclick="togglePin()">🔤 <span id="pinBtn">隐藏拼音</span></button>
+    <button class="btn btn-b" onclick="readAll()">🔊 朗读全文</button>
+    <button class="btn btn-c" onclick="hlAll()">✨ 逐段朗读</button>
+    <button class="btn btn-d" onclick="resetAll()">🔄 重新开始</button>
+  </div>
+
+  <div class="spd-row">
+    朗读速度：
+    <button class="spd-btn" id="ss" onclick="setSpd(0.6)">慢</button>
+    <button class="spd-btn active" id="sn" onclick="setSpd(0.85)">正常</button>
+    <button class="spd-btn" id="sf" onclick="setSpd(1.1)">快</button>
+  </div>
+
+  <!-- KEYWORDS -->
+  <div class="kw-bar">
+    <div class="kw-title">💼 职业词语，点一点听发音：</div>
+    <div class="kw-chips" id="kwChips"></div>
+  </div>
+
+  <!-- JOB MATCH GAME -->
+  <div class="job-game">
+    <div class="jg-title">🎯 配对游戏：先选小朋友，再点他/她爸爸的职业！</div>
+    <div class="jg-instr" id="jgInstr">请先选一个小朋友 ↓</div>
+    <div class="kid-btns" id="kidBtns"></div>
+    <div class="jobs-grid" id="jobsGrid"></div>
+    <div class="jg-fb" id="jgFb"></div>
+    <button class="jg-reset" onclick="resetJobGame()">🔄 再玩一次</button>
+  </div>
+
+  <!-- THREE STORY CARDS -->
+  <div id="storyCards"></div>
+
+  <!-- MY DAD BOX -->
+  <div class="my-dad-box">
+    <div class="mdb-title">💭 你的爸爸是做什么的？点一点！</div>
+    <div class="mdb-row" id="mdbRow"></div>
+    <div class="mdb-response" id="mdbResp"></div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-card">
+    <div class="quiz-hdr">🧠 想一想！</div>
+    <div class="quiz-q" id="quizQ"></div>
+    <div class="ans-grid" id="ansGrid"></div>
+    <div class="quiz-fb" id="quizFb"></div>
+  </div>
+
+  <div class="cel-card" id="celCard">
+    <span class="cel-emoji">👨‍👦❤️🏅</span>
+    <div class="cel-title">爸爸真棒！</div>
+    <div class="cel-sub">你读完了《我爸爸》！每个爸爸都用自己的方式爱护我们！🧡</div>
+  </div>
+
+</div>
+<div class="conf-host" id="confHost"></div>
+
+<script>
+/* ── DATA ── */
+const stories = [
+  {
+    id:'adi',
+    bannerBg:'linear-gradient(135deg,#E53935,#FF6F00)',
+    borderColor:'#EF9A9A',
+    bigIcon:'👨‍🚒',
+    title:'阿迪的爸爸 — 消防员',
+    author:'二年级甲班  阿迪',
+    kidName:'阿迪',
+    job:'消防员',
+    jobIcon:'🚒',
+    sentences:[
+      {chunks:['我','爸爸','是','消防员','。'],pins:['wǒ','bà ba','shì','xiāo fáng yuán','']},
+      {chunks:['哪里','发生','火灾，'],pins:['nǎ lǐ','fā shēng','huǒ zāi，']},
+      {chunks:['他','就','开着','消防车','去','灭火','。'],pins:['tā','jiù','kāi zhe','xiāo fáng chē','qù','miè huǒ','']},
+    ]
+  },
+  {
+    id:'kaya',
+    bannerBg:'linear-gradient(135deg,#1565C0,#283593)',
+    borderColor:'#90CAF9',
+    bigIcon:'👮‍♂️',
+    title:'卡雅的爸爸 — 警察',
+    author:'二年级乙班  卡雅',
+    kidName:'卡雅',
+    job:'警察',
+    jobIcon:'🚔',
+    sentences:[
+      {chunks:['我','爸爸','是','警察','。'],pins:['wǒ','bà ba','shì','jǐng chá','']},
+      {chunks:['他','会','保护','我们，'],pins:['tā','huì','bǎo hù','wǒ men，']},
+      {chunks:['把','坏人','全都','抓起来','。'],pins:['bǎ','huài rén','quán dōu','zhuā qǐ lái','']},
+    ]
+  },
+  {
+    id:'xiao',
+    bannerBg:'linear-gradient(135deg,#F57F17,#E65100)',
+    borderColor:'#FFE082',
+    bigIcon:'👷',
+    title:'小安的爸爸 — 建筑师',
+    author:'二年级甲班  小安',
+    kidName:'小安',
+    job:'建筑师',
+    jobIcon:'🏗️',
+    sentences:[
+      {chunks:['我','爸爸','是','建筑师','。'],pins:['wǒ','bà ba','shì','jiàn zhù shī','']},
+      {chunks:['他','和','工人们','建起了','一座座','高大的','组屋','。'],pins:['tā','hé','gōng rén men','jiàn qǐ le','yī zuò zuò','gāo dà de','zǔ wū','']},
+      {chunks:['我们','大家','都有','房子','住','。'],pins:['wǒ men','dà jiā','dōu yǒu','fáng zi','zhù','']},
+    ]
+  }
+];
+
+const keywords = [
+  {w:'消防员',p:'xiāo fáng yuán'},{w:'消防车',p:'xiāo fáng chē'},{w:'火灾',p:'huǒ zāi'},
+  {w:'灭火',p:'miè huǒ'},{w:'警察',p:'jǐng chá'},{w:'保护',p:'bǎo hù'},
+  {w:'坏人',p:'huài rén'},{w:'建筑师',p:'jiàn zhù shī'},{w:'工人',p:'gōng rén'},
+  {w:'组屋',p:'zǔ wū'},{w:'高大',p:'gāo dà'},{w:'发生',p:'fā shēng'},
+];
+
+// Job match: kids → jobs
+const kidJobMap = {阿迪:'消防员', 卡雅:'警察', 小安:'建筑师'};
+const kids = ['阿迪','卡雅','小安'];
+const jobDefs = [
+  {role:'消防员',icon:'👨‍🚒',tool:'🚒',color:'#E53935'},
+  {role:'警察',  icon:'👮‍♂️',tool:'🚔',color:'#1565C0'},
+  {role:'建筑师',icon:'👷', tool:'🏗️',color:'#F57F17'},
+];
+
+const myDadJobs = [
+  {label:'消防员 🚒',resp:'哇！你爸爸是消防员！他很勇敢，会去灭火！'},
+  {label:'警察 👮',  resp:'太棒了！你爸爸是警察！他会保护大家！'},
+  {label:'建筑师 👷',resp:'好厉害！你爸爸是建筑师，他建起了高大的房子！'},
+  {label:'医生 🩺',  resp:'了不起！你爸爸是医生，他帮人治病！'},
+  {label:'老师 📚',  resp:'真好！你爸爸是老师，他教书育人！'},
+  {label:'厨师 👨‍🍳', resp:'美味！你爸爸是厨师，他做出好吃的食物！'},
+  {label:'其他 ❤️',  resp:'每个爸爸都有自己特别的工作，谢谢爸爸的付出！'},
+];
+
+const quizzes = [
+  {q:'阿迪的爸爸是做什么的？',opts:['警察','建筑师','消防员'],ans:2,fb:['再想想～','再想想～','🎉 对！阿迪的爸爸是消防员！']},
+  {q:'卡雅的爸爸会做什么？',opts:['灭火','保护大家抓坏人','建造房子'],ans:1,fb:['再想想～','🎉 对！他会保护我们，把坏人抓起来！','再想想～']},
+  {q:'小安的爸爸和谁一起建组屋？',opts:['邻居','消防员','工人们'],ans:2,fb:['再想想～','再想想～','🎉 对！和工人们一起建！']},
+  {q:'这篇课文有几个小朋友介绍他们的爸爸？',opts:['两个','三个','四个'],ans:1,fb:['再想想～','🎉 对！有三个小朋友！','再想想～']},
+];
+
+/* ── STATE ── */
+let pinOn=true, spd=0.85, doneSt=new Set(), stars=0, hlActive=false, quizIdx=0;
+let selKid=null, matchDone={};
+const TOTAL=stories.length, MAX_STARS=7;
+
+/* ── BUILD ── */
+buildKW(); buildJobGame(); buildStories(); buildMyDad(); loadQuiz(0);
+
+function buildKW(){
+  const c=document.getElementById('kwChips');
+  keywords.forEach(k=>{
+    const b=document.createElement('button'); b.className='kw-chip';
+    b.innerHTML=`<span class="kp">${k.p}</span>${k.w}`;
+    b.onclick=()=>speak(k.w); c.appendChild(b);
+  });
+}
+
+/* ── JOB MATCH GAME ── */
+function buildJobGame(){
+  // kid buttons
+  const kb=document.getElementById('kidBtns'); kb.innerHTML='';
+  const kidColors=['#E53935','#1565C0','#F57F17'];
+  kids.forEach((kid,i)=>{
+    const b=document.createElement('button'); b.className='kid-btn'; b.textContent=kid;
+    b.style.background=kidColors[i]; b.style.boxShadow=`0 4px 0 ${['#B71C1C','#0D47A1','#E65100'][i]}`;
+    b.id=`kb-${kid}`; b.onclick=()=>selectKid(kid,b); kb.appendChild(b);
+  });
+
+  // job columns
+  const jg=document.getElementById('jobsGrid'); jg.innerHTML='';
+  jobDefs.forEach(jd=>{
+    const col=document.createElement('div'); col.className='job-col';
+    col.style.borderColor=jd.color+'66';
+    col.id=`jc-${jd.role}`;
+    col.innerHTML=`<span class="jc-icon">${jd.icon}</span><span class="jc-role" style="color:${jd.color}">${jd.role}</span><span class="jc-tool">${jd.tool}</span><span class="jc-kid" id="jck-${jd.role}"></span><span class="jc-check">✅</span>`;
+    col.onclick=()=>assignJob(jd,col);
+    jg.appendChild(col);
+  });
+
+  selKid=null; matchDone={};
+  document.getElementById('jgInstr').textContent='请先选一个小朋友 ↓';
+  document.getElementById('jgInstr').className='jg-instr';
+  document.getElementById('jgFb').textContent='';
+  document.getElementById('jgFb').className='jg-fb';
+}
+
+function selectKid(kid,btn){
+  if(matchDone[kid]) return;
+  selKid=kid;
+  document.querySelectorAll('.kid-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('jgInstr').textContent=`已选「${kid}」，现在点击她/他爸爸的职业！`;
+  document.getElementById('jgInstr').className='jg-instr info';
+}
+
+function assignJob(jd,col){
+  if(!selKid){
+    document.getElementById('jgInstr').textContent='请先选一个小朋友！';
+    document.getElementById('jgInstr').className='jg-instr bad';
+    return;
+  }
+  const correct=kidJobMap[selKid]===jd.role;
+  const fb=document.getElementById('jgFb');
+  if(correct){
+    col.classList.add('matched'); col.style.borderColor=jd.color;
+    document.getElementById(`jck-${jd.role}`).textContent=selKid+'的爸爸';
+    matchDone[selKid]=true;
+    document.getElementById(`kb-${selKid}`).classList.add('used');
+    selKid=null;
+    document.querySelectorAll('.kid-btn').forEach(b=>b.classList.remove('selected'));
+    const allDone=Object.keys(matchDone).length===3;
+    fb.textContent=allDone?'🎉 全对了！你真厉害！':'✅ 配对正确！继续！';
+    fb.className='jg-fb ok';
+    document.getElementById('jgInstr').textContent=allDone?'全部配对完成！':'继续选小朋友配对！';
+    document.getElementById('jgInstr').className='jg-instr ok';
+    if(allDone) gainStar();
+    speak(`${jd.role}`);
+  } else {
+    fb.textContent='❌ 不对哦，再想想课文里说的！';
+    fb.className='jg-fb bad';
+    col.style.animation='shake 0.35s ease';
+    setTimeout(()=>col.style.animation='',400);
+  }
+}
+
+function resetJobGame(){buildJobGame();}
+
+/* ── STORY CARDS ── */
+function buildStories(){
+  const con=document.getElementById('storyCards'); con.innerHTML='';
+  stories.forEach((story,si)=>{
+    const card=document.createElement('div');
+    card.className='story-card'; card.id=`sc${si}`;
+    card.style.border=`3px solid ${story.borderColor}`;
+
+    // banner
+    const banner=document.createElement('div');
+    banner.className='sc-banner'; banner.style.background=story.bannerBg;
+    const bigIco=document.createElement('span'); bigIco.className='sc-big-icon'; bigIco.textContent=story.bigIcon;
+    const info=document.createElement('div'); info.className='sc-info';
+    const title=document.createElement('div'); title.className='sc-title'; title.textContent=story.title;
+    const author=document.createElement('div'); author.className='sc-author'; author.textContent=story.author;
+    const dtick=document.createElement('div'); dtick.className='sc-done-tick'; dtick.textContent='✅';
+    info.appendChild(title); info.appendChild(author);
+    banner.appendChild(bigIco); banner.appendChild(info); banner.appendChild(dtick);
+
+    // body
+    const body=document.createElement('div'); body.className='sc-body'; body.id=`sb${si}`;
+    story.sentences.forEach((sent,sni)=>{
+      const wrap=document.createElement('span'); wrap.id=`snt${si}_${sni}`;
+      sent.chunks.forEach((ch,ci)=>{
+        const isPunc=/^[，。！？""：；、…—·\s""]+$/.test(ch);
+        if(isPunc){
+          const sp=document.createElement('span');sp.className='punc';sp.textContent=ch;wrap.appendChild(sp);
+        } else {
+          const hasTr=/[，。！？"：；]$/.test(ch);
+          const txt=hasTr?ch.slice(0,-1):ch; const tr=hasTr?ch.slice(-1):'';
+          const r=document.createElement('ruby'); r.id=`rb${si}_${sni}_${ci}`;
+          const rt=document.createElement('rt'); rt.textContent=sent.pins[ci]||'';
+          const rb=document.createElement('rb'); rb.textContent=txt;
+          rb.onclick=(e)=>{e.stopPropagation();speak(txt);flash(r);};
+          r.appendChild(rt); r.appendChild(rb); wrap.appendChild(r);
+          if(tr){const ps=document.createElement('span');ps.className='punc';ps.textContent=tr;wrap.appendChild(ps);}
+        }
+      });
+      body.appendChild(wrap);
+    });
+
+    const hint=document.createElement('div'); hint.className='read-hint'; hint.textContent='👆 点击朗读这段';
+
+    card.appendChild(banner); card.appendChild(body); card.appendChild(hint);
+    card.onclick=()=>readStory(si,card);
+    con.appendChild(card);
+  });
+}
+
+function readStory(si,card){
+  const txt=stories[si].sentences.map(s=>s.chunks.join('')).join('');
+  speak(txt);
+  if(!card.classList.contains('done')){
+    card.classList.add('done'); doneSt.add(si); gainStar(); updateProg();
+    if(doneSt.size===TOTAL) setTimeout(celebrate,700);
+  }
+  // highlight effect on banner
+  card.style.boxShadow='0 8px 28px rgba(0,0,0,0.18)'; card.style.transform='translateY(-2px)';
+  setTimeout(()=>{ card.style.boxShadow=''; card.style.transform=''; },1200);
+}
+
+/* ── MY DAD ── */
+function buildMyDad(){
+  const row=document.getElementById('mdbRow');
+  myDadJobs.forEach(j=>{
+    const b=document.createElement('button'); b.className='mdb-job-btn'; b.textContent=j.label;
+    b.onclick=()=>{
+      document.getElementById('mdbResp').innerHTML=`<span>💬 </span>${j.resp}`;
+      speak(j.resp);
+    };
+    row.appendChild(b);
+  });
+}
+
+/* ── CORE ── */
+function gainStar(){
+  if(stars>=MAX_STARS)return;
+  document.getElementById(`sp${stars}`).classList.add('lit'); stars++;
+  document.getElementById('slbl').textContent=`${stars} / ${MAX_STARS}`;
+}
+function updateProg(){document.getElementById('pFill').style.width=(doneSt.size/TOTAL*100)+'%';}
+function speak(txt,rate){
+  if(!window.speechSynthesis)return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(txt); u.lang='zh-CN'; u.rate=rate||spd; speechSynthesis.speak(u);
+}
+function speakWait(txt){
+  return new Promise(res=>{
+    if(!window.speechSynthesis){setTimeout(res,800);return;}
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(txt); u.lang='zh-CN'; u.rate=spd;
+    u.onend=res; u.onerror=res; speechSynthesis.speak(u);
+    setTimeout(res,txt.length*660+1800);
+  });
+}
+async function hlAll(){
+  if(hlActive){speechSynthesis.cancel();hlActive=false;return;}
+  hlActive=true;
+  for(let si=0;si<stories.length&&hlActive;si++){
+    for(let sni=0;sni<stories[si].sentences.length&&hlActive;sni++){
+      hlSent(si,sni,true);
+      await speakWait(stories[si].sentences[sni].chunks.join(''));
+      hlSent(si,sni,false);
+    }
+    const card=document.getElementById(`sc${si}`);
+    if(!card.classList.contains('done')){
+      card.classList.add('done'); doneSt.add(si); gainStar(); updateProg();
+    }
+  }
+  hlActive=false;
+  if(doneSt.size===TOTAL) setTimeout(celebrate,700);
+}
+function hlSent(si,sni,on){
+  const el=document.getElementById(`snt${si}_${sni}`);
+  if(!el)return;
+  el.querySelectorAll('ruby').forEach(r=>r.classList.toggle('hl',on));
+}
+function readAll(){
+  const all=stories.map(s=>s.sentences.map(sn=>sn.chunks.join('')).join('')).join('　');
+  speak(all);
+}
+function togglePin(){pinOn=!pinOn;document.body.classList.toggle('pin-off',!pinOn);document.getElementById('pinBtn').textContent=pinOn?'隐藏拼音':'显示拼音';}
+function setSpd(r){
+  spd=r; document.querySelectorAll('.spd-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById({0.6:'ss',0.85:'sn',1.1:'sf'}[r]).classList.add('active');
+}
+function flash(el){el.style.background='#EDE0FF';setTimeout(()=>el.style.background='',420);}
+function resetAll(){
+  speechSynthesis.cancel(); hlActive=false; doneSt.clear(); stars=0;
+  document.getElementById('slbl').textContent=`0 / ${MAX_STARS}`;
+  document.getElementById('pFill').style.width='0%';
+  document.getElementById('celCard').classList.remove('show');
+  document.querySelectorAll('.spip').forEach(s=>s.classList.remove('lit'));
+  buildJobGame(); buildStories(); quizIdx=0; loadQuiz(0);
+  document.getElementById('mdbResp').textContent='';
+}
+
+/* ── QUIZ ── */
+function loadQuiz(idx){
+  const q=quizzes[idx];
+  document.getElementById('quizQ').textContent=q.q;
+  document.getElementById('quizFb').textContent=''; document.getElementById('quizFb').className='quiz-fb';
+  const grid=document.getElementById('ansGrid'); grid.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const b=document.createElement('button'); b.className='ans-btn'; b.textContent=opt;
+    b.onclick=()=>checkAns(i,q,grid); grid.appendChild(b);
+  });
+}
+function checkAns(i,q,grid){
+  Array.from(grid.children).forEach((b,bi)=>{
+    b.disabled=true;
+    if(bi===q.ans)b.classList.add('correct');
+    else if(bi===i&&i!==q.ans)b.classList.add('wrong');
+  });
+  const fb=document.getElementById('quizFb');
+  fb.textContent=q.fb[i]; fb.className='quiz-fb '+(i===q.ans?'ok':'bad');
+  if(i===q.ans){gainStar();setTimeout(()=>{quizIdx=(quizIdx+1)%quizzes.length;loadQuiz(quizIdx);},2000);}
+}
+
+/* ── CELEBRATE ── */
+function celebrate(){
+  document.getElementById('celCard').classList.add('show');
+  speak('你读完了我爸爸！每个爸爸都很棒！谢谢爸爸的付出！',0.85); fireConf();
+}
+function fireConf(){
+  const host=document.getElementById('confHost'); host.innerHTML='';
+  const colors=['#E53935','#1565C0','#F57F17','#4A3080','#2E7D32','#FF9800','#9C27B0'];
+  const W=window.innerWidth;
+  for(let i=0;i<46;i++){
+    const p=document.createElement('div'); p.className='cp';
+    const sx=Math.random()*W, sy=Math.random()*120+20;
+    const ex=sx+(Math.random()-0.5)*340, ey=sy+Math.random()*440+140;
+    p.style.cssText=`left:${sx}px;top:${sy}px;background:${colors[i%colors.length]};--sx:0px;--sy:0px;--ex:${ex-sx}px;--ey:${ey-sy}px;animation-delay:${Math.random()*0.5}s`;
+    host.appendChild(p);
+  }
+  setTimeout(()=>host.innerHTML='',2400);
+}
+
+const s=document.createElement('style');
+s.textContent='@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-7px);}75%{transform:translateX(7px);}}';
+document.head.appendChild(s);
+</script>
+</body>
+</html>

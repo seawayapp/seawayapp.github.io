@@ -2,6 +2,10 @@ const data = {
   lastUpdated: "02/04/2026 V1",
   recentReleases: [
     {
+      date: "2026-05-05",
+      name: "<a href='Education/ChineseReadingAloud/index.html'>华文朗读练习 P2 (Chinese Reading Aloud)</a>"
+    },
+    {
       date: "2026-04-02",
       name: "<a href='Education/Tools/ChineseWordWriting.html'>Chinse Writing Template</a>"
     },
