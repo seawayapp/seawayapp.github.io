@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>特别的面包 - 朗读练习</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  font-family:'Nunito','PingFang SC','Hiragino Sans GB',sans-serif;
+  min-height:100vh;padding:20px 16px 48px;overflow-x:hidden;
+  background:#FDF6EC;position:relative;
+}
+
+body::before{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 60% 35% at 10% 10%,rgba(255,180,80,0.12) 0%,transparent 65%),
+    radial-gradient(ellipse 50% 30% at 90% 20%,rgba(210,140,80,0.10) 0%,transparent 60%),
+    radial-gradient(ellipse 45% 28% at 50% 90%,rgba(255,210,130,0.10) 0%,transparent 60%);
+  pointer-events:none;z-index:0;
+}
+
+.steam{
+  position:fixed;font-size:1.4rem;opacity:0.08;pointer-events:none;z-index:0;
+  animation:steamRise 6s ease-in-out infinite;
+}
+@keyframes steamRise{
+  0%,100%{transform:translateY(0) scale(1);opacity:0.08;}
+  50%{transform:translateY(-20px) scale(1.1);opacity:0.04;}
+}
+
+.con{max-width:760px;margin:0 auto;position:relative;z-index:1;}
+
+/* ── HERO ── */
+.hero{text-align:center;padding:14px 0 16px;}
+.hero-row{display:flex;justify-content:center;align-items:flex-end;gap:6px;margin-bottom:10px;}
+.h-item{font-size:2rem;display:inline-block;animation:hBob 2.6s ease-in-out infinite;}
+.h-item:nth-child(1){animation-delay:0s;}
+.h-item:nth-child(2){animation-delay:0.3s;}
+.h-item:nth-child(3){animation-delay:0.6s;}
+.h-item:nth-child(4){animation-delay:0.9s;}
+.h-item:nth-child(5){animation-delay:1.2s;}
+@keyframes hBob{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
+
+h1{
+  font-size:2rem;font-weight:900;
+  color:#8B4513;
+  text-shadow:2px 3px 0 rgba(255,255,255,0.85);
+  letter-spacing:3px;margin-bottom:3px;
+}
+.subtitle{font-size:0.85rem;font-weight:800;color:#C49A6C;letter-spacing:2px;margin-bottom:18px;}
+
+/* ── STARS ── */
+.star-row{display:flex;align-items:center;justify-content:center;gap:3px;margin-bottom:12px;}
+.spip{font-size:1.4rem;filter:grayscale(1) opacity(0.22);transition:filter 0.3s;}
+.spip.lit{filter:none;animation:sPop 0.4s ease;}
+@keyframes sPop{0%{transform:scale(1);}50%{transform:scale(1.7) rotate(18deg);}100%{transform:scale(1);}}
+#slbl{font-size:0.8rem;font-weight:800;color:#C49A6C;margin-left:6px;}
+
+/* ── PROGRESS ── */
+.prog-wrap{background:#F0D9B5;border-radius:50px;height:12px;margin-bottom:16px;overflow:hidden;border:2px solid #E0C090;}
+.prog-fill{height:100%;background:linear-gradient(90deg,#D2691E,#E8A550,#F5D27A);border-radius:50px;width:0%;transition:width 0.6s cubic-bezier(.4,0,.2,1);}
+
+/* ── CONTROLS ── */
+.controls{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.btn{border:none;border-radius:50px;padding:9px 17px;font-size:0.86rem;font-weight:800;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;font-family:inherit;display:flex;align-items:center;gap:5px;}
+.btn:active{transform:scale(0.93)!important;}
+.btn-a{background:#8B4513;color:#fff;box-shadow:0 4px 0 #5C2D0D;}
+.btn-a:hover{transform:translateY(-2px);box-shadow:0 6px 0 #5C2D0D;}
+.btn-b{background:#D2691E;color:#fff;box-shadow:0 4px 0 #9E4A10;}
+.btn-b:hover{transform:translateY(-2px);box-shadow:0 6px 0 #9E4A10;}
+.btn-c{background:#E8A550;color:#fff;box-shadow:0 4px 0 #B87820;}
+.btn-c:hover{transform:translateY(-2px);box-shadow:0 6px 0 #B87820;}
+.btn-d{background:#7BA05B;color:#fff;box-shadow:0 4px 0 #4A6E2D;}
+.btn-d:hover{transform:translateY(-2px);box-shadow:0 6px 0 #4A6E2D;}
+
+/* ── SPEED ── */
+.spd-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:16px;font-size:0.8rem;font-weight:800;color:#C49A6C;}
+.spd-btn{background:white;border:2px solid #E0C090;border-radius:20px;padding:3px 11px;font-size:0.77rem;font-weight:800;color:#8B4513;cursor:pointer;font-family:inherit;transition:all 0.15s;}
+.spd-btn.active{background:#8B4513;color:white;border-color:#8B4513;}
+.spd-btn:hover{transform:scale(1.06);}
+
+/* ── KEYWORD BAR ── */
+.kw-bar{background:linear-gradient(135deg,#FFF8EE,#FFF3E0);border:2px dashed #E8C080;border-radius:18px;padding:12px 15px;margin-bottom:14px;}
+.kw-title{font-size:0.77rem;font-weight:900;color:#8B4513;margin-bottom:8px;display:flex;align-items:center;gap:5px;}
+.kw-chips{display:flex;flex-wrap:wrap;gap:7px;}
+.kw-chip{background:white;border:2px solid #E8C080;border-radius:20px;padding:4px 12px;font-size:0.86rem;font-weight:800;color:#8B4513;cursor:pointer;transition:all 0.15s;font-family:inherit;}
+.kw-chip .kp{display:block;font-size:0.58rem;color:#C49A6C;font-weight:700;line-height:1.2;margin-bottom:1px;}
+.kw-chip:hover{background:#D2691E;color:white;border-color:#D2691E;transform:scale(1.05);}
+.kw-chip:hover .kp{color:rgba(255,255,255,0.7);}
+.kw-chip:active{transform:scale(0.94);}
+
+/* ── CAFE SCENE GAME ── */
+.cafe-game{background:white;border-radius:22px;padding:18px 20px;margin-bottom:14px;box-shadow:0 4px 18px rgba(139,69,19,0.10);border:2px solid #E8C080;}
+.cg-title{font-size:0.8rem;font-weight:900;color:#8B4513;margin-bottom:12px;display:flex;align-items:center;gap:5px;}
+
+/* Scene visual */
+.cafe-scene{
+  background:linear-gradient(180deg,#FDEFD8 0%,#FBE4C0 60%,#F5D4A0 100%);
+  border-radius:16px;border:2px solid #E8C080;
+  padding:14px;margin-bottom:14px;position:relative;
+  overflow:hidden;
+}
+.cafe-scene::before{
+  content:'☕';position:absolute;top:6px;right:10px;font-size:2.5rem;opacity:0.08;
+}
+
+/* Task cards */
+.task-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
+.task-card{
+  flex:1;min-width:130px;
+  background:white;border:2px solid #E8C080;border-radius:14px;
+  padding:10px 12px;text-align:center;cursor:pointer;
+  transition:all 0.2s;
+}
+.task-card:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(139,69,19,0.15);}
+.task-card.done{background:#F0FFF0;border-color:#7BA05B;transform:none;cursor:default;}
+.task-card .tc-icon{font-size:1.8rem;display:block;margin-bottom:4px;}
+.task-card .tc-who{font-size:0.7rem;font-weight:800;color:#C49A6C;margin-bottom:2px;}
+.task-card .tc-task{font-size:0.82rem;font-weight:800;color:#5C2D0D;}
+.task-card .tc-check{font-size:1rem;display:none;margin-top:2px;}
+.task-card.done .tc-check{display:block;}
+
+.assign-instr{font-size:0.8rem;font-weight:800;color:#C49A6C;margin-bottom:8px;min-height:18px;}
+.assign-instr.ok{color:#7BA05B;}.assign-instr.bad{color:#D2691E;}
+
+.family-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px;}
+.fam-btn{
+  background:white;border:2px solid #E8C080;border-radius:20px;
+  padding:6px 14px;font-size:0.86rem;font-weight:800;
+  color:#8B4513;cursor:pointer;font-family:inherit;transition:all 0.15s;
+}
+.fam-btn:hover{background:#FFF3E0;transform:scale(1.05);}
+.fam-btn.selected{background:#8B4513;color:white;border-color:#8B4513;}
+.fam-btn:active{transform:scale(0.94);}
+
+.cg-reset-btn{background:none;border:2px solid #E8C080;border-radius:20px;padding:5px 14px;font-size:0.77rem;font-weight:800;color:#C49A6C;cursor:pointer;font-family:inherit;transition:all 0.15s;display:block;margin:6px auto 0;}
+.cg-reset-btn:hover{border-color:#8B4513;color:#8B4513;}
+
+/* ── TABLE CLEANUP MINI GAME ── */
+.cleanup-game{background:white;border-radius:22px;padding:18px 20px;margin-bottom:14px;box-shadow:0 4px 18px rgba(139,69,19,0.09);border:2px solid #E8C080;}
+.cg2-title{font-size:0.8rem;font-weight:900;color:#8B4513;margin-bottom:12px;display:flex;align-items:center;gap:5px;}
+
+.table-area{
+  background:linear-gradient(135deg,#F5DEB3,#F0C890);
+  border-radius:16px;padding:16px;margin-bottom:10px;
+  border:3px solid #D4A96A;
+  display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;
+  min-height:90px;position:relative;
+}
+.table-item{
+  font-size:1.8rem;cursor:pointer;display:inline-block;
+  animation:tableWiggle 3s ease-in-out infinite;
+  transition:transform 0.2s,opacity 0.4s;
+  filter:drop-shadow(1px 2px 3px rgba(0,0,0,0.2));
+}
+.table-item:hover{transform:scale(1.2) rotate(5deg);}
+.table-item.removed{opacity:0;transform:scale(0) rotate(45deg);pointer-events:none;}
+@keyframes tableWiggle{0%,100%{transform:rotate(-2deg);}50%{transform:rotate(2deg);}}
+
+.clean-msg{font-size:0.82rem;font-weight:800;color:#C49A6C;text-align:center;min-height:20px;margin-bottom:6px;transition:color 0.3s;}
+.clean-msg.ok{color:#7BA05B;}.clean-msg.bad{color:#D2691E;}
+
+/* ── PARA CARDS ── */
+.para-card{background:white;border-radius:22px;padding:20px 22px 14px;margin-bottom:13px;box-shadow:0 4px 16px rgba(139,69,19,0.07);border:3px solid transparent;transition:border-color 0.3s,transform 0.2s,box-shadow 0.3s;cursor:pointer;position:relative;overflow:hidden;}
+.para-card::before{content:'';position:absolute;top:0;left:0;width:7px;height:100%;background:#F0D9B5;border-radius:22px 0 0 22px;transition:background 0.3s;}
+.para-card.active{border-color:#E8A550;box-shadow:0 8px 28px rgba(139,69,19,0.15);transform:translateY(-2px);}
+.para-card.active::before{background:#D2691E;}
+.para-card.done{border-color:#A8D5A2;background:linear-gradient(135deg,#FAFFF8,#F0FFF0);}
+.para-card.done::before{background:#7BA05B;}
+.card-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.card-ico{font-size:1.7rem;width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.card-lbl{font-size:0.75rem;font-weight:900;color:white;padding:3px 12px;border-radius:20px;letter-spacing:1px;}
+.done-tick{margin-left:auto;font-size:1.3rem;display:none;animation:pop 0.35s ease;}
+@keyframes pop{0%{transform:scale(0) rotate(-20deg);}70%{transform:scale(1.3) rotate(5deg);}100%{transform:scale(1);}}
+.para-card.done .done-tick{display:block;}
+
+/* Dialogue styling */
+.dialogue{display:flex;align-items:flex-start;gap:8px;background:#FFF8EE;border-radius:12px;padding:8px 10px;margin:4px 0;border-left:3px solid #E8A550;}
+.dlg-speaker{font-size:1.2rem;flex-shrink:0;margin-top:2px;}
+.dlg-text{flex:1;line-height:2.4;}
+
+/* ── RUBY ── */
+.text-area{line-height:2.6;word-break:break-all;}
+ruby{display:inline-flex;flex-direction:column-reverse;align-items:center;margin:0 1px;vertical-align:bottom;}
+ruby rt{font-size:0.57em;font-weight:800;color:#8B4513;line-height:1.2;user-select:none;transition:opacity 0.3s;font-family:'Nunito',sans-serif;}
+ruby rb{font-size:1.32rem;font-weight:700;color:#3D1A08;cursor:pointer;display:inline-block;padding:2px 3px;border-radius:6px;transition:background 0.15s,transform 0.1s;}
+ruby:hover rb{background:#FFE8C0;transform:scale(1.13);}
+ruby.hl rb{background:#FFE082;border-radius:6px;}
+.punc{font-size:1.32rem;font-weight:700;color:#C9A870;margin:0 1px;}
+body.pin-off ruby rt{opacity:0;}
+.read-hint{font-size:0.7rem;color:#D8C0A0;margin-top:7px;text-align:right;font-weight:800;}
+
+/* ── QUIZ ── */
+.quiz-card{background:linear-gradient(135deg,#FFF8EE,#FFF3E0);border:2px solid #E8C080;border-radius:20px;padding:16px 20px;margin-bottom:14px;}
+.quiz-hdr{font-size:0.8rem;font-weight:900;color:#8B4513;margin-bottom:9px;display:flex;align-items:center;gap:5px;}
+.quiz-q{font-size:0.98rem;font-weight:800;color:#5C2D0D;margin-bottom:11px;}
+.ans-grid{display:flex;flex-wrap:wrap;gap:7px;}
+.ans-btn{background:white;border:2px solid #E8C080;border-radius:12px;padding:7px 14px;font-size:0.86rem;font-weight:800;color:#8B4513;cursor:pointer;transition:all 0.15s;font-family:inherit;}
+.ans-btn:hover:not(:disabled){background:#FFF8EE;transform:scale(1.04);}
+.ans-btn.correct{background:#7BA05B;color:white;border-color:#4A6E2D;}
+.ans-btn.wrong{background:#D2691E;color:white;border-color:#9E4A10;}
+.quiz-fb{font-size:0.86rem;font-weight:800;margin-top:7px;min-height:20px;}
+.quiz-fb.ok{color:#4A6E2D;}.quiz-fb.bad{color:#9E4A10;}
+
+/* ── CELEBRATE ── */
+.cel-card{display:none;text-align:center;background:white;border-radius:24px;padding:26px 20px;box-shadow:0 10px 40px rgba(139,69,19,0.14);border:3px solid #E8A550;margin-bottom:20px;}
+.cel-card.show{display:block;animation:riseUp 0.5s ease;}
+@keyframes riseUp{from{opacity:0;transform:translateY(22px) scale(0.95);}to{opacity:1;transform:translateY(0) scale(1);}}
+.cel-emoji{font-size:3.6rem;display:block;margin-bottom:10px;}
+.cel-title{font-size:1.4rem;font-weight:900;color:#8B4513;letter-spacing:2px;margin-bottom:5px;}
+.cel-sub{font-size:0.9rem;color:#C49A6C;font-weight:700;}
+
+.conf-host{position:fixed;top:0;left:0;width:100%;height:0;pointer-events:none;z-index:999;overflow:visible;}
+.cp{position:absolute;width:10px;height:10px;border-radius:2px;animation:cpFly 1.5s ease-out forwards;}
+@keyframes cpFly{0%{transform:translate(var(--sx),var(--sy)) rotate(0deg);opacity:1;}100%{transform:translate(var(--ex),var(--ey)) rotate(540deg);opacity:0;}}
+
+@media(max-width:480px){
+  h1{font-size:1.6rem;}
+  .para-card{padding:14px 14px 10px;}
+  ruby rb,.punc{font-size:1.12rem;}
+}
+</style>
+<script>
+  window.NAV_CONFIG = {
+    breadcrumbs: [
+      { label: "Home",               href: "../../index.html" },
+      { label: "Education",          href: "../index.html" },
+      { label: "Chinese Reading Aloud", href: "index.html" },
+      { label: "特别的面包" }
+    ]
+  };
+</script>
+<script src="../../nav-top.js"></script>
+</head>
+<body>
+
+<div class="steam" style="top:12%;left:8%;animation-delay:0s">☕</div>
+<div class="steam" style="top:20%;right:6%;animation-delay:2s">🍞</div>
+<div class="steam" style="top:60%;left:4%;animation-delay:4s">✨</div>
+<div class="steam" style="top:75%;right:5%;animation-delay:3s">☕</div>
+
+<div class="con">
+
+  <div class="hero">
+    <div class="hero-row">
+      <span class="h-item">☕</span>
+      <span class="h-item">🍞</span>
+      <span class="h-item">🥐</span>
+      <span class="h-item">🧁</span>
+      <span class="h-item">🍳</span>
+    </div>
+    <h1>特 别 的 面 包</h1>
+    <div class="subtitle">第七课 · 朗读练习 · 二年级</div>
+  </div>
+
+  <div class="star-row">
+    <span class="spip" id="sp0">⭐</span>
+    <span class="spip" id="sp1">⭐</span>
+    <span class="spip" id="sp2">⭐</span>
+    <span class="spip" id="sp3">⭐</span>
+    <span class="spip" id="sp4">⭐</span>
+    <span class="spip" id="sp5">⭐</span>
+    <span class="spip" id="sp6">⭐</span>
+    <span id="slbl">0 / 7</span>
+  </div>
+
+  <div class="prog-wrap"><div class="prog-fill" id="pFill"></div></div>
+
+  <div class="controls">
+    <button class="btn btn-a" onclick="togglePin()">🔤 <span id="pinBtn">隐藏拼音</span></button>
+    <button class="btn btn-b" onclick="readAll()">🔊 朗读全文</button>
+    <button class="btn btn-c" onclick="hlAll()">✨ 逐句朗读</button>
+    <button class="btn btn-d" onclick="resetAll()">🔄 重新开始</button>
+  </div>
+
+  <div class="spd-row">
+    朗读速度：
+    <button class="spd-btn" id="ss" onclick="setSpd(0.6)">慢</button>
+    <button class="spd-btn active" id="sn" onclick="setSpd(0.85)">正常</button>
+    <button class="spd-btn" id="sf" onclick="setSpd(1.1)">快</button>
+  </div>
+
+  <!-- KEYWORDS -->
+  <div class="kw-bar">
+    <div class="kw-title">☕ 词语点一点，听发音：</div>
+    <div class="kw-chips" id="kwChips"></div>
+  </div>
+
+  <!-- GAME 1: DIVIDE THE TASKS -->
+  <div class="cafe-game">
+    <div class="cg-title">🤝 分工合作游戏：谁去做什么？先选人，再选任务！</div>
+    <div class="assign-instr" id="assignInstr">请先选一个家人 ↓</div>
+    <div class="family-btns" id="famBtns"></div>
+
+    <div class="cafe-scene">
+      <div class="task-row" id="taskRow"></div>
+    </div>
+    <div id="assignFb" style="font-size:0.82rem;font-weight:800;color:#7BA05B;text-align:center;min-height:20px;"></div>
+    <button class="cg-reset-btn" onclick="resetAssign()">🔄 重新分工</button>
+  </div>
+
+  <!-- GAME 2: TABLE CLEANUP -->
+  <div class="cleanup-game">
+    <div class="cg2-title">🧹 收拾桌子！点击桌上的东西，帮妹妹收拾干净！</div>
+    <div class="table-area" id="tableArea"></div>
+    <div class="clean-msg" id="cleanMsg">点击桌上的东西，一件一件收拾好！</div>
+  </div>
+
+  <!-- PARAGRAPHS -->
+  <div id="parasCon"></div>
+
+  <!-- QUIZ -->
+  <div class="quiz-card">
+    <div class="quiz-hdr">🧠 想一想！</div>
+    <div class="quiz-q" id="quizQ"></div>
+    <div class="ans-grid" id="ansGrid"></div>
+    <div class="quiz-fb" id="quizFb"></div>
+  </div>
+
+  <div class="cel-card" id="celCard">
+    <span class="cel-emoji">🍞✨😊</span>
+    <div class="cel-title">真懂事！</div>
+    <div class="cel-sub">你读完了《特别的面包》！记得多帮家人分工合作、收拾桌子哦！🧡</div>
+  </div>
+
+</div>
+<div class="conf-host" id="confHost"></div>
+
+<script>
+/* ── DATA ── */
+const paras = [
+  {
+    icon:'🌅', bg:'#FFF8EE', color:'#D2691E', label:'第一段',
+    sentences:[
+      {chunks:['星期六','早上，'],pins:['xīng qī liù','zǎo shàng，']},
+      {chunks:['我们','到','咖啡店','吃早餐','。'],pins:['wǒ men','dào','kā fēi diàn','chī zǎo cān','']},
+    ]
+  },
+  {
+    icon:'👃', bg:'#FFF3E0', color:'#E8A550', label:'第二段',
+    dialogue:true,
+    sentences:[
+      {chunks:['远远地，'],pins:['yuǎn yuǎn de，']},
+      {chunks:['我们','就','闻到','面包的','香味','。'],pins:['wǒ men','jiù','wén dào','miàn bāo de','xiāng wèi','']},
+      {chunks:['妹妹','说','："我','要吃','面包','！"'],pins:['mèi mei','shuō','："wǒ','yào chī','miàn bāo','！"'],speaker:'👧'},
+      {chunks:['爸爸','说','："这家','咖啡店的','面包','很好吃','。"'],pins:['bà ba','shuō','："zhè jiā','kā fēi diàn de','miàn bāo','hěn hǎo chī','。"'],speaker:'👨'},
+    ]
+  },
+  {
+    icon:'🤝', bg:'#FFF8EE', color:'#8B4513', label:'第三段',
+    dialogue:true,
+    sentences:[
+      {chunks:['我们','走进','咖啡店，'],pins:['wǒ men','zǒu jìn','kā fēi diàn，']},
+      {chunks:['妈妈','说','："现在','买食物的人','很多，'],pins:['mā ma','shuō','："xiàn zài','mǎi shí wù de rén','hěn duō，'],speaker:'👩'},
+      {chunks:['我们','分工合作，'],pins:['wǒ men','fēn gōng hé zuò，'],speaker:'👩'},
+      {chunks:['你们','去','找座位，'],pins:['nǐ men','qù','zhǎo zuò wèi，'],speaker:'👩'},
+      {chunks:['我','去','排队','。"'],pins:['wǒ','qù','pái duì','。"'],speaker:'👩'},
+    ]
+  },
+  {
+    icon:'🧹', bg:'#F0FFF0', color:'#7BA05B', label:'第四段',
+    dialogue:true,
+    sentences:[
+      {chunks:['吃完','早餐，'],pins:['chī wán','zǎo cān，']},
+      {chunks:['我们','要回家了','。'],pins:['wǒ men','yào huí jiā le','']},
+      {chunks:['妹妹','说','："等一等，'],pins:['mèi mei','shuō','："děng yi děng，'],speaker:'👧'},
+      {chunks:['我们','把','桌子','收拾干净','再走','。"'],pins:['wǒ men','bǎ','zhuō zi','shōu shi gān jìng','zài zǒu','。"'],speaker:'👧'},
+    ]
+  },
+  {
+    icon:'😊', bg:'#FFF8EE', color:'#C49A6C', label:'第五段',
+    dialogue:true,
+    sentences:[
+      {chunks:['妈妈','笑着说','："这面包','真特别','！'],pins:['mā ma','xiào zhe shuō','："zhè miàn bāo','zhēn tè bié','！'],speaker:'👩'},
+      {chunks:['吃了','它，'],pins:['chī le','tā，'],speaker:'👩'},
+      {chunks:['人也','变懂事了','！"'],pins:['rén yě','biàn dǒng shì le','！"'],speaker:'👩'},
+    ]
+  }
+];
+
+const keywords = [
+  {w:'咖啡店',p:'kā fēi diàn'},{w:'早餐',p:'zǎo cān'},{w:'香味',p:'xiāng wèi'},
+  {w:'面包',p:'miàn bāo'},{w:'分工合作',p:'fēn gōng hé zuò'},{w:'排队',p:'pái duì'},
+  {w:'找座位',p:'zhǎo zuò wèi'},{w:'收拾',p:'shōu shi'},{w:'干净',p:'gān jìng'},
+  {w:'懂事',p:'dǒng shì'},{w:'特别',p:'tè bié'},{w:'远远地',p:'yuǎn yuǎn de'},
+];
+
+const quizzes = [
+  {q:'他们去哪里吃早餐？',opts:['餐厅','麦当劳','咖啡店'],ans:2,fb:['再想想～','再想想～','🎉 对！去咖啡店！']},
+  {q:'妈妈叫大家分工合作，妈妈去做什么？',opts:['找座位','排队','买饮料'],ans:1,fb:['再想想～','🎉 对！妈妈去排队！','再想想～']},
+  {q:'是谁说要把桌子收拾干净？',opts:['妈妈','爸爸','妹妹'],ans:2,fb:['再想想～','再想想～','🎉 对！是妹妹！真懂事！']},
+  {q:'妈妈说面包有什么特别的地方？',opts:['甜甜的','让人变懂事','让人变高'],ans:1,fb:['再想想～','🎉 答对了！吃了它，人也变懂事了！','再想想～']},
+];
+
+// Assignment game data
+const tasks = [
+  {id:'task-seat',icon:'🪑',who:'孩子们',task:'找座位',correct:['孩子们','哥哥姐姐']},
+  {id:'task-queue',icon:'🧾',who:'妈妈',task:'排队买食物',correct:['妈妈']},
+  {id:'task-clean',icon:'🧹',who:'妹妹',task:'收拾桌子',correct:['妹妹','孩子们','哥哥姐姐']},
+];
+const family = ['妈妈','爸爸','妹妹','孩子们'];
+
+// Table items for cleanup game
+const tableItems = ['🥛','🧃','🍽️','🥄','🧻','☕','🥐','🍳'];
+
+/* ── STATE ── */
+let pinOn=true, spd=0.85, donePi=new Set(), stars=0, hlActive=false, quizIdx=0;
+let selFam=null, assignDone={};
+let tableClean=false;
+const TOTAL=paras.length, MAX_STARS=7;
+
+/* ── BUILD ── */
+buildKW(); buildAssignGame(); buildTableGame(); buildParas(); loadQuiz(0);
+
+function buildKW(){
+  const c=document.getElementById('kwChips');
+  keywords.forEach(k=>{
+    const b=document.createElement('button'); b.className='kw-chip';
+    b.innerHTML=`<span class="kp">${k.p}</span>${k.w}`;
+    b.onclick=()=>speak(k.w); c.appendChild(b);
+  });
+}
+
+/* ── ASSIGN GAME ── */
+function buildAssignGame(){
+  const fb=document.getElementById('famBtns');
+  fb.innerHTML='';
+  family.forEach(f=>{
+    const b=document.createElement('button'); b.className='fam-btn'; b.textContent=f;
+    b.id=`fam-${f}`; b.onclick=()=>selectFam(f,b); fb.appendChild(b);
+  });
+
+  const tr=document.getElementById('taskRow'); tr.innerHTML='';
+  tasks.forEach(t=>{
+    const card=document.createElement('div');
+    card.className='task-card'; card.id=t.id;
+    card.innerHTML=`<span class="tc-icon">${t.icon}</span><span class="tc-who"></span><span class="tc-task">${t.task}</span><span class="tc-check">✅</span>`;
+    card.onclick=()=>assignTask(t,card);
+    tr.appendChild(card);
+  });
+  selFam=null; assignDone={};
+  document.getElementById('assignInstr').textContent='请先选一个家人 ↓';
+  document.getElementById('assignInstr').className='assign-instr';
+  document.getElementById('assignFb').textContent='';
+}
+
+function selectFam(f,btn){
+  selFam=f;
+  document.querySelectorAll('.fam-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('assignInstr').textContent=`已选「${f}」，现在点击一个任务！`;
+  document.getElementById('assignInstr').className='assign-instr ok';
+}
+
+function assignTask(t,card){
+  if(!selFam){
+    document.getElementById('assignInstr').textContent='请先选一个家人！';
+    document.getElementById('assignInstr').className='assign-instr bad';
+    return;
+  }
+  if(assignDone[t.id]) return;
+
+  const correct = t.correct.includes(selFam) || selFam==='爸爸';// dad can help with anything
+  if(correct){
+    card.classList.add('done');
+    card.querySelector('.tc-who').textContent=selFam;
+    assignDone[t.id]=true;
+    speak(`${selFam}去${t.task}`);
+    const allDone=Object.keys(assignDone).length===tasks.length;
+    document.getElementById('assignFb').textContent=allDone?'🎉 分工合作完成！大家真棒！':'✅ 好的！继续分配！';
+    if(allDone) gainStar();
+    selFam=null;
+    document.querySelectorAll('.fam-btn').forEach(b=>b.classList.remove('selected'));
+    document.getElementById('assignInstr').textContent=allDone?'全部分配好了！':'请继续选人分配任务 ↓';
+    document.getElementById('assignInstr').className='assign-instr ok';
+  } else {
+    document.getElementById('assignInstr').textContent='再想想～妈妈说了谁去做什么？';
+    document.getElementById('assignInstr').className='assign-instr bad';
+    card.style.animation='shake 0.3s ease';
+    setTimeout(()=>card.style.animation='',400);
+  }
+}
+
+function resetAssign(){buildAssignGame();}
+
+/* ── TABLE CLEANUP GAME ── */
+function buildTableGame(){
+  const ta=document.getElementById('tableArea'); ta.innerHTML='';
+  tableClean=false;
+  let remaining=tableItems.length;
+
+  tableItems.forEach((item,i)=>{
+    const el=document.createElement('span');
+    el.className='table-item'; el.textContent=item;
+    el.style.animationDelay=(i*0.3)+'s';
+    el.onclick=()=>{
+      if(el.classList.contains('removed')) return;
+      el.classList.add('removed');
+      remaining--;
+      speak('干净！');
+      if(remaining===0){
+        document.getElementById('cleanMsg').textContent='🎉 桌子收拾干净了！妹妹真懂事！';
+        document.getElementById('cleanMsg').className='clean-msg ok';
+        if(!tableClean){tableClean=true; gainStar();}
+      } else {
+        document.getElementById('cleanMsg').textContent=`还有 ${remaining} 件，继续收拾！`;
+        document.getElementById('cleanMsg').className='clean-msg';
+      }
+    };
+    ta.appendChild(el);
+  });
+  document.getElementById('cleanMsg').textContent='点击桌上的东西，一件一件收拾好！';
+  document.getElementById('cleanMsg').className='clean-msg';
+}
+
+/* ── PARAGRAPHS ── */
+function buildParas(){
+  const con=document.getElementById('parasCon'); con.innerHTML='';
+  paras.forEach((para,pi)=>{
+    const card=document.createElement('div'); card.className='para-card'; card.id=`pc${pi}`;
+    const hdr=document.createElement('div'); hdr.className='card-hdr';
+    const ico=document.createElement('div'); ico.className='card-ico'; ico.style.background=para.bg; ico.textContent=para.icon;
+    const lbl=document.createElement('div'); lbl.className='card-lbl'; lbl.style.background=para.color; lbl.textContent=para.label;
+    const tick=document.createElement('div'); tick.className='done-tick'; tick.textContent='✅';
+    hdr.appendChild(ico); hdr.appendChild(lbl); hdr.appendChild(tick);
+
+    const ta=document.createElement('div'); ta.className='text-area'; ta.id=`ta${pi}`;
+
+    para.sentences.forEach((sent,si)=>{
+      let container;
+      if(sent.speaker){
+        const dlg=document.createElement('div'); dlg.className='dialogue';
+        const sp=document.createElement('span'); sp.className='dlg-speaker'; sp.textContent=sent.speaker;
+        const dt=document.createElement('span'); dt.className='dlg-text'; dt.id=`snt${pi}_${si}`;
+        container=dt;
+        dlg.appendChild(sp); dlg.appendChild(dt); ta.appendChild(dlg);
+      } else {
+        const wrap=document.createElement('span'); wrap.id=`snt${pi}_${si}`; container=wrap; ta.appendChild(wrap);
+      }
+      sent.chunks.forEach((ch,ci)=>{
+        const isPunc=/^[，。！？""：；、…—·\s""]+$/.test(ch);
+        if(isPunc){const sp=document.createElement('span');sp.className='punc';sp.textContent=ch;container.appendChild(sp);}
+        else{
+          const hasTr=/[，。！？"：；]$/.test(ch);
+          const txt=hasTr?ch.slice(0,-1):ch; const tr=hasTr?ch.slice(-1):'';
+          const r=document.createElement('ruby'); r.id=`rb${pi}_${si}_${ci}`;
+          const rt=document.createElement('rt'); rt.textContent=sent.pins[ci]||'';
+          const rb=document.createElement('rb'); rb.textContent=txt;
+          rb.onclick=(e)=>{e.stopPropagation();speak(txt);flash(r);};
+          r.appendChild(rt); r.appendChild(rb); container.appendChild(r);
+          if(tr){const ps=document.createElement('span');ps.className='punc';ps.textContent=tr;container.appendChild(ps);}
+        }
+      });
+    });
+
+    const hint=document.createElement('div'); hint.className='read-hint'; hint.textContent='👆 点击这段来朗读';
+    card.appendChild(hdr); card.appendChild(ta); card.appendChild(hint);
+    card.onclick=()=>{setActive(pi);readPara(pi);};
+    con.appendChild(card);
+  });
+}
+
+/* ── CORE ── */
+function setActive(pi){document.querySelectorAll('.para-card').forEach((c,i)=>c.classList.toggle('active',i===pi));}
+function readPara(pi){speak(paras[pi].sentences.map(s=>s.chunks.join('')).join(''));markDone(pi);}
+function markDone(pi){
+  const card=document.getElementById(`pc${pi}`);
+  if(card.classList.contains('done'))return;
+  card.classList.add('done'); donePi.add(pi); gainStar(); updateProg();
+  if(donePi.size===TOTAL) setTimeout(celebrate,700);
+}
+function gainStar(){
+  if(stars>=MAX_STARS)return;
+  document.getElementById(`sp${stars}`).classList.add('lit'); stars++;
+  document.getElementById('slbl').textContent=`${stars} / ${MAX_STARS}`;
+}
+function updateProg(){document.getElementById('pFill').style.width=(donePi.size/TOTAL*100)+'%';}
+function speak(txt,rate){
+  if(!window.speechSynthesis)return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(txt); u.lang='zh-CN'; u.rate=rate||spd; speechSynthesis.speak(u);
+}
+function speakWait(txt){
+  return new Promise(res=>{
+    if(!window.speechSynthesis){setTimeout(res,800);return;}
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(txt); u.lang='zh-CN'; u.rate=spd;
+    u.onend=res; u.onerror=res; speechSynthesis.speak(u);
+    setTimeout(res,txt.length*660+1800);
+  });
+}
+async function hlAll(){
+  if(hlActive){speechSynthesis.cancel();hlActive=false;return;}
+  hlActive=true;
+  for(let pi=0;pi<paras.length&&hlActive;pi++){
+    setActive(pi);
+    for(let si=0;si<paras[pi].sentences.length&&hlActive;si++){
+      hlSent(pi,si,true);
+      await speakWait(paras[pi].sentences[si].chunks.join(''));
+      hlSent(pi,si,false);
+    }
+    markDone(pi);
+  }
+  hlActive=false;
+}
+function hlSent(pi,si,on){
+  const el=document.getElementById(`snt${pi}_${si}`);
+  if(!el)return;
+  el.querySelectorAll('ruby').forEach(r=>r.classList.toggle('hl',on));
+}
+function readAll(){speak(paras.map(p=>p.sentences.map(s=>s.chunks.join('')).join('')).join('　'));}
+function togglePin(){pinOn=!pinOn;document.body.classList.toggle('pin-off',!pinOn);document.getElementById('pinBtn').textContent=pinOn?'隐藏拼音':'显示拼音';}
+function setSpd(r){
+  spd=r; document.querySelectorAll('.spd-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById({0.6:'ss',0.85:'sn',1.1:'sf'}[r]).classList.add('active');
+}
+function flash(el){el.style.background='#FFE8C0';setTimeout(()=>el.style.background='',420);}
+function resetAll(){
+  speechSynthesis.cancel(); hlActive=false; donePi.clear(); stars=0;
+  document.getElementById('slbl').textContent=`0 / ${MAX_STARS}`;
+  document.getElementById('pFill').style.width='0%';
+  document.getElementById('celCard').classList.remove('show');
+  document.querySelectorAll('.spip').forEach(s=>s.classList.remove('lit'));
+  tableClean=false;
+  buildAssignGame(); buildTableGame(); buildParas(); quizIdx=0; loadQuiz(0);
+}
+
+/* ── QUIZ ── */
+function loadQuiz(idx){
+  const q=quizzes[idx];
+  document.getElementById('quizQ').textContent=q.q;
+  document.getElementById('quizFb').textContent=''; document.getElementById('quizFb').className='quiz-fb';
+  const grid=document.getElementById('ansGrid'); grid.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const b=document.createElement('button'); b.className='ans-btn'; b.textContent=opt;
+    b.onclick=()=>checkAns(i,q,grid); grid.appendChild(b);
+  });
+}
+function checkAns(i,q,grid){
+  Array.from(grid.children).forEach((b,bi)=>{
+    b.disabled=true;
+    if(bi===q.ans)b.classList.add('correct');
+    else if(bi===i&&i!==q.ans)b.classList.add('wrong');
+  });
+  const fb=document.getElementById('quizFb');
+  fb.textContent=q.fb[i]; fb.className='quiz-fb '+(i===q.ans?'ok':'bad');
+  if(i===q.ans){gainStar();setTimeout(()=>{quizIdx=(quizIdx+1)%quizzes.length;loadQuiz(quizIdx);},2000);}
+}
+
+/* ── CELEBRATE ── */
+function celebrate(){
+  document.getElementById('celCard').classList.add('show');
+  speak('真懂事！你读完了特别的面包！记得多帮家人分工合作哦！',0.85); fireConf();
+}
+function fireConf(){
+  const host=document.getElementById('confHost'); host.innerHTML='';
+  const colors=['#8B4513','#D2691E','#E8A550','#7BA05B','#C49A6C','#FFD166','#F5D27A'];
+  const W=window.innerWidth;
+  for(let i=0;i<46;i++){
+    const p=document.createElement('div'); p.className='cp';
+    const sx=Math.random()*W, sy=Math.random()*120+20;
+    const ex=sx+(Math.random()-0.5)*340, ey=sy+Math.random()*440+140;
+    p.style.cssText=`left:${sx}px;top:${sy}px;background:${colors[i%colors.length]};--sx:0px;--sy:0px;--ex:${ex-sx}px;--ey:${ey-sy}px;animation-delay:${Math.random()*0.5}s`;
+    host.appendChild(p);
+  }
+  setTimeout(()=>host.innerHTML='',2400);
+}
+
+// Shake keyframe
+const s=document.createElement('style');
+s.textContent='@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}';
+document.head.appendChild(s);
+</script>
+</body>
+</html>

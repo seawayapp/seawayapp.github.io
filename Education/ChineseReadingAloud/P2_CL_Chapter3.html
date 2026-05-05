@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小狗请客 - 朗读练习</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  font-family:'Nunito','PingFang SC','Hiragino Sans GB',sans-serif;
+  min-height:100vh;
+  padding:20px 16px 48px;
+  overflow-x:hidden;
+  background:#F0F7EE;
+  position:relative;
+}
+
+/* Soft forest dapple bg */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 10%, rgba(134,197,106,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 35% at 80% 80%, rgba(91,175,138,0.14) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 60% 30%, rgba(255,220,100,0.10) 0%, transparent 55%);
+  pointer-events:none;z-index:0;
+}
+
+.leaf{
+  position:fixed;
+  font-size:1.4rem;
+  opacity:0.13;
+  pointer-events:none;z-index:0;
+  animation:leafFloat 7s ease-in-out infinite;
+}
+@keyframes leafFloat{
+  0%,100%{transform:translateY(0) rotate(0deg);}
+  33%{transform:translateY(-10px) rotate(8deg);}
+  66%{transform:translateY(5px) rotate(-5deg);}
+}
+
+.con{max-width:760px;margin:0 auto;position:relative;z-index:1;}
+
+/* ── HERO ── */
+.hero{text-align:center;padding:14px 0 18px;position:relative;}
+
+.animal-row{
+  display:flex;justify-content:center;align-items:flex-end;
+  gap:6px;margin-bottom:10px;
+}
+
+.animal{
+  font-size:2.2rem;
+  display:inline-block;
+  animation:animalBob 2.4s ease-in-out infinite;
+  filter:drop-shadow(0 4px 6px rgba(0,0,0,0.12));
+}
+.animal:nth-child(1){animation-delay:0s;}
+.animal:nth-child(2){animation-delay:0.35s;font-size:2.6rem;}
+.animal:nth-child(3){animation-delay:0.7s;}
+.animal:nth-child(4){animation-delay:1.0s;}
+.animal:nth-child(5){animation-delay:1.35s;}
+
+@keyframes animalBob{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-7px);}
+}
+
+h1{
+  font-size:2rem;font-weight:900;
+  color:#2D6A4F;
+  text-shadow:2px 3px 0 rgba(255,255,255,0.8);
+  letter-spacing:3px;margin-bottom:3px;
+}
+
+.subtitle{
+  font-size:0.85rem;font-weight:800;
+  color:#52796F;letter-spacing:2px;margin-bottom:18px;
+}
+
+/* ── STARS ── */
+.star-row{
+  display:flex;align-items:center;justify-content:center;
+  gap:3px;margin-bottom:12px;
+}
+.spip{
+  font-size:1.4rem;
+  filter:grayscale(1) opacity(0.28);
+  transition:filter 0.3s;
+}
+.spip.lit{filter:none;animation:starPop 0.4s ease;}
+@keyframes starPop{
+  0%{transform:scale(1);}50%{transform:scale(1.65) rotate(18deg);}100%{transform:scale(1);}
+}
+#slbl{font-size:0.8rem;font-weight:800;color:#52796F;margin-left:6px;}
+
+/* ── PROGRESS ── */
+.prog-wrap{
+  background:#C8E6C9;border-radius:50px;height:11px;
+  margin-bottom:16px;overflow:hidden;border:2px solid #A5D6A7;
+}
+.prog-fill{
+  height:100%;
+  background:linear-gradient(90deg,#43A047,#81C784,#AED581);
+  border-radius:50px;width:0%;
+  transition:width 0.6s cubic-bezier(.4,0,.2,1);
+}
+
+/* ── CONTROLS ── */
+.controls{
+  display:flex;justify-content:center;gap:8px;
+  flex-wrap:wrap;margin-bottom:10px;
+}
+.btn{
+  border:none;border-radius:50px;padding:9px 17px;
+  font-size:0.86rem;font-weight:800;cursor:pointer;
+  transition:transform 0.15s,box-shadow 0.15s;
+  font-family:inherit;display:flex;align-items:center;gap:5px;
+  letter-spacing:0.5px;
+}
+.btn:active{transform:scale(0.93)!important;}
+.btn-grn {background:#43A047;color:#fff;box-shadow:0 4px 0 #1B5E20;}
+.btn-grn:hover{transform:translateY(-2px);box-shadow:0 6px 0 #1B5E20;}
+.btn-teal{background:#00897B;color:#fff;box-shadow:0 4px 0 #004D40;}
+.btn-teal:hover{transform:translateY(-2px);box-shadow:0 6px 0 #004D40;}
+.btn-amber{background:#F9A825;color:#fff;box-shadow:0 4px 0 #F57F17;}
+.btn-amber:hover{transform:translateY(-2px);box-shadow:0 6px 0 #F57F17;}
+.btn-blue{background:#1E88E5;color:#fff;box-shadow:0 4px 0 #0D47A1;}
+.btn-blue:hover{transform:translateY(-2px);box-shadow:0 6px 0 #0D47A1;}
+
+/* ── SPEED ── */
+.spd-row{
+  display:flex;align-items:center;justify-content:center;
+  gap:6px;margin-bottom:16px;
+  font-size:0.8rem;font-weight:800;color:#52796F;
+}
+.spd-btn{
+  background:white;border:2px solid #A5D6A7;border-radius:20px;
+  padding:3px 11px;font-size:0.77rem;font-weight:800;
+  color:#2D6A4F;cursor:pointer;font-family:inherit;transition:all 0.15s;
+}
+.spd-btn.active{background:#43A047;color:white;border-color:#43A047;}
+.spd-btn:hover{transform:scale(1.06);}
+
+/* ── KEYWORD BAR ── */
+.kw-bar{
+  background:linear-gradient(135deg,#F1F8E9,#E8F5E9);
+  border:2px dashed #81C784;border-radius:18px;
+  padding:12px 15px;margin-bottom:14px;
+}
+.kw-title{
+  font-size:0.77rem;font-weight:900;color:#2D6A4F;
+  margin-bottom:8px;display:flex;align-items:center;gap:5px;
+}
+.kw-chips{display:flex;flex-wrap:wrap;gap:7px;}
+.kw-chip{
+  background:white;border:2px solid #81C784;border-radius:20px;
+  padding:4px 12px;font-size:0.86rem;font-weight:800;
+  color:#1B5E20;cursor:pointer;transition:all 0.15s;font-family:inherit;
+}
+.kw-chip .kp{
+  display:block;font-size:0.58rem;color:#52796F;
+  font-weight:700;line-height:1.2;margin-bottom:1px;
+}
+.kw-chip:hover{background:#43A047;color:white;border-color:#43A047;transform:scale(1.05);}
+.kw-chip:hover .kp{color:rgba(255,255,255,0.75);}
+.kw-chip:active{transform:scale(0.95);}
+
+/* ── FOOD MATCH GAME ── */
+.game-box{
+  background:white;border-radius:22px;padding:16px 18px;
+  margin-bottom:14px;
+  box-shadow:0 4px 18px rgba(67,160,71,0.10);
+  border:2px solid #C8E6C9;
+}
+.game-title{
+  font-size:0.8rem;font-weight:900;color:#2D6A4F;
+  margin-bottom:12px;display:flex;align-items:center;gap:5px;
+}
+.match-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+}
+.match-animal{
+  background:#F1F8E9;border-radius:14px;padding:10px 12px;
+  display:flex;align-items:center;gap:8px;
+  border:2px solid #C8E6C9;
+}
+.m-icon{font-size:1.8rem;}
+.m-name{font-size:0.88rem;font-weight:800;color:#1B5E20;}
+.m-food{
+  margin-top:4px;font-size:0.8rem;font-weight:800;
+  color:#81C784;min-height:18px;transition:color 0.3s;
+}
+.m-food.revealed{color:#E65100;}
+
+.food-chips{
+  grid-column:1/-1;
+  display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
+  margin-top:4px;
+}
+.food-chip{
+  background:white;border:2px solid #FFA726;border-radius:20px;
+  padding:6px 14px;font-size:0.95rem;font-weight:800;
+  color:#E65100;cursor:pointer;transition:all 0.15s;font-family:inherit;
+}
+.food-chip:hover:not(.used){background:#FFF3E0;transform:scale(1.06);}
+.food-chip.used{opacity:0.35;pointer-events:none;}
+.food-chip:active:not(.used){transform:scale(0.94);}
+
+.match-feedback{
+  grid-column:1/-1;font-size:0.85rem;font-weight:800;
+  min-height:20px;margin-top:4px;
+}
+.match-feedback.ok{color:#2E7D32;}
+.match-feedback.bad{color:#C62828;}
+
+.match-reset{
+  grid-column:1/-1;margin-top:6px;
+  background:none;border:2px solid #A5D6A7;border-radius:20px;
+  padding:5px 14px;font-size:0.78rem;font-weight:800;
+  color:#43A047;cursor:pointer;font-family:inherit;transition:all 0.15s;
+  display:none;
+}
+.match-reset:hover{background:#E8F5E9;}
+
+/* ── PARAGRAPHS ── */
+.para-card{
+  background:white;border-radius:22px;padding:20px 22px 14px;
+  margin-bottom:13px;
+  box-shadow:0 4px 16px rgba(67,160,71,0.08);
+  border:3px solid transparent;
+  transition:border-color 0.3s,transform 0.2s,box-shadow 0.3s;
+  cursor:pointer;position:relative;overflow:hidden;
+}
+.para-card::before{
+  content:'';position:absolute;top:0;left:0;
+  width:7px;height:100%;background:#DDE8DD;
+  transition:background 0.3s;border-radius:22px 0 0 22px;
+}
+.para-card.active{
+  border-color:#81C784;
+  box-shadow:0 8px 28px rgba(67,160,71,0.18);
+  transform:translateY(-2px);
+}
+.para-card.active::before{background:#43A047;}
+.para-card.done{border-color:#AED581;background:linear-gradient(135deg,#FAFFF6,#F1F8E9);}
+.para-card.done::before{background:#558B2F;}
+
+.card-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.card-ico{
+  font-size:1.7rem;width:42px;height:42px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.card-lbl{
+  font-size:0.75rem;font-weight:900;color:white;
+  padding:3px 12px;border-radius:20px;letter-spacing:1px;
+}
+.done-tick{
+  margin-left:auto;font-size:1.3rem;display:none;
+  animation:pop 0.35s ease;
+}
+@keyframes pop{
+  0%{transform:scale(0) rotate(-20deg);}
+  70%{transform:scale(1.3) rotate(5deg);}
+  100%{transform:scale(1);}
+}
+.para-card.done .done-tick{display:block;}
+
+/* ── RUBY ── */
+.text-area{line-height:2.6;word-break:break-all;}
+
+ruby{
+  display:inline-flex;flex-direction:column-reverse;
+  align-items:center;margin:0 1px;vertical-align:bottom;
+}
+ruby rt{
+  font-size:0.57em;font-weight:800;color:#2D6A4F;line-height:1.2;
+  user-select:none;transition:opacity 0.3s;font-family:'Nunito',sans-serif;
+}
+ruby rb{
+  font-size:1.32rem;font-weight:700;color:#1A3A2A;
+  cursor:pointer;display:inline-block;padding:2px 3px;
+  border-radius:6px;transition:background 0.15s,transform 0.1s;
+}
+ruby:hover rb{background:#DCEDC8;transform:scale(1.13);}
+ruby.hl rb{background:#FFE082;border-radius:6px;}
+
+.punc{font-size:1.32rem;font-weight:700;color:#90A4A0;margin:0 1px;}
+
+body.pin-off ruby rt{opacity:0;}
+
+.read-hint{font-size:0.7rem;color:#B2CCBB;margin-top:7px;text-align:right;font-weight:800;}
+
+/* ── QUIZ ── */
+.quiz-card{
+  background:linear-gradient(135deg,#F1F8E9,#E8F5E9);
+  border:2px solid #A5D6A7;border-radius:20px;
+  padding:16px 20px;margin-bottom:14px;
+}
+.quiz-hdr{font-size:0.8rem;font-weight:900;color:#2D6A4F;margin-bottom:9px;display:flex;align-items:center;gap:5px;}
+.quiz-q{font-size:0.98rem;font-weight:800;color:#1B3A28;margin-bottom:11px;}
+.ans-grid{display:flex;flex-wrap:wrap;gap:7px;}
+.ans-btn{
+  background:white;border:2px solid #81C784;border-radius:12px;
+  padding:7px 14px;font-size:0.86rem;font-weight:800;
+  color:#2D6A4F;cursor:pointer;transition:all 0.15s;font-family:inherit;
+}
+.ans-btn:hover:not(:disabled){background:#F1F8E9;transform:scale(1.04);}
+.ans-btn.correct{background:#43A047;color:white;border-color:#1B5E20;}
+.ans-btn.wrong{background:#E53935;color:white;border-color:#B71C1C;}
+.quiz-fb{font-size:0.86rem;font-weight:800;margin-top:7px;min-height:20px;}
+.quiz-fb.ok{color:#2E7D32;}.quiz-fb.bad{color:#C62828;}
+
+/* ── CELEBRATE ── */
+.cel-card{
+  display:none;text-align:center;background:white;
+  border-radius:24px;padding:26px 20px;
+  box-shadow:0 10px 40px rgba(67,160,71,0.15);
+  border:3px solid #AED581;margin-bottom:20px;
+}
+.cel-card.show{display:block;animation:riseUp 0.5s ease;}
+@keyframes riseUp{
+  from{opacity:0;transform:translateY(22px) scale(0.95);}
+  to{opacity:1;transform:translateY(0) scale(1);}
+}
+.cel-emoji{font-size:3.6rem;display:block;margin-bottom:10px;}
+.cel-title{font-size:1.4rem;font-weight:900;color:#2D6A4F;letter-spacing:2px;margin-bottom:5px;}
+.cel-sub{font-size:0.9rem;color:#52796F;font-weight:700;}
+
+/* CONFETTI */
+.conf-host{position:fixed;top:0;left:0;width:100%;height:0;pointer-events:none;z-index:999;overflow:visible;}
+.cp{position:absolute;width:10px;height:10px;border-radius:2px;animation:cpFly 1.4s ease-out forwards;}
+@keyframes cpFly{
+  0%{transform:translate(var(--sx),var(--sy)) rotate(0deg);opacity:1;}
+  100%{transform:translate(var(--ex),var(--ey)) rotate(540deg);opacity:0;}
+}
+
+@media(max-width:480px){
+  h1{font-size:1.6rem;}
+  .para-card{padding:14px 14px 10px;}
+  ruby rb{font-size:1.12rem;}.punc{font-size:1.12rem;}
+  .match-grid{grid-template-columns:1fr;}
+}
+</style>
+<script>
+  window.NAV_CONFIG = {
+    breadcrumbs: [
+      { label: "Home",               href: "../../index.html" },
+      { label: "Education",          href: "../index.html" },
+      { label: "Chinese Reading Aloud", href: "index.html" },
+      { label: "小狗请客" }
+    ]
+  };
+</script>
+<script src="../../nav-top.js"></script>
+</head>
+<body>
+
+<div class="leaf" style="top:6%;left:2%;animation-delay:0s">🌿</div>
+<div class="leaf" style="top:20%;right:3%;animation-delay:2s">🍃</div>
+<div class="leaf" style="top:50%;left:1%;animation-delay:4s">🌱</div>
+<div class="leaf" style="top:70%;right:2%;animation-delay:1.5s">🍀</div>
+<div class="leaf" style="top:85%;left:4%;animation-delay:3s">🌿</div>
+
+<div class="con">
+
+  <div class="hero">
+    <div class="animal-row">
+      <span class="animal">🐟</span>
+      <span class="animal">🐱</span>
+      <span class="animal">🐶</span>
+      <span class="animal">🐑</span>
+      <span class="animal">🐰</span>
+    </div>
+    <h1>小 狗 请 客</h1>
+    <div class="subtitle">第三课 · 朗读练习 · 二年级</div>
+  </div>
+
+  <div class="star-row" id="starRow">
+    <span class="spip" id="sp0">⭐</span>
+    <span class="spip" id="sp1">⭐</span>
+    <span class="spip" id="sp2">⭐</span>
+    <span class="spip" id="sp3">⭐</span>
+    <span class="spip" id="sp4">⭐</span>
+    <span class="spip" id="sp5">⭐</span>
+    <span class="spip" id="sp6">⭐</span>
+    <span id="slbl">0 / 7</span>
+  </div>
+
+  <div class="prog-wrap"><div class="prog-fill" id="pFill"></div></div>
+
+  <div class="controls">
+    <button class="btn btn-grn"   onclick="togglePin()">🔤 <span id="pinBtn">隐藏拼音</span></button>
+    <button class="btn btn-teal"  onclick="readAll()">🔊 朗读全文</button>
+    <button class="btn btn-amber" onclick="hlAll()">✨ 逐句朗读</button>
+    <button class="btn btn-blue"  onclick="resetAll()">🔄 重新开始</button>
+  </div>
+
+  <div class="spd-row">
+    朗读速度：
+    <button class="spd-btn" id="ss" onclick="setSpd(0.6)">慢</button>
+    <button class="spd-btn active" id="sn" onclick="setSpd(0.85)">正常</button>
+    <button class="spd-btn" id="sf" onclick="setSpd(1.1)">快</button>
+  </div>
+
+  <!-- KEYWORD BAR -->
+  <div class="kw-bar">
+    <div class="kw-title">🌿 点击词语，听发音：</div>
+    <div class="kw-chips" id="kwChips"></div>
+  </div>
+
+  <!-- FOOD MATCH GAME -->
+  <div class="game-box">
+    <div class="game-title">🎯 配对游戏：小动物爱吃什么？点击食物配对！</div>
+    <div class="match-grid" id="matchGrid">
+      <div class="match-animal" id="ma-cat">
+        <div class="m-icon">🐱</div>
+        <div>
+          <div class="m-name">小猫</div>
+          <div class="m-food" id="mf-cat">？？？</div>
+        </div>
+      </div>
+      <div class="match-animal" id="ma-sheep">
+        <div class="m-icon">🐑</div>
+        <div>
+          <div class="m-name">小羊</div>
+          <div class="m-food" id="mf-sheep">？？？</div>
+        </div>
+      </div>
+      <div class="match-animal" id="ma-rabbit">
+        <div class="m-icon">🐰</div>
+        <div>
+          <div class="m-name">小兔</div>
+          <div class="m-food" id="mf-rabbit">？？？</div>
+        </div>
+      </div>
+      <div class="match-animal" style="background:#FFF8E1;border-color:#FFE082;">
+        <div class="m-icon">🐶</div>
+        <div>
+          <div class="m-name">小狗</div>
+          <div class="m-food revealed" id="mf-dog">肉骨头 🦴</div>
+        </div>
+      </div>
+      <div class="food-chips" id="foodChips"></div>
+      <div class="match-feedback" id="matchFb"></div>
+      <button class="match-reset" id="matchReset" onclick="resetMatch()">🔄 再玩一次</button>
+    </div>
+  </div>
+
+  <!-- PARAGRAPHS -->
+  <div id="parasCon"></div>
+
+  <!-- QUIZ -->
+  <div class="quiz-card">
+    <div class="quiz-hdr">🧠 想一想！</div>
+    <div class="quiz-q" id="quizQ"></div>
+    <div class="ans-grid" id="ansGrid"></div>
+    <div class="quiz-fb" id="quizFb"></div>
+  </div>
+
+  <div class="cel-card" id="celCard">
+    <span class="cel-emoji">🐶🎉🍖</span>
+    <div class="cel-title">太棒了！</div>
+    <div class="cel-sub">你读完了《小狗请客》！小狗非常开心，它高兴地笑了！😄</div>
+  </div>
+
+</div>
+
+<div class="conf-host" id="confHost"></div>
+
+<script>
+/* ── DATA ── */
+const paras = [
+  {
+    icon:'🐶', bg:'#F1F8E9', color:'#43A047', label:'第一段',
+    sentences:[
+      {chunks:['小狗','有','三个','好朋友，'],pins:['xiǎo gǒu','yǒu','sān gè','hǎo péng yǒu，']},
+      {chunks:['它们','是','圆眼睛','小猫、'],pins:['tā men','shì','yuán yǎn jīng','xiǎo māo、']},
+      {chunks:['卷卷毛','小羊','和','长耳朵','小兔','。'],pins:['juǎn juǎn máo','xiǎo yáng','hé','cháng ěr duo','xiǎo tù','']},
+    ]
+  },
+  {
+    icon:'🍖', bg:'#FFF8E1', color:'#FB8C00', label:'第二段',
+    sentences:[
+      {chunks:['一天，'],pins:['yī tiān，']},
+      {chunks:['小狗','请','朋友们','到家里','做客','。'],pins:['xiǎo gǒu','qǐng','péng yǒu men','dào jiā lǐ','zuò kè','']},
+      {chunks:['它','忙了','一个上午，'],pins:['tā','máng le','yī gè shàng wǔ，']},
+      {chunks:['做了','一大盘','肉骨头','。'],pins:['zuò le','yī dà pán','ròu gǔ tou','']},
+      {chunks:['它','伸出','舌头','尝了尝','："真','好吃','！"'],pins:['tā','shēn chū','shé tou','cháng le cháng','："zhēn','hǎo chī','！"']},
+    ]
+  },
+  {
+    icon:'😔', bg:'#E3F2FD', color:'#1E88E5', label:'第三段',
+    sentences:[
+      {chunks:['可是，'],pins:['kě shì，']},
+      {chunks:['它做的','肉骨头，'],pins:['tā zuò de','ròu gǔ tou，']},
+      {chunks:['朋友们','一口也没吃','。'],pins:['péng yǒu men','yī kǒu yě méi chī','']},
+      {chunks:['原来，'],pins:['yuán lái，']},
+      {chunks:['它们','有','各自','爱吃的','东西','：'],pins:['tā men','yǒu','gè zì','ài chī de','dōng xi','：']},
+      {chunks:['小猫','爱吃','鱼，'],pins:['xiǎo māo','ài chī','yú，']},
+      {chunks:['小羊','爱吃','青草，'],pins:['xiǎo yáng','ài chī','qīng cǎo，']},
+      {chunks:['小兔','爱吃','红萝卜','。'],pins:['xiǎo tù','ài chī','hóng luó bo','']},
+      {chunks:['小狗','对','它们','说','：'],pins:['xiǎo gǒu','duì','tā men','shuō','：']},
+      {chunks:['"你们','明天','再来','吧，'],pins:['"nǐ men','míng tiān','zài lái','ba，']},
+      {chunks:['明天的','东西','你们','一定','爱吃','！"'],pins:['míng tiān de','dōng xi','nǐ men','yī dìng','ài chī','！"']},
+    ]
+  },
+  {
+    icon:'🌈', bg:'#E8F5E9', color:'#2E7D32', label:'第四段',
+    sentences:[
+      {chunks:['第二天','上午，'],pins:['dì èr tiān','shàng wǔ，']},
+      {chunks:['小狗','到河边','拔了','青草，'],pins:['xiǎo gǒu','dào hé biān','bá le','qīng cǎo，']},
+      {chunks:['到河里','捉了','鱼，'],pins:['dào hé lǐ','zhuō le','yú，']},
+      {chunks:['又到','田里','拔了','红萝卜','。'],pins:['yòu dào','tián lǐ','bá le','hóng luó bo','']},
+      {chunks:['中午，'],pins:['zhōng wǔ，']},
+      {chunks:['朋友们','把','东西','都吃完了，'],pins:['péng yǒu men','bǎ','dōng xi','dōu chī wán le，']},
+      {chunks:['小狗','非常','开心，'],pins:['xiǎo gǒu','fēi cháng','kāi xīn，']},
+      {chunks:['它','高兴地','笑了','。'],pins:['tā','gāo xìng de','xiào le','']},
+    ]
+  }
+];
+
+const keywords = [
+  {w:'请客',p:'qǐng kè'},{w:'做客',p:'zuò kè'},{w:'肉骨头',p:'ròu gǔ tou'},
+  {w:'舌头',p:'shé tou'},{w:'尝一尝',p:'cháng yi cháng'},{w:'原来',p:'yuán lái'},
+  {w:'各自',p:'gè zì'},{w:'青草',p:'qīng cǎo'},{w:'红萝卜',p:'hóng luó bo'},
+  {w:'非常',p:'fēi cháng'},{w:'高兴',p:'gāo xìng'},{w:'一口也没吃',p:'yī kǒu yě méi chī'},
+];
+
+const matchData = [
+  {id:'cat',  label:'小猫', food:'鱼 🐟',  correct:true},
+  {id:'sheep',label:'小羊', food:'青草 🌿', correct:true},
+  {id:'rabbit',label:'小兔',food:'红萝卜 🥕',correct:true},
+];
+const foodOptions = ['鱼 🐟','青草 🌿','红萝卜 🥕'];
+const foodMap = {'cat':'鱼 🐟','sheep':'青草 🌿','rabbit':'红萝卜 🥕'};
+
+const quizzes = [
+  {q:'小狗做了什么招待朋友？',opts:['一大盘鱼','一大盘肉骨头','一大盘青草'],ans:1,fb:['再想一想～','🎉 对！一大盘肉骨头！','再想一想～']},
+  {q:'朋友们为什么没吃小狗做的东西？',opts:['它们不饿','它们不喜欢肉骨头','它们迟到了'],ans:1,fb:['再想一想～','🎉 答对了！因为它们有各自爱吃的东西！','再想一想～']},
+  {q:'第二天小狗到哪里捉鱼？',opts:['河里','田里','海边'],ans:0,fb:['🎉 对了！在河里捉鱼！','再想一想～','再想一想～']},
+  {q:'朋友们吃完东西后，小狗感到怎样？',opts:['很难过','非常生气','非常开心'],ans:2,fb:['再想一想～','再想一想～','🎉 太棒了！小狗非常开心！']},
+];
+
+/* ── STATE ── */
+let pinOn=true, spd=0.85, donePi=new Set(), stars=0, hlActive=false, quizIdx=0;
+let selectedAnimal=null, matchDone={};
+const TOTAL=paras.length;
+const MAX_STARS=7;
+
+/* ── BUILD ── */
+buildKW(); buildMatch(); buildParas(); loadQuiz(0);
+
+function buildKW(){
+  const c=document.getElementById('kwChips');
+  keywords.forEach(k=>{
+    const b=document.createElement('button');
+    b.className='kw-chip';
+    b.innerHTML=`<span class="kp">${k.p}</span>${k.w}`;
+    b.onclick=()=>speak(k.w);
+    c.appendChild(b);
+  });
+}
+
+function buildMatch(){
+  const fc=document.getElementById('foodChips');
+  fc.innerHTML='';
+  foodOptions.forEach(f=>{
+    const b=document.createElement('button');
+    b.className='food-chip';
+    b.textContent=f;
+    b.dataset.food=f;
+    b.onclick=()=>placeFood(f,b);
+    fc.appendChild(b);
+  });
+  // reset animal slots
+  ['cat','sheep','rabbit'].forEach(id=>{
+    const el=document.getElementById(`mf-${id}`);
+    el.textContent='？？？';
+    el.classList.remove('revealed');
+    document.getElementById(`ma-${id}`).style.borderColor='';
+  });
+  matchDone={};
+  document.getElementById('matchFb').textContent='';
+  document.getElementById('matchFb').className='match-feedback';
+  document.getElementById('matchReset').style.display='none';
+  selectedAnimal=null;
+
+  // make animals clickable to select
+  ['cat','sheep','rabbit'].forEach(id=>{
+    const el=document.getElementById(`ma-${id}`);
+    el.style.cursor='pointer';
+    el.onclick=()=>selectAnimal(id);
+  });
+}
+
+function selectAnimal(id){
+  if(matchDone[id]) return;
+  selectedAnimal=id;
+  ['cat','sheep','rabbit'].forEach(aid=>{
+    document.getElementById(`ma-${aid}`).style.outline=aid===id?'3px solid #43A047':'none';
+  });
+  document.getElementById('matchFb').textContent='👆 现在点击一种食物！';
+  document.getElementById('matchFb').className='match-feedback ok';
+}
+
+function placeFood(food, btn){
+  if(!selectedAnimal){
+    document.getElementById('matchFb').textContent='👈 先点击一只小动物！';
+    document.getElementById('matchFb').className='match-feedback bad';
+    return;
+  }
+  const id=selectedAnimal;
+  const correct=foodMap[id]===food;
+  const fb=document.getElementById('matchFb');
+  const mf=document.getElementById(`mf-${id}`);
+  const ma=document.getElementById(`ma-${id}`);
+
+  if(correct){
+    mf.textContent=food; mf.classList.add('revealed');
+    ma.style.borderColor='#43A047';ma.style.outline='none';
+    btn.classList.add('used');
+    matchDone[id]=true;
+    speak(food.replace(/[🐟🌿🥕]/g,'').trim());
+    const allDone=Object.keys(matchDone).length===3;
+    if(allDone){
+      fb.textContent='🎉 全对了！你真聪明！';
+      fb.className='match-feedback ok';
+      document.getElementById('matchReset').style.display='block';
+      gainStar();
+    } else {
+      fb.textContent='✅ 答对了！继续！';
+      fb.className='match-feedback ok';
+    }
+  } else {
+    fb.textContent='❌ 再想想～';
+    fb.className='match-feedback bad';
+    ma.style.outline='3px solid #E53935';
+    setTimeout(()=>{ ma.style.outline='3px solid #43A047'; fb.textContent=''; },800);
+  }
+  selectedAnimal=null;
+}
+
+function resetMatch(){buildMatch();}
+
+function buildParas(){
+  const con=document.getElementById('parasCon');
+  con.innerHTML='';
+  paras.forEach((para,pi)=>{
+    const card=document.createElement('div');
+    card.className='para-card';card.id=`pc${pi}`;
+
+    const hdr=document.createElement('div'); hdr.className='card-hdr';
+    const ico=document.createElement('div'); ico.className='card-ico';
+    ico.style.background=para.bg; ico.textContent=para.icon;
+    const lbl=document.createElement('div'); lbl.className='card-lbl';
+    lbl.style.background=para.color; lbl.textContent=para.label;
+    const tick=document.createElement('div'); tick.className='done-tick';
+    tick.textContent='✅';
+    hdr.appendChild(ico);hdr.appendChild(lbl);hdr.appendChild(tick);
+
+    const ta=document.createElement('div');
+    ta.className='text-area';ta.id=`ta${pi}`;
+
+    para.sentences.forEach((sent,si)=>{
+      const wrap=document.createElement('span');
+      wrap.id=`snt${pi}_${si}`;
+      sent.chunks.forEach((ch,ci)=>{
+        const isPunc=/^[，。！？""：；、…—·\s""]+$/.test(ch);
+        if(isPunc){
+          const sp=document.createElement('span');sp.className='punc';sp.textContent=ch;wrap.appendChild(sp);
+        } else {
+          const hasTr=/[，。！？"：；]$/.test(ch);
+          const txt=hasTr?ch.slice(0,-1):ch;
+          const tr=hasTr?ch.slice(-1):'';
+          const r=document.createElement('ruby'); r.id=`rb${pi}_${si}_${ci}`;
+          const rt=document.createElement('rt'); rt.textContent=sent.pins[ci]||'';
+          const rb=document.createElement('rb'); rb.textContent=txt;
+          rb.onclick=(e)=>{e.stopPropagation();speak(txt);flash(r);};
+          r.appendChild(rt);r.appendChild(rb);wrap.appendChild(r);
+          if(tr){const ps=document.createElement('span');ps.className='punc';ps.textContent=tr;wrap.appendChild(ps);}
+        }
+      });
+      ta.appendChild(wrap);
+    });
+
+    const hint=document.createElement('div');hint.className='read-hint';hint.textContent='👆 点击这段来朗读';
+    card.appendChild(hdr);card.appendChild(ta);card.appendChild(hint);
+    card.onclick=()=>{setActive(pi);readPara(pi);};
+    con.appendChild(card);
+  });
+}
+
+/* ── ACTIONS ── */
+function setActive(pi){
+  document.querySelectorAll('.para-card').forEach((c,i)=>c.classList.toggle('active',i===pi));
+}
+
+function readPara(pi){
+  const txt=paras[pi].sentences.map(s=>s.chunks.join('')).join('');
+  speak(txt); markDone(pi);
+}
+
+function markDone(pi){
+  const card=document.getElementById(`pc${pi}`);
+  if(card.classList.contains('done'))return;
+  card.classList.add('done');donePi.add(pi);
+  gainStar();updateProg();
+  if(donePi.size===TOTAL) setTimeout(celebrate,700);
+}
+
+function gainStar(){
+  if(stars>=MAX_STARS)return;
+  const el=document.getElementById(`sp${stars}`);
+  el.classList.add('lit');stars++;
+  document.getElementById('slbl').textContent=`${stars} / ${MAX_STARS}`;
+}
+
+function updateProg(){
+  document.getElementById('pFill').style.width=(donePi.size/TOTAL*100)+'%';
+}
+
+function speak(txt,rate){
+  if(!window.speechSynthesis)return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(txt);
+  u.lang='zh-CN';u.rate=rate||spd;speechSynthesis.speak(u);
+}
+
+function speakWait(txt){
+  return new Promise(res=>{
+    if(!window.speechSynthesis){setTimeout(res,800);return;}
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(txt);
+    u.lang='zh-CN';u.rate=spd;u.onend=res;u.onerror=res;
+    speechSynthesis.speak(u);
+    setTimeout(res,txt.length*660+1800);
+  });
+}
+
+async function hlAll(){
+  if(hlActive){speechSynthesis.cancel();hlActive=false;return;}
+  hlActive=true;
+  for(let pi=0;pi<paras.length&&hlActive;pi++){
+    setActive(pi);
+    for(let si=0;si<paras[pi].sentences.length&&hlActive;si++){
+      hlSent(pi,si,true);
+      const txt=paras[pi].sentences[si].chunks.join('');
+      await speakWait(txt);
+      hlSent(pi,si,false);
+    }
+    markDone(pi);
+  }
+  hlActive=false;
+}
+
+function hlSent(pi,si,on){
+  const el=document.getElementById(`snt${pi}_${si}`);
+  if(!el)return;
+  el.querySelectorAll('ruby').forEach(r=>r.classList.toggle('hl',on));
+}
+
+function readAll(){
+  const all=paras.map(p=>p.sentences.map(s=>s.chunks.join('')).join('')).join('　');
+  speak(all);
+}
+
+function togglePin(){
+  pinOn=!pinOn;
+  document.body.classList.toggle('pin-off',!pinOn);
+  document.getElementById('pinBtn').textContent=pinOn?'隐藏拼音':'显示拼音';
+}
+
+function setSpd(r){
+  spd=r;
+  document.querySelectorAll('.spd-btn').forEach(b=>b.classList.remove('active'));
+  ({0.6:'ss',0.85:'sn',1.1:'sf'})[r] && (document.getElementById(({0.6:'ss',0.85:'sn',1.1:'sf'})[r]).classList.add('active'));
+}
+
+function flash(el){el.style.background='#FFE082';setTimeout(()=>el.style.background='',400);}
+
+function resetAll(){
+  speechSynthesis.cancel();hlActive=false;
+  donePi.clear();stars=0;
+  document.getElementById('slbl').textContent=`0 / ${MAX_STARS}`;
+  document.getElementById('pFill').style.width='0%';
+  document.getElementById('celCard').classList.remove('show');
+  document.querySelectorAll('.spip').forEach(s=>s.classList.remove('lit'));
+  buildMatch();buildParas();quizIdx=0;loadQuiz(0);
+}
+
+/* ── QUIZ ── */
+function loadQuiz(idx){
+  const q=quizzes[idx];
+  document.getElementById('quizQ').textContent=q.q;
+  document.getElementById('quizFb').textContent='';
+  document.getElementById('quizFb').className='quiz-fb';
+  const grid=document.getElementById('ansGrid');
+  grid.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const b=document.createElement('button');b.className='ans-btn';b.textContent=opt;
+    b.onclick=()=>checkAns(i,q,grid);
+    grid.appendChild(b);
+  });
+}
+
+function checkAns(i,q,grid){
+  Array.from(grid.children).forEach((b,bi)=>{
+    b.disabled=true;
+    if(bi===q.ans)b.classList.add('correct');
+    else if(bi===i&&i!==q.ans)b.classList.add('wrong');
+  });
+  const fb=document.getElementById('quizFb');
+  fb.textContent=q.fb[i];
+  fb.className='quiz-fb '+(i===q.ans?'ok':'bad');
+  if(i===q.ans){gainStar();setTimeout(()=>{quizIdx=(quizIdx+1)%quizzes.length;loadQuiz(quizIdx);},2000);}
+}
+
+/* ── CELEBRATE ── */
+function celebrate(){
+  document.getElementById('celCard').classList.add('show');
+  speak('太棒了！你读完了小狗请客！小狗非常开心，它高兴地笑了！',0.85);
+  fireConf();
+}
+
+function fireConf(){
+  const host=document.getElementById('confHost');
+  host.innerHTML='';
+  const colors=['#43A047','#FB8C00','#1E88E5','#E53935','#F9A825','#00897B','#9C27B0'];
+  const W=window.innerWidth;
+  for(let i=0;i<42;i++){
+    const p=document.createElement('div');p.className='cp';
+    const sx=Math.random()*W,sy=Math.random()*150+30;
+    const ex=sx+(Math.random()-0.5)*320,ey=sy+Math.random()*420+120;
+    p.style.cssText=`left:${sx}px;top:${sy}px;background:${colors[i%colors.length]};--sx:0px;--sy:0px;--ex:${ex-sx}px;--ey:${ey-sy}px;animation-delay:${Math.random()*0.5}s`;
+    host.appendChild(p);
+  }
+  setTimeout(()=>host.innerHTML='',2300);
+}
+</script>
+</body>
+</html>
