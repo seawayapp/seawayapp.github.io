@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      window.NAV_CONFIG = {
+        breadcrumbs: [
+          { label: "Home", href: "../index.html" },
+          { label: "Reading Notes", href: "./index.html" },
+          { label: "Chapter 1" },
+        ],
+      };
+    </script>
+    <script src="../nav-top.js"></script>
+    <title id="maintitle">Bilingual Reading</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=LXGW+WenKai&family=IM+Fell+English:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-size: 11pt;
+        background: #fafaf8;
+        color: #1a1a1a;
+      }
+
+      .page-wrapper {
+        width: 90%;
+        max-width: 1600px;
+        margin: 0 auto;
+        padding: 15mm 12mm;
+      }
+
+      @media (max-width: 768px) {
+        .page-wrapper {
+          width: 100%;
+          padding: 10mm 4mm;
+        }
+      }
+
+      /* ── Title block ── */
+      .title-block {
+        text-align: center;
+        margin-bottom: 10mm;
+        padding-bottom: 6mm;
+        border-bottom: 2px solid #6b4c2a;
+      }
+      .title-zh {
+        font-family: "LXGW WenKai", "KaiTi", "STKaiti", serif;
+        font-size: 20pt;
+        color: #3b2a14;
+        letter-spacing: 0.08em;
+      }
+      .title-en {
+        font-family: "Book Antiqua", serif;
+        font-size: 17pt;
+        color: #3b2a14;
+        margin-top: 2mm;
+        font-style: italic;
+      }
+
+      /* ── Bilingual table ── */
+      table.bilingual {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+      }
+
+      thead th {
+        padding: 4mm 5mm;
+        font-size: 10pt;
+        letter-spacing: 0.12em;
+        text-align: center;
+      }
+      thead th.col-zh {
+        font-family: "LXGW WenKai", "KaiTi", "STKaiti", serif;
+        background: #6b4c2a;
+        color: #fff8f0;
+        border-right: 1px solid #a0784a;
+        width: 50%;
+      }
+      thead th.col-en {
+        font-family: "Book Antiqua", serif;
+        background: #3b2a14;
+        color: #fff8f0;
+        font-style: italic;
+        width: 50%;
+      }
+
+      tbody tr:nth-child(odd) td.col-zh {
+        background: #fdf6ed;
+      }
+      tbody tr:nth-child(even) td.col-zh {
+        background: #faf0e2;
+      }
+      tbody tr:nth-child(odd) td.col-en {
+        background: #f5f0e8;
+      }
+      tbody tr:nth-child(even) td.col-en {
+        background: #ede8de;
+      }
+
+      tbody td {
+        padding: 4mm 5mm;
+        vertical-align: top;
+        border-bottom: 0.5px solid #d4c4a8;
+      }
+      tbody td.col-zh {
+        border-right: 1.5px solid #a0784a;
+        font-family: "LXGW WenKai", "KaiTi", "STKaiti", "楷体", serif;
+        font-size: 14pt;
+        line-height: 1.85;
+        color: #1c140a;
+      }
+      tbody td.col-en {
+        font-family: "Book Antiqua", serif;
+        font-size: 14pt;
+        line-height: 1.8;
+        color: #1a1208;
+      }
+
+      /* ── Highlight helpers (matches data file span classes) ── */
+      [class^="hl"] {
+        padding: 0 4px;
+        border-radius: 3px;
+        display: inline;
+      }
+      .hl1 {
+        color: red;
+        background-color: yellow;
+        font-weight: bold;
+      }
+      .hl2 {
+        color: red;
+        font-weight: bold;
+      }
+      .hl3 {
+        background-color: yellow;
+      }
+
+      /* ── Footer ── */
+      .footer {
+        margin-top: 8mm;
+        padding-top: 4mm;
+        border-top: 1px solid #a0784a;
+        text-align: center;
+        font-family: "LXGW WenKai", "KaiTi", serif;
+        font-size: 8pt;
+        color: #888;
+      }
+
+      @media print {
+        body {
+          background: white;
+        }
+        .page-wrapper {
+          padding: 10mm 10mm;
+        }
+        tbody td,
+        thead th {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+      }
+
+      @page {
+        size: A4;
+        margin: 15mm 12mm;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="page-wrapper">
+      <div class="title-block" id="title-block"></div>
+      <table class="bilingual">
+        <thead>
+          <tr>
+            <th class="col-zh">中 文</th>
+            <th class="col-en">English</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+      <div class="footer" id="footer-text"></div>
+    </div>
+
+    <script>
+      // Function to load script dynamically
+      function loadScript(fileName) {
+        return new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = fileName;
+          script.type = "text/javascript";
+          script.onload = () => {
+            if (typeof mainData !== "undefined") {
+              resolve(mainData);
+            } else {
+              reject(new Error("No data found in the loaded script."));
+            }
+          };
+          script.onerror = () =>
+            reject(new Error(`Failed to load script: ${fileName}`));
+          document.body.appendChild(script);
+        });
+      }
+
+      // Get script parameter from URL
+      function getScriptParam() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("input");
+      }
+
+      // Initialize application
+      async function init() {
+        try {
+          const scriptFile = getScriptParam();
+          if (!scriptFile) throw new Error("No JS file specified.");
+
+          const fileName = `./data/${scriptFile}.js`;
+          const mainData = await loadScript(fileName);
+
+          document.getElementById("maintitle").innerHTML =
+            mainData.title + " " + mainData.subtitle;
+
+          document.getElementById("title-block").innerHTML =
+            `<div class="title-zh">${mainData.subtitle}</div>` +
+            `<div class="title-en">${mainData.title}</div>`;
+
+          const rows = (mainData.paragraph || [])
+            .filter((p) => p.en || p.cn)
+            .map(
+              (p) =>
+                `<tr><td class="col-zh">${p.cn}</td><td class="col-en">${p.en}</td></tr>`,
+            )
+            .join("\n");
+
+          document.getElementById("table-body").innerHTML = rows;
+          document.getElementById("footer-text").textContent =
+            mainData.title + " · " + mainData.subtitle;
+        } catch (error) {
+          console.error("Initialization error:", error);
+          document.getElementById("table-body").innerHTML =
+            '<tr><td colspan="2">Error loading data. Please try again later.</td></tr>';
+        }
+      }
+
+      // Initialize on load
+      window.addEventListener("load", init);
+    </script>
+  </body>
+</html>
