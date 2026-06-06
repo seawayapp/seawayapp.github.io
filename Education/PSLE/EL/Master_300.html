@@ -4,20 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <script src="../../../nav-config.js"></script>
-    <script>
-        window.NAV_CONFIG = {
-            breadcrumbs: [
-                {
-                    label: "Home",
-                    href: "../index.html",
-                    children: NAV_MENUS.site(),
-                },
-                { label: "Reading Notes" },
-            ],
-        };
-    </script>
-    <script src="../../../nav-top.js"></script> -->
     <title id="maintitle">PSLE Cloze Phrasal Viewer</title>
     <style>
         body {
@@ -29,6 +15,7 @@
             background-color: #f8f9fa;
         }
 
+        /* ── Header ── */
         header {
             background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
             color: white;
@@ -67,6 +54,7 @@
             line-height: 1;
         }
 
+        /* ── Content ── */
         .content {
             flex: 1;
             min-height: 0;
@@ -130,6 +118,7 @@
             line-height: 1.4;
         }
 
+        /* ── Footer ── */
         footer {
             background-color: #f8f9fa;
             padding: 12px 15px;
@@ -139,6 +128,11 @@
             border-top: 1px solid #ddd;
             flex-shrink: 0;
             gap: 8px;
+        }
+
+        .nav-group {
+            display: flex;
+            align-items: center;
         }
 
         .nav-btn {
@@ -151,7 +145,11 @@
             font-size: 16px;
             white-space: nowrap;
             touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
+
+        .nav-btn:hover { background-color: #43a047; }
+        .nav-btn:active { background-color: #388e3c; }
 
         .slide-info {
             font-size: 16px;
@@ -167,14 +165,38 @@
             margin-right: 8px;
         }
 
-        .nav-group {
+        /* ── Side navigation ── */
+        .side-nav {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            background: rgba(76, 175, 80, 0.35);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            font-size: 18px;
+            cursor: pointer;
             display: flex;
             align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.18s, transform 0.15s;
+            user-select: none;
         }
 
-        u {
-            color: red;
-        }
+        .side-nav:hover  { background: rgba(76, 175, 80, 0.75); }
+        .side-nav:active { background: rgba(56, 142, 60, 0.9); transform: translateY(-50%) scale(0.93); }
+
+        .side-nav-left  { left: 6px; }
+        .side-nav-right { right: 6px; }
+
+        /* ── Highlight helpers ── */
+        u { color: red; }
 
         [class^="hl"] {
             padding: 0 4px;
@@ -182,21 +204,11 @@
             display: inline;
         }
 
-        .hl1 {
-            color: red;
-            background-color: yellow;
-            font-weight: bold;
-        }
+        .hl1 { color: red; background-color: yellow; font-weight: bold; }
+        .hl2 { color: red; font-weight: bold; }
+        .hl3 { background-color: yellow; }
 
-        .hl2 {
-            color: red;
-            font-weight: bold;
-        }
-
-        .hl3 {
-            background-color: yellow;
-        }
-
+        /* ── Tablet ── */
         @media (max-width: 768px) {
             h1 {
                 font-size: 1.4em;
@@ -208,23 +220,13 @@
                 padding: 24px 20px;
             }
 
-            .meaning-en {
-                font-size: 24px;
-            }
-
-            .meaning-cn {
-                font-size: 22px;
-            }
-
-            .sentence-en {
-                font-size: 18px;
-            }
-
-            .sentence-cn {
-                font-size: 17px;
-            }
+            .meaning-en  { font-size: 24px; }
+            .meaning-cn  { font-size: 22px; }
+            .sentence-en { font-size: 18px; }
+            .sentence-cn { font-size: 17px; }
         }
 
+        /* ── Mobile ── */
         @media (max-width: 540px) {
             .back-btn {
                 font-size: 12px;
@@ -232,7 +234,21 @@
             }
 
             .content {
-                padding: 12px;
+                padding: 12px 46px;
+            }
+
+            /* Footer: centered, icon-only buttons */
+            footer {
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .nav-group {
+                display: contents;
+            }
+
+            .btn-label {
+                display: none;
             }
 
             .slide-info {
@@ -240,21 +256,34 @@
             }
 
             .nav-btn {
-                padding: 10px 14px;
-                font-size: 15px;
+                padding: 10px 12px;
+                font-size: 16px;
             }
 
             .jump-select {
                 font-size: 14px;
                 padding: 8px 6px;
-                margin-right: 6px;
-                max-width: 110px;
+                max-width: 150px;
+                margin-right: 0;
             }
+
+            .side-nav {
+                width: 38px;
+                height: 38px;
+                font-size: 15px;
+            }
+
+            .side-nav-left  { left: 4px; }
+            .side-nav-right { right: 4px; }
         }
     </style>
 </head>
 
 <body>
+    <!-- Side navigation -->
+    <button class="side-nav side-nav-left"  id="side-prev" aria-label="Previous slide">◀</button>
+    <button class="side-nav side-nav-right" id="side-next" aria-label="Next slide">▶</button>
+
     <header>
         <button class="back-btn" onclick="history.back()">← Back</button>
         <h1 id="slide-title">Loading...</h1>
@@ -275,12 +304,12 @@
 
     <footer>
         <div class="nav-group">
-            <button class="nav-btn" id="prev-btn">◀ Previous</button>
+            <button class="nav-btn" id="prev-btn">◀ <span class="btn-label">Previous</span></button>
         </div>
         <span class="slide-info" id="slide-counter">1 of 1</span>
         <div class="nav-group">
             <select class="jump-select" id="slide-select"></select>
-            <button class="nav-btn" id="next-btn">Next ▶</button>
+            <button class="nav-btn" id="next-btn"><span class="btn-label">Next</span> ▶</button>
         </div>
     </footer>
 
@@ -289,15 +318,17 @@
         let title = "";
         let currentSlide = 0;
 
-        const slideTitle = document.getElementById('slide-title');
+        const slideTitle   = document.getElementById('slide-title');
         const meaningEnText = document.getElementById('meaning-en');
         const meaningCnText = document.getElementById('meaning-cn');
         const sentenceEnText = document.getElementById('sentence-en');
         const sentenceCnText = document.getElementById('sentence-cn');
         const slideCounter = document.getElementById('slide-counter');
-        const slideSelect = document.getElementById('slide-select');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
+        const slideSelect  = document.getElementById('slide-select');
+        const prevBtn      = document.getElementById('prev-btn');
+        const nextBtn      = document.getElementById('next-btn');
+        const sidePrev     = document.getElementById('side-prev');
+        const sideNext     = document.getElementById('side-next');
 
         function initSlideSelect() {
             slideSelect.innerHTML = '';
@@ -330,6 +361,8 @@
 
         prevBtn.addEventListener('click', () => showSlide(currentSlide - 1));
         nextBtn.addEventListener('click', () => showSlide(currentSlide + 1));
+        sidePrev.addEventListener('click', () => showSlide(currentSlide - 1));
+        sideNext.addEventListener('click', () => showSlide(currentSlide + 1));
         slideSelect.addEventListener('change', () => showSlide(parseInt(slideSelect.value)));
 
         document.addEventListener('keydown', (e) => {
