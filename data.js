@@ -2,6 +2,10 @@ const data = {
   lastUpdated: "02/04/2026 V1",
   recentReleases: [
     {
+      date: "2026-05-05",
+      name: "<a href='Education/ChineseReadingAloud/index.html'>华文朗读练习 P2 (Chinese Reading Aloud)</a>"
+    },
+    {
       date: "2026-04-02",
       name: "<a href='Education/Tools/ChineseWordWriting.html'>Chinse Writing Template</a>"
     },
@@ -79,6 +83,14 @@ const data = {
     {
       date: "2026-04-14",
       name: "<a href='Math/index.html'>Math 数学</a>"
+    },
+    {
+      date: "2026-05-02",
+      name: "<a href='Games/index.html'>Games 游戏</a>"
+    },
+    {
+      date: "2026-05-13",
+      name: "<a href='ReadingNotes/index.html'>Reading Notes 读书笔记</a>"
     }
   ],
   archiveReleases: [

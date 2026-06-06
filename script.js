@@ -108,4 +108,53 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /* ── Last Updated ── */
   document.getElementById("last-updated").textContent = data.lastUpdated;
+
+  /* ── Nav Dropdowns ── */
+  function buildDropdown(id, items, sortFn) {
+    const container = document.getElementById(id);
+    if (!container) return;
+    sortFn(items).forEach(item => {
+      const { href, text } = parseLink(item.name);
+      const el = document.createElement('a');
+      el.className = 'nav-dd-item';
+      el.href = href;
+      el.innerHTML = `<span class="nav-dd-item-icon">${iconFor(text)}</span><span class="nav-dd-item-name">${text}</span>`;
+      el.addEventListener('click', () => {
+        document.getElementById('navLinks').classList.remove('open');
+        closeAllDropdowns();
+      });
+      container.appendChild(el);
+    });
+  }
+
+  function closeAllDropdowns() {
+    document.querySelectorAll('.nav-dd-btn').forEach(b => b.setAttribute('aria-expanded', 'false'));
+    document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+  }
+
+  buildDropdown('dd-recent',  data.recentReleases,  sortDesc);
+  buildDropdown('dd-pinned',  data.pinReleases,      sortAsc);
+  buildDropdown('dd-archive', data.archiveReleases,  sortDesc);
+
+  document.querySelectorAll('.nav-dd-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const ddId = 'dd-' + btn.id.replace('dd-btn-', '');
+      const dd = document.getElementById(ddId);
+      const wasOpen = btn.getAttribute('aria-expanded') === 'true';
+      closeAllDropdowns();
+      if (!wasOpen && dd) {
+        btn.setAttribute('aria-expanded', 'true');
+        dd.classList.add('open');
+      }
+    });
+  });
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.nav-item')) closeAllDropdowns();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeAllDropdowns();
+  });
 });

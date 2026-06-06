@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新年到了 - 朗读练习</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    min-height: 100vh;
+    padding: 20px 16px 40px;
+    overflow-x: hidden;
+    background: #FFF9F0;
+    position: relative;
+  }
+
+  /* Festive lantern pattern background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(255,60,60,0.06) 0%, transparent 35%),
+      radial-gradient(circle at 85% 75%, rgba(255,180,0,0.08) 0%, transparent 35%),
+      radial-gradient(circle at 50% 50%, rgba(255,100,50,0.04) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .floating-decor {
+    position: fixed;
+    font-size: 1.5rem;
+    opacity: 0.12;
+    pointer-events: none;
+    z-index: 0;
+    animation: floatDecor 8s ease-in-out infinite;
+  }
+
+  @keyframes floatDecor {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-12px) rotate(5deg); }
+  }
+
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 16px 0 20px;
+    position: relative;
+  }
+
+  .lanterns {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 10px;
+  }
+
+  .lantern {
+    font-size: 2.6rem;
+    animation: swingLantern 3s ease-in-out infinite;
+    display: inline-block;
+    transform-origin: top center;
+  }
+
+  .lantern:nth-child(2) { animation-delay: 0.4s; }
+  .lantern:nth-child(3) { animation-delay: 0.8s; }
+
+  @keyframes swingLantern {
+    0%, 100% { transform: rotate(-6deg); }
+    50% { transform: rotate(6deg); }
+  }
+
+  h1 {
+    font-size: 2.2rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #D32F2F, #FF6F00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    margin-bottom: 4px;
+    letter-spacing: 4px;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+    color: #C17F4A;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 18px;
+  }
+
+  /* STAR ROW */
+  .star-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 14px;
+  }
+
+  .star-pip {
+    font-size: 1.5rem;
+    transition: transform 0.3s;
+    filter: grayscale(1) opacity(0.3);
+  }
+
+  .star-pip.lit {
+    filter: none;
+    animation: starBurst 0.4s ease;
+  }
+
+  @keyframes starBurst {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.6) rotate(20deg); }
+    100% { transform: scale(1); }
+  }
+
+  /* PROGRESS */
+  .prog-wrap {
+    background: #FFE0B2;
+    border-radius: 50px;
+    height: 12px;
+    margin-bottom: 18px;
+    overflow: hidden;
+    border: 2px solid #FFCC80;
+  }
+
+  .prog-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #E53935, #FF6F00, #FFC107);
+    border-radius: 50px;
+    width: 0%;
+    transition: width 0.6s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* CONTROLS */
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  .btn {
+    border: none;
+    border-radius: 50px;
+    padding: 9px 18px;
+    font-size: 0.88rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    letter-spacing: 0.5px;
+  }
+
+  .btn:active { transform: scale(0.93) !important; }
+
+  .btn-red   { background:#E53935; color:#fff; box-shadow:0 4px 0 #B71C1C; }
+  .btn-red:hover   { transform:translateY(-2px); box-shadow:0 6px 0 #B71C1C; }
+  .btn-orange{ background:#FB8C00; color:#fff; box-shadow:0 4px 0 #E65100; }
+  .btn-orange:hover{ transform:translateY(-2px); box-shadow:0 6px 0 #E65100; }
+  .btn-gold  { background:#F9A825; color:#fff; box-shadow:0 4px 0 #F57F17; }
+  .btn-gold:hover  { transform:translateY(-2px); box-shadow:0 6px 0 #F57F17; }
+  .btn-teal  { background:#00897B; color:#fff; box-shadow:0 4px 0 #004D40; }
+  .btn-teal:hover  { transform:translateY(-2px); box-shadow:0 6px 0 #004D40; }
+
+  /* SPEED */
+  .speed-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 16px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #BF6A30;
+  }
+
+  .spd-btn {
+    background: white;
+    border: 2px solid #FFCC80;
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: #E65100;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+
+  .spd-btn.active { background: #E53935; color: white; border-color: #E53935; }
+  .spd-btn:hover { transform: scale(1.06); }
+
+  /* KEYWORD BAR */
+  .kw-bar {
+    background: linear-gradient(135deg, #FFF3E0, #FFF8E1);
+    border: 2px dashed #FFA726;
+    border-radius: 18px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+  }
+
+  .kw-title {
+    font-size: 0.78rem;
+    font-weight: 900;
+    color: #E65100;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .kw-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  .kw-chip {
+    background: white;
+    border: 2px solid #FFA726;
+    border-radius: 20px;
+    padding: 4px 13px;
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #BF360C;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+    position: relative;
+  }
+
+  .kw-chip:hover { background: #E53935; color: white; border-color: #E53935; transform: scale(1.05); }
+  .kw-chip:active { transform: scale(0.95); }
+
+  .kw-chip .kw-pin {
+    display: block;
+    font-size: 0.6rem;
+    color: #FB8C00;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 1px;
+  }
+
+  .kw-chip:hover .kw-pin { color: rgba(255,255,255,0.8); }
+
+  /* PARAGRAPH CARDS */
+  .para-card {
+    background: white;
+    border-radius: 22px;
+    padding: 20px 22px 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 18px rgba(180,60,0,0.08);
+    border: 3px solid transparent;
+    transition: border-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .para-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 7px; height: 100%;
+    background: #E8D5C0;
+    transition: background 0.3s;
+    border-radius: 22px 0 0 22px;
+  }
+
+  .para-card.active {
+    border-color: #FFA726;
+    box-shadow: 0 8px 28px rgba(229,57,53,0.18);
+    transform: translateY(-2px);
+  }
+
+  .para-card.active::before { background: #E53935; }
+
+  .para-card.done {
+    border-color: #A5D6A7;
+    background: linear-gradient(135deg, #FAFFFE, #F1FFF4);
+  }
+
+  .para-card.done::before { background: #43A047; }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 13px;
+  }
+
+  .card-icon {
+    font-size: 1.7rem;
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .card-label {
+    font-size: 0.76rem;
+    font-weight: 900;
+    color: white;
+    padding: 3px 12px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+  }
+
+  .done-tick {
+    margin-left: auto;
+    font-size: 1.3rem;
+    display: none;
+    animation: pop 0.35s ease;
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0) rotate(-20deg); }
+    70% { transform: scale(1.3) rotate(5deg); }
+    100% { transform: scale(1) rotate(0deg); }
+  }
+
+  .para-card.done .done-tick { display: block; }
+
+  /* RUBY TEXT */
+  .text-area {
+    line-height: 2.6;
+    word-break: break-all;
+  }
+
+  ruby {
+    display: inline-flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    margin: 0 1px;
+    vertical-align: bottom;
+  }
+
+  ruby rt {
+    font-size: 0.58em;
+    font-weight: 800;
+    color: #D84315;
+    line-height: 1.2;
+    user-select: none;
+    transition: opacity 0.3s;
+    font-family: 'Nunito', sans-serif;
+    letter-spacing: 0.01em;
+  }
+
+  ruby rb {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #3E2000;
+    cursor: pointer;
+    display: inline-block;
+    padding: 2px 3px;
+    border-radius: 6px;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  ruby:hover rb {
+    background: #FFF3E0;
+    transform: scale(1.13);
+  }
+
+  ruby.hl rb {
+    background: #FFE082;
+    border-radius: 6px;
+  }
+
+  .punc {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #A1887F;
+    margin: 0 1px;
+  }
+
+  body.pin-off ruby rt { opacity: 0; }
+
+  .read-hint {
+    font-size: 0.72rem;
+    color: #D7B896;
+    margin-top: 8px;
+    text-align: right;
+    font-weight: 800;
+  }
+
+  /* COMPREHENSION */
+  .quiz-card {
+    background: linear-gradient(135deg, #FFF8E1, #FFF3E0);
+    border: 2px solid #FFB74D;
+    border-radius: 20px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+  }
+
+  .quiz-header {
+    font-size: 0.82rem;
+    font-weight: 900;
+    color: #E65100;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .quiz-q {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #4E2500;
+    margin-bottom: 12px;
+  }
+
+  .ans-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .ans-btn {
+    background: white;
+    border: 2px solid #FFA726;
+    border-radius: 12px;
+    padding: 8px 15px;
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #BF360C;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+
+  .ans-btn:hover:not(:disabled) { background: #FFF3E0; transform: scale(1.04); }
+  .ans-btn.correct { background: #43A047; color: white; border-color: #1B5E20; }
+  .ans-btn.wrong   { background: #E53935; color: white; border-color: #B71C1C; }
+
+  .quiz-fb {
+    font-size: 0.88rem;
+    font-weight: 800;
+    margin-top: 8px;
+    min-height: 22px;
+  }
+
+  .quiz-fb.ok  { color: #2E7D32; }
+  .quiz-fb.bad { color: #C62828; }
+
+  /* CELEBRATION */
+  .cel-card {
+    display: none;
+    text-align: center;
+    background: white;
+    border-radius: 24px;
+    padding: 28px 20px;
+    box-shadow: 0 10px 40px rgba(229,57,53,0.15);
+    border: 3px solid #FFD54F;
+    margin-bottom: 20px;
+  }
+
+  .cel-card.show { display: block; animation: riseUp 0.5s ease; }
+
+  @keyframes riseUp {
+    from { opacity: 0; transform: translateY(24px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .cel-emoji { font-size: 3.8rem; display: block; margin-bottom: 10px; }
+  .cel-title { font-size: 1.5rem; font-weight: 900; color: #E53935; letter-spacing: 2px; margin-bottom: 6px; }
+  .cel-sub   { font-size: 0.92rem; color: #FB8C00; font-weight: 700; }
+
+  /* CONFETTI */
+  .confetti-host {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 0;
+    pointer-events: none;
+    z-index: 999;
+    overflow: visible;
+  }
+
+  .cp {
+    position: absolute;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    animation: cpFly 1.4s ease-out forwards;
+  }
+
+  @keyframes cpFly {
+    0%   { transform: translate(var(--sx), var(--sy)) rotate(0deg); opacity: 1; }
+    100% { transform: translate(var(--ex), var(--ey)) rotate(540deg); opacity: 0; }
+  }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 1.7rem; letter-spacing: 2px; }
+    .para-card { padding: 14px 14px 12px; }
+    ruby rb { font-size: 1.15rem; }
+    .punc    { font-size: 1.15rem; }
+  }
+</style>
+<script>
+  window.NAV_CONFIG = {
+    breadcrumbs: [
+      { label: "Home",               href: "../../index.html" },
+      { label: "Education",          href: "../index.html" },
+      { label: "Chinese Reading Aloud", href: "index.html" },
+      { label: "新年到了" }
+    ]
+  };
+</script>
+<script src="../../nav-top.js"></script>
+</head>
+<body>
+
+<!-- Floating festive decorations -->
+<div class="floating-decor" style="top:8%;left:3%;animation-delay:0s">🧧</div>
+<div class="floating-decor" style="top:22%;right:2%;animation-delay:1.5s">🎆</div>
+<div class="floating-decor" style="top:60%;left:1%;animation-delay:3s">🍊</div>
+<div class="floating-decor" style="top:75%;right:3%;animation-delay:1s">🧨</div>
+<div class="floating-decor" style="top:45%;left:2%;animation-delay:2s">🌸</div>
+
+<div class="container">
+
+  <div class="hero">
+    <div class="lanterns">
+      <span class="lantern">🏮</span>
+      <span class="lantern">🏮</span>
+      <span class="lantern">🏮</span>
+    </div>
+    <h1>新 年 到 了</h1>
+    <div class="subtitle">第二课 · 朗读练习 · 二年级</div>
+  </div>
+
+  <div class="star-row" id="starRow">
+    <span class="star-pip" id="sp0">⭐</span>
+    <span class="star-pip" id="sp1">⭐</span>
+    <span class="star-pip" id="sp2">⭐</span>
+    <span class="star-pip" id="sp3">⭐</span>
+    <span class="star-pip" id="sp4">⭐</span>
+    <span class="star-pip" id="sp5">⭐</span>
+    <span style="font-size:0.82rem;font-weight:800;color:#E65100;margin-left:6px;" id="starLbl">0 / 6</span>
+  </div>
+
+  <div class="prog-wrap"><div class="prog-fill" id="progFill"></div></div>
+
+  <div class="controls">
+    <button class="btn btn-red"    onclick="togglePin()">🔤 <span id="pinBtn">隐藏拼音</span></button>
+    <button class="btn btn-orange" onclick="readAll()">🔊 朗读全文</button>
+    <button class="btn btn-gold"   onclick="highlightAll()">✨ 逐句朗读</button>
+    <button class="btn btn-teal"   onclick="resetAll()">🔄 重新开始</button>
+  </div>
+
+  <div class="speed-row">
+    朗读速度：
+    <button class="spd-btn" id="sp-slow"   onclick="setSpd(0.6)">慢</button>
+    <button class="spd-btn active" id="sp-norm" onclick="setSpd(0.85)">正常</button>
+    <button class="spd-btn" id="sp-fast"   onclick="setSpd(1.1)">快</button>
+  </div>
+
+  <div class="kw-bar">
+    <div class="kw-title">🔑 新年词语，点一点听发音：</div>
+    <div class="kw-chips" id="kwChips"></div>
+  </div>
+
+  <div id="parasCon"></div>
+
+  <div class="quiz-card" id="quizCard">
+    <div class="quiz-header">🧠 答一答！</div>
+    <div class="quiz-q" id="quizQ"></div>
+    <div class="ans-grid" id="ansGrid"></div>
+    <div class="quiz-fb" id="quizFb"></div>
+  </div>
+
+  <div class="cel-card" id="celCard">
+    <span class="cel-emoji">🎊</span>
+    <div class="cel-title">恭喜恭喜！</div>
+    <div class="cel-sub">你读完了整篇课文，新年快乐！🧧</div>
+  </div>
+
+</div>
+
+<div class="confetti-host" id="confHost"></div>
+
+<script>
+/* ── DATA ───────────────────────────────────────────── */
+const paras = [
+  {
+    icon:'🎆', bg:'#FFF3E0', color:'#E53935', label:'第一段',
+    sentences:[
+      { chunks:['新年','到了','。'], pins:['xīn nián','dào le',''] }
+    ]
+  },
+  {
+    icon:'👨‍👩‍👧‍👦', bg:'#FFF8E1', color:'#FB8C00', label:'第二段',
+    sentences:[
+      { chunks:['我们','兄弟姐妹','穿上了','新衣服，'], pins:['wǒ men','xiōng dì jiě mèi','chuān shàng le','xīn yī fu，'] },
+      { chunks:['和','爸爸妈妈','去','外公外婆家','拜年','。'], pins:['hé','bà ba mā ma','qù','wài gōng wài pó jiā','bài nián',''] },
+      { chunks:['我们','拿着','柑，'], pins:['wǒ men','ná zhe','gān，'] },
+      { chunks:['对','外公外婆','说','："'], pins:['duì','wài gōng wài pó','shuō','："'] },
+      { chunks:['祝您','新年快乐，','身体健康','！"'], pins:['zhù nín','xīn nián kuài lè，','shēn tǐ jiàn kāng','！"'] },
+    ]
+  },
+  {
+    icon:'🧧', bg:'#FCE4EC', color:'#C62828', label:'第三段',
+    sentences:[
+      { chunks:['外公外婆','给','我们','红包','。'], pins:['wài gōng wài pó','gěi','wǒ men','hóng bāo',''] },
+      { chunks:['外公','说','："过年了，','你们','又大了','一岁','！"'], pins:['wài gōng','shuō','："guò nián le，','nǐ men','yòu dà le','yī suì','！"'] },
+      { chunks:['外婆','说','："祝你们','快高长大，','学业进步','！"'], pins:['wài pó','shuō','："zhù nǐ men','kuài gāo zhǎng dà，','xué yè jìn bù','！"'] },
+      { chunks:['我们','接过','红包，','说','："谢谢','外公外婆','。"'], pins:['wǒ men','jiē guò','hóng bāo，','shuō','："xiè xie','wài gōng wài pó','。"'] },
+    ]
+  },
+  {
+    icon:'🍊', bg:'#FFF3E0', color:'#EF6C00', label:'第四段',
+    sentences:[
+      { chunks:['外公外婆家','有','很多','好吃的','东西','。'], pins:['wài gōng wài pó jiā','yǒu','hěn duō','hǎo chī de','dōng xi',''] },
+      { chunks:['我们','吃了','肉干','和','鸡蛋卷','。'], pins:['wǒ men','chī le','ròu gān','hé','jī dàn juǎn',''] },
+    ]
+  },
+  {
+    icon:'🎉', bg:'#F3E5F5', color:'#7B1FA2', label:'第五段',
+    sentences:[
+      { chunks:['过新年','真','开心啊','！'], pins:['guò xīn nián','zhēn','kāi xīn a','！'] }
+    ]
+  }
+];
+
+const keywords = [
+  { w:'新年快乐', p:'xīn nián kuài lè' },
+  { w:'兄弟姐妹', p:'xiōng dì jiě mèi' },
+  { w:'拜年',     p:'bài nián' },
+  { w:'柑',       p:'gān' },
+  { w:'红包',     p:'hóng bāo' },
+  { w:'身体健康', p:'shēn tǐ jiàn kāng' },
+  { w:'学业进步', p:'xué yè jìn bù' },
+  { w:'肉干',     p:'ròu gān' },
+  { w:'鸡蛋卷',   p:'jī dàn juǎn' },
+  { w:'外公外婆', p:'wài gōng wài pó' },
+];
+
+const quizzes = [
+  {
+    q:'小朋友们去外公外婆家做什么？',
+    opts:['拜年','上学','买东西'],
+    ans:0,
+    fb:['🎉 答对了！去拜年！新年快乐！','再想一想～','再想一想～']
+  },
+  {
+    q:'他们带着什么去外公外婆家？',
+    opts:['苹果','柑','红包'],
+    ans:1,
+    fb:['再想一想～','🎉 答对了！是柑！','再想一想～']
+  },
+  {
+    q:'他们在外公外婆家吃了什么？',
+    opts:['肉干和鸡蛋卷','饺子和汤圆','鱼和米饭'],
+    ans:0,
+    fb:['🎉 答对了！好好吃！','再想一想～','再想一想～']
+  },
+  {
+    q:'外公说了什么祝福的话？',
+    opts:['身体健康','你们又大了一岁','学业进步'],
+    ans:1,
+    fb:['再想一想～','🎉 答对了！你们又大了一岁！','再想一想～']
+  },
+];
+
+/* ── STATE ──────────────────────────────────────────── */
+let pinOn = true, spd = 0.85, donePi = new Set(), stars = 0;
+let hlActive = false, quizIdx = 0;
+const TOTAL_PARA = paras.length;
+
+/* ── INIT ───────────────────────────────────────────── */
+buildKW(); buildParas(); loadQuiz(0);
+
+/* ── BUILD KEYWORDS ─────────────────────────────────── */
+function buildKW() {
+  const c = document.getElementById('kwChips');
+  c.innerHTML = '';
+  keywords.forEach(k => {
+    const b = document.createElement('button');
+    b.className = 'kw-chip';
+    b.innerHTML = `<span class="kw-pin">${k.p}</span>${k.w}`;
+    b.onclick = () => speak(k.w);
+    c.appendChild(b);
+  });
+}
+
+/* ── BUILD PARAGRAPHS ───────────────────────────────── */
+function buildParas() {
+  const con = document.getElementById('parasCon');
+  con.innerHTML = '';
+  paras.forEach((para, pi) => {
+    const card = document.createElement('div');
+    card.className = 'para-card';
+    card.id = `pc${pi}`;
+
+    // header
+    const hdr = document.createElement('div');
+    hdr.className = 'card-header';
+
+    const ico = document.createElement('div');
+    ico.className = 'card-icon';
+    ico.style.background = para.bg;
+    ico.textContent = para.icon;
+
+    const lbl = document.createElement('div');
+    lbl.className = 'card-label';
+    lbl.style.background = para.color;
+    lbl.textContent = para.label;
+
+    const tick = document.createElement('div');
+    tick.className = 'done-tick';
+    tick.textContent = '✅';
+
+    hdr.appendChild(ico); hdr.appendChild(lbl); hdr.appendChild(tick);
+
+    // text
+    const ta = document.createElement('div');
+    ta.className = 'text-area';
+    ta.id = `ta${pi}`;
+
+    para.sentences.forEach((sent, si) => {
+      const wrap = document.createElement('span');
+      wrap.id = `snt${pi}_${si}`;
+      sent.chunks.forEach((ch, ci) => {
+        const isPure = /^[，。！？""：；、…—·\s]+$/.test(ch);
+        if (isPure) {
+          const sp = document.createElement('span');
+          sp.className = 'punc';
+          sp.textContent = ch;
+          wrap.appendChild(sp);
+        } else {
+          const hasTrail = /[，。！？""：；]$/.test(ch);
+          const textPart = hasTrail ? ch.slice(0,-1) : ch;
+          const trailPart = hasTrail ? ch.slice(-1) : '';
+          const r = document.createElement('ruby');
+          r.id = `rby${pi}_${si}_${ci}`;
+          const rt = document.createElement('rt');
+          rt.textContent = sent.pins[ci] || '';
+          const rb = document.createElement('rb');
+          rb.textContent = textPart;
+          rb.onclick = (e) => { e.stopPropagation(); speak(textPart); ripple(r); };
+          r.appendChild(rt); r.appendChild(rb);
+          wrap.appendChild(r);
+          if (trailPart) {
+            const ps = document.createElement('span');
+            ps.className = 'punc';
+            ps.textContent = trailPart;
+            wrap.appendChild(ps);
+          }
+        }
+      });
+      ta.appendChild(wrap);
+    });
+
+    const hint = document.createElement('div');
+    hint.className = 'read-hint';
+    hint.textContent = '👆 点击这段来朗读';
+
+    card.appendChild(hdr); card.appendChild(ta); card.appendChild(hint);
+    card.onclick = () => { setActive(pi); readPara(pi); };
+    con.appendChild(card);
+  });
+}
+
+/* ── CARD ACTIONS ───────────────────────────────────── */
+function setActive(pi) {
+  document.querySelectorAll('.para-card').forEach((c,i) => c.classList.toggle('active', i===pi));
+}
+
+function readPara(pi) {
+  const txt = paras[pi].sentences.map(s => s.chunks.join('')).join('');
+  speak(txt);
+  markDone(pi);
+}
+
+function markDone(pi) {
+  const card = document.getElementById(`pc${pi}`);
+  if (card.classList.contains('done')) return;
+  card.classList.add('done');
+  donePi.add(pi);
+  gainStar();
+  updateProg();
+  if (donePi.size === TOTAL_PARA) setTimeout(celebrate, 700);
+}
+
+function gainStar() {
+  if (stars >= 6) return;
+  const el = document.getElementById(`sp${stars}`);
+  el.classList.add('lit');
+  stars++;
+  document.getElementById('starLbl').textContent = `${stars} / 6`;
+}
+
+function updateProg() {
+  document.getElementById('progFill').style.width = (donePi.size / TOTAL_PARA * 100) + '%';
+}
+
+/* ── SPEAK ──────────────────────────────────────────── */
+function speak(txt, rate) {
+  if (!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(txt);
+  u.lang = 'zh-CN'; u.rate = rate || spd;
+  speechSynthesis.speak(u);
+}
+
+function speakWait(txt) {
+  return new Promise(res => {
+    if (!window.speechSynthesis) { setTimeout(res,800); return; }
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(txt);
+    u.lang='zh-CN'; u.rate=spd;
+    u.onend=res; u.onerror=res;
+    speechSynthesis.speak(u);
+    setTimeout(res, txt.length*650+1800);
+  });
+}
+
+/* ── HIGHLIGHT ALL ──────────────────────────────────── */
+async function highlightAll() {
+  if (hlActive) { speechSynthesis.cancel(); hlActive=false; return; }
+  hlActive = true;
+  for (let pi=0; pi<paras.length && hlActive; pi++) {
+    setActive(pi);
+    for (let si=0; si<paras[pi].sentences.length && hlActive; si++) {
+      hlSent(pi,si,true);
+      const txt = paras[pi].sentences[si].chunks.join('');
+      await speakWait(txt);
+      hlSent(pi,si,false);
+    }
+    markDone(pi);
+  }
+  hlActive = false;
+}
+
+function hlSent(pi,si,on) {
+  const el = document.getElementById(`snt${pi}_${si}`);
+  if (!el) return;
+  el.querySelectorAll('ruby').forEach(r => r.classList.toggle('hl',on));
+}
+
+/* ── READ ALL ───────────────────────────────────────── */
+function readAll() {
+  const all = paras.map(p=>p.sentences.map(s=>s.chunks.join('')).join('')).join('　');
+  speak(all);
+}
+
+/* ── TOGGLE PINYIN ──────────────────────────────────── */
+function togglePin() {
+  pinOn = !pinOn;
+  document.body.classList.toggle('pin-off', !pinOn);
+  document.getElementById('pinBtn').textContent = pinOn ? '隐藏拼音' : '显示拼音';
+}
+
+/* ── SPEED ──────────────────────────────────────────── */
+function setSpd(r) {
+  spd = r;
+  document.querySelectorAll('.spd-btn').forEach(b=>b.classList.remove('active'));
+  const map = {0.6:'sp-slow',0.85:'sp-norm',1.1:'sp-fast'};
+  document.getElementById(map[r]).classList.add('active');
+}
+
+/* ── RESET ──────────────────────────────────────────── */
+function resetAll() {
+  speechSynthesis.cancel();
+  hlActive = false;
+  donePi.clear(); stars = 0;
+  document.getElementById('starLbl').textContent = '0 / 6';
+  document.getElementById('progFill').style.width = '0%';
+  document.getElementById('celCard').classList.remove('show');
+  document.querySelectorAll('.star-pip').forEach(s=>s.classList.remove('lit'));
+  buildParas(); quizIdx=0; loadQuiz(0);
+}
+
+/* ── RIPPLE EFFECT ──────────────────────────────────── */
+function ripple(el) {
+  el.style.background='#FFE082';
+  setTimeout(()=>el.style.background='',400);
+}
+
+/* ── QUIZ ───────────────────────────────────────────── */
+function loadQuiz(idx) {
+  const q = quizzes[idx];
+  document.getElementById('quizQ').textContent = q.q;
+  document.getElementById('quizFb').textContent = '';
+  document.getElementById('quizFb').className = 'quiz-fb';
+  const grid = document.getElementById('ansGrid');
+  grid.innerHTML = '';
+  q.opts.forEach((opt,i) => {
+    const b = document.createElement('button');
+    b.className = 'ans-btn';
+    b.textContent = opt;
+    b.onclick = () => checkAns(i,q,grid);
+    grid.appendChild(b);
+  });
+}
+
+function checkAns(i,q,grid) {
+  Array.from(grid.children).forEach((b,bi)=>{
+    b.disabled=true;
+    if (bi===q.ans) b.classList.add('correct');
+    else if (bi===i && i!==q.ans) b.classList.add('wrong');
+  });
+  const fb = document.getElementById('quizFb');
+  fb.textContent = q.fb[i];
+  fb.className = 'quiz-fb ' + (i===q.ans?'ok':'bad');
+  if (i===q.ans) {
+    gainStar();
+    setTimeout(()=>{ quizIdx=(quizIdx+1)%quizzes.length; loadQuiz(quizIdx); },2000);
+  }
+}
+
+/* ── CELEBRATE ──────────────────────────────────────── */
+function celebrate() {
+  document.getElementById('celCard').classList.add('show');
+  speak('恭喜恭喜！新年快乐！你读完了整篇课文！',0.85);
+  fireConf();
+}
+
+function fireConf() {
+  const host = document.getElementById('confHost');
+  host.innerHTML = '';
+  const colors=['#E53935','#FB8C00','#F9A825','#43A047','#7B1FA2','#FF4081','#FFEB3B'];
+  const W = window.innerWidth;
+  for (let i=0;i<40;i++) {
+    const p = document.createElement('div');
+    p.className = 'cp';
+    const sx = Math.random()*W, sy=Math.random()*200+50;
+    const ex = sx + (Math.random()-0.5)*300;
+    const ey = sy + Math.random()*400+100;
+    p.style.cssText=`left:${sx}px;top:${sy}px;background:${colors[i%colors.length]};--sx:0px;--sy:0px;--ex:${ex-sx}px;--ey:${ey-sy}px;animation-delay:${Math.random()*0.5}s`;
+    host.appendChild(p);
+  }
+  setTimeout(()=>host.innerHTML='',2200);
+}
+</script>
+</body>
+</html>

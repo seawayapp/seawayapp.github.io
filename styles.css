@@ -536,6 +536,98 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* =========================================
+   NAV DROPDOWNS
+   ========================================= */
+.nav-item { position: relative; }
+
+.nav-dd-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  font-family: var(--font);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: rgba(255,255,255,0.7);
+  padding: 6px 14px;
+  border-radius: 20px;
+  transition: color 0.2s, background 0.2s;
+  white-space: nowrap;
+}
+
+.nav-dd-btn:hover,
+.nav-dd-btn[aria-expanded="true"] {
+  color: #fff;
+  background: rgba(255,255,255,0.1);
+}
+
+.dd-chevron {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.nav-dd-btn[aria-expanded="true"] .dd-chevron {
+  transform: rotate(180deg);
+}
+
+.nav-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 220px;
+  max-width: 280px;
+  background: var(--navy-mid);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.25);
+  overflow-y: auto;
+  max-height: 400px;
+  z-index: 1001;
+  padding: 6px;
+}
+
+.nav-dropdown.open { display: block; }
+
+.nav-dd-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: rgba(255,255,255,0.75);
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+  overflow: hidden;
+}
+
+.nav-dd-item:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  text-decoration: none;
+}
+
+.nav-dd-item-icon {
+  flex-shrink: 0;
+  font-size: 0.9rem;
+  width: 20px;
+  text-align: center;
+}
+
+.nav-dd-item-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =========================================
    RESPONSIVE — Tablet ≤ 768px
    ========================================= */
 @media (max-width: 768px) {
@@ -573,6 +665,36 @@ a { color: inherit; text-decoration: none; }
     padding: 13px 24px;
     border-radius: 0;
     font-size: 0.95rem;
+  }
+
+  /* Dropdown buttons fill width in mobile hamburger menu */
+  .nav-dd-btn {
+    width: 100%;
+    border-radius: 0;
+    padding: 13px 24px;
+    font-size: 0.95rem;
+    justify-content: space-between;
+  }
+
+  /* Dropdown panel flows inline under the trigger */
+  .nav-dropdown {
+    position: static;
+    min-width: unset;
+    max-width: unset;
+    width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    background: rgba(0,0,0,0.2);
+    max-height: 300px;
+    padding: 4px 0;
+  }
+
+  .nav-dd-item {
+    padding: 10px 36px;
+    font-size: 0.9rem;
+    border-radius: 0;
   }
 
   /* Hero */

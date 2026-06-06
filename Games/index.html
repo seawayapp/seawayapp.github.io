@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Games</title>
+  <script src="../nav-config.js"></script>
+  <script>
+    window.NAV_CONFIG = {
+      breadcrumbs: [
+        { label: "Home", href: "../index.html", children: NAV_MENUS.site() },
+        { label: "Games" }
+      ]
+    };
+  </script>
+  <script src="../nav-top.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Fredoka+One&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(135deg, #fff9c4 0%, #c3f0fc 50%, #ffd6e7 100%);
+      min-height: 100vh;
+    }
+
+    .page-header {
+      text-align: center;
+      padding: 40px 16px 20px;
+    }
+
+    .page-header h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      color: #e84393;
+      text-shadow: 2px 2px 0 rgba(232, 67, 147, 0.2);
+    }
+
+    .page-header p {
+      color: #888;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-top: 6px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px 24px 60px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 22px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      text-decoration: none;
+      transition: transform 0.18s, box-shadow 0.18s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.16);
+    }
+
+    .card-thumb {
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+    }
+
+    .card-body {
+      padding: 18px 20px 22px;
+    }
+
+    .card-body h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.4rem;
+      margin-bottom: 6px;
+    }
+
+    .card-body p {
+      font-size: 0.88rem;
+      color: #777;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .card-sentence .card-thumb { background: linear-gradient(135deg, #fff9c4, #ffd6e7); }
+    .card-sentence .card-body h2 { color: #e84393; }
+
+    .card-cardgame .card-thumb { background: linear-gradient(135deg, #c3f0fc, #d6f5e3); }
+    .card-cardgame .card-body h2 { color: #197DC7; }
+  </style>
+</head>
+
+<body>
+
+  <div class="page-header">
+    <h1>🎮 Games</h1>
+    <p>Pick a game and start playing!</p>
+  </div>
+
+  <div class="grid">
+    <a class="card card-sentence" href="Sentence_Builder/index.html">
+      <div class="card-thumb">🌟</div>
+      <div class="card-body">
+        <h2>Sentence Builder</h2>
+        <p>Pick one card from each column — Who, Doing, and What — to build a sentence!</p>
+      </div>
+    </a>
+
+    <a class="card card-cardgame" href="Card_Game/index.html">
+      <div class="card-thumb">🃏</div>
+      <div class="card-body">
+        <h2>Card Game</h2>
+        <p>Match cards and practice vocabulary with this fun card-flipping game!</p>
+      </div>
+    </a>
+  </div>
+
+</body>
+
+</html>

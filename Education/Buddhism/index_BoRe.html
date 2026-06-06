@@ -1,8 +1,19 @@
-<!DOCTYPE html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
+    <script>
+        window.NAV_CONFIG = {
+            breadcrumbs: [
+                { label: "Home", href: "../../index.html" },
+                { label: "Education", href: "../index.html" },
+                { label: "Buddhism", href: "index.html" },
+                { label: "大般若经" }
+            ]
+        };
+    </script>
+    <script src="../../nav-top.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Input Data -->
     <script src="./data/br_data_index.js"></script>
@@ -111,14 +122,14 @@
         text += `
         <tr>
             <td>${index1}</td>
-            <td><a href="./BR_Template.html?input=${inputJSON[i1].filename}" target="_blank">&nbsp;${inputJSON[i1].title}&nbsp;</a></td>
+            <td><a href="./BR_Template.html?input=${inputJSON[i1].filename}">&nbsp;${inputJSON[i1].title}&nbsp;</a></td>
             <td></td>    
         `
 
         if (inputJSON[i2]) {
             text += `
             <td>${index2}</td>    
-            <td><a href="./BR_Template.html?&input=${inputJSON[i2].filename}" target="_blank">&nbsp;${inputJSON[i2].title}&nbsp;</a></td>
+            <td><a href="./BR_Template.html?&input=${inputJSON[i2].filename}">&nbsp;${inputJSON[i2].title}&nbsp;</a></td>
             `
         } else {
             text += `

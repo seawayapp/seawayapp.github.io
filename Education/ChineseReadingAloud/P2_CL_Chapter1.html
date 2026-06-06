@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我长大了 - 朗读练习</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: linear-gradient(135deg, #FFF8E7 0%, #FFF0F5 50%, #F0F8FF 100%);
+    min-height: 100vh;
+    padding: 20px;
+    overflow-x: hidden;
+  }
+
+  .stars-bg {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    animation: twinkle 3s ease-in-out infinite;
+    opacity: 0;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; transform: scale(0.8); }
+    50% { opacity: 0.6; transform: scale(1.2); }
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero {
+    text-align: center;
+    padding: 24px 20px 16px;
+  }
+
+  .hero-emoji {
+    font-size: 60px;
+    display: block;
+    margin-bottom: 8px;
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #C65D8A;
+    text-shadow: 3px 3px 0 #FFD6E8;
+    margin-bottom: 4px;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: #A077C8;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+
+  .btn {
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn:active { transform: scale(0.94); }
+
+  .btn-pink {
+    background: #F06292;
+    color: white;
+    box-shadow: 0 4px 0 #C2185B;
+  }
+  .btn-pink:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #C2185B; }
+
+  .btn-purple {
+    background: #AB47BC;
+    color: white;
+    box-shadow: 0 4px 0 #7B1FA2;
+  }
+  .btn-purple:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #7B1FA2; }
+
+  .btn-teal {
+    background: #26C6DA;
+    color: white;
+    box-shadow: 0 4px 0 #00838F;
+  }
+  .btn-teal:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #00838F; }
+
+  .btn-gold {
+    background: #FFB300;
+    color: white;
+    box-shadow: 0 4px 0 #F57F17;
+  }
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #F57F17; }
+
+  .btn-green {
+    background: #66BB6A;
+    color: white;
+    box-shadow: 0 4px 0 #2E7D32;
+  }
+  .btn-green:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #2E7D32; }
+
+  .btn-gray {
+    background: #90A4AE;
+    color: white;
+    box-shadow: 0 4px 0 #546E7A;
+  }
+  .btn-gray:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #546E7A; }
+
+  .progress-bar-container {
+    background: #FCE4EC;
+    border-radius: 50px;
+    height: 14px;
+    margin: 0 0 24px;
+    overflow: hidden;
+    border: 2px solid #F8BBD9;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #F06292, #AB47BC);
+    border-radius: 50px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  .paragraph-card {
+    background: white;
+    border-radius: 24px;
+    padding: 22px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+    border: 3px solid transparent;
+    transition: border-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .paragraph-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 6px; height: 100%;
+    background: #E0E0E0;
+    transition: background 0.3s;
+  }
+
+  .paragraph-card.active {
+    border-color: #F48FB1;
+    box-shadow: 0 8px 30px rgba(240,98,146,0.2);
+    transform: translateY(-2px);
+  }
+
+  .paragraph-card.active::before { background: #F06292; }
+
+  .paragraph-card.done {
+    border-color: #A5D6A7;
+    background: #F9FFF9;
+  }
+
+  .paragraph-card.done::before { background: #66BB6A; }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .card-icon {
+    font-size: 1.8rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .card-label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: white;
+    padding: 3px 12px;
+    border-radius: 20px;
+    flex-shrink: 0;
+  }
+
+  .done-badge {
+    margin-left: auto;
+    font-size: 1.4rem;
+    display: none;
+    animation: pop 0.3s ease;
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0); }
+    70% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+  }
+
+  .paragraph-card.done .done-badge { display: block; }
+
+  .text-area {
+    line-height: 2.4;
+  }
+
+  ruby {
+    display: inline-flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    margin: 0 1px;
+    vertical-align: bottom;
+  }
+
+  ruby rt {
+    font-size: 0.6em;
+    font-weight: 700;
+    color: #AB47BC;
+    line-height: 1.2;
+    user-select: none;
+    transition: opacity 0.3s;
+    font-family: 'Nunito', sans-serif;
+    letter-spacing: 0.02em;
+  }
+
+  ruby rb, .char-span {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #333;
+    cursor: pointer;
+    display: inline-block;
+    padding: 2px 3px;
+    border-radius: 6px;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  ruby:hover rb, ruby:hover .char-span {
+    background: #FCE4EC;
+    transform: scale(1.12);
+  }
+
+  ruby.highlighted rb {
+    background: #FFE082;
+    border-radius: 6px;
+  }
+
+  .punc {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #888;
+    margin: 0 2px;
+  }
+
+  body.pinyin-off ruby rt { opacity: 0; }
+
+  .phrase-break { display: inline; }
+  .phrase-break::after {
+    content: '';
+    display: inline-block;
+    width: 0;
+  }
+
+  .play-hint {
+    font-size: 0.78rem;
+    color: #BDBDBD;
+    margin-top: 10px;
+    text-align: right;
+    font-weight: 700;
+  }
+
+  .keyword-box {
+    background: linear-gradient(135deg, #FFF8E1, #FFF3E0);
+    border: 2px dashed #FFB300;
+    border-radius: 16px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+  }
+
+  .keyword-title {
+    font-size: 0.82rem;
+    font-weight: 900;
+    color: #F57F17;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .keyword-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .keyword-chip {
+    background: white;
+    border: 2px solid #FFB300;
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #E65100;
+    cursor: pointer;
+    transition: transform 0.15s, background 0.15s;
+    user-select: none;
+  }
+
+  .keyword-chip:hover {
+    background: #FFB300;
+    color: white;
+    transform: scale(1.05);
+  }
+
+  .keyword-chip:active { transform: scale(0.95); }
+
+  .star-counter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #F57F17;
+  }
+
+  .star-display {
+    display: flex;
+    gap: 4px;
+    font-size: 1.4rem;
+  }
+
+  .star-icon {
+    transition: transform 0.3s;
+  }
+
+  .star-icon.lit {
+    animation: starPop 0.4s ease forwards;
+  }
+
+  @keyframes starPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.5) rotate(15deg); }
+    100% { transform: scale(1); }
+  }
+
+  .confetti-burst {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  .confetti-piece {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    animation: fly 1.2s ease-out forwards;
+  }
+
+  @keyframes fly {
+    0% { transform: translate(0,0) rotate(0deg); opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) rotate(360deg); opacity: 0; }
+  }
+
+  .celebration-msg {
+    display: none;
+    text-align: center;
+    padding: 24px;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+  }
+
+  .celebration-msg.show { display: block; animation: fadeInUp 0.5s ease; }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .celebration-emoji { font-size: 3.5rem; display: block; margin-bottom: 10px; }
+  .celebration-text { font-size: 1.3rem; font-weight: 900; color: #C65D8A; }
+  .celebration-sub { font-size: 0.9rem; color: #AB47BC; font-weight: 700; margin-top: 4px; }
+
+  .speed-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #7B6FA0;
+  }
+
+  .speed-btn {
+    background: white;
+    border: 2px solid #CE93D8;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #AB47BC;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+
+  .speed-btn.active {
+    background: #AB47BC;
+    color: white;
+    border-color: #AB47BC;
+  }
+
+  .speed-btn:hover { transform: scale(1.05); }
+
+  .question-card {
+    background: linear-gradient(135deg, #E8F5E9, #E3F2FD);
+    border-radius: 20px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    border: 2px solid #A5D6A7;
+  }
+
+  .question-title {
+    font-size: 0.85rem;
+    font-weight: 900;
+    color: #2E7D32;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .question-text {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #1B5E20;
+    margin-bottom: 12px;
+  }
+
+  .answer-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .answer-btn {
+    background: white;
+    border: 2px solid #66BB6A;
+    border-radius: 12px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #2E7D32;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+
+  .answer-btn:hover { background: #E8F5E9; transform: scale(1.03); }
+  .answer-btn.correct { background: #66BB6A; color: white; border-color: #2E7D32; }
+  .answer-btn.wrong { background: #EF9A9A; color: white; border-color: #C62828; }
+
+  .feedback-text {
+    font-size: 0.9rem;
+    font-weight: 800;
+    margin-top: 8px;
+    min-height: 24px;
+  }
+  .feedback-text.correct { color: #2E7D32; }
+  .feedback-text.wrong { color: #C62828; }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 1.5rem; }
+    .paragraph-card { padding: 16px 16px; }
+    ruby rb, .char-span { font-size: 1.2rem; }
+    .punc { font-size: 1.2rem; }
+  }
+</style>
+<script>
+  window.NAV_CONFIG = {
+    breadcrumbs: [
+      { label: "Home",               href: "../../index.html" },
+      { label: "Education",          href: "../index.html" },
+      { label: "Chinese Reading Aloud", href: "index.html" },
+      { label: "我长大了" }
+    ]
+  };
+</script>
+<script src="../../nav-top.js"></script>
+</head>
+<body>
+
+<div class="stars-bg" id="starsBg"></div>
+
+<div class="container">
+  <div class="hero">
+    <span class="hero-emoji">🌟</span>
+    <h1>我 长 大 了！</h1>
+    <div class="subtitle">朗读练习 · 二年级</div>
+  </div>
+
+  <div class="star-counter">
+    <span>你的星星：</span>
+    <div class="star-display" id="starDisplay">
+      <span class="star-icon" id="s0">⭐</span>
+      <span class="star-icon" id="s1">⭐</span>
+      <span class="star-icon" id="s2">⭐</span>
+      <span class="star-icon" id="s3">⭐</span>
+      <span class="star-icon" id="s4">⭐</span>
+      <span class="star-icon" id="s5">⭐</span>
+    </div>
+    <span id="starCount">0</span> / 6
+  </div>
+
+  <div class="progress-bar-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-pink" onclick="togglePinyin()">🔤 <span id="pinyinBtnText">隐藏拼音</span></button>
+    <button class="btn btn-purple" onclick="readAll()">🔊 朗读全文</button>
+    <button class="btn btn-gold" onclick="highlightAll()">✨ 逐句高亮</button>
+    <button class="btn btn-green" onclick="resetAll()">🔄 重新开始</button>
+  </div>
+
+  <div class="speed-selector">
+    <span>朗读速度：</span>
+    <button class="speed-btn" onclick="setSpeed(0.6)" id="sp-slow">慢</button>
+    <button class="speed-btn active" onclick="setSpeed(0.85)" id="sp-normal">正常</button>
+    <button class="speed-btn" onclick="setSpeed(1.1)" id="sp-fast">快</button>
+  </div>
+
+  <div class="keyword-box">
+    <div class="keyword-title">🔑 点击词语，听发音：</div>
+    <div class="keyword-chips" id="keywordChips"></div>
+  </div>
+
+  <div id="paragraphsContainer"></div>
+
+  <div class="question-card">
+    <div class="question-title">🧠 想一想！</div>
+    <div class="question-text" id="qText"></div>
+    <div class="answer-btns" id="answerBtns"></div>
+    <div class="feedback-text" id="feedbackText"></div>
+  </div>
+
+  <div class="celebration-msg" id="celebMsg">
+    <span class="celebration-emoji">🎉</span>
+    <div class="celebration-text">你太棒了！</div>
+    <div class="celebration-sub">你读完了整篇课文，你真的长大了！⭐</div>
+  </div>
+</div>
+
+<div class="confetti-burst" id="confetti"></div>
+
+<script>
+const paragraphs = [
+  {
+    icon: '👕',
+    color: '#F06292',
+    bg: '#FCE4EC',
+    label: '第一段',
+    sentences: [
+      { text: '快开学了，', pinyin: ['kuài','kāi xué le，'], chars: ['快','开学了，'] },
+      { text: '我拿出校服试了试。', pinyin: ['wǒ','ná chū','xiào fú','shì le shì。'], chars: ['我','拿出','校服','试了试。'] },
+      { text: '这些衣服以前很合适，', pinyin: ['zhè xiē','yī fu','yǐ qián','hěn','hé shì，'], chars: ['这些','衣服','以前','很','合适，'] },
+      { text: '现在怎么都变小了？', pinyin: ['xiàn zài','zěn me','dōu','biàn xiǎo le？'], chars: ['现在','怎么','都','变小了？'] },
+      { text: '妈妈对我说："你长大了！"', pinyin: ['māmā','duì wǒ shuō：','nǐ','zhǎng dà le！'], chars: ['妈妈','对我说："','你','长大了！"'] },
+    ]
+  },
+  {
+    icon: '📚',
+    color: '#AB47BC',
+    bg: '#F3E5F5',
+    label: '第二段',
+    sentences: [
+      { text: '今年，我读二年级了。', pinyin: ['jīn nián，','wǒ dú','èr nián jí le。'], chars: ['今年，','我读','二年级了。'] },
+      { text: '我在二年级甲班。', pinyin: ['wǒ zài','èr nián jí','jiǎ bān。'], chars: ['我在','二年级','甲班。'] },
+    ]
+  },
+  {
+    icon: '👨‍👧',
+    color: '#26C6DA',
+    bg: '#E0F7FA',
+    label: '第三段',
+    sentences: [
+      { text: '在家里，我会折衣服，', pinyin: ['zài jiā lǐ，','wǒ huì','zhé','yī fu，'], chars: ['在家里，','我会','折','衣服，'] },
+      { text: '还会帮妹妹穿衣服。', pinyin: ['hái huì','bāng mèi mei','chuān','yī fu。'], chars: ['还会','帮妹妹','穿','衣服。'] },
+      { text: '爸爸对我说："你长大了！"', pinyin: ['bàba','duì wǒ shuō：','nǐ','zhǎng dà le！'], chars: ['爸爸','对我说："','你','长大了！"'] },
+    ]
+  },
+  {
+    icon: '🏫',
+    color: '#66BB6A',
+    bg: '#E8F5E9',
+    label: '第四段',
+    sentences: [
+      { text: '在学校，我会专心听老师讲课，', pinyin: ['zài xué xiào，','wǒ huì','zhuān xīn','tīng lǎo shī','jiǎng kè，'], chars: ['在学校，','我会','专心','听老师','讲课，'] },
+      { text: '还会帮助一年级的新同学。', pinyin: ['hái huì','bāng zhù','yī nián jí','de','xīn tóng xué。'], chars: ['还会','帮助','一年级','的','新同学。'] },
+      { text: '老师对我说："你长大了！"', pinyin: ['lǎo shī','duì wǒ shuō：','nǐ','zhǎng dà le！'], chars: ['老师','对我说："','你','长大了！"'] },
+    ]
+  },
+  {
+    icon: '🌟',
+    color: '#FFB300',
+    bg: '#FFF8E1',
+    label: '第五段',
+    sentences: [
+      { text: '大家都说我长大了。', pinyin: ['dà jiā','dōu shuō','wǒ','zhǎng dà le。'], chars: ['大家','都说','我','长大了。'] },
+      { text: '同学们，你们长大了吗？', pinyin: ['tóng xué men，','nǐ men','zhǎng dà le ma？'], chars: ['同学们，','你们','长大了吗？'] },
+    ]
+  }
+];
+
+const keywords = [
+  { word: '长大了', pinyin: 'zhǎng dà le' },
+  { word: '校服', pinyin: 'xiào fú' },
+  { word: '合适', pinyin: 'hé shì' },
+  { word: '二年级', pinyin: 'èr nián jí' },
+  { word: '甲班', pinyin: 'jiǎ bān' },
+  { word: '折衣服', pinyin: 'zhé yī fu' },
+  { word: '专心', pinyin: 'zhuān xīn' },
+  { word: '帮助', pinyin: 'bāng zhù' },
+];
+
+const questions = [
+  {
+    q: '妈妈为什么说"你长大了"？',
+    options: ['因为校服变小了', '因为作业做完了', '因为吃了很多饭'],
+    correct: 0,
+    feedback: ['🎉 答对了！校服变小，说明你长高了！', '再想一想～', '再想一想～']
+  },
+  {
+    q: '小朋友在家里会做什么？',
+    options: ['帮妈妈煮饭', '折衣服和帮妹妹穿衣服', '玩手机游戏'],
+    correct: 1,
+    feedback: ['再想一想～', '🎉 答对了！真能干！', '再想一想～']
+  },
+  {
+    q: '小朋友现在读几年级？',
+    options: ['一年级乙班', '三年级', '二年级甲班'],
+    correct: 2,
+    feedback: ['再想一想～', '再想一想～', '🎉 答对了！二年级甲班！']
+  }
+];
+
+let pinyinVisible = true;
+let speechRate = 0.85;
+let doneCards = new Set();
+let stars = 0;
+let currentQ = 0;
+let isHighlighting = false;
+let utterance = null;
+
+function createStars() {
+  const bg = document.getElementById('starsBg');
+  const colors = ['#FFD700','#FFB6C1','#ADD8E6','#98FB98','#DDA0DD'];
+  for (let i = 0; i < 25; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 6 + 3;
+    s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;background:${colors[Math.floor(Math.random()*colors.length)]};animation-delay:${Math.random()*4}s;animation-duration:${2+Math.random()*3}s`;
+    bg.appendChild(s);
+  }
+}
+
+function buildKeywords() {
+  const container = document.getElementById('keywordChips');
+  keywords.forEach(kw => {
+    const chip = document.createElement('button');
+    chip.className = 'keyword-chip';
+    chip.innerHTML = `<ruby><rb>${kw.word}</rb><rt>${kw.pinyin}</rt></ruby>`;
+    chip.onclick = () => speakText(kw.word);
+    container.appendChild(chip);
+  });
+}
+
+function buildParagraphs() {
+  const container = document.getElementById('paragraphsContainer');
+  container.innerHTML = '';
+  paragraphs.forEach((para, pi) => {
+    const card = document.createElement('div');
+    card.className = 'paragraph-card';
+    card.id = `para-${pi}`;
+
+    const header = document.createElement('div');
+    header.className = 'card-header';
+
+    const iconEl = document.createElement('div');
+    iconEl.className = 'card-icon';
+    iconEl.style.background = para.bg;
+    iconEl.textContent = para.icon;
+
+    const labelEl = document.createElement('div');
+    labelEl.className = 'card-label';
+    labelEl.style.background = para.color;
+    labelEl.textContent = para.label;
+
+    const doneBadge = document.createElement('div');
+    doneBadge.className = 'done-badge';
+    doneBadge.textContent = '✅';
+
+    header.appendChild(iconEl);
+    header.appendChild(labelEl);
+    header.appendChild(doneBadge);
+
+    const textArea = document.createElement('div');
+    textArea.className = 'text-area';
+    textArea.id = `text-${pi}`;
+
+    para.sentences.forEach((sent, si) => {
+      const span = document.createElement('span');
+      span.className = 'phrase-break';
+      span.id = `sent-${pi}-${si}`;
+      sent.chars.forEach((chunk, ci) => {
+        const isPunc = /[，。！？""：]/.test(chunk);
+        if (isPunc && chunk.length === 1) {
+          const p = document.createElement('span');
+          p.className = 'punc';
+          p.textContent = chunk;
+          span.appendChild(p);
+        } else {
+          const r = document.createElement('ruby');
+          r.id = `chunk-${pi}-${si}-${ci}`;
+          const rb = document.createElement('rb');
+          rb.textContent = chunk;
+          rb.onclick = (e) => { e.stopPropagation(); speakText(chunk.replace(/[，。！？""：]/g,'')); sparkle(r); };
+          const rt = document.createElement('rt');
+          rt.textContent = sent.pinyin[ci] || '';
+          r.appendChild(rt);
+          r.appendChild(rb);
+          span.appendChild(r);
+        }
+      });
+      textArea.appendChild(span);
+      if (si < para.sentences.length - 1) {
+        textArea.appendChild(document.createTextNode(' '));
+      }
+    });
+
+    const hint = document.createElement('div');
+    hint.className = 'play-hint';
+    hint.textContent = '👆 点击段落朗读';
+
+    card.appendChild(header);
+    card.appendChild(textArea);
+    card.appendChild(hint);
+
+    card.onclick = () => {
+      setActiveCard(pi);
+      readParagraph(pi);
+    };
+
+    container.appendChild(card);
+  });
+}
+
+function setActiveCard(pi) {
+  document.querySelectorAll('.paragraph-card').forEach((c, i) => {
+    c.classList.toggle('active', i === pi);
+  });
+}
+
+function speakText(text, rate) {
+  if (!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'zh-CN';
+  u.rate = rate || speechRate;
+  speechSynthesis.speak(u);
+}
+
+function readParagraph(pi) {
+  const para = paragraphs[pi];
+  const fullText = para.sentences.map(s => s.text).join('');
+  speakText(fullText);
+  markDone(pi);
+}
+
+function markDone(pi) {
+  const card = document.getElementById(`para-${pi}`);
+  if (!card.classList.contains('done')) {
+    card.classList.add('done');
+    doneCards.add(pi);
+    addStar();
+    updateProgress();
+    if (doneCards.size === paragraphs.length) {
+      setTimeout(() => celebrate(), 600);
+    }
+  }
+}
+
+function addStar() {
+  if (stars < 6) {
+    const starEl = document.getElementById(`s${stars}`);
+    starEl.classList.add('lit');
+    setTimeout(() => starEl.classList.remove('lit'), 600);
+    stars++;
+    document.getElementById('starCount').textContent = stars;
+  }
+}
+
+function updateProgress() {
+  const pct = (doneCards.size / paragraphs.length) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+function readAll() {
+  const allText = paragraphs.map(p => p.sentences.map(s => s.text).join('')).join('　');
+  speakText(allText, speechRate);
+}
+
+async function highlightAll() {
+  if (isHighlighting) return;
+  isHighlighting = true;
+  speechSynthesis.cancel();
+
+  for (let pi = 0; pi < paragraphs.length; pi++) {
+    setActiveCard(pi);
+    for (let si = 0; si < paragraphs[pi].sentences.length; si++) {
+      const sent = paragraphs[pi].sentences[si];
+      highlightSentence(pi, si, true);
+      await speakAndWait(sent.text);
+      highlightSentence(pi, si, false);
+    }
+    markDone(pi);
+  }
+  isHighlighting = false;
+}
+
+function highlightSentence(pi, si, on) {
+  const sentEl = document.getElementById(`sent-${pi}-${si}`);
+  if (!sentEl) return;
+  sentEl.querySelectorAll('ruby').forEach(r => {
+    r.classList.toggle('highlighted', on);
+  });
+}
+
+function speakAndWait(text) {
+  return new Promise(resolve => {
+    if (!window.speechSynthesis) { setTimeout(resolve, 1000); return; }
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'zh-CN';
+    u.rate = speechRate;
+    u.onend = resolve;
+    u.onerror = resolve;
+    speechSynthesis.speak(u);
+    setTimeout(resolve, text.length * 600 + 1500);
+  });
+}
+
+function sparkle(el) {
+  el.style.background = '#FFE082';
+  setTimeout(() => { el.style.background = ''; }, 400);
+}
+
+function togglePinyin() {
+  pinyinVisible = !pinyinVisible;
+  document.body.classList.toggle('pinyin-off', !pinyinVisible);
+  document.getElementById('pinyinBtnText').textContent = pinyinVisible ? '隐藏拼音' : '显示拼音';
+}
+
+function setSpeed(rate) {
+  speechRate = rate;
+  document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+  if (rate === 0.6) document.getElementById('sp-slow').classList.add('active');
+  else if (rate === 0.85) document.getElementById('sp-normal').classList.add('active');
+  else document.getElementById('sp-fast').classList.add('active');
+}
+
+function resetAll() {
+  speechSynthesis.cancel();
+  isHighlighting = false;
+  doneCards.clear();
+  stars = 0;
+  document.getElementById('starCount').textContent = 0;
+  document.getElementById('progressBar').style.width = '0%';
+  document.getElementById('celebMsg').classList.remove('show');
+  document.querySelectorAll('.star-icon').forEach(s => s.classList.remove('lit'));
+  buildParagraphs();
+  currentQ = 0;
+  loadQuestion(currentQ);
+}
+
+function celebrate() {
+  document.getElementById('celebMsg').classList.add('show');
+  fireConfetti();
+  speakText('你太棒了！你读完了整篇课文！', 0.85);
+}
+
+function fireConfetti() {
+  const burst = document.getElementById('confetti');
+  burst.innerHTML = '';
+  burst.style.left = '50%';
+  burst.style.top = '40%';
+  const colors = ['#F06292','#AB47BC','#26C6DA','#66BB6A','#FFB300','#FF7043'];
+  for (let i = 0; i < 30; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    const angle = Math.random() * 360;
+    const dist = 80 + Math.random() * 120;
+    const tx = Math.cos(angle * Math.PI / 180) * dist;
+    const ty = Math.sin(angle * Math.PI / 180) * dist - 60;
+    piece.style.cssText = `background:${colors[i%colors.length]};--tx:${tx}px;--ty:${ty}px;animation-delay:${Math.random()*0.3}s`;
+    burst.appendChild(piece);
+  }
+  setTimeout(() => burst.innerHTML = '', 1600);
+}
+
+function buildQuestion() {
+  currentQ = Math.floor(Math.random() * questions.length);
+  loadQuestion(currentQ);
+}
+
+function loadQuestion(idx) {
+  const q = questions[idx];
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('feedbackText').textContent = '';
+  document.getElementById('feedbackText').className = 'feedback-text';
+  const btns = document.getElementById('answerBtns');
+  btns.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const b = document.createElement('button');
+    b.className = 'answer-btn';
+    b.textContent = opt;
+    b.onclick = () => checkAnswer(i, q, btns);
+    btns.appendChild(b);
+  });
+}
+
+function checkAnswer(i, q, btns) {
+  Array.from(btns.children).forEach((b, bi) => {
+    b.disabled = true;
+    if (bi === q.correct) b.classList.add('correct');
+    else if (bi === i && i !== q.correct) b.classList.add('wrong');
+  });
+  const fb = document.getElementById('feedbackText');
+  fb.textContent = q.feedback[i];
+  fb.className = 'feedback-text ' + (i === q.correct ? 'correct' : 'wrong');
+  if (i === q.correct) {
+    addStar();
+    setTimeout(() => {
+      const next = (currentQ + 1) % questions.length;
+      currentQ = next;
+      loadQuestion(next);
+    }, 2000);
+  }
+}
+
+createStars();
+buildKeywords();
+buildParagraphs();
+buildQuestion();
+</script>
+</body>
+</html>

@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>送颜色 - 朗读练习</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  font-family:'Nunito','PingFang SC','Hiragino Sans GB',sans-serif;
+  min-height:100vh;
+  padding:20px 16px 48px;
+  overflow-x:hidden;
+  background:#FAFAFA;
+  position:relative;
+}
+
+/* Rainbow shimmer background */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 55% 30% at 10% 15%, rgba(255,100,150,0.09) 0%,transparent 65%),
+    radial-gradient(ellipse 45% 35% at 90% 20%, rgba(80,160,255,0.10) 0%,transparent 65%),
+    radial-gradient(ellipse 50% 30% at 50% 85%, rgba(100,210,120,0.10) 0%,transparent 65%),
+    radial-gradient(ellipse 40% 25% at 80% 60%, rgba(255,210,80,0.09) 0%,transparent 60%);
+  pointer-events:none;z-index:0;
+}
+
+/* Floating paint drops */
+.dot{
+  position:fixed;border-radius:50%;pointer-events:none;z-index:0;
+  animation:dotFloat 8s ease-in-out infinite;opacity:0.12;
+}
+@keyframes dotFloat{
+  0%,100%{transform:translateY(0) scale(1);}
+  50%{transform:translateY(-14px) scale(1.1);}
+}
+
+.con{max-width:760px;margin:0 auto;position:relative;z-index:1;}
+
+/* ── HERO ── */
+.hero{text-align:center;padding:14px 0 18px;}
+
+.pencils{
+  display:flex;justify-content:center;gap:5px;margin-bottom:10px;
+}
+.pencil{
+  font-size:2rem;display:inline-block;
+  animation:pencilWiggle 2.5s ease-in-out infinite;
+  transform-origin:bottom center;
+}
+.pencil:nth-child(1){animation-delay:0s;}
+.pencil:nth-child(2){animation-delay:0.3s;}
+.pencil:nth-child(3){animation-delay:0.6s;}
+.pencil:nth-child(4){animation-delay:0.9s;}
+.pencil:nth-child(5){animation-delay:1.2s;}
+.pencil:nth-child(6){animation-delay:1.5s;}
+.pencil:nth-child(7){animation-delay:1.8s;}
+@keyframes pencilWiggle{
+  0%,100%{transform:rotate(-5deg);}
+  50%{transform:rotate(5deg);}
+}
+
+h1{
+  font-size:2rem;font-weight:900;
+  background:linear-gradient(135deg,#FF6B6B,#FF8C42,#FFD166,#06D6A0,#118AB2,#9B5DE5);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:3px;margin-bottom:3px;
+}
+.subtitle{font-size:0.85rem;font-weight:800;color:#999;letter-spacing:2px;margin-bottom:18px;}
+
+/* ── STARS ── */
+.star-row{display:flex;align-items:center;justify-content:center;gap:3px;margin-bottom:12px;}
+.spip{font-size:1.4rem;filter:grayscale(1) opacity(0.25);transition:filter 0.3s;}
+.spip.lit{filter:none;animation:sPop 0.4s ease;}
+@keyframes sPop{0%{transform:scale(1);}50%{transform:scale(1.7) rotate(20deg);}100%{transform:scale(1);}}
+#slbl{font-size:0.8rem;font-weight:800;color:#999;margin-left:6px;}
+
+/* ── PROGRESS ── */
+.prog-wrap{
+  background:#EEE;border-radius:50px;height:12px;
+  margin-bottom:16px;overflow:hidden;border:2px solid #E0E0E0;
+}
+.prog-fill{
+  height:100%;
+  background:linear-gradient(90deg,#FF6B6B,#FFD166,#06D6A0,#118AB2,#9B5DE5);
+  background-size:300% 100%;
+  animation:rainbowSlide 3s linear infinite;
+  border-radius:50px;width:0%;transition:width 0.6s cubic-bezier(.4,0,.2,1);
+}
+@keyframes rainbowSlide{0%{background-position:0%}100%{background-position:300%}}
+
+/* ── CONTROLS ── */
+.controls{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.btn{
+  border:none;border-radius:50px;padding:9px 17px;
+  font-size:0.86rem;font-weight:800;cursor:pointer;
+  transition:transform 0.15s,box-shadow 0.15s;
+  font-family:inherit;display:flex;align-items:center;gap:5px;
+}
+.btn:active{transform:scale(0.93)!important;}
+.btn-a{background:#9B5DE5;color:#fff;box-shadow:0 4px 0 #6A1FC2;}
+.btn-a:hover{transform:translateY(-2px);box-shadow:0 6px 0 #6A1FC2;}
+.btn-b{background:#06D6A0;color:#fff;box-shadow:0 4px 0 #028A6A;}
+.btn-b:hover{transform:translateY(-2px);box-shadow:0 6px 0 #028A6A;}
+.btn-c{background:#FF8C42;color:#fff;box-shadow:0 4px 0 #C25E1A;}
+.btn-c:hover{transform:translateY(-2px);box-shadow:0 6px 0 #C25E1A;}
+.btn-d{background:#118AB2;color:#fff;box-shadow:0 4px 0 #0A5473;}
+.btn-d:hover{transform:translateY(-2px);box-shadow:0 6px 0 #0A5473;}
+
+/* ── SPEED ── */
+.spd-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:16px;font-size:0.8rem;font-weight:800;color:#AAA;}
+.spd-btn{
+  background:white;border:2px solid #DDD;border-radius:20px;
+  padding:3px 11px;font-size:0.77rem;font-weight:800;
+  color:#888;cursor:pointer;font-family:inherit;transition:all 0.15s;
+}
+.spd-btn.active{background:#9B5DE5;color:white;border-color:#9B5DE5;}
+.spd-btn:hover{transform:scale(1.06);}
+
+/* ── KEYWORD BAR ── */
+.kw-bar{
+  background:linear-gradient(135deg,#FFF9F0,#FFF0F9);
+  border:2px dashed #FFB3C6;border-radius:18px;
+  padding:12px 15px;margin-bottom:14px;
+}
+.kw-title{font-size:0.77rem;font-weight:900;color:#CC4466;margin-bottom:8px;display:flex;align-items:center;gap:5px;}
+.kw-chips{display:flex;flex-wrap:wrap;gap:7px;}
+.kw-chip{
+  background:white;border:2px solid #FFB3C6;border-radius:20px;
+  padding:4px 12px;font-size:0.86rem;font-weight:800;
+  color:#CC2255;cursor:pointer;transition:all 0.15s;font-family:inherit;
+}
+.kw-chip .kp{display:block;font-size:0.58rem;color:#CC88AA;font-weight:700;line-height:1.2;margin-bottom:1px;}
+.kw-chip:hover{background:#FF6B6B;color:white;border-color:#FF6B6B;transform:scale(1.05);}
+.kw-chip:hover .kp{color:rgba(255,255,255,0.75);}
+.kw-chip:active{transform:scale(0.94);}
+
+/* ── COLOR MATCH GAME ── */
+.color-game{
+  background:white;border-radius:22px;padding:18px 20px;
+  margin-bottom:14px;
+  box-shadow:0 4px 18px rgba(0,0,0,0.07);
+  border:2px solid #EEE;
+}
+.cg-title{font-size:0.8rem;font-weight:900;color:#555;margin-bottom:14px;display:flex;align-items:center;gap:5px;}
+
+.cg-targets{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;
+}
+.cg-target{
+  border-radius:14px;padding:10px 8px;text-align:center;
+  border:3px dashed #DDD;background:#FAFAFA;
+  transition:all 0.3s;min-height:72px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  cursor:pointer;
+  font-size:0.82rem;font-weight:800;color:#777;
+}
+.cg-target .tg-icon{font-size:1.6rem;display:block;}
+.cg-target .tg-name{font-size:0.78rem;font-weight:800;}
+.cg-target .tg-color{font-size:0.7rem;font-weight:800;min-height:16px;color:#999;transition:color 0.3s;}
+.cg-target.selected-target{border-style:solid;border-color:#9B5DE5;box-shadow:0 0 0 3px rgba(155,93,229,0.2);}
+.cg-target.filled{border-style:solid;border-color:#06D6A0;}
+
+.cg-colors{
+  display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
+  margin-bottom:10px;
+}
+.cg-color-btn{
+  width:42px;height:42px;border-radius:50%;border:3px solid rgba(0,0,0,0.12);
+  cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.65rem;font-weight:800;color:white;
+  text-shadow:0 1px 2px rgba(0,0,0,0.3);
+}
+.cg-color-btn:hover:not(.used){transform:scale(1.18);box-shadow:0 4px 12px rgba(0,0,0,0.2);}
+.cg-color-btn.selected-color{transform:scale(1.2);box-shadow:0 0 0 4px rgba(155,93,229,0.5);}
+.cg-color-btn.used{opacity:0.28;pointer-events:none;}
+.cg-color-btn:active:not(.used){transform:scale(0.94);}
+
+.cg-instr{
+  font-size:0.78rem;font-weight:800;color:#AAA;
+  text-align:center;margin-bottom:8px;min-height:18px;transition:color 0.3s;
+}
+.cg-instr.ok{color:#06D6A0;}
+.cg-instr.bad{color:#FF6B6B;}
+.cg-instr.info{color:#9B5DE5;}
+
+.cg-footer{display:flex;justify-content:center;gap:8px;margin-top:6px;}
+.cg-reset{
+  background:none;border:2px solid #DDD;border-radius:20px;
+  padding:5px 14px;font-size:0.77rem;font-weight:800;
+  color:#AAA;cursor:pointer;font-family:inherit;transition:all 0.15s;
+}
+.cg-reset:hover{border-color:#9B5DE5;color:#9B5DE5;}
+
+/* ── MINI BOOK VIEW ── */
+.book-preview{
+  display:flex;gap:6px;overflow-x:auto;padding:4px 0 8px;
+  scrollbar-width:thin;
+}
+.book-page{
+  flex-shrink:0;width:80px;border-radius:10px;
+  padding:8px 6px;text-align:center;
+  border:2px solid #EEE;background:white;
+  font-size:0.7rem;font-weight:800;color:#666;
+  transition:transform 0.2s,border-color 0.2s,background 0.3s;
+}
+.book-page .pg-icon{font-size:1.4rem;display:block;margin-bottom:3px;}
+.book-page.colored{border-color:#FFD166;background:linear-gradient(135deg,#FFFEF0,#FFFFF5);}
+
+/* ── PARAGRAPHS ── */
+.para-card{
+  background:white;border-radius:22px;padding:20px 22px 14px;
+  margin-bottom:13px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.06);
+  border:3px solid transparent;
+  transition:border-color 0.3s,transform 0.2s,box-shadow 0.3s;
+  cursor:pointer;position:relative;overflow:hidden;
+}
+.para-card::before{
+  content:'';position:absolute;top:0;left:0;
+  width:7px;height:100%;background:#EEE;
+  border-radius:22px 0 0 22px;transition:background 0.3s;
+}
+.para-card.active{border-color:#9B5DE5;box-shadow:0 8px 28px rgba(155,93,229,0.15);transform:translateY(-2px);}
+.para-card.active::before{background:#9B5DE5;}
+.para-card.done{border-color:#06D6A0;background:linear-gradient(135deg,#FAFFFE,#F0FFFA);}
+.para-card.done::before{background:#06D6A0;}
+
+.card-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.card-ico{font-size:1.7rem;width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.card-lbl{font-size:0.75rem;font-weight:900;color:white;padding:3px 12px;border-radius:20px;letter-spacing:1px;}
+.done-tick{margin-left:auto;font-size:1.3rem;display:none;animation:pop 0.35s ease;}
+@keyframes pop{0%{transform:scale(0) rotate(-20deg);}70%{transform:scale(1.3) rotate(5deg);}100%{transform:scale(1);}}
+.para-card.done .done-tick{display:block;}
+
+/* COLOR LINES - special styling for color gifting sentences */
+.color-line{
+  display:flex;align-items:center;gap:8px;
+  padding:5px 10px;border-radius:10px;margin:3px 0;
+  transition:background 0.3s;
+}
+.color-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;border:2px solid rgba(0,0,0,0.1);}
+
+/* ── RUBY ── */
+.text-area{line-height:2.6;word-break:break-all;}
+ruby{display:inline-flex;flex-direction:column-reverse;align-items:center;margin:0 1px;vertical-align:bottom;}
+ruby rt{font-size:0.57em;font-weight:800;color:#9B5DE5;line-height:1.2;user-select:none;transition:opacity 0.3s;font-family:'Nunito',sans-serif;}
+ruby rb{font-size:1.32rem;font-weight:700;color:#2A2A2A;cursor:pointer;display:inline-block;padding:2px 3px;border-radius:6px;transition:background 0.15s,transform 0.1s;}
+ruby:hover rb{background:#F3E5FF;transform:scale(1.13);}
+ruby.hl rb{background:#FFE082;border-radius:6px;}
+.punc{font-size:1.32rem;font-weight:700;color:#BDBDBD;margin:0 1px;}
+body.pin-off ruby rt{opacity:0;}
+.read-hint{font-size:0.7rem;color:#CCC;margin-top:7px;text-align:right;font-weight:800;}
+
+/* ── QUESTION BOX ── */
+.q-box{font-size:1.05rem;font-weight:800;color:#444;
+  background:linear-gradient(135deg,#FFF9F0,#FFF0FF);
+  border:2px solid #FFB3C6;border-radius:16px;
+  padding:14px 18px;margin-bottom:14px;line-height:1.8;
+}
+.q-box .q-label{font-size:0.75rem;color:#CC88AA;font-weight:900;margin-bottom:6px;}
+.q-box .answer-area{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.color-answer-btn{
+  border:none;border-radius:50px;padding:7px 16px;
+  font-size:0.88rem;font-weight:800;cursor:pointer;
+  font-family:inherit;color:white;text-shadow:0 1px 2px rgba(0,0,0,0.25);
+  transition:transform 0.15s,box-shadow 0.15s;
+}
+.color-answer-btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.2);}
+.color-answer-btn:active{transform:scale(0.93);}
+.answer-reveal{font-size:0.88rem;font-weight:800;margin-top:8px;min-height:22px;}
+.answer-reveal.ok{color:#06D6A0;}.answer-reveal.hint{color:#FF8C42;}
+
+/* ── QUIZ ── */
+.quiz-card{background:linear-gradient(135deg,#F9F0FF,#FFF0F9);border:2px solid #D4AAFF;border-radius:20px;padding:16px 20px;margin-bottom:14px;}
+.quiz-hdr{font-size:0.8rem;font-weight:900;color:#7B2FBE;margin-bottom:9px;display:flex;align-items:center;gap:5px;}
+.quiz-q{font-size:0.98rem;font-weight:800;color:#3A1A5E;margin-bottom:11px;}
+.ans-grid{display:flex;flex-wrap:wrap;gap:7px;}
+.ans-btn{background:white;border:2px solid #D4AAFF;border-radius:12px;padding:7px 14px;font-size:0.86rem;font-weight:800;color:#7B2FBE;cursor:pointer;transition:all 0.15s;font-family:inherit;}
+.ans-btn:hover:not(:disabled){background:#F3E5FF;transform:scale(1.04);}
+.ans-btn.correct{background:#06D6A0;color:white;border-color:#028A6A;}
+.ans-btn.wrong{background:#FF6B6B;color:white;border-color:#CC2222;}
+.quiz-fb{font-size:0.86rem;font-weight:800;margin-top:7px;min-height:20px;}
+.quiz-fb.ok{color:#028A6A;}.quiz-fb.bad{color:#CC2222;}
+
+/* ── CELEBRATE ── */
+.cel-card{display:none;text-align:center;background:white;border-radius:24px;padding:26px 20px;box-shadow:0 10px 40px rgba(155,93,229,0.15);border:3px solid #FFD166;margin-bottom:20px;}
+.cel-card.show{display:block;animation:riseUp 0.5s ease;}
+@keyframes riseUp{from{opacity:0;transform:translateY(22px) scale(0.95);}to{opacity:1;transform:translateY(0) scale(1);}}
+.cel-emoji{font-size:3.6rem;display:block;margin-bottom:10px;}
+.cel-title{font-size:1.4rem;font-weight:900;background:linear-gradient(90deg,#FF6B6B,#FFD166,#06D6A0,#118AB2,#9B5DE5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:2px;margin-bottom:5px;}
+.cel-sub{font-size:0.9rem;color:#888;font-weight:700;}
+
+.conf-host{position:fixed;top:0;left:0;width:100%;height:0;pointer-events:none;z-index:999;overflow:visible;}
+.cp{position:absolute;width:10px;height:10px;border-radius:2px;animation:cpFly 1.5s ease-out forwards;}
+@keyframes cpFly{0%{transform:translate(var(--sx),var(--sy)) rotate(0deg);opacity:1;}100%{transform:translate(var(--ex),var(--ey)) rotate(540deg);opacity:0;}}
+
+@media(max-width:480px){
+  h1{font-size:1.6rem;}
+  .para-card{padding:14px 14px 10px;}
+  ruby rb{font-size:1.12rem;}.punc{font-size:1.12rem;}
+  .cg-targets{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+<script>
+  window.NAV_CONFIG = {
+    breadcrumbs: [
+      { label: "Home",               href: "../../index.html" },
+      { label: "Education",          href: "../index.html" },
+      { label: "Chinese Reading Aloud", href: "index.html" },
+      { label: "送颜色" }
+    ]
+  };
+</script>
+<script src="../../nav-top.js"></script>
+</head>
+<body>
+
+<div class="dot" style="width:40px;height:40px;background:#FF6B6B;top:8%;left:3%;animation-delay:0s"></div>
+<div class="dot" style="width:28px;height:28px;background:#FFD166;top:15%;right:5%;animation-delay:1.5s"></div>
+<div class="dot" style="width:35px;height:35px;background:#06D6A0;top:55%;left:2%;animation-delay:3s"></div>
+<div class="dot" style="width:22px;height:22px;background:#118AB2;top:70%;right:3%;animation-delay:2s"></div>
+<div class="dot" style="width:30px;height:30px;background:#9B5DE5;top:85%;left:5%;animation-delay:4s"></div>
+
+<div class="con">
+
+  <div class="hero">
+    <div class="pencils">
+      <span class="pencil">🖍️</span>
+      <span class="pencil">✏️</span>
+      <span class="pencil">🖌️</span>
+      <span class="pencil">🖊️</span>
+      <span class="pencil">🖍️</span>
+      <span class="pencil">🎨</span>
+      <span class="pencil">✏️</span>
+    </div>
+    <h1>送 颜 色</h1>
+    <div class="subtitle">第四课 · 朗读练习 · 二年级</div>
+  </div>
+
+  <div class="star-row">
+    <span class="spip" id="sp0">🌈</span>
+    <span class="spip" id="sp1">🌈</span>
+    <span class="spip" id="sp2">🌈</span>
+    <span class="spip" id="sp3">🌈</span>
+    <span class="spip" id="sp4">🌈</span>
+    <span class="spip" id="sp5">🌈</span>
+    <span class="spip" id="sp6">🌈</span>
+    <span id="slbl">0 / 7</span>
+  </div>
+
+  <div class="prog-wrap"><div class="prog-fill" id="pFill"></div></div>
+
+  <div class="controls">
+    <button class="btn btn-a" onclick="togglePin()">🔤 <span id="pinBtn">隐藏拼音</span></button>
+    <button class="btn btn-b" onclick="readAll()">🔊 朗读全文</button>
+    <button class="btn btn-c" onclick="hlAll()">✨ 逐句朗读</button>
+    <button class="btn btn-d" onclick="resetAll()">🔄 重新开始</button>
+  </div>
+
+  <div class="spd-row">
+    朗读速度：
+    <button class="spd-btn" id="ss" onclick="setSpd(0.6)">慢</button>
+    <button class="spd-btn active" id="sn" onclick="setSpd(0.85)">正常</button>
+    <button class="spd-btn" id="sf" onclick="setSpd(1.1)">快</button>
+  </div>
+
+  <!-- KEYWORD BAR -->
+  <div class="kw-bar">
+    <div class="kw-title">🎨 颜色词语，点一点听发音：</div>
+    <div class="kw-chips" id="kwChips"></div>
+  </div>
+
+  <!-- COLOR MATCH GAME -->
+  <div class="color-game">
+    <div class="cg-title">🖍️ 涂色游戏：先选颜色，再点事物，给它送颜色！</div>
+    <div class="cg-instr" id="cgInstr">请先点击一种颜色 ↓</div>
+    <div class="cg-colors" id="cgColors"></div>
+    <div class="cg-targets" id="cgTargets"></div>
+    <div class="cg-footer">
+      <button class="cg-reset" onclick="resetColorGame()">🔄 重新涂色</button>
+    </div>
+  </div>
+
+  <!-- PARAGRAPHS -->
+  <div id="parasCon"></div>
+
+  <!-- OPEN QUESTION -->
+  <div class="q-box">
+    <div class="q-label">💭 欢欢的问题：</div>
+    小雨点也来要颜色。欢欢想：<strong>我送给它们什么颜色呢？</strong><br>
+    你觉得小雨点应该是什么颜色？
+    <div class="answer-area" id="rainAnswers"></div>
+    <div class="answer-reveal" id="rainReveal"></div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-card">
+    <div class="quiz-hdr">🧠 想一想！</div>
+    <div class="quiz-q" id="quizQ"></div>
+    <div class="ans-grid" id="ansGrid"></div>
+    <div class="quiz-fb" id="quizFb"></div>
+  </div>
+
+  <div class="cel-card" id="celCard">
+    <span class="cel-emoji">🎨🌈✨</span>
+    <div class="cel-title">太厉害了！</div>
+    <div class="cel-sub">你读完了《送颜色》！世界因为有你变得更美丽！🌸</div>
+  </div>
+
+</div>
+
+<div class="conf-host" id="confHost"></div>
+
+<script>
+/* ── DATA ── */
+const paras = [
+  {
+    icon:'📖', bg:'#F9F0FF', color:'#9B5DE5', label:'第一段',
+    sentences:[
+      {chunks:['欢欢','做了','一本','小书，'],pins:['huān huān','zuò le','yī běn','xiǎo shū，']},
+      {chunks:['一共','有','四页','。'],pins:['yī gòng','yǒu','sì yè','']},
+      {chunks:['她','在','每一页','都','画了画','。'],pins:['tā','zài','měi yī yè','dōu','huà le huà','']},
+    ]
+  },
+  {
+    icon:'🎨', bg:'#E8F8FF', color:'#118AB2', label:'第二段',
+    sentences:[
+      {chunks:['第一页','画了','天空、','太阳','和','云朵','。'],pins:['dì yī yè','huà le','tiān kōng、','tài yáng','hé','yún duǒ','']},
+      {chunks:['第二页','画了','森林','。'],pins:['dì èr yè','huà le','sēn lín','']},
+      {chunks:['第三页','画了','花朵','。'],pins:['dì sān yè','huà le','huā duǒ','']},
+      {chunks:['第四页','画了','草地','和','小雨点','。'],pins:['dì sì yè','huà le','cǎo dì','hé','xiǎo yǔ diǎn','']},
+    ]
+  },
+  {
+    icon:'🖍️', bg:'#FFF9F0', color:'#FF8C42', label:'第三段',
+    sentences:[
+      {chunks:['画好后，'],pins:['huà hǎo hòu，']},
+      {chunks:['欢欢','从','书包里','拿出','几支','彩色笔，'],pins:['huān huān','cóng','shū bāo lǐ','ná chū','jǐ zhī','cǎi sè bǐ，']},
+      {chunks:['把颜色','送给','它们','。'],pins:['bǎ yán sè','sòng gěi','tā men','']},
+    ]
+  },
+  {
+    icon:'🌈', bg:'#F0FFF8', color:'#06D6A0', label:'第四段（颜色）',
+    sentences:[
+      {chunks:['蓝色，','送给','天空','。'],pins:['lán sè，','sòng gěi','tiān kōng',''],color:'#118AB2'},
+      {chunks:['红色，','送给','太阳','。'],pins:['hóng sè，','sòng gěi','tài yáng',''],color:'#FF6B6B'},
+      {chunks:['白色，','送给','云朵','。'],pins:['bái sè，','sòng gěi','yún duǒ',''],color:'#90CAF9'},
+      {chunks:['绿色，','送给','森林','。'],pins:['lǜ sè，','sòng gěi','sēn lín',''],color:'#06D6A0'},
+      {chunks:['黄色，','送给','花朵','。'],pins:['huáng sè，','sòng gěi','huā duǒ',''],color:'#FFD166'},
+    ]
+  },
+  {
+    icon:'🌧️', bg:'#FFF0F9', color:'#FF6B6B', label:'第五段',
+    sentences:[
+      {chunks:['小雨点','也来','要颜色','。'],pins:['xiǎo yǔ diǎn','yě lái','yào yán sè','']},
+      {chunks:['欢欢','想','：'],pins:['huān huān','xiǎng','：']},
+      {chunks:['我','送给','它们','什么颜色','呢','？'],pins:['wǒ','sòng gěi','tā men','shén me yán sè','ne','？']},
+    ]
+  }
+];
+
+const keywords = [
+  {w:'颜色',p:'yán sè'},{w:'彩色笔',p:'cǎi sè bǐ'},{w:'送给',p:'sòng gěi'},
+  {w:'天空',p:'tiān kōng'},{w:'太阳',p:'tài yáng'},{w:'云朵',p:'yún duǒ'},
+  {w:'森林',p:'sēn lín'},{w:'花朵',p:'huā duǒ'},{w:'草地',p:'cǎo dì'},
+  {w:'小雨点',p:'xiǎo yǔ diǎn'},{w:'书包',p:'shū bāo'},{w:'一共',p:'yī gòng'},
+];
+
+const colorDefs = [
+  {name:'蓝色',hex:'#5B9BD5',cn:'蓝'},
+  {name:'红色',hex:'#E05252',cn:'红'},
+  {name:'白色',hex:'#B0C8E8',cn:'白'},
+  {name:'绿色',hex:'#4CAF78',cn:'绿'},
+  {name:'黄色',hex:'#F0C430',cn:'黄'},
+];
+
+const targetDefs = [
+  {id:'sky',  icon:'☁️',  label:'天空',  correct:'蓝色'},
+  {id:'sun',  icon:'☀️',  label:'太阳',  correct:'红色'},
+  {id:'cloud',icon:'🌤️',  label:'云朵',  correct:'白色'},
+  {id:'tree', icon:'🌲',  label:'森林',  correct:'绿色'},
+  {id:'flower',icon:'🌸', label:'花朵',  correct:'黄色'},
+];
+
+const quizzes = [
+  {q:'欢欢的书一共有几页？',opts:['三页','四页','五页'],ans:1,fb:['再想想～','🎉 对！一共四页！','再想想～']},
+  {q:'欢欢从哪里拿出彩色笔？',opts:['桌子上','书包里','口袋里'],ans:1,fb:['再想想～','🎉 答对了！从书包里！','再想想～']},
+  {q:'欢欢把什么颜色送给天空？',opts:['绿色','黄色','蓝色'],ans:2,fb:['再想想～','再想想～','🎉 答对了！蓝色送给天空！']},
+  {q:'哪个动物来要颜色？',opts:['小鸟','小雨点','小鱼'],ans:1,fb:['再想想～','🎉 对！是小雨点！','再想想～']},
+];
+
+/* ── STATE ── */
+let pinOn=true,spd=0.85,donePi=new Set(),stars=0,hlActive=false,quizIdx=0;
+let selColor=null, cgDone={};
+const TOTAL=paras.length, MAX_STARS=7;
+
+/* ── BUILD ── */
+buildKW(); buildColorGame(); buildParas(); loadQuiz(0); buildRainAnswers();
+
+function buildKW(){
+  const c=document.getElementById('kwChips');
+  keywords.forEach(k=>{
+    const b=document.createElement('button');
+    b.className='kw-chip';
+    b.innerHTML=`<span class="kp">${k.p}</span>${k.w}`;
+    b.onclick=()=>speak(k.w);
+    c.appendChild(b);
+  });
+}
+
+function buildColorGame(){
+  // color buttons
+  const cc=document.getElementById('cgColors');
+  cc.innerHTML='';
+  colorDefs.forEach(cd=>{
+    const b=document.createElement('button');
+    b.className='cg-color-btn';
+    b.style.background=cd.hex;
+    b.textContent=cd.name;
+    b.dataset.name=cd.name;
+    b.id=`cb-${cd.name}`;
+    b.onclick=()=>selectColor(cd.name,b);
+    cc.appendChild(b);
+  });
+  // targets
+  const ct=document.getElementById('cgTargets');
+  ct.innerHTML='';
+  targetDefs.forEach(td=>{
+    const d=document.createElement('div');
+    d.className='cg-target';d.id=`tg-${td.id}`;
+    d.innerHTML=`<span class="tg-icon">${td.icon}</span><span class="tg-name">${td.label}</span><span class="tg-color" id="tc-${td.id}"></span>`;
+    d.onclick=()=>applyColor(td,d);
+    ct.appendChild(d);
+  });
+  selColor=null;cgDone={};
+  document.getElementById('cgInstr').textContent='请先点击一种颜色 ↓';
+  document.getElementById('cgInstr').className='cg-instr';
+}
+
+function selectColor(name,btn){
+  selColor=name;
+  document.querySelectorAll('.cg-color-btn').forEach(b=>b.classList.remove('selected-color'));
+  btn.classList.add('selected-color');
+  document.getElementById('cgInstr').textContent=`已选「${name}」，现在点击一个事物 →`;
+  document.getElementById('cgInstr').className='cg-instr info';
+}
+
+function applyColor(td,el){
+  if(!selColor){
+    document.getElementById('cgInstr').textContent='请先点击一种颜色！';
+    document.getElementById('cgInstr').className='cg-instr bad';
+    return;
+  }
+  if(cgDone[td.id]) return;
+  const correct=selColor===td.correct;
+  const instr=document.getElementById('cgInstr');
+  if(correct){
+    const hex=colorDefs.find(c=>c.name===selColor).hex;
+    el.style.background=hex+'22';
+    el.style.borderColor=hex;
+    el.style.borderStyle='solid';
+    el.classList.add('filled');
+    document.getElementById(`tc-${td.id}`).textContent=selColor+'✓';
+    document.getElementById(`tc-${td.id}`).style.color=hex;
+    document.getElementById(`cb-${selColor}`).classList.add('used');
+    cgDone[td.id]=true;
+    speak(td.label);
+    instr.textContent='✅ 答对了！继续！';
+    instr.className='cg-instr ok';
+    if(Object.keys(cgDone).length===targetDefs.length){
+      instr.textContent='🎉 全部涂完了！你真棒！';
+      gainStar();
+    }
+    selColor=null;
+    document.querySelectorAll('.cg-color-btn').forEach(b=>b.classList.remove('selected-color'));
+  } else {
+    instr.textContent=`❌ 不对哦～${td.label}不是${selColor}！`;
+    instr.className='cg-instr bad';
+    el.style.animation='shake 0.35s ease';
+    setTimeout(()=>el.style.animation='',400);
+  }
+}
+
+function resetColorGame(){buildColorGame();}
+
+function buildRainAnswers(){
+  const area=document.getElementById('rainAnswers');
+  const colors=[
+    {label:'蓝色 💧',hex:'#5B9BD5',msg:'很好！雨水是透明的，有时候看起来是蓝色！'},
+    {label:'灰色 ☁️',hex:'#9E9E9E',msg:'对！下雨天天空是灰色的，所以雨点也可以是灰色！'},
+    {label:'透明 🫧',hex:'#78909C',msg:'非常正确！水是透明无色的！'},
+    {label:'彩虹色 🌈',hex:'#9B5DE5',msg:'哇！有创意！下完雨会出现彩虹，真棒的想法！'},
+  ];
+  colors.forEach(c=>{
+    const b=document.createElement('button');
+    b.className='color-answer-btn';
+    b.style.background=c.hex;
+    b.textContent=c.label;
+    b.onclick=()=>{
+      document.getElementById('rainReveal').textContent=c.msg;
+      document.getElementById('rainReveal').className='answer-reveal ok';
+      speak(c.msg);
+    };
+    area.appendChild(b);
+  });
+}
+
+function buildParas(){
+  const con=document.getElementById('parasCon');
+  con.innerHTML='';
+  paras.forEach((para,pi)=>{
+    const card=document.createElement('div');
+    card.className='para-card';card.id=`pc${pi}`;
+
+    const hdr=document.createElement('div');hdr.className='card-hdr';
+    const ico=document.createElement('div');ico.className='card-ico';
+    ico.style.background=para.bg;ico.textContent=para.icon;
+    const lbl=document.createElement('div');lbl.className='card-lbl';
+    lbl.style.background=para.color;lbl.textContent=para.label;
+    const tick=document.createElement('div');tick.className='done-tick';tick.textContent='✅';
+    hdr.appendChild(ico);hdr.appendChild(lbl);hdr.appendChild(tick);
+
+    const ta=document.createElement('div');ta.className='text-area';ta.id=`ta${pi}`;
+
+    para.sentences.forEach((sent,si)=>{
+      const wrap=document.createElement('span');wrap.id=`snt${pi}_${si}`;
+
+      // color line decoration for para 3 (colors)
+      if(pi===3 && sent.color){
+        const cd=colorDefs.find(c=>c.hex===sent.color||c.name===sent.chunks[0].replace('，',''));
+        const dot=document.createElement('span');
+        dot.className='color-dot';
+        const hex=sent.color;
+        dot.style.background=hex;
+        wrap.appendChild(dot);
+        wrap.style.display='flex';
+        wrap.style.alignItems='center';
+        wrap.style.gap='6px';
+        wrap.style.padding='2px 6px';
+        wrap.style.borderRadius='8px';
+        wrap.style.marginBottom='2px';
+      }
+
+      sent.chunks.forEach((ch,ci)=>{
+        const isPunc=/^[，。！？""：；、…—·\s""]+$/.test(ch);
+        if(isPunc){
+          const sp=document.createElement('span');sp.className='punc';sp.textContent=ch;wrap.appendChild(sp);
+        } else {
+          const hasTr=/[，。！？"：；]$/.test(ch);
+          const txt=hasTr?ch.slice(0,-1):ch;
+          const tr=hasTr?ch.slice(-1):'';
+          const r=document.createElement('ruby');r.id=`rb${pi}_${si}_${ci}`;
+          const rt=document.createElement('rt');rt.textContent=sent.pins[ci]||'';
+          const rb=document.createElement('rb');rb.textContent=txt;
+          rb.onclick=(e)=>{e.stopPropagation();speak(txt);flash(r);};
+          r.appendChild(rt);r.appendChild(rb);wrap.appendChild(r);
+          if(tr){const ps=document.createElement('span');ps.className='punc';ps.textContent=tr;wrap.appendChild(ps);}
+        }
+      });
+      ta.appendChild(wrap);
+      if(pi===3 && sent.color) ta.appendChild(document.createElement('br'));
+    });
+
+    const hint=document.createElement('div');hint.className='read-hint';hint.textContent='👆 点击这段来朗读';
+    card.appendChild(hdr);card.appendChild(ta);card.appendChild(hint);
+    card.onclick=()=>{setActive(pi);readPara(pi);};
+    con.appendChild(card);
+  });
+}
+
+/* ── CORE ── */
+function setActive(pi){document.querySelectorAll('.para-card').forEach((c,i)=>c.classList.toggle('active',i===pi));}
+function readPara(pi){speak(paras[pi].sentences.map(s=>s.chunks.join('')).join(''));markDone(pi);}
+function markDone(pi){
+  const card=document.getElementById(`pc${pi}`);
+  if(card.classList.contains('done'))return;
+  card.classList.add('done');donePi.add(pi);gainStar();updateProg();
+  if(donePi.size===TOTAL)setTimeout(celebrate,700);
+}
+function gainStar(){
+  if(stars>=MAX_STARS)return;
+  const el=document.getElementById(`sp${stars}`);
+  el.classList.add('lit');stars++;
+  document.getElementById('slbl').textContent=`${stars} / ${MAX_STARS}`;
+}
+function updateProg(){document.getElementById('pFill').style.width=(donePi.size/TOTAL*100)+'%';}
+function speak(txt,rate){
+  if(!window.speechSynthesis)return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(txt);
+  u.lang='zh-CN';u.rate=rate||spd;speechSynthesis.speak(u);
+}
+function speakWait(txt){
+  return new Promise(res=>{
+    if(!window.speechSynthesis){setTimeout(res,800);return;}
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(txt);
+    u.lang='zh-CN';u.rate=spd;u.onend=res;u.onerror=res;
+    speechSynthesis.speak(u);
+    setTimeout(res,txt.length*660+1800);
+  });
+}
+async function hlAll(){
+  if(hlActive){speechSynthesis.cancel();hlActive=false;return;}
+  hlActive=true;
+  for(let pi=0;pi<paras.length&&hlActive;pi++){
+    setActive(pi);
+    for(let si=0;si<paras[pi].sentences.length&&hlActive;si++){
+      hlSent(pi,si,true);
+      await speakWait(paras[pi].sentences[si].chunks.join(''));
+      hlSent(pi,si,false);
+    }
+    markDone(pi);
+  }
+  hlActive=false;
+}
+function hlSent(pi,si,on){
+  const el=document.getElementById(`snt${pi}_${si}`);
+  if(!el)return;
+  el.querySelectorAll('ruby').forEach(r=>r.classList.toggle('hl',on));
+}
+function readAll(){speak(paras.map(p=>p.sentences.map(s=>s.chunks.join('')).join('')).join('　'));}
+function togglePin(){pinOn=!pinOn;document.body.classList.toggle('pin-off',!pinOn);document.getElementById('pinBtn').textContent=pinOn?'隐藏拼音':'显示拼音';}
+function setSpd(r){
+  spd=r;document.querySelectorAll('.spd-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById({0.6:'ss',0.85:'sn',1.1:'sf'}[r]).classList.add('active');
+}
+function flash(el){el.style.background='#E8D5FF';setTimeout(()=>el.style.background='',400);}
+function resetAll(){
+  speechSynthesis.cancel();hlActive=false;donePi.clear();stars=0;
+  document.getElementById('slbl').textContent=`0 / ${MAX_STARS}`;
+  document.getElementById('pFill').style.width='0%';
+  document.getElementById('celCard').classList.remove('show');
+  document.querySelectorAll('.spip').forEach(s=>s.classList.remove('lit'));
+  buildColorGame();buildParas();quizIdx=0;loadQuiz(0);
+  document.getElementById('rainReveal').textContent='';
+}
+
+/* ── QUIZ ── */
+function loadQuiz(idx){
+  const q=quizzes[idx];
+  document.getElementById('quizQ').textContent=q.q;
+  document.getElementById('quizFb').textContent='';
+  document.getElementById('quizFb').className='quiz-fb';
+  const grid=document.getElementById('ansGrid');grid.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const b=document.createElement('button');b.className='ans-btn';b.textContent=opt;
+    b.onclick=()=>checkAns(i,q,grid);grid.appendChild(b);
+  });
+}
+function checkAns(i,q,grid){
+  Array.from(grid.children).forEach((b,bi)=>{
+    b.disabled=true;
+    if(bi===q.ans)b.classList.add('correct');
+    else if(bi===i&&i!==q.ans)b.classList.add('wrong');
+  });
+  const fb=document.getElementById('quizFb');
+  fb.textContent=q.fb[i];fb.className='quiz-fb '+(i===q.ans?'ok':'bad');
+  if(i===q.ans){gainStar();setTimeout(()=>{quizIdx=(quizIdx+1)%quizzes.length;loadQuiz(quizIdx);},2000);}
+}
+
+/* ── CELEBRATE ── */
+function celebrate(){
+  document.getElementById('celCard').classList.add('show');
+  speak('太厉害了！你读完了送颜色！世界因为有你变得更美丽！',0.85);fireConf();
+}
+function fireConf(){
+  const host=document.getElementById('confHost');host.innerHTML='';
+  const colors=['#FF6B6B','#FFD166','#06D6A0','#118AB2','#9B5DE5','#FF8C42','#4CAF78'];
+  const W=window.innerWidth;
+  for(let i=0;i<48;i++){
+    const p=document.createElement('div');p.className='cp';
+    const sx=Math.random()*W,sy=Math.random()*120+20;
+    const ex=sx+(Math.random()-0.5)*350,ey=sy+Math.random()*450+150;
+    p.style.cssText=`left:${sx}px;top:${sy}px;background:${colors[i%colors.length]};--sx:0px;--sy:0px;--ex:${ex-sx}px;--ey:${ey-sy}px;animation-delay:${Math.random()*0.6}s`;
+    host.appendChild(p);
+  }
+  setTimeout(()=>host.innerHTML='',2500);
+}
+
+// Shake animation
+const styleEl=document.createElement('style');
+styleEl.textContent='@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}';
+document.head.appendChild(styleEl);
+</script>
+</body>
+</html>

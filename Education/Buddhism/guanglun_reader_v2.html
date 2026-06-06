@@ -1,0 +1,1496 @@
+﻿<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <script>
+    window.NAV_CONFIG = {
+      breadcrumbs: [
+        { label: "Home", href: "../../index.html" },
+        { label: "Education", href: "../../Education/index.html" },
+        { label: "Buddhism", href: "index.html" },
+        { label: "广论" }
+      ]
+    };
+  </script>
+  <script src="../../nav-top.js"></script>
+  <title>菩提道次第广论 · 原文查阅</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400;500&family=ZCOOL+XiaoWei&display=swap"
+    rel="stylesheet">
+
+  <script src="./data/guanglun_index.js"></script>
+  <script src="./data/guanglun_vernacular.js"></script>
+
+  <style>
+    :root {
+      --ink: #1a1208;
+      --ink-light: #4a3c28;
+      --ink-faint: #8a7a62;
+      --paper: #f5f0e8;
+      --paper-warm: #ede6d6;
+      --paper-deep: #e0d4b8;
+      --gold: #b8912a;
+      --gold-light: #d4aa4a;
+      --gold-pale: #f0e4c0;
+      --divider: #c8b896;
+      --vern-accent: #3a6040;
+      --vern-bg: rgba(122, 171, 134, .05);
+      --shadow: rgba(80, 60, 20, 0.14);
+      --radius: 10px;
+      --header-h: 56px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Noto Serif SC', serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ══════════════════════════════════════
+   HEADER
+══════════════════════════════════════ */
+    header {
+      background: var(--ink);
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      box-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      height: var(--header-h);
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      font-family: 'ZCOOL XiaoWei', serif;
+      font-size: 19px;
+      letter-spacing: 3px;
+      color: var(--gold-light);
+      line-height: 1.2;
+      flex-shrink: 0;
+    }
+
+    .logo small {
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      color: var(--ink-faint);
+      display: block;
+      font-family: 'Noto Sans SC', sans-serif;
+      font-weight: 300;
+      margin-top: 1px;
+    }
+
+    .header-badges {
+      display: flex;
+      gap: 6px;
+    }
+
+    .badge {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-family: 'Noto Sans SC', sans-serif;
+      letter-spacing: .5px;
+      white-space: nowrap;
+    }
+
+    .badge.ok {
+      background: rgba(100, 180, 100, .15);
+      color: #8bc88b;
+      border: 1px solid rgba(100, 180, 100, .3);
+    }
+
+    .badge.ing {
+      background: rgba(184, 145, 42, .15);
+      color: var(--gold);
+      border: 1px solid rgba(184, 145, 42, .3);
+    }
+
+    .badge.no {
+      background: rgba(139, 32, 16, .15);
+      color: #e08070;
+      border: 1px solid rgba(139, 32, 16, .3);
+    }
+
+    /* ── Query panel (inside header) ── */
+    .query-panel {
+      background: rgba(255, 255, 255, 0.04);
+      border-top: 1px solid rgba(184, 145, 42, 0.15);
+      padding: 12px 16px 14px;
+    }
+
+    .query-panel-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ref block = 起/止 */
+    .ref-block {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+      min-width: 130px;
+    }
+
+    .ref-block-label {
+      font-size: 10px;
+      color: var(--gold);
+      letter-spacing: 2px;
+      font-family: 'Noto Sans SC', sans-serif;
+      padding-left: 2px;
+    }
+
+    .ref-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* stepper = [−] [num] [＋] */
+    .stepper {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(184, 145, 42, 0.3);
+      border-radius: 8px;
+      overflow: hidden;
+      height: 44px;
+    }
+
+    .stepper-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--gold-light);
+      font-size: 20px;
+      font-weight: 300;
+      width: 40px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .12s;
+      flex-shrink: 0;
+      touch-action: manipulation;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .stepper-btn:active {
+      background: rgba(184, 145, 42, .2);
+    }
+
+    .stepper input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-family: 'Noto Sans SC', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      width: 52px;
+      text-align: center;
+      height: 44px;
+      /* hide spin arrows */
+      -moz-appearance: textfield;
+    }
+
+    .stepper input::-webkit-inner-spin-button,
+    .stepper input::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+    }
+
+    .stepper-sep {
+      font-size: 11px;
+      color: rgba(184, 145, 42, .4);
+      font-family: 'Noto Sans SC', sans-serif;
+      padding: 0 2px;
+    }
+
+    /* line stepper — smaller, max 17 */
+    .stepper.line-step {
+      height: 44px;
+    }
+
+    .stepper.line-step input {
+      width: 36px;
+      font-size: 15px;
+    }
+
+    .stepper.line-step .stepper-btn {
+      width: 34px;
+    }
+
+    .ref-unit {
+      font-size: 11px;
+      color: rgba(184, 145, 42, .55);
+      font-family: 'Noto Sans SC', sans-serif;
+    }
+
+    .query-arrow {
+      color: var(--gold);
+      font-size: 20px;
+      align-self: center;
+      padding: 0 2px;
+      flex-shrink: 0;
+      padding-bottom: 0;
+      margin-top: 18px;
+      /* align with steppers */
+    }
+
+    .btn-search {
+      background: var(--gold);
+      color: var(--ink);
+      border: none;
+      border-radius: 8px;
+      height: 44px;
+      padding: 0 22px;
+      font-family: 'Noto Sans SC', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 2px;
+      flex-shrink: 0;
+      transition: background .15s, transform .1s;
+      touch-action: manipulation;
+      margin-top: 18px;
+      /* align with steppers */
+      min-width: 72px;
+    }
+
+    .btn-search:hover {
+      background: var(--gold-light);
+    }
+
+    .btn-search:active {
+      transform: scale(0.97);
+    }
+
+    /* ══════════════════════════════════════
+   CATEGORY NAV — 5 rows, one per group
+══════════════════════════════════════ */
+    .cat-bar {
+      background: var(--paper-warm);
+      border-bottom: 2px solid var(--divider);
+    }
+
+    .cat-bar-inner {
+      display: flex;
+      flex-direction: column;
+      /* ← five stacked rows */
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Each group = one horizontal row */
+    .cat-section {
+      display: flex;
+      align-items: stretch;
+      border-bottom: 1px solid var(--divider);
+    }
+
+    .cat-section:last-child {
+      border-bottom: none;
+    }
+
+    /* Group label — fixed left column */
+    .cat-group-label {
+      width: 72px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gold);
+      letter-spacing: 1.5px;
+      font-family: 'Noto Sans SC', sans-serif;
+      white-space: nowrap;
+      border-right: 2px solid rgba(184, 145, 42, .3);
+      background: rgba(184, 145, 42, .05);
+    }
+
+    /* Pills — single row, wraps on very narrow screens */
+    .cat-pills {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 3px;
+      padding: 5px 10px;
+      flex: 1;
+    }
+
+    .cat-pill {
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Noto Sans SC', sans-serif;
+      white-space: nowrap;
+      color: var(--ink-light);
+      transition: background .12s, color .12s, border-color .12s;
+      border: 1px solid transparent;
+      touch-action: manipulation;
+      -webkit-user-select: none;
+      user-select: none;
+      line-height: 1.7;
+    }
+
+    .cat-pill:active,
+    .cat-pill:hover {
+      background: var(--gold-pale);
+      color: var(--gold);
+      border-color: var(--gold-light);
+    }
+
+    .cat-pill.active {
+      background: var(--gold);
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    /* Mobile tweaks */
+    @media (max-width: 639px) {
+      .cat-group-label {
+        width: 48px;
+        font-size: 10px;
+        letter-spacing: 1px;
+      }
+
+      .cat-pills {
+        padding: 5px 8px;
+        gap: 3px;
+      }
+
+      .cat-pill {
+        font-size: 11px;
+        padding: 4px 9px;
+      }
+    }
+
+    /* ══════════════════════════════════════
+   MAIN
+══════════════════════════════════════ */
+    main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px 16px 100px;
+    }
+
+    /* Results meta */
+    .results-meta {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--divider);
+    }
+
+    .results-range {
+      font-family: 'ZCOOL XiaoWei', serif;
+      font-size: 17px;
+      letter-spacing: 2px;
+    }
+
+    .results-cat {
+      font-size: 12px;
+      color: var(--ink-faint);
+      font-family: 'Noto Sans SC', sans-serif;
+    }
+
+    .results-count {
+      margin-left: auto;
+      font-size: 12px;
+      color: var(--ink-faint);
+      font-family: 'Noto Sans SC', sans-serif;
+    }
+
+    /* Mobile tab toggle — only shows when vernacular exists */
+    .view-tabs {
+      display: none;
+      gap: 0;
+      margin-bottom: 12px;
+      border: 1px solid var(--divider);
+      border-radius: 7px;
+      overflow: hidden;
+      background: var(--paper-warm);
+    }
+
+    .view-tab {
+      flex: 1;
+      padding: 9px 0;
+      text-align: center;
+      font-size: 12px;
+      font-family: 'Noto Sans SC', sans-serif;
+      color: var(--ink-faint);
+      cursor: pointer;
+      transition: all .15s;
+      border: none;
+      background: none;
+      letter-spacing: 1px;
+    }
+
+    .view-tab.active {
+      background: var(--gold);
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    /* Col headers (desktop) */
+    .col-headers {
+      display: grid;
+      margin-bottom: 6px;
+    }
+
+    .col-headers.dual {
+      grid-template-columns: 68px 1fr 1fr;
+    }
+
+    .col-headers.single {
+      grid-template-columns: 68px 1fr;
+    }
+
+    .col-h {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--ink-faint);
+      font-family: 'Noto Sans SC', sans-serif;
+      padding-bottom: 7px;
+      border-bottom: 2px solid var(--divider);
+    }
+
+    .col-h:nth-child(2) {
+      padding-left: 12px;
+    }
+
+    .col-h:nth-child(3) {
+      padding-left: 16px;
+      color: var(--vern-accent);
+      opacity: .8;
+    }
+
+    /* Page group */
+    .page-group {
+      margin-bottom: 20px;
+    }
+
+    .page-hdr {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+
+    .page-tag {
+      font-family: 'Noto Sans SC', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--gold);
+      letter-spacing: 2px;
+      background: rgba(184, 145, 42, .1);
+      border: 1px solid rgba(184, 145, 42, .22);
+      padding: 2px 9px;
+      border-radius: 3px;
+    }
+
+    .page-catname {
+      font-size: 11px;
+      color: var(--ink-faint);
+      font-family: 'Noto Sans SC', sans-serif;
+    }
+
+    .page-rule {
+      flex: 1;
+      height: 1px;
+      background: var(--divider);
+      opacity: .4;
+    }
+
+    /* Line rows */
+    .line-row {
+      display: grid;
+      border-bottom: 1px solid rgba(200, 184, 150, .25);
+      transition: background .1s;
+    }
+
+    .line-row:last-child {
+      border-bottom: none;
+    }
+
+    .line-row:hover {
+      background: rgba(184, 145, 42, .03);
+    }
+
+    .line-row.dual {
+      grid-template-columns: 68px 1fr 1fr;
+    }
+
+    .line-row.single {
+      grid-template-columns: 68px 1fr;
+    }
+
+    .line-ref {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 12px 3px 10px;
+      font-size: 10px;
+      color: var(--ink-faint);
+      font-family: 'Noto Sans SC', sans-serif;
+      border-right: 2px solid var(--divider);
+      flex-shrink: 0;
+      text-align: center;
+      line-height: 1.4;
+      letter-spacing: .3px;
+    }
+
+    .line-orig {
+      padding: 10px 16px 10px 12px;
+      font-size: 15px;
+      line-height: 2;
+      color: var(--ink);
+      font-family: 'Noto Serif SC', serif;
+      font-weight: 400;
+      border-right: 1px solid rgba(200, 184, 150, .3);
+    }
+
+    .line-vern {
+      padding: 10px 12px 10px 16px;
+      font-size: 14px;
+      line-height: 2;
+      color: var(--vern-accent);
+      font-family: 'Noto Sans SC', sans-serif;
+      font-weight: 300;
+      background: var(--vern-bg);
+    }
+
+    .line-vern.pending {
+      color: var(--ink-faint);
+      font-style: italic;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--divider);
+      flex-shrink: 0;
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: .2;
+        transform: scale(.8);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.2);
+      }
+    }
+
+    /* ══════════════════════════════════════
+   WELCOME
+══════════════════════════════════════ */
+    .welcome {
+      text-align: center;
+      padding: 60px 20px;
+      animation: fadeUp .5s .15s both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .welcome-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: .35;
+    }
+
+    .welcome-title {
+      font-family: 'ZCOOL XiaoWei', serif;
+      font-size: 24px;
+      color: var(--ink-light);
+      letter-spacing: 4px;
+      margin-bottom: 10px;
+    }
+
+    .welcome-sub {
+      font-size: 13px;
+      color: var(--ink-faint);
+      font-family: 'Noto Sans SC', sans-serif;
+      line-height: 2.2;
+      letter-spacing: .8px;
+    }
+
+    .welcome-chips {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      background: var(--paper-warm);
+      border: 1px solid var(--divider);
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-size: 12px;
+      color: var(--ink-light);
+      font-family: 'Noto Sans SC', sans-serif;
+      cursor: pointer;
+      transition: all .15s;
+      letter-spacing: .5px;
+      touch-action: manipulation;
+    }
+
+    .chip:active,
+    .chip:hover {
+      background: var(--gold-pale);
+      border-color: var(--gold-light);
+      color: var(--gold);
+    }
+
+    /* ══════════════════════════════════════
+   EXPORT BAR
+══════════════════════════════════════ */
+    .export-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--paper-warm);
+      border-top: 1px solid var(--divider);
+      padding: 10px 16px;
+      padding-bottom: calc(10px + env(safe-area-inset-bottom));
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 190;
+      box-shadow: 0 -4px 20px var(--shadow);
+      opacity: 0;
+      transform: translateY(6px);
+      transition: all .22s;
+      pointer-events: none;
+    }
+
+    .export-bar.show {
+      opacity: 1;
+      transform: none;
+      pointer-events: all;
+    }
+
+    .exp-label {
+      font-size: 12px;
+      color: var(--ink-faint);
+      font-family: 'Noto Sans SC', sans-serif;
+    }
+
+    .exp-count {
+      font-size: 13px;
+      color: var(--gold);
+      font-family: 'Noto Sans SC', sans-serif;
+      font-weight: 500;
+    }
+
+    .btn-exp {
+      background: var(--ink);
+      color: var(--gold-pale);
+      border: none;
+      border-radius: 7px;
+      padding: 9px 18px;
+      font-family: 'Noto Sans SC', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      letter-spacing: 1.5px;
+      transition: background .15s;
+      margin-left: auto;
+      touch-action: manipulation;
+    }
+
+    .btn-exp:active {
+      background: var(--ink-light);
+    }
+
+    /* ══════════════════════════════════════
+   MODAL
+══════════════════════════════════════ */
+    .modal-mask {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 8, 4, .75);
+      z-index: 300;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s;
+    }
+
+    .modal-mask.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-box {
+      background: var(--paper);
+      border-radius: 14px 14px 0 0;
+      width: 100%;
+      max-width: 700px;
+      max-height: 80vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 -8px 40px rgba(0, 0, 0, .4);
+      transform: translateY(20px);
+      transition: transform .22s;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .modal-mask.open .modal-box {
+      transform: none;
+    }
+
+    .modal-head {
+      padding: 16px 20px 14px;
+      border-bottom: 1px solid var(--divider);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--paper-warm);
+    }
+
+    .modal-drag {
+      width: 36px;
+      height: 4px;
+      background: var(--divider);
+      border-radius: 2px;
+      margin: 0 auto 12px;
+      display: block;
+    }
+
+    .modal-title {
+      font-family: 'ZCOOL XiaoWei', serif;
+      font-size: 15px;
+      letter-spacing: 2px;
+    }
+
+    .btn-close {
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      color: var(--ink-faint);
+      line-height: 1;
+      padding: 2px 4px;
+    }
+
+    .modal-body {
+      padding: 16px 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .modal-note {
+      font-size: 11px;
+      color: var(--ink-faint);
+      font-family: 'Noto Sans SC', sans-serif;
+      margin-bottom: 10px;
+      line-height: 1.8;
+    }
+
+    .slide-ta {
+      width: 100%;
+      height: 240px;
+      background: var(--ink);
+      color: var(--gold-pale);
+      border: 1px solid var(--divider);
+      border-radius: 7px;
+      padding: 14px;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 12px;
+      line-height: 2;
+      resize: vertical;
+      outline: none;
+    }
+
+    .modal-foot {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .btn-copy {
+      background: var(--gold);
+      color: var(--ink);
+      border: none;
+      border-radius: 7px;
+      padding: 10px 20px;
+      font-family: 'Noto Sans SC', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: background .15s;
+      touch-action: manipulation;
+    }
+
+    .btn-copy:active {
+      background: var(--gold-light);
+    }
+
+    .btn-sec {
+      background: transparent;
+      color: var(--ink-faint);
+      border: 1px solid var(--divider);
+      border-radius: 7px;
+      padding: 10px 16px;
+      font-family: 'Noto Sans SC', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    /* ══════════════════════════════════════
+   RESPONSIVE — DESKTOP (≥ 640px)
+══════════════════════════════════════ */
+    @media (min-width: 640px) {
+      .header-top {
+        padding: 0 28px;
+      }
+
+      .query-panel {
+        padding: 10px 28px 12px;
+      }
+
+      .query-panel-inner {
+        flex-wrap: nowrap;
+        align-items: flex-end;
+      }
+
+      .ref-block {
+        flex: none;
+        min-width: 0;
+      }
+
+      main {
+        padding: 24px 28px 100px;
+      }
+
+      .modal-mask {
+        align-items: center;
+      }
+
+      .modal-box {
+        border-radius: 12px;
+        max-height: 78vh;
+      }
+
+      .modal-drag {
+        display: none;
+      }
+
+      .cat-bar-inner {
+        padding: 0 20px;
+      }
+    }
+
+    /* ══════════════════════════════════════
+   MOBILE-ONLY tweaks (< 640px)
+══════════════════════════════════════ */
+    @media (max-width: 639px) {
+      :root {
+        --header-h: 52px;
+      }
+
+      .logo {
+        font-size: 17px;
+        letter-spacing: 2px;
+      }
+
+      /* On mobile, hide desktop badge text, show dots */
+      .badge {
+        font-size: 9px;
+        padding: 2px 7px;
+      }
+
+      /* Query: stack into 2 rows cleanly */
+      .query-panel-inner {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .ref-block {
+        min-width: calc(50% - 14px);
+        flex: 1 1 calc(50% - 14px);
+      }
+
+      .query-arrow {
+        display: none;
+      }
+
+      /* hidden, arrow implied */
+      .btn-search {
+        width: 100%;
+        margin-top: 4px;
+      }
+
+      /* Stepper sizes */
+      .stepper {
+        height: 48px;
+      }
+
+      .stepper-btn {
+        width: 44px;
+        height: 48px;
+        font-size: 22px;
+      }
+
+      .stepper input {
+        font-size: 17px;
+        width: 50px;
+        height: 48px;
+      }
+
+      .stepper.line-step {
+        height: 48px;
+      }
+
+      .stepper.line-step .stepper-btn {
+        width: 40px;
+        height: 48px;
+      }
+
+      .stepper.line-step input {
+        width: 34px;
+      }
+
+      /* Mobile tab view toggle */
+      .view-tabs.has-vern {
+        display: flex;
+      }
+
+      /* On mobile with dual, hide the non-active column */
+      .line-row.dual.show-orig .line-vern {
+        display: none;
+      }
+
+      .line-row.dual.show-orig {
+        grid-template-columns: 68px 1fr;
+      }
+
+      .line-row.dual.show-vern .line-orig {
+        display: none;
+      }
+
+      .line-row.dual.show-vern {
+        grid-template-columns: 68px 1fr;
+      }
+
+      /* Slightly smaller text on mobile */
+      .line-orig {
+        font-size: 14px;
+        padding: 10px 12px;
+      }
+
+      .line-vern {
+        font-size: 13px;
+        padding: 10px 12px;
+      }
+
+      .line-ref {
+        font-size: 9px;
+        padding: 11px 2px 9px;
+      }
+
+      /* Wider col ref */
+      .line-row.single {
+        grid-template-columns: 58px 1fr;
+      }
+
+      .line-row.dual.show-orig,
+      .line-row.dual.show-vern {
+        grid-template-columns: 58px 1fr;
+      }
+
+      .col-headers.dual {
+        grid-template-columns: 58px 1fr 1fr;
+      }
+
+      .col-headers.single {
+        grid-template-columns: 58px 1fr;
+      }
+
+      .welcome {
+        padding: 48px 16px;
+      }
+
+      .welcome-title {
+        font-size: 20px;
+      }
+
+      .chip {
+        font-size: 11px;
+        padding: 7px 11px;
+      }
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--divider);
+      border-radius: 2px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══ HEADER ══ -->
+  <header>
+    <div class="header-top">
+      <div class="logo">菩提道次第广論
+        <small>LAMRIM CHENMO · READER</small>
+      </div>
+      <div class="header-badges">
+        <span class="badge" id="badgeOrig">原文载入中</span>
+        <span class="badge" id="badgeVern">白话文</span>
+      </div>
+    </div>
+
+    <!-- Query panel -->
+    <div class="query-panel">
+      <div class="query-panel-inner">
+
+        <!-- 起 -->
+        <div class="ref-block">
+          <div class="ref-block-label">起　始</div>
+          <div class="ref-row">
+            <div class="stepper" id="st-sp">
+              <button class="stepper-btn" onclick="step('sp',-1)" aria-label="减少页码">−</button>
+              <input type="number" id="sp" min="1" max="585" placeholder="页">
+              <button class="stepper-btn" onclick="step('sp',+1)" aria-label="增加页码">+</button>
+            </div>
+            <span class="ref-unit">页</span>
+            <div class="stepper line-step" id="st-sl">
+              <button class="stepper-btn" onclick="step('sl',-1)">−</button>
+              <input type="number" id="sl" min="1" max="17" value="1">
+              <button class="stepper-btn" onclick="step('sl',+1)">+</button>
+            </div>
+            <span class="ref-unit">行</span>
+          </div>
+        </div>
+
+        <span class="query-arrow">→</span>
+
+        <!-- 止 -->
+        <div class="ref-block">
+          <div class="ref-block-label">终　止</div>
+          <div class="ref-row">
+            <div class="stepper" id="st-ep">
+              <button class="stepper-btn" onclick="step('ep',-1)">−</button>
+              <input type="number" id="ep" min="1" max="585" placeholder="页">
+              <button class="stepper-btn" onclick="step('ep',+1)">+</button>
+            </div>
+            <span class="ref-unit">页</span>
+            <div class="stepper line-step" id="st-el">
+              <button class="stepper-btn" onclick="step('el',-1)">−</button>
+              <input type="number" id="el" min="1" max="17" value="13">
+              <button class="stepper-btn" onclick="step('el',+1)">+</button>
+            </div>
+            <span class="ref-unit">行</span>
+          </div>
+        </div>
+
+        <button class="btn-search" onclick="doSearch()">检　索</button>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ CATEGORY NAV ══ -->
+  <nav class="cat-bar">
+    <div class="cat-bar-inner" id="catBar"></div>
+  </nav>
+
+  <!-- ══ MAIN ══ -->
+  <main>
+    <div class="welcome" id="welcome">
+      <div class="welcome-icon">📖</div>
+      <div class="welcome-title">菩提道次第广論</div>
+      <div class="welcome-sub">
+        调整上方页码与行号，点击检索<br>
+        或点击章节导航快速定位
+      </div>
+      <div class="welcome-chips">
+        <span class="chip" onclick="qs(1,1,3,13)">皈敬颂 P1–P3</span>
+        <span class="chip" onclick="qs(75,1,80,13)">念死无常 P75–P80</span>
+        <span class="chip" onclick="qs(117,1,122,13)">深信业果 P117–P122</span>
+        <span class="chip" onclick="qs(337,1,342,13)">奢摩他 P337–P342</span>
+        <span class="chip" onclick="qs(399,1,404,13)">毗钵舍那 P399–P404</span>
+      </div>
+    </div>
+
+    <div id="results" style="display:none"></div>
+  </main>
+
+  <!-- ══ EXPORT BAR ══ -->
+  <div class="export-bar" id="exportBar">
+    <span class="exp-label">已检索</span>
+    <span class="exp-count" id="expCount">0 行</span>
+    <button class="btn-exp" onclick="openExport()">导出 Slide 文本</button>
+  </div>
+
+  <!-- ══ MODAL ══ -->
+  <div class="modal-mask" id="modalMask" onclick="maskClick(event)">
+    <div class="modal-box">
+      <span class="modal-drag"></span>
+      <div class="modal-head">
+        <span class="modal-title">Slide 文本导出</span>
+        <button class="btn-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-note">原文与白话文对照，可直接贴入 Slide 模板。</p>
+        <textarea class="slide-ta" id="slideTA" readonly></textarea>
+        <div class="modal-foot">
+          <button class="btn-sec" onclick="closeModal()">关闭</button>
+          <button class="btn-copy" id="btnCopy" onclick="copyText()">复制全文</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── Data ──────────────────────────────────────────────────────────────────────
+    const originalData = (typeof GUANGLUN_ORIGINAL !== 'undefined') ? GUANGLUN_ORIGINAL : null;
+    const vernacularData = (typeof GUANGLUN_VERNACULAR !== 'undefined') ? GUANGLUN_VERNACULAR : null;
+
+    // Status badges
+    const bo = document.getElementById('badgeOrig');
+    const bv = document.getElementById('badgeVern');
+    if (originalData) { bo.textContent = '原文已载入'; bo.className = 'badge ok'; }
+    else { bo.textContent = '原文未找到'; bo.className = 'badge no'; }
+    if (vernacularData) { bv.textContent = '白话文已载入'; bv.className = 'badge ok'; }
+    else { bv.textContent = '白话文翻译中'; bv.className = 'badge ing'; }
+
+    // ── Stepper ───────────────────────────────────────────────────────────────────
+    function step(id, delta) {
+      const el = document.getElementById(id);
+      const min = parseInt(el.min) || 1;
+      const max = parseInt(el.max) || 585;
+      let v = (parseInt(el.value) || 0) + delta;
+      el.value = Math.max(min, Math.min(max, v));
+    }
+
+    // Long-press repeat for steppers
+    (function () {
+      let timer, interval;
+      function startRepeat(id, delta) {
+        step(id, delta);
+        timer = setTimeout(() => {
+          interval = setInterval(() => step(id, delta), 80);
+        }, 400);
+      }
+      function stopRepeat() { clearTimeout(timer); clearInterval(interval); }
+
+      document.querySelectorAll('.stepper-btn').forEach(btn => {
+        const onStart = e => {
+          e.preventDefault();
+          const onclick = btn.getAttribute('onclick');
+          const m = onclick.match(/step\('(\w+)',([+-]\d+)\)/);
+          if (m) startRepeat(m[1], parseInt(m[2]));
+        };
+        btn.addEventListener('pointerdown', onStart);
+        btn.addEventListener('pointerup', stopRepeat);
+        btn.addEventListener('pointerleave', stopRepeat);
+      });
+    })();
+
+    // ── Category nav ──────────────────────────────────────────────────────────────
+    const CAT_GROUPS = {
+      '道前基础': ['皈敬颂', '造者殊胜', '教授殊胜', '听闻轨理', '说法轨理', '完结轨理', '亲近善士', '修习轨理', '暇满', '道次引导'],
+      '下士道': ['念死无常', '三恶趣苦', '皈依三宝', '深信业果'],
+      '中士道': ['希求解脫', '思惟苦谛', '思惟集谛', '十二缘起', '除邪分別', '解脫正道'],
+      '上士道': ['入大乘门', '菩提心次第', '仪轨受法', '学菩萨行', '布施波罗蜜', '持戒波罗蜜',
+        '忍波罗蜜', '精进波罗蜜', '静虑波罗蜜', '般若波罗蜜', '四摄法', '奢摩他', '毗钵舍那'],
+      '附录': ['略论（止观）'],
+    };
+
+    const catStartPage = {};
+    if (originalData) {
+      for (const [pk, pv] of Object.entries(originalData.index)) {
+        const cat = pv.category || '';
+        if (cat && !catStartPage[cat]) catStartPage[cat] = parseInt(pk.slice(1));
+      }
+    }
+
+    function buildCatNav() {
+      const bar = document.getElementById('catBar');
+      for (const [group, sections] of Object.entries(CAT_GROUPS)) {
+        const sec = document.createElement('div');
+        sec.className = 'cat-section';
+        sec.innerHTML = `<div class="cat-group-label">${group}</div><div class="cat-pills"></div>`;
+        const pills = sec.querySelector('.cat-pills');
+        for (const section of sections) {
+          const fullCat = group === '附录' ? `附录一 ${section}` : `${group} ${section}`;
+          const startPg = catStartPage[fullCat];
+          if (!startPg) continue;
+          const pill = document.createElement('div');
+          pill.className = 'cat-pill';
+          pill.textContent = section;
+          pill.onclick = () => jumpCat(fullCat, startPg, pill);
+          pills.appendChild(pill);
+        }
+        if (pills.children.length) bar.appendChild(sec);
+      }
+    }
+    buildCatNav();
+
+    function jumpCat(cat, startPg, pillEl) {
+      let endPg = startPg;
+      if (originalData) {
+        for (let p = startPg; p <= 585; p++) {
+          const pv = originalData.index[`P${p}`];
+          if (!pv) break;
+          if ((pv.category || '') === cat) endPg = p;
+          else if (p > startPg) break;
+        }
+      }
+      document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+      pillEl.classList.add('active');
+      document.getElementById('sp').value = startPg;
+      document.getElementById('sl').value = 1;
+      document.getElementById('ep').value = Math.min(endPg, startPg + 19);
+      document.getElementById('el').value = 13;
+      doSearch();
+      // Scroll to results on mobile
+      if (window.innerWidth < 640) {
+        setTimeout(() => document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+      }
+    }
+
+    // ── Mobile tab state ──────────────────────────────────────────────────────────
+    let mobileView = 'orig'; // 'orig' | 'vern'
+
+    function setMobileView(v) {
+      mobileView = v;
+      document.querySelectorAll('.view-tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.view === v);
+      });
+      document.querySelectorAll('.line-row.dual').forEach(row => {
+        row.classList.toggle('show-orig', v === 'orig');
+        row.classList.toggle('show-vern', v === 'vern');
+      });
+    }
+
+    // ── Search ────────────────────────────────────────────────────────────────────
+    let currentLines = [];
+
+    function qs(sp, sl, ep, el) {
+      document.getElementById('sp').value = sp;
+      document.getElementById('sl').value = sl;
+      document.getElementById('ep').value = ep;
+      document.getElementById('el').value = el;
+      doSearch();
+    }
+
+    function doSearch() {
+      if (!originalData) return;
+      const sp = parseInt(document.getElementById('sp').value) || 0;
+      const sl = parseInt(document.getElementById('sl').value) || 1;
+      const ep = parseInt(document.getElementById('ep').value) || 0;
+      const el = parseInt(document.getElementById('el').value) || 13;
+      if (!sp || !ep || sp < 1 || ep > 585 || sp > ep) return;
+
+      currentLines = [];
+      const idx = originalData.index;
+      for (let p = sp; p <= ep; p++) {
+        const pd = idx[`P${p}`];
+        if (!pd) continue;
+        const maxL = Object.keys(pd).filter(k => k[0] === 'L').length;
+        const ls = (p === sp) ? sl : 1;
+        const le = (p === ep) ? el : maxL;
+        for (let l = ls; l <= le; l++) {
+          const lk = `L${l}`;
+          if (!pd[lk]) continue;
+          currentLines.push({
+            p, l,
+            ref: `P${p}L${l}`,
+            cat: pd.category || '',
+            orig: pd[lk],
+            vern: vernacularData?.index?.[`P${p}`]?.[lk] ?? null,
+          });
+        }
+      }
+      render(sp, sl, ep, el);
+    }
+
+    function esc(s) {
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function render(sp, sl, ep, el) {
+      document.getElementById('welcome').style.display = 'none';
+      const res = document.getElementById('results');
+      res.style.display = 'block';
+
+      const hasVern = vernacularData !== null;
+      const cls = hasVern ? 'dual' : 'single';
+      const isMobile = window.innerWidth < 640;
+
+      // Mobile tab toggle
+      const tabsHtml = hasVern ? `
+    <div class="view-tabs has-vern" id="viewTabs">
+      <button class="view-tab ${mobileView === 'orig' ? 'active' : ''}" data-view="orig" onclick="setMobileView('orig')">原　文</button>
+      <button class="view-tab ${mobileView === 'vern' ? 'active' : ''}" data-view="vern" onclick="setMobileView('vern')">白话文</button>
+    </div>` : '';
+
+      let html = `
+    <div class="results-meta">
+      <span class="results-range">P${sp}L${sl} → P${ep}L${el}</span>
+      <span class="results-cat">${currentLines[0]?.cat || ''}</span>
+      <span class="results-count">共 ${currentLines.length} 行</span>
+    </div>
+    ${tabsHtml}
+    <div class="col-headers ${cls}">
+      <div class="col-h"></div>
+      <div class="col-h">原　文</div>
+      ${hasVern ? '<div class="col-h">白话文</div>' : ''}
+    </div>
+  `;
+
+      // Mobile: hide desktop col-headers when tabs are showing
+      if (hasVern && isMobile) {
+        html = html.replace(`<div class="col-headers ${cls}">`, `<div class="col-headers ${cls}" style="display:none">`);
+      }
+
+      let curPage = null;
+      const mvOrig = mobileView === 'orig' ? ' show-orig' : ' show-vern';
+
+      for (const line of currentLines) {
+        if (line.p !== curPage) {
+          if (curPage !== null) html += '</div>';
+          curPage = line.p;
+          html += `
+        <div class="page-group">
+          <div class="page-hdr">
+            <span class="page-tag">第 ${line.p} 页</span>
+            <span class="page-catname">${line.cat}</span>
+            <div class="page-rule"></div>
+          </div>
+      `;
+        }
+
+        const vernCell = hasVern
+          ? (line.vern
+            ? `<div class="line-vern">${esc(line.vern)}</div>`
+            : `<div class="line-vern pending"><span class="dot"></span>翻译进行中…</div>`)
+          : '';
+
+        const rowCls = hasVern ? `${cls}${mvOrig}` : cls;
+
+        html += `
+      <div class="line-row ${rowCls}">
+        <div class="line-ref">${esc(line.ref)}</div>
+        <div class="line-orig">${esc(line.orig)}</div>
+        ${vernCell}
+      </div>
+    `;
+      }
+      if (curPage !== null) html += '</div>';
+
+      res.innerHTML = html;
+
+      document.getElementById('exportBar').classList.add('show');
+      document.getElementById('expCount').textContent = `${currentLines.length} 行`;
+    }
+
+    // Enter key
+    document.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+
+    // ── Export ────────────────────────────────────────────────────────────────────
+    function openExport() {
+      if (!currentLines.length) return;
+      const first = currentLines[0].ref;
+      const last = currentLines[currentLines.length - 1].ref;
+      const header = `菩提道次第广论\n${first} → ${last}\n${'─'.repeat(32)}\n\n`;
+      const body = currentLines.map(l => {
+        let s = `【${l.ref}】${l.orig}`;
+        if (l.vern) s += `\n　　　${l.vern}`;
+        return s;
+      }).join('\n\n');
+      document.getElementById('slideTA').value = header + body;
+      document.getElementById('modalMask').classList.add('open');
+    }
+
+    function maskClick(e) {
+      if (e.target === document.getElementById('modalMask')) closeModal();
+    }
+    function closeModal() {
+      document.getElementById('modalMask').classList.remove('open');
+    }
+    function copyText() {
+      const ta = document.getElementById('slideTA');
+      ta.select();
+      document.execCommand('copy');
+      const btn = document.getElementById('btnCopy');
+      btn.textContent = '已复制 ✓';
+      setTimeout(() => btn.textContent = '复制全文', 2000);
+    }
+  </script>
+</body>
+
+</html>
