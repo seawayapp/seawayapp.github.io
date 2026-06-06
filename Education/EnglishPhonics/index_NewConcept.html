@@ -5,33 +5,62 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>New Concept English</title>
+  <script>
+    window.NAV_CONFIG = {
+      breadcrumbs: [
+        { label: "Home", href: "../../index.html" },
+        { label: "Education", href: "../index.html" },
+        { label: "New Concept English" }
+      ]
+    };
+  </script>
   <script src="../../nav-top.js"></script>
   <!-- Input Data -->
   <script src="./data/A_index_NewConcept.js"></script>
   <style>
     /* Breadcrumb links inside the nav bar title slot */
-    #__snavTitle a { color: rgba(255,255,255,0.6); text-decoration: none; }
-    #__snavTitle a:hover { color: #fff; }
-    #__snavTitle .bc-sep { color: rgba(255,255,255,0.3); margin: 0 4px; }
-    #__snavTitle .bc-cur { color: #fff; font-weight: 600; }
+    #__snavTitle a {
+      color: rgba(255, 255, 255, 0.6);
+      text-decoration: none;
+    }
+
+    #__snavTitle a:hover {
+      color: #fff;
+    }
+
+    #__snavTitle .bc-sep {
+      color: rgba(255, 255, 255, 0.3);
+      margin: 0 4px;
+    }
+
+    #__snavTitle .bc-cur {
+      color: #fff;
+      font-weight: 600;
+    }
   </style>
   <style>
     :root {
-      --green:      #92d050;
+      --green: #92d050;
       --green-dark: #6aaa2a;
-      --green-dim:  rgba(146,208,80,0.12);
-      --text:       #1e293b;
+      --green-dim: rgba(146, 208, 80, 0.12);
+      --text: #1e293b;
       --text-muted: #64748b;
       --text-light: #94a3b8;
-      --bg:         #f8fafc;
-      --surface:    #ffffff;
-      --border:     #e2e8f0;
-      --radius:     12px;
-      --shadow:     0 2px 12px rgba(0,0,0,0.07);
-      --font:       "Inter", "Segoe UI", system-ui, sans-serif;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+      --font: "Inter", "Segoe UI", system-ui, sans-serif;
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       font-family: var(--font);
@@ -47,7 +76,9 @@
     }
 
     /* ── Page header ── */
-    .page-header { margin-bottom: 28px; }
+    .page-header {
+      margin-bottom: 28px;
+    }
 
     .page-eyebrow {
       display: inline-flex;
@@ -102,7 +133,7 @@
 
     .lesson-card:hover {
       border-color: var(--green);
-      box-shadow: 0 4px 20px rgba(146,208,80,0.18);
+      box-shadow: 0 4px 20px rgba(146, 208, 80, 0.18);
       transform: translateX(4px);
       text-decoration: none;
       color: var(--text);
@@ -169,10 +200,25 @@
     }
 
     @media (max-width: 480px) {
-      .page-wrap { padding: 24px 14px 48px; }
-      .lesson-card { padding: 14px 16px; gap: 12px; }
-      .lesson-title { font-size: 0.92rem; }
-      .lesson-num { width: 32px; height: 32px; font-size: 0.78rem; border-radius: 8px; }
+      .page-wrap {
+        padding: 24px 14px 48px;
+      }
+
+      .lesson-card {
+        padding: 14px 16px;
+        gap: 12px;
+      }
+
+      .lesson-title {
+        font-size: 0.92rem;
+      }
+
+      .lesson-num {
+        width: 32px;
+        height: 32px;
+        font-size: 0.78rem;
+        border-radius: 8px;
+      }
     }
   </style>
 </head>
@@ -196,9 +242,9 @@
 
   <script>
     function getHref(item) {
-      if (item.category === "file")       return `./NewConcept_Template.html?input=${item.filename}`;
+      if (item.category === "file") return `./NewConcept_Template.html?input=${item.filename}`;
       if (item.category === "file_slide") return `./template_textslide.html?input=${item.filename}&from=NewConcept`;
-      if (item.category === "folder")     return `./${item.filename}`;
+      if (item.category === "folder") return `./${item.filename}`;
       return "#";
     }
 
@@ -206,7 +252,7 @@
       // Breadcrumb in nav bar
       const t = document.getElementById('__snavTitle');
       if (t) t.innerHTML = `<a href="../../index.html">Home</a><span class="bc-sep">›</span>`
-          + `<span class="bc-cur">New Concept English</span>`;
+        + `<span class="bc-cur">New Concept English</span>`;
 
       try {
         const container = document.getElementById("mainContent");
@@ -220,7 +266,7 @@
           card.className = "lesson-card";
           card.href = getHref(item);
 
-          const title    = item.title    || "";
+          const title = item.title || "";
           const subtitle = item.subtitle || "";
 
           card.innerHTML = `

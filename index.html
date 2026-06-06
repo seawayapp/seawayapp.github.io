@@ -28,9 +28,24 @@
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-links" id="navLinks">
-        <li><a href="#recent"  class="nav-link">Recent</a></li>
-        <li><a href="#pinned" class="nav-link">Pinned</a></li>
-        <li><a href="#archive" class="nav-link">Archive</a></li>
+        <li class="nav-item">
+          <button class="nav-link nav-dd-btn" id="dd-btn-recent" aria-expanded="false" aria-haspopup="true">
+            Recent<svg class="dd-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="nav-dropdown" id="dd-recent"></div>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link nav-dd-btn" id="dd-btn-pinned" aria-expanded="false" aria-haspopup="true">
+            Pinned<svg class="dd-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="nav-dropdown" id="dd-pinned"></div>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link nav-dd-btn" id="dd-btn-archive" aria-expanded="false" aria-haspopup="true">
+            Archive<svg class="dd-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="nav-dropdown" id="dd-archive"></div>
+        </li>
       </ul>
     </div>
   </nav>
@@ -94,15 +109,13 @@
   </footer>
 
   <script>
-    // Hamburger
+    // Hamburger — close open dropdowns when toggling the mobile menu
     document.getElementById("navToggle").addEventListener("click", () => {
-      document.getElementById("navLinks").classList.toggle("open");
+      const nl = document.getElementById("navLinks");
+      nl.classList.toggle("open");
+      nl.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+      nl.querySelectorAll('.nav-dd-btn').forEach(b => b.setAttribute('aria-expanded', 'false'));
     });
-    document.querySelectorAll(".nav-link").forEach(l =>
-      l.addEventListener("click", () =>
-        document.getElementById("navLinks").classList.remove("open")
-      )
-    );
 
     // Archive toggle
     let archiveExpanded = false;

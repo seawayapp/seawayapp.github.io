@@ -5,13 +5,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>国际音标表 (IPA Phonetic Chart)</title>
+    <script>
+        window.NAV_CONFIG = {
+            breadcrumbs: [
+                { label: "Home", href: "../../index.html" },
+                { label: "Education", href: "../index.html" },
+                { label: "New Concept English", href: "index_NewConcept.html" },
+                { label: "国际音标表" }
+            ]
+        };
+    </script>
     <script src="../../nav-top.js"></script>
     <style>
         /* Breadcrumb links inside the nav bar title slot */
-        #__snavTitle a { color: rgba(255,255,255,0.6); text-decoration: none; }
-        #__snavTitle a:hover { color: #fff; }
-        #__snavTitle .bc-sep { color: rgba(255,255,255,0.3); margin: 0 4px; }
-        #__snavTitle .bc-cur { color: #fff; font-weight: 600; }
+        #__snavTitle a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+        }
+
+        #__snavTitle a:hover {
+            color: #fff;
+        }
+
+        #__snavTitle .bc-sep {
+            color: rgba(255, 255, 255, 0.3);
+            margin: 0 4px;
+        }
+
+        #__snavTitle .bc-cur {
+            color: #fff;
+            font-weight: 600;
+        }
     </style>
     <style>
         body {
@@ -146,7 +170,8 @@
         .modal {
             display: none;
             position: fixed;
-            top: 56px; /* below nav bar */
+            top: 56px;
+            /* below nav bar */
             left: 0;
             width: 100%;
             height: calc(100% - 56px);

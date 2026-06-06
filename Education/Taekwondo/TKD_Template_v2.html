@@ -1,9 +1,20 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        window.NAV_CONFIG = {
+            breadcrumbs: [
+                { label: "Home", href: "../../index.html" },
+                { label: "Education", href: "../index.html" },
+                { label: "Taekwondo", href: "index.html" },
+                { label: "..." }
+            ]
+        };
+    </script>
+    <script src="../../nav-top.js"></script>
     <title id="maintitle"></title>
     <style>
         table {
@@ -190,6 +201,10 @@
             document.getElementById("maintitle").innerHTML = inputJSON.pattern;
             document.getElementById("header").innerHTML = inputJSON.pattern + "<br>" + inputJSON.belt_color;
 
+            // Sync the last nav breadcrumb to the real data title
+            const lastCrumb = document.querySelector('.__snav-crumb[aria-current="page"]');
+            if (lastCrumb) lastCrumb.textContent = inputJSON.pattern;
+
             let text = `<table class="center">
                 <tr>
                     <th>Step No.</th>
@@ -204,7 +219,7 @@
                     <tr>
                         <td onclick="startSlideshow(${i})">${inputJSON.steps[i].step}</td>
                         <td>${inputJSON.steps[i].description_en}<br>${inputJSON.steps[i].description_cn}</td>
-                        <td><img src="./images/${inputJSON.folder}/${inputJSON.steps[i].image}_small.png" onclick="openPopup(${i})"></td>
+                        <td><img src="./images/${inputJSON.folder}/${inputJSON.steps[i].image}_small.png" onclick="openPopup(${i})" loading="lazy"></td>
                     </tr>
                 `
                 images.push(

@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentence Builder Game</title>
+  <script src="../../nav-config.js"></script>
+  <script>
+    window.NAV_CONFIG = {
+      breadcrumbs: [
+        { label: "Home", href: "../../index.html", children: NAV_MENUS.site() },
+        { label: "Games", href: "../index.html", children: NAV_MENUS.games() },
+        { label: "Sentence Builder" }
+      ]
+    };
+  </script>
+  <script src="../../nav-top.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Fredoka+One&display=swap');
+
+    :root {
+      --who: #E25624;
+      --doing: #197DC7;
+      --what: #4D9D1D;
+      --who-light: #FFF979;
+      --doing-light: #CFF6FF;
+      --what-light: #EEF9EE;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(135deg, #fff9c4 0%, #c3f0fc 50%, #ffd6e7 100%);
+      min-height: 100vh;
+      user-select: none;
+    }
+
+    /* ── HEADER ── */
+    header {
+      text-align: center;
+      padding: 20px 16px 6px;
+    }
+
+    header h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      color: #e84393;
+      text-shadow: 2px 2px 0 rgba(232, 67, 147, 0.2);
+    }
+
+    header p {
+      color: #888;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    /* ── SENTENCE BAR ── */
+    .sentence-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: white;
+      border-radius: 22px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.11);
+      border: 3px solid #ffe8f4;
+      padding: 14px 20px;
+      margin: 14px auto 10px;
+      max-width: 880px;
+      width: 95%;
+      min-height: 100px;
+    }
+
+    .slot {
+      position: relative;
+      border-radius: 14px;
+      border: 2.5px dashed #ddd;
+      min-width: 130px;
+      min-height: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 8px 8px 6px;
+      transition: transform 0.15s, border-color 0.2s;
+    }
+
+    .slot[data-cat="who"] {
+      border-color: var(--who);
+      background: var(--who-light);
+    }
+
+    .slot[data-cat="doing"] {
+      border-color: var(--doing);
+      background: var(--doing-light);
+    }
+
+    .slot[data-cat="what"] {
+      border-color: var(--what);
+      background: var(--what-light);
+    }
+
+    .slot .slot-label {
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.56rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 1px 8px;
+      border-radius: 20px;
+      color: white;
+      white-space: nowrap;
+    }
+
+    .slot[data-cat="who"] .slot-label {
+      background: var(--who);
+    }
+
+    .slot[data-cat="doing"] .slot-label {
+      background: var(--doing);
+    }
+
+    .slot[data-cat="what"] .slot-label {
+      background: var(--what);
+    }
+
+    .slot .empty-hint {
+      color: #ccc;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .slot img {
+      height: 52px;
+      object-fit: contain;
+    }
+
+    .slot .card-name {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: #555;
+      text-align: center;
+    }
+
+    .slot .clear-btn {
+      position: absolute;
+      top: 2px;
+      right: 4px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: #bbb;
+      line-height: 1;
+      padding: 0;
+    }
+
+    .slot .clear-btn:hover {
+      color: #e74c3c;
+    }
+
+    .arrow {
+      font-size: 1.2rem;
+      color: #ccc;
+      flex-shrink: 0;
+    }
+
+    /* ── CHECK BUTTON ── */
+    .check-wrap {
+      text-align: center;
+      padding: 6px 0 16px;
+    }
+
+    .check-btn {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2rem;
+      padding: 11px 36px;
+      border: none;
+      border-radius: 50px;
+      background: linear-gradient(135deg, #e84393, #ff6b6b);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(232, 67, 147, 0.35);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .check-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 20px rgba(232, 67, 147, 0.4);
+    }
+
+    .check-btn:active {
+      transform: translateY(1px);
+    }
+
+    /* ── GAME AREA ── */
+    .game-area {
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 20px 8px;
+    }
+
+    .columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0;
+    }
+
+    .col-who,
+    .col-doing,
+    .col-what {
+      padding: 16px 14px 20px;
+      border-radius: 20px;
+    }
+
+    .col-who {
+      background: #FFF979;
+      border: 3px solid var(--who);
+      margin-right: 10px;
+    }
+
+    .col-doing {
+      background: #CFF6FF;
+      border: 3px solid var(--doing);
+      margin-right: 10px;
+    }
+
+    .col-what {
+      background: #EEF9EE;
+      border: 3px solid var(--what);
+    }
+
+    .col-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.3rem;
+      text-align: center;
+      padding: 10px 12px;
+      border-radius: 14px;
+      color: white;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .col-who .col-title {
+      background: var(--who);
+    }
+
+    .col-doing .col-title {
+      background: var(--doing);
+    }
+
+    .col-what .col-title {
+      background: var(--what);
+    }
+
+    /* 4-column grid, scrollable */
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+      border: 3px solid transparent;
+      cursor: pointer;
+      padding: 0;
+      overflow: hidden;
+      line-height: 0;
+      transition: transform 0.13s, box-shadow 0.13s, border-color 0.13s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.16);
+    }
+
+    .card.selected-who {
+      border-color: var(--who);
+      background: var(--who-light);
+    }
+
+    .card.selected-doing {
+      border-color: var(--doing);
+      background: var(--doing-light);
+    }
+
+    .card.selected-what {
+      border-color: var(--what);
+      background: var(--what-light);
+    }
+
+    .card img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .card .card-label {
+      display: none;
+    }
+
+    .card.selected-who .card-label {
+      color: var(--who);
+    }
+
+    .card.selected-doing .card-label {
+      color: var(--doing);
+    }
+
+    .card.selected-what .card-label {
+      color: var(--what);
+    }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: linear-gradient(160deg, #fffbe6 0%, #fff 60%, #f0f9ff 100%);
+      border-radius: 30px;
+      padding: 30px 32px 26px;
+      max-width: 96vw;
+      width: 80vw;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3), 0 0 0 5px #ffe066;
+      position: relative;
+      text-align: center;
+      animation: popIn 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes popIn {
+      from {
+        transform: scale(0.6) rotate(-3deg);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+
+    .modal h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2.8rem;
+      margin-bottom: 18px;
+      letter-spacing: 1px;
+      text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.08);
+    }
+
+    .modal h2.correct {
+      color: #2dbe5c;
+    }
+
+    .modal h2.wrong {
+      color: var(--who);
+    }
+
+    .modal-cards {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .modal-card {
+      flex: 1;
+      border-radius: 20px;
+      padding: 16px 12px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+      transition: transform 0.2s;
+    }
+
+    .modal-card:hover {
+      transform: scale(1.03);
+    }
+
+    .modal-card.who-card {
+      background: var(--who-light);
+      border: 3px solid var(--who);
+    }
+
+    .modal-card.doing-card {
+      background: var(--doing-light);
+      border: 3px solid var(--doing);
+    }
+
+    .modal-card.what-card {
+      background: var(--what-light);
+      border: 3px solid var(--what);
+    }
+
+    .modal-card img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      border-radius: 10px;
+    }
+
+    .modal-card .mc-label {
+      display: none;
+    }
+
+    .modal-arrow {
+      font-size: 2.4rem;
+      color: #ccc;
+      align-self: center;
+      flex-shrink: 0;
+    }
+
+    .modal-sentence {
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      letter-spacing: 0.5px;
+    }
+
+    .modal-sentence .ms-who {
+      color: var(--who);
+      background: var(--who-light);
+      padding: 2px 8px;
+      border-radius: 8px;
+    }
+
+    .modal-sentence .ms-doing {
+      color: var(--doing);
+      background: var(--doing-light);
+      padding: 2px 8px;
+      border-radius: 8px;
+    }
+
+    .modal-sentence .ms-what {
+      color: var(--what);
+      background: var(--what-light);
+      padding: 2px 8px;
+      border-radius: 8px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-speak {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.25rem;
+      padding: 13px 34px;
+      border: none;
+      border-radius: 50px;
+      background: linear-gradient(135deg, #339af0, #4dabf7);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(51, 154, 240, 0.4);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-speak:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 24px rgba(51, 154, 240, 0.45);
+    }
+
+    .btn-close {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.25rem;
+      padding: 13px 34px;
+      border: 3px solid #ddd;
+      border-radius: 50px;
+      background: white;
+      color: #888;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .btn-close:hover {
+      border-color: #aaa;
+      color: #555;
+    }
+
+    .modal-close-x {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      color: #bbb;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .modal-close-x:hover {
+      color: #e74c3c;
+    }
+
+    /* ── WIN SCREEN ── */
+    .win-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .win-overlay.open {
+      display: flex;
+    }
+
+    .win-box {
+      background: linear-gradient(150deg, #fffbe6, #e8f9ff, #fff0fb);
+      border-radius: 32px;
+      padding: 48px 52px 40px;
+      text-align: center;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3), 0 0 0 6px #ffe066;
+      animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .win-box h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 3.2rem;
+      color: #2dbe5c;
+      text-shadow: 3px 3px 0 rgba(45, 190, 92, 0.2);
+      margin-bottom: 10px;
+    }
+
+    .win-box p {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    .btn-replay {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.3rem;
+      padding: 14px 44px;
+      border: none;
+      border-radius: 50px;
+      background: linear-gradient(135deg, #e84393, #ff6b6b);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(232, 67, 147, 0.4);
+      transition: transform 0.15s;
+    }
+
+    .btn-replay:hover {
+      transform: translateY(-3px);
+    }
+
+    /* progress counter */
+    .progress {
+      text-align: center;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      color: #aaa;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── RESPONSIVE ── */
+    /* .columns is always 3 side-by-side (enforced by default rule above) */
+
+    /* Tablet: 3 cards per row inside each column */
+    @media (max-width: 1024px) {
+      .card-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+    }
+
+    /* Mobile: 1 card per row inside each column, columns stay side by side */
+    @media (max-width: 600px) {
+      .game-area {
+        padding: 0 6px 32px;
+      }
+
+      .col-who,
+      .col-doing,
+      .col-what {
+        padding: 8px 5px 10px;
+      }
+
+      .col-who {
+        margin-right: 4px;
+      }
+
+      .col-doing {
+        margin-right: 4px;
+      }
+
+      .col-title {
+        font-size: 0.8rem;
+        padding: 6px 4px;
+      }
+
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sentence-bar {
+        flex-direction: column;
+        min-height: auto;
+        padding: 10px 12px;
+        gap: 4px;
+      }
+
+      .slot {
+        min-width: 0;
+        width: 100%;
+        min-height: 60px;
+      }
+
+      .arrow {
+        transform: rotate(90deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>🌟 Sentence Builder 🌟</h1>
+    <p>Pick one card from each column — then check your sentence!</p>
+  </header>
+  <div class="progress" id="progress"></div>
+
+  <!-- SENTENCE BAR -->
+  <div class="sentence-bar">
+    <div class="slot" data-cat="who" id="slot-who">
+      <span class="slot-label">Who</span>
+      <span class="empty-hint">Pick a WHO</span>
+    </div>
+    <span class="arrow">➜</span>
+    <div class="slot" data-cat="doing" id="slot-doing">
+      <span class="slot-label">Doing</span>
+      <span class="empty-hint">Pick a DOING</span>
+    </div>
+    <span class="arrow">➜</span>
+    <div class="slot" data-cat="what" id="slot-what">
+      <span class="slot-label">What</span>
+      <span class="empty-hint">Pick a WHAT</span>
+    </div>
+  </div>
+
+  <div class="check-wrap">
+    <button class="check-btn" onclick="checkSentence()">✅ Check My Sentence!</button>
+  </div>
+
+  <!-- CARD COLUMNS -->
+  <div class="game-area">
+    <div class="columns">
+      <div class="col-who">
+        <div class="col-title">👤 Who</div>
+        <div class="card-grid" id="grid-who"></div>
+      </div>
+      <div class="col-doing">
+        <div class="col-title">🏃 Doing</div>
+        <div class="card-grid" id="grid-doing"></div>
+      </div>
+      <div class="col-what">
+        <div class="col-title">🎯 What</div>
+        <div class="card-grid" id="grid-what"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="check-wrap">
+    <button class="check-btn" onclick="checkSentence()">✅ Check My Sentence!</button>
+  </div>
+
+  <!-- WIN SCREEN -->
+  <div class="win-overlay" id="win-screen">
+    <div class="win-box">
+      <h1>🏆 You Win! 🏆</h1>
+      <p>Amazing! You matched all the sentences!</p>
+      <button class="btn-replay" onclick="replayGame()">🔄 Play Again!</button>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <button class="modal-close-x" onclick="closeModal()">✕</button>
+      <h2 id="modal-title"></h2>
+      <div class="modal-cards" id="modal-cards"></div>
+      <div class="modal-sentence" id="modal-sentence"></div>
+      <div class="modal-actions">
+        <button class="btn-speak" onclick="speakSentence()">🔊 Read it out!</button>
+        <button class="btn-close" id="modal-close-btn" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── CARD DATA ──
+    const CARDS = {
+      who: [
+        { id: 1, file: "1_The_boy.png", label: "The boy" },
+        { id: 2, file: "2_The_girls.png", label: "The girls" },
+        { id: 3, file: "3_The_lady.png", label: "The lady" },
+        { id: 4, file: "4_The_family.png", label: "The family" },
+        { id: 5, file: "5_The_boy.png", label: "The boy" },
+        { id: 6, file: "6_The_lady.png", label: "The lady" },
+        { id: 7, file: "7_The_man.png", label: "The man" },
+        { id: 8, file: "8_The_girls.png", label: "The girls" }
+      ],
+      doing: [
+        { id: 1, file: "1_is_kicking.png", label: "is kicking" },
+        { id: 2, file: "2_are_walking.png", label: "are walking" },
+        { id: 3, file: "3_is_putting.png", label: "is putting" },
+        { id: 4, file: "4_are_eating.png", label: "are eating" },
+        { id: 5, file: "5_is_flying.png", label: "is flying" },
+        { id: 6, file: "6_is_reading.png", label: "is reading" },
+        { id: 7, file: "7_is_riding.png", label: "is riding" },
+        { id: 8, file: "8_are_playing.png", label: "are playing" }
+      ],
+      what: [
+        { id: 1, file: "1_the_ball.png", label: "the ball" },
+        { id: 2, file: "2_the_dog.png", label: "the dog" },
+        { id: 3, file: "3_the_rubbish.png", label: "the rubbish" },
+        { id: 4, file: "4_a_picnic.png", label: "a picnic" },
+        { id: 5, file: "5_a_kite.png", label: "a kite" },
+        { id: 6, file: "6_a_book.png", label: "a book" },
+        { id: 7, file: "7_the_bike.png", label: "the bike" },
+        { id: 8, file: "8_a_game.png", label: "a game" }
+      ]
+    };
+
+    const TOTAL = CARDS.who.length;
+
+    // ── SHUFFLE ──
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    let remaining; // counts matched pairs removed
+    let pendingRemovalId = null;
+    const selected = { who: null, doing: null, what: null };
+    let currentSentence = "";
+
+    function imgPath(cat, file) { return `${cat}/${file}`; }
+
+    // ── INIT / REPLAY ──
+    function initGame() {
+      remaining = TOTAL;
+      pendingRemovalId = null;
+      selected.who = selected.doing = selected.what = null;
+
+      ["who", "doing", "what"].forEach(cat => {
+        const grid = document.getElementById(`grid-${cat}`);
+        grid.innerHTML = "";
+        shuffle(CARDS[cat]).forEach(card => {
+          const div = document.createElement("div");
+          div.className = "card";
+          div.dataset.id = card.id;
+          div.innerHTML = `
+        <img src="${imgPath(cat, card.file)}" alt="${card.label}" loading="lazy">
+        <div class="card-label">${card.label}</div>
+      `;
+          div.addEventListener("click", () => selectCard(cat, card, div));
+          grid.appendChild(div);
+        });
+        resetSlotUI(cat);
+      });
+
+      updateProgress();
+      document.getElementById("win-screen").classList.remove("open");
+    }
+
+    initGame();
+
+    // ── PROGRESS ──
+    function updateProgress() {
+      const done = TOTAL - remaining;
+      document.getElementById("progress").textContent =
+        remaining > 0 ? `✅ ${done} / ${TOTAL} matched` : "";
+    }
+
+    // ── SELECT CARD ──
+    function selectCard(cat, card, el) {
+      document.querySelectorAll(`#grid-${cat} .card`).forEach(c =>
+        c.classList.remove(`selected-${cat}`)
+      );
+      el.classList.add(`selected-${cat}`);
+      selected[cat] = card;
+
+      const slot = document.getElementById(`slot-${cat}`);
+      const capCat = cap(cat);
+      slot.innerHTML = `
+    <span class="slot-label">${capCat}</span>
+    <img src="${imgPath(cat, card.file)}" alt="${card.label}">
+    <div class="card-name">${card.label}</div>
+    <button class="clear-btn" onclick="clearSlot('${cat}', event)">✕</button>
+  `;
+    }
+
+    function clearSlot(cat, event) {
+      event && event.stopPropagation();
+      selected[cat] = null;
+      document.querySelectorAll(`#grid-${cat} .card`).forEach(c =>
+        c.classList.remove(`selected-${cat}`)
+      );
+      resetSlotUI(cat);
+    }
+
+    function resetSlotUI(cat) {
+      const capCat = cap(cat);
+      document.getElementById(`slot-${cat}`).innerHTML = `
+    <span class="slot-label">${capCat}</span>
+    <span class="empty-hint">Pick a ${capCat.toUpperCase()}</span>
+  `;
+    }
+
+    function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+    // ── CHECK SENTENCE ──
+    function checkSentence() {
+      const w = selected.who, d = selected.doing, t = selected.what;
+      if (!w || !d || !t) { alert("Pick one card from each column first!"); return; }
+
+      const isCorrect = w.id === d.id && d.id === t.id;
+      currentSentence = `${w.label} ${d.label} ${t.label}`;
+
+      if (isCorrect) pendingRemovalId = w.id;
+
+      const titleEl = document.getElementById("modal-title");
+      titleEl.textContent = isCorrect ? "🎉 Correct!" : "🤔 Keep trying!";
+      titleEl.className = isCorrect ? "correct" : "wrong";
+
+      document.getElementById("modal-sentence").innerHTML =
+        `<span class="ms-who">${w.label}</span>` +
+        `<span class="ms-doing">${d.label}</span>` +
+        `<span class="ms-what">${t.label}</span>`;
+
+      document.getElementById("modal-cards").innerHTML = `
+    <div class="modal-card who-card">
+      <img src="${imgPath("who", w.file)}" alt="${w.label}">
+      <div class="mc-label">${w.label}</div>
+    </div>
+    <span class="modal-arrow">➜</span>
+    <div class="modal-card doing-card">
+      <img src="${imgPath("doing", d.file)}" alt="${d.label}">
+      <div class="mc-label">${d.label}</div>
+    </div>
+    <span class="modal-arrow">➜</span>
+    <div class="modal-card what-card">
+      <img src="${imgPath("what", t.file)}" alt="${t.label}">
+      <div class="mc-label">${t.label}</div>
+    </div>
+  `;
+
+      // Swap button label based on result
+      document.getElementById("modal-close-btn").textContent =
+        isCorrect ? "✨ Next!" : "Close";
+
+      document.getElementById("modal").classList.add("open");
+      setTimeout(speakSentence, 400);
+    }
+
+    // ── CLOSE MODAL ──
+    function closeModal() {
+      document.getElementById("modal").classList.remove("open");
+      window.speechSynthesis?.cancel();
+
+      if (pendingRemovalId !== null) {
+        removeMatchedCards(pendingRemovalId);
+        pendingRemovalId = null;
+      }
+    }
+
+    function removeMatchedCards(id) {
+      ["who", "doing", "what"].forEach(cat => {
+        const el = document.querySelector(`#grid-${cat} .card[data-id="${id}"]`);
+        if (el) {
+          el.style.transition = "opacity 0.3s, transform 0.3s";
+          el.style.opacity = "0";
+          el.style.transform = "scale(0.7)";
+          setTimeout(() => el.remove(), 300);
+        }
+        selected[cat] = null;
+        resetSlotUI(cat);
+      });
+
+      remaining--;
+      updateProgress();
+
+      setTimeout(() => {
+        if (remaining === 0) document.getElementById("win-screen").classList.add("open");
+      }, 350);
+    }
+
+    // ── SPEAK ──
+    function speakSentence() {
+      if (!currentSentence || !window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+      const utt = new SpeechSynthesisUtterance(currentSentence);
+      utt.rate = 0.9; utt.pitch = 1.1;
+      window.speechSynthesis.speak(utt);
+    }
+
+    // ── REPLAY ──
+    function replayGame() { initGame(); }
+
+    document.getElementById("modal").addEventListener("click", e => {
+      if (e.target === document.getElementById("modal")) closeModal();
+    });
+  </script>
+</body>
+
+</html>

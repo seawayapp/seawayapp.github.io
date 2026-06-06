@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小猫问路 - 朗读练习</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  font-family:'Nunito','PingFang SC','Hiragino Sans GB',sans-serif;
+  min-height:100vh;
+  padding:20px 16px 48px;
+  overflow-x:hidden;
+  background:#FEF9F0;
+  position:relative;
+}
+
+body::before{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 55% 30% at 5% 20%,rgba(120,200,120,0.13) 0%,transparent 65%),
+    radial-gradient(ellipse 45% 30% at 95% 30%,rgba(100,160,255,0.12) 0%,transparent 65%),
+    radial-gradient(ellipse 50% 25% at 50% 90%,rgba(255,200,100,0.10) 0%,transparent 60%);
+  pointer-events:none;z-index:0;
+}
+
+.cloud-float{
+  position:fixed;font-size:1.8rem;opacity:0.10;pointer-events:none;z-index:0;
+  animation:cloudDrift 12s ease-in-out infinite;
+}
+@keyframes cloudDrift{0%,100%{transform:translateX(0);}50%{transform:translateX(18px);}}
+
+.con{max-width:760px;margin:0 auto;position:relative;z-index:1;}
+
+/* ── HERO ── */
+.hero{text-align:center;padding:14px 0 16px;}
+
+.journey-row{
+  display:flex;justify-content:center;align-items:center;gap:4px;
+  margin-bottom:10px;font-size:1.8rem;
+}
+.j-item{display:inline-block;animation:jBob 2.5s ease-in-out infinite;}
+.j-item:nth-child(1){animation-delay:0s;}
+.j-item:nth-child(2){animation-delay:0.25s;}
+.j-item:nth-child(3){animation-delay:0.5s;}
+.j-item:nth-child(4){animation-delay:0.75s;}
+.j-item:nth-child(5){animation-delay:1s;}
+.j-item:nth-child(6){animation-delay:1.25s;}
+.j-item:nth-child(7){animation-delay:1.5s;}
+@keyframes jBob{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
+
+h1{font-size:2rem;font-weight:900;color:#3D5A80;text-shadow:2px 3px 0 rgba(255,255,255,0.9);letter-spacing:3px;margin-bottom:3px;}
+.subtitle{font-size:0.85rem;font-weight:800;color:#98A8B8;letter-spacing:2px;margin-bottom:18px;}
+
+/* ── STARS ── */
+.star-row{display:flex;align-items:center;justify-content:center;gap:3px;margin-bottom:12px;}
+.spip{font-size:1.4rem;filter:grayscale(1) opacity(0.22);transition:filter 0.3s;}
+.spip.lit{filter:none;animation:sPop 0.4s ease;}
+@keyframes sPop{0%{transform:scale(1);}50%{transform:scale(1.7) rotate(18deg);}100%{transform:scale(1);}}
+#slbl{font-size:0.8rem;font-weight:800;color:#98A8B8;margin-left:6px;}
+
+/* ── PROGRESS ── */
+.prog-wrap{background:#E2EEF8;border-radius:50px;height:12px;margin-bottom:16px;overflow:hidden;border:2px solid #C9DDEF;}
+.prog-fill{height:100%;background:linear-gradient(90deg,#3D5A80,#5B8FB9,#98D4E8);border-radius:50px;width:0%;transition:width 0.6s cubic-bezier(.4,0,.2,1);}
+
+/* ── CONTROLS ── */
+.controls{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.btn{border:none;border-radius:50px;padding:9px 17px;font-size:0.86rem;font-weight:800;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;font-family:inherit;display:flex;align-items:center;gap:5px;}
+.btn:active{transform:scale(0.93)!important;}
+.btn-a{background:#3D5A80;color:#fff;box-shadow:0 4px 0 #1C3454;}
+.btn-a:hover{transform:translateY(-2px);box-shadow:0 6px 0 #1C3454;}
+.btn-b{background:#5B8FB9;color:#fff;box-shadow:0 4px 0 #2D5C82;}
+.btn-b:hover{transform:translateY(-2px);box-shadow:0 6px 0 #2D5C82;}
+.btn-c{background:#E07B54;color:#fff;box-shadow:0 4px 0 #A04E2E;}
+.btn-c:hover{transform:translateY(-2px);box-shadow:0 6px 0 #A04E2E;}
+.btn-d{background:#56A659;color:#fff;box-shadow:0 4px 0 #2D6B30;}
+.btn-d:hover{transform:translateY(-2px);box-shadow:0 6px 0 #2D6B30;}
+
+/* ── SPEED ── */
+.spd-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:16px;font-size:0.8rem;font-weight:800;color:#98A8B8;}
+.spd-btn{background:white;border:2px solid #C9DDEF;border-radius:20px;padding:3px 11px;font-size:0.77rem;font-weight:800;color:#3D5A80;cursor:pointer;font-family:inherit;transition:all 0.15s;}
+.spd-btn.active{background:#3D5A80;color:white;border-color:#3D5A80;}
+.spd-btn:hover{transform:scale(1.06);}
+
+/* ── KEYWORD BAR ── */
+.kw-bar{background:linear-gradient(135deg,#EEF5FF,#E6F0FA);border:2px dashed #9AB8D9;border-radius:18px;padding:12px 15px;margin-bottom:14px;}
+.kw-title{font-size:0.77rem;font-weight:900;color:#3D5A80;margin-bottom:8px;display:flex;align-items:center;gap:5px;}
+.kw-chips{display:flex;flex-wrap:wrap;gap:7px;}
+.kw-chip{background:white;border:2px solid #9AB8D9;border-radius:20px;padding:4px 12px;font-size:0.86rem;font-weight:800;color:#2D4A6A;cursor:pointer;transition:all 0.15s;font-family:inherit;}
+.kw-chip .kp{display:block;font-size:0.58rem;color:#8AA8C8;font-weight:700;line-height:1.2;margin-bottom:1px;}
+.kw-chip:hover{background:#3D5A80;color:white;border-color:#3D5A80;transform:scale(1.05);}
+.kw-chip:hover .kp{color:rgba(255,255,255,0.7);}
+.kw-chip:active{transform:scale(0.94);}
+
+/* ── MAP GAME ── */
+.map-game{background:white;border-radius:22px;padding:18px 20px;margin-bottom:14px;box-shadow:0 4px 18px rgba(61,90,128,0.09);border:2px solid #C9DDEF;}
+.mg-title{font-size:0.8rem;font-weight:900;color:#3D5A80;margin-bottom:12px;display:flex;align-items:center;gap:5px;}
+
+/* The visual map */
+.map-canvas{
+  position:relative;background:linear-gradient(160deg,#E8F4E8 0%,#D4EDD4 40%,#C8E6F0 70%,#B8DDF8 100%);
+  border-radius:16px;border:2px solid #B0CCE0;
+  height:240px;margin-bottom:14px;overflow:hidden;
+}
+
+/* Fixed landmark positions */
+.map-item{position:absolute;text-align:center;cursor:default;user-select:none;}
+.map-emoji{font-size:1.5rem;display:block;line-height:1;}
+.map-label{font-size:0.6rem;font-weight:800;color:#3D5A80;margin-top:1px;white-space:nowrap;}
+
+/* Road lines on map */
+.map-road{position:absolute;background:rgba(255,255,255,0.55);border-radius:4px;}
+
+/* Cat position marker */
+#catMarker{
+  position:absolute;font-size:1.6rem;
+  transition:left 0.8s cubic-bezier(.4,0,.2,1),top 0.8s cubic-bezier(.4,0,.2,1);
+  z-index:10;line-height:1;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+/* Direction buttons */
+.dir-panel{display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(3,44px);gap:4px;justify-content:center;margin-bottom:10px;}
+.dir-btn{border:none;border-radius:10px;background:#EEF5FF;border:2px solid #C9DDEF;font-size:1.2rem;cursor:pointer;font-weight:800;color:#3D5A80;transition:all 0.15s;display:flex;align-items:center;justify-content:center;}
+.dir-btn:hover{background:#3D5A80;color:white;transform:scale(1.1);}
+.dir-btn:active{transform:scale(0.9);}
+.dir-btn:disabled{opacity:0.3;cursor:not-allowed;}
+.dir-btn.empty{border:none;background:transparent;pointer-events:none;}
+
+.mg-instr{font-size:0.8rem;font-weight:800;color:#98A8B8;text-align:center;min-height:20px;margin-bottom:6px;transition:color 0.3s;}
+.mg-instr.ok{color:#56A659;}.mg-instr.bad{color:#E07B54;}.mg-instr.info{color:#3D5A80;}
+
+.mg-steps{
+  display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:8px;
+}
+.step-chip{
+  background:#EEF5FF;border:2px solid #C9DDEF;border-radius:20px;
+  padding:3px 10px;font-size:0.78rem;font-weight:800;color:#5B8FB9;
+}
+.step-chip.done{background:#56A659;border-color:#2D6B30;color:white;}
+
+.mg-reset{background:none;border:2px solid #C9DDEF;border-radius:20px;padding:5px 14px;font-size:0.77rem;font-weight:800;color:#98A8B8;cursor:pointer;font-family:inherit;transition:all 0.15s;display:block;margin:0 auto;}
+.mg-reset:hover{border-color:#3D5A80;color:#3D5A80;}
+
+/* ── PARA CARDS ── */
+.para-card{background:white;border-radius:22px;padding:20px 22px 14px;margin-bottom:13px;box-shadow:0 4px 16px rgba(61,90,128,0.07);border:3px solid transparent;transition:border-color 0.3s,transform 0.2s,box-shadow 0.3s;cursor:pointer;position:relative;overflow:hidden;}
+.para-card::before{content:'';position:absolute;top:0;left:0;width:7px;height:100%;background:#E2EEF8;border-radius:22px 0 0 22px;transition:background 0.3s;}
+.para-card.active{border-color:#5B8FB9;box-shadow:0 8px 28px rgba(61,90,128,0.16);transform:translateY(-2px);}
+.para-card.active::before{background:#3D5A80;}
+.para-card.done{border-color:#98D4A3;background:linear-gradient(135deg,#FAFFFE,#F0FBF4);}
+.para-card.done::before{background:#56A659;}
+
+.card-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.card-ico{font-size:1.7rem;width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.card-lbl{font-size:0.75rem;font-weight:900;color:white;padding:3px 12px;border-radius:20px;letter-spacing:1px;}
+.done-tick{margin-left:auto;font-size:1.3rem;display:none;animation:pop 0.35s ease;}
+@keyframes pop{0%{transform:scale(0) rotate(-20deg);}70%{transform:scale(1.3) rotate(5deg);}100%{transform:scale(1);}}
+.para-card.done .done-tick{display:block;}
+
+/* dialogue styling */
+.dialogue{
+  display:flex;align-items:flex-start;gap:8px;
+  background:#F0F7FF;border-radius:12px;padding:8px 10px;
+  margin:4px 0;border-left:3px solid #5B8FB9;
+}
+.dlg-speaker{font-size:1.2rem;flex-shrink:0;margin-top:2px;}
+.dlg-text{flex:1;line-height:2.4;}
+
+/* ── RUBY ── */
+.text-area{line-height:2.6;word-break:break-all;}
+ruby{display:inline-flex;flex-direction:column-reverse;align-items:center;margin:0 1px;vertical-align:bottom;}
+ruby rt{font-size:0.57em;font-weight:800;color:#3D5A80;line-height:1.2;user-select:none;transition:opacity 0.3s;font-family:'Nunito',sans-serif;}
+ruby rb{font-size:1.32rem;font-weight:700;color:#1A2E44;cursor:pointer;display:inline-block;padding:2px 3px;border-radius:6px;transition:background 0.15s,transform 0.1s;}
+ruby:hover rb{background:#DCE9F8;transform:scale(1.13);}
+ruby.hl rb{background:#FFE082;border-radius:6px;}
+.punc{font-size:1.32rem;font-weight:700;color:#BDBDBD;margin:0 1px;}
+body.pin-off ruby rt{opacity:0;}
+.read-hint{font-size:0.7rem;color:#C8D8E8;margin-top:7px;text-align:right;font-weight:800;}
+
+/* ── QUIZ ── */
+.quiz-card{background:linear-gradient(135deg,#EEF5FF,#E6F0FA);border:2px solid #9AB8D9;border-radius:20px;padding:16px 20px;margin-bottom:14px;}
+.quiz-hdr{font-size:0.8rem;font-weight:900;color:#2D4A6A;margin-bottom:9px;display:flex;align-items:center;gap:5px;}
+.quiz-q{font-size:0.98rem;font-weight:800;color:#1C3454;margin-bottom:11px;}
+.ans-grid{display:flex;flex-wrap:wrap;gap:7px;}
+.ans-btn{background:white;border:2px solid #9AB8D9;border-radius:12px;padding:7px 14px;font-size:0.86rem;font-weight:800;color:#2D4A6A;cursor:pointer;transition:all 0.15s;font-family:inherit;}
+.ans-btn:hover:not(:disabled){background:#EEF5FF;transform:scale(1.04);}
+.ans-btn.correct{background:#56A659;color:white;border-color:#2D6B30;}
+.ans-btn.wrong{background:#E07B54;color:white;border-color:#A04E2E;}
+.quiz-fb{font-size:0.86rem;font-weight:800;margin-top:7px;min-height:20px;}
+.quiz-fb.ok{color:#2D6B30;}.quiz-fb.bad{color:#A04E2E;}
+
+/* ── CELEBRATE ── */
+.cel-card{display:none;text-align:center;background:white;border-radius:24px;padding:26px 20px;box-shadow:0 10px 40px rgba(61,90,128,0.15);border:3px solid #98D4A3;margin-bottom:20px;}
+.cel-card.show{display:block;animation:riseUp 0.5s ease;}
+@keyframes riseUp{from{opacity:0;transform:translateY(22px) scale(0.95);}to{opacity:1;transform:translateY(0) scale(1);}}
+.cel-emoji{font-size:3.6rem;display:block;margin-bottom:10px;}
+.cel-title{font-size:1.4rem;font-weight:900;color:#3D5A80;letter-spacing:2px;margin-bottom:5px;}
+.cel-sub{font-size:0.9rem;color:#5B8FB9;font-weight:700;}
+
+.conf-host{position:fixed;top:0;left:0;width:100%;height:0;pointer-events:none;z-index:999;overflow:visible;}
+.cp{position:absolute;width:10px;height:10px;border-radius:2px;animation:cpFly 1.5s ease-out forwards;}
+@keyframes cpFly{0%{transform:translate(var(--sx),var(--sy)) rotate(0deg);opacity:1;}100%{transform:translate(var(--ex),var(--ey)) rotate(540deg);opacity:0;}}
+
+@media(max-width:480px){
+  h1{font-size:1.6rem;}
+  .para-card{padding:14px 14px 10px;}
+  ruby rb,.punc{font-size:1.12rem;}
+  .map-canvas{height:200px;}
+}
+</style>
+<script>
+  window.NAV_CONFIG = {
+    breadcrumbs: [
+      { label: "Home",               href: "../../index.html" },
+      { label: "Education",          href: "../index.html" },
+      { label: "Chinese Reading Aloud", href: "index.html" },
+      { label: "小猫问路" }
+    ]
+  };
+</script>
+<script src="../../nav-top.js"></script>
+</head>
+<body>
+
+<div class="cloud-float" style="top:10%;left:5%;animation-delay:0s">☁️</div>
+<div class="cloud-float" style="top:18%;right:8%;animation-delay:3s">🌤️</div>
+<div class="cloud-float" style="top:60%;right:4%;animation-delay:6s">☁️</div>
+<div class="cloud-float" style="top:78%;left:3%;animation-delay:2s">🌥️</div>
+
+<div class="con">
+
+  <div class="hero">
+    <div class="journey-row">
+      <span class="j-item">🐱</span>
+      <span class="j-item">➡️</span>
+      <span class="j-item">🐑</span>
+      <span class="j-item">🐴</span>
+      <span class="j-item">🐘</span>
+      <span class="j-item">➡️</span>
+      <span class="j-item">🏡</span>
+    </div>
+    <h1>小 猫 问 路</h1>
+    <div class="subtitle">第五课 · 朗读练习 · 二年级</div>
+  </div>
+
+  <div class="star-row">
+    <span class="spip" id="sp0">⭐</span>
+    <span class="spip" id="sp1">⭐</span>
+    <span class="spip" id="sp2">⭐</span>
+    <span class="spip" id="sp3">⭐</span>
+    <span class="spip" id="sp4">⭐</span>
+    <span class="spip" id="sp5">⭐</span>
+    <span class="spip" id="sp6">⭐</span>
+    <span id="slbl">0 / 7</span>
+  </div>
+
+  <div class="prog-wrap"><div class="prog-fill" id="pFill"></div></div>
+
+  <div class="controls">
+    <button class="btn btn-a" onclick="togglePin()">🔤 <span id="pinBtn">隐藏拼音</span></button>
+    <button class="btn btn-b" onclick="readAll()">🔊 朗读全文</button>
+    <button class="btn btn-c" onclick="hlAll()">✨ 逐句朗读</button>
+    <button class="btn btn-d" onclick="resetAll()">🔄 重新开始</button>
+  </div>
+
+  <div class="spd-row">
+    朗读速度：
+    <button class="spd-btn" id="ss" onclick="setSpd(0.6)">慢</button>
+    <button class="spd-btn active" id="sn" onclick="setSpd(0.85)">正常</button>
+    <button class="spd-btn" id="sf" onclick="setSpd(1.1)">快</button>
+  </div>
+
+  <!-- KEYWORDS -->
+  <div class="kw-bar">
+    <div class="kw-title">🗺️ 词语点一点，听发音：</div>
+    <div class="kw-chips" id="kwChips"></div>
+  </div>
+
+  <!-- MAP DIRECTION GAME -->
+  <div class="map-game">
+    <div class="mg-title">🧭 带小猫找路！按照方向按钮，帮它走到奶奶家！</div>
+    <div class="mg-instr" id="mgInstr">听山羊说：「向前直走」，请按 ↑ 走一步！</div>
+
+    <div class="map-canvas" id="mapCanvas">
+      <!-- Roads -->
+      <div class="map-road" style="left:50%;top:0;width:8px;height:100%;transform:translateX(-50%)"></div>
+      <div class="map-road" style="left:50%;top:55%;width:50%;height:8px;"></div>
+
+      <!-- Landmarks -->
+      <div class="map-item" style="left:46%;top:2%">
+        <span class="map-emoji">🏡</span><span class="map-label">奶奶家</span>
+      </div>
+      <div class="map-item" style="left:5%;top:35%">
+        <span class="map-emoji">⛰️</span><span class="map-label">山坡</span>
+      </div>
+      <div class="map-item" style="left:72%;top:48%">
+        <span class="map-emoji">🌊</span><span class="map-label">河边</span>
+      </div>
+      <div class="map-item" style="left:22%;top:10%">
+        <span class="map-emoji">🌳</span><span class="map-label"></span>
+      </div>
+      <div class="map-item" style="left:75%;top:10%">
+        <span class="map-emoji">🌲</span><span class="map-label"></span>
+      </div>
+      <div class="map-item" style="left:10%;top:68%">
+        <span class="map-emoji">🌿</span><span class="map-label"></span>
+      </div>
+
+      <!-- NPC animals -->
+      <div class="map-item" id="npc-goat" style="left:10%;top:28%">
+        <span class="map-emoji">🐑</span><span class="map-label">山羊</span>
+      </div>
+      <div class="map-item" id="npc-horse" style="left:68%;top:38%">
+        <span class="map-emoji">🐴</span><span class="map-label">小马</span>
+      </div>
+      <div class="map-item" id="npc-elephant" style="left:42%;top:15%">
+        <span class="map-emoji">🐘</span><span class="map-label">大象</span>
+      </div>
+
+      <!-- Cat (start position) -->
+      <div id="catMarker" style="left:44%;top:78%">🐱</div>
+    </div>
+
+    <!-- Steps indicator -->
+    <div class="mg-steps" id="mgSteps">
+      <div class="step-chip" id="step0">1. 向前直走 ↑</div>
+      <div class="step-chip" id="step1">2. 过河 🌊</div>
+      <div class="step-chip" id="step2">3. 向右转 →</div>
+      <div class="step-chip" id="step3">4. 直走 ↑</div>
+      <div class="step-chip" id="step4">5. 到达! 🏡</div>
+    </div>
+
+    <!-- Direction pad -->
+    <div class="dir-panel">
+      <div class="dir-btn empty"></div>
+      <button class="dir-btn" id="dUp"    onclick="moveDir('up')"   title="向前走">↑</button>
+      <div class="dir-btn empty"></div>
+      <button class="dir-btn" id="dLeft"  onclick="moveDir('left')" title="向左转" disabled>←</button>
+      <div class="dir-btn empty" style="font-size:0.9rem;display:flex;align-items:center;justify-content:center;color:#CCC;font-weight:800;">🐱</div>
+      <button class="dir-btn" id="dRight" onclick="moveDir('right')" title="向右转" disabled>→</button>
+      <div class="dir-btn empty"></div>
+      <button class="dir-btn" id="dDown"  onclick="moveDir('down')"  title="向后走" disabled>↓</button>
+      <div class="dir-btn empty"></div>
+    </div>
+
+    <button class="mg-reset" onclick="resetMap()">🔄 重新走</button>
+  </div>
+
+  <!-- PARAGRAPHS -->
+  <div id="parasCon"></div>
+
+  <!-- QUIZ -->
+  <div class="quiz-card">
+    <div class="quiz-hdr">🧠 想一想！</div>
+    <div class="quiz-q" id="quizQ"></div>
+    <div class="ans-grid" id="ansGrid"></div>
+    <div class="quiz-fb" id="quizFb"></div>
+  </div>
+
+  <div class="cel-card" id="celCard">
+    <span class="cel-emoji">🐱🏡🎉</span>
+    <div class="cel-title">找到了！</div>
+    <div class="cel-sub">你读完了《小猫问路》！要记得多礼貌问路哦！"请问……怎么走？"😊</div>
+  </div>
+
+</div>
+<div class="conf-host" id="confHost"></div>
+
+<script>
+/* ── DATA ── */
+const paras = [
+  {
+    icon:'🐱', bg:'#EEF5FF', color:'#3D5A80', label:'第一段',
+    sentences:[
+      {chunks:['小猫','要去','奶奶家','。'],pins:['xiǎo māo','yào qù','nǎi nai jiā','']},
+      {chunks:['奶奶家','很远，'],pins:['nǎi nai jiā','hěn yuǎn，']},
+      {chunks:['它','走着走着','就','迷路了','。'],pins:['tā','zǒu zhe zǒu zhe','jiù','mí lù le','']},
+    ]
+  },
+  {
+    icon:'🐑', bg:'#F0F8F0', color:'#56A659', label:'第二段',
+    dialogue: true,
+    sentences:[
+      {chunks:['山羊','从','山坡上','走下来','。'],pins:['shān yáng','cóng','shān pō shang','zǒu xià lái','']},
+      {chunks:['小猫','问','："请问，','去我奶奶家','怎么走','？"'],pins:['xiǎo māo','wèn','："qǐng wèn，','qù wǒ nǎi nai jiā','zěn me zǒu','？"'],speaker:'🐱'},
+      {chunks:['"向前直走','。"'],pins:['"xiàng qián zhí zǒu',''],speaker:'🐑'},
+      {chunks:['山羊','说','。'],pins:['shān yáng','shuō','']},
+    ]
+  },
+  {
+    icon:'🐴', bg:'#FFF8F0', color:'#E07B54', label:'第三段',
+    dialogue: true,
+    sentences:[
+      {chunks:['小猫','走了','很久，'],pins:['xiǎo māo','zǒu le','hěn jiǔ，']},
+      {chunks:['也没','看到','奶奶家','。'],pins:['yě méi','kàn dào','nǎi nai jiā','']},
+      {chunks:['小马','从','河边','跑过来','。'],pins:['xiǎo mǎ','cóng','hé biān','pǎo guò lái','']},
+      {chunks:['小猫','问','："请问，','去我奶奶家','怎么走','？"'],pins:['xiǎo māo','wèn','："qǐng wèn，','qù wǒ nǎi nai jiā','zěn me zǒu','？"'],speaker:'🐱'},
+      {chunks:['"你先','过河，','再向右转，','然后','直走','。"'],pins:['"nǐ xiān','guò hé，','zài xiàng yòu zhuǎn，','rán hòu','zhí zǒu','。"'],speaker:'🐴'},
+      {chunks:['小马','回答','。'],pins:['xiǎo mǎ','huí dá','']},
+    ]
+  },
+  {
+    icon:'🐘', bg:'#F8F0FF', color:'#9B5DE5', label:'第四段',
+    dialogue: true,
+    sentences:[
+      {chunks:['小猫','走了','很久，'],pins:['xiǎo māo','zǒu le','hěn jiǔ，']},
+      {chunks:['还是','没看到','奶奶家','。'],pins:['hái shì','méi kàn dào','nǎi nai jiā','']},
+      {chunks:['这时，'],pins:['zhè shí，']},
+      {chunks:['它','看见了','大象，'],pins:['tā','kàn jiàn le','dà xiàng，']},
+      {chunks:['就','上前问','："请问','去我奶奶家','怎么走','？"'],pins:['jiù','shàng qián wèn','："qǐng wèn','qù wǒ nǎi nai jiā','zěn me zǒu','？"'],speaker:'🐱'},
+      {chunks:['大象','笑着说','："你','已经在','奶奶家','门口了','！"'],pins:['dà xiàng','xiào zhe shuō','："nǐ','yǐ jīng zài','nǎi nai jiā','mén kǒu le','！"'],speaker:'🐘'},
+    ]
+  }
+];
+
+const keywords = [
+  {w:'问路',p:'wèn lù'},{w:'迷路',p:'mí lù'},{w:'请问',p:'qǐng wèn'},
+  {w:'向前',p:'xiàng qián'},{w:'直走',p:'zhí zǒu'},{w:'向右转',p:'xiàng yòu zhuǎn'},
+  {w:'过河',p:'guò hé'},{w:'然后',p:'rán hòu'},{w:'已经',p:'yǐ jīng'},
+  {w:'门口',p:'mén kǒu'},{w:'走着走着',p:'zǒu zhe zǒu zhe'},{w:'山坡',p:'shān pō'},
+];
+
+const quizzes = [
+  {q:'小猫要去哪里？',opts:['外公外婆家','奶奶家','学校'],ans:1,fb:['再想想～','🎉 对！去奶奶家！','再想想～']},
+  {q:'山羊叫小猫怎么走？',opts:['向左转','向右转','向前直走'],ans:2,fb:['再想想～','再想想～','🎉 对！向前直走！']},
+  {q:'小马说过河之后要怎么走？',opts:['向左转再直走','向右转然后直走','再问大象'],ans:1,fb:['再想想～','🎉 答对了！向右转然后直走！','再想想～']},
+  {q:'最后谁告诉小猫已经到了？',opts:['山羊','小马','大象'],ans:2,fb:['再想想～','再想想～','🎉 答对了！是大象！']},
+];
+
+/* ── MAP GAME STATE ── */
+// Cat position in % (left, top)
+let catPos = {l:44, t:78};
+let mapStep = 0;
+// Steps: up1, cross river (up), right, up2, arrive
+const mapSteps = [
+  {dir:'up',   newL:44, newT:55, instr:'很好！走过山羊了！现在按 ↑ 再往前走！', enable:['up'], disable:[]},
+  {dir:'up',   newL:44, newT:38, instr:'过河啦！🌊 小马说向右转，按 → 吧！',   enable:['right'], disable:['up']},
+  {dir:'right',newL:62, newT:38, instr:'向右转了！现在按 ↑ 直走，到奶奶家！',  enable:['up'], disable:['right']},
+  {dir:'up',   newL:62, newT:18, instr:'🎉 找到奶奶家啦！大象说得对！',          enable:[], disable:['up','right','left','down'], done:true},
+];
+
+/* ── STATE ── */
+let pinOn=true, spd=0.85, donePi=new Set(), stars=0, hlActive=false, quizIdx=0;
+const TOTAL=paras.length, MAX_STARS=7;
+
+/* ── BUILD ── */
+buildKW(); buildParas(); loadQuiz(0);
+
+function buildKW(){
+  const c=document.getElementById('kwChips');
+  keywords.forEach(k=>{
+    const b=document.createElement('button'); b.className='kw-chip';
+    b.innerHTML=`<span class="kp">${k.p}</span>${k.w}`;
+    b.onclick=()=>speak(k.w); c.appendChild(b);
+  });
+}
+
+/* ── MAP GAME ── */
+function moveDir(dir){
+  const step=mapSteps[mapStep];
+  if(dir!==step.dir){
+    document.getElementById('mgInstr').textContent='❌ 方向不对哦，再想想！';
+    document.getElementById('mgInstr').className='mg-instr bad';
+    setTimeout(()=>{
+      document.getElementById('mgInstr').className='mg-instr info';
+      document.getElementById('mgInstr').textContent=getCurrentInstr();
+    },900);
+    return;
+  }
+  // move cat
+  const cat=document.getElementById('catMarker');
+  cat.style.left=step.newL+'%';
+  cat.style.top=step.newT+'%';
+  // flip emoji if going right
+  cat.style.transform = dir==='right'?'scaleX(-1)':'scaleX(1)';
+
+  // mark step done
+  document.getElementById(`step${mapStep}`).classList.add('done');
+  mapStep++;
+
+  const instr=document.getElementById('mgInstr');
+  instr.textContent=step.instr;
+  instr.className='mg-instr '+(step.done?'ok':'info');
+
+  // update buttons
+  ['up','right','left','down'].forEach(d=>{
+    document.getElementById('d'+d.charAt(0).toUpperCase()+d.slice(1)).disabled=true;
+  });
+  if(!step.done){
+    step.enable.forEach(d=>{
+      document.getElementById('d'+d.charAt(0).toUpperCase()+d.slice(1)).disabled=false;
+    });
+  } else {
+    gainStar();
+  }
+  speak(step.instr);
+}
+
+function getCurrentInstr(){
+  if(mapStep===0) return '听山羊说：「向前直走」，请按 ↑ 走一步！';
+  if(mapStep===1) return '按 ↑ 继续向前走过河！';
+  if(mapStep===2) return '按 → 向右转！';
+  if(mapStep===3) return '按 ↑ 直走到奶奶家！';
+  return '已经到了！';
+}
+
+function resetMap(){
+  mapStep=0;
+  const cat=document.getElementById('catMarker');
+  cat.style.left='44%'; cat.style.top='78%'; cat.style.transform='scaleX(1)';
+  for(let i=0;i<5;i++) document.getElementById(`step${i}`).classList.remove('done');
+  ['up','right','left','down'].forEach(d=>{
+    document.getElementById('d'+d.charAt(0).toUpperCase()+d.slice(1)).disabled=true;
+  });
+  document.getElementById('dUp').disabled=false;
+  const instr=document.getElementById('mgInstr');
+  instr.textContent=getCurrentInstr(); instr.className='mg-instr info';
+}
+
+/* ── PARAGRAPHS ── */
+function buildParas(){
+  const con=document.getElementById('parasCon'); con.innerHTML='';
+  paras.forEach((para,pi)=>{
+    const card=document.createElement('div'); card.className='para-card'; card.id=`pc${pi}`;
+    const hdr=document.createElement('div'); hdr.className='card-hdr';
+    const ico=document.createElement('div'); ico.className='card-ico'; ico.style.background=para.bg; ico.textContent=para.icon;
+    const lbl=document.createElement('div'); lbl.className='card-lbl'; lbl.style.background=para.color; lbl.textContent=para.label;
+    const tick=document.createElement('div'); tick.className='done-tick'; tick.textContent='✅';
+    hdr.appendChild(ico); hdr.appendChild(lbl); hdr.appendChild(tick);
+
+    const ta=document.createElement('div'); ta.className='text-area'; ta.id=`ta${pi}`;
+
+    para.sentences.forEach((sent,si)=>{
+      let container;
+      if(sent.speaker){
+        const dlg=document.createElement('div'); dlg.className='dialogue';
+        const sp=document.createElement('span'); sp.className='dlg-speaker'; sp.textContent=sent.speaker;
+        const dt=document.createElement('span'); dt.className='dlg-text'; dt.id=`snt${pi}_${si}`;
+        container=dt;
+        dlg.appendChild(sp); dlg.appendChild(dt); ta.appendChild(dlg);
+      } else {
+        const wrap=document.createElement('span'); wrap.id=`snt${pi}_${si}`; container=wrap; ta.appendChild(wrap);
+      }
+      sent.chunks.forEach((ch,ci)=>{
+        const isPunc=/^[，。！？""：；、…—·\s""]+$/.test(ch);
+        if(isPunc){const sp=document.createElement('span');sp.className='punc';sp.textContent=ch;container.appendChild(sp);}
+        else{
+          const hasTr=/[，。！？"：；]$/.test(ch);
+          const txt=hasTr?ch.slice(0,-1):ch; const tr=hasTr?ch.slice(-1):'';
+          const r=document.createElement('ruby'); r.id=`rb${pi}_${si}_${ci}`;
+          const rt=document.createElement('rt'); rt.textContent=sent.pins[ci]||'';
+          const rb=document.createElement('rb'); rb.textContent=txt;
+          rb.onclick=(e)=>{e.stopPropagation();speak(txt);flash(r);};
+          r.appendChild(rt); r.appendChild(rb); container.appendChild(r);
+          if(tr){const ps=document.createElement('span');ps.className='punc';ps.textContent=tr;container.appendChild(ps);}
+        }
+      });
+    });
+
+    const hint=document.createElement('div'); hint.className='read-hint'; hint.textContent='👆 点击这段来朗读';
+    card.appendChild(hdr); card.appendChild(ta); card.appendChild(hint);
+    card.onclick=()=>{setActive(pi);readPara(pi);};
+    con.appendChild(card);
+  });
+}
+
+/* ── CORE ── */
+function setActive(pi){document.querySelectorAll('.para-card').forEach((c,i)=>c.classList.toggle('active',i===pi));}
+function readPara(pi){speak(paras[pi].sentences.map(s=>s.chunks.join('')).join(''));markDone(pi);}
+function markDone(pi){
+  const card=document.getElementById(`pc${pi}`);
+  if(card.classList.contains('done'))return;
+  card.classList.add('done'); donePi.add(pi); gainStar(); updateProg();
+  if(donePi.size===TOTAL) setTimeout(celebrate,700);
+}
+function gainStar(){
+  if(stars>=MAX_STARS)return;
+  document.getElementById(`sp${stars}`).classList.add('lit'); stars++;
+  document.getElementById('slbl').textContent=`${stars} / ${MAX_STARS}`;
+}
+function updateProg(){document.getElementById('pFill').style.width=(donePi.size/TOTAL*100)+'%';}
+function speak(txt,rate){
+  if(!window.speechSynthesis)return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(txt);
+  u.lang='zh-CN'; u.rate=rate||spd; speechSynthesis.speak(u);
+}
+function speakWait(txt){
+  return new Promise(res=>{
+    if(!window.speechSynthesis){setTimeout(res,800);return;}
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(txt);
+    u.lang='zh-CN'; u.rate=spd; u.onend=res; u.onerror=res; speechSynthesis.speak(u);
+    setTimeout(res,txt.length*660+1800);
+  });
+}
+async function hlAll(){
+  if(hlActive){speechSynthesis.cancel();hlActive=false;return;}
+  hlActive=true;
+  for(let pi=0;pi<paras.length&&hlActive;pi++){
+    setActive(pi);
+    for(let si=0;si<paras[pi].sentences.length&&hlActive;si++){
+      hlSent(pi,si,true);
+      await speakWait(paras[pi].sentences[si].chunks.join(''));
+      hlSent(pi,si,false);
+    }
+    markDone(pi);
+  }
+  hlActive=false;
+}
+function hlSent(pi,si,on){
+  const el=document.getElementById(`snt${pi}_${si}`);
+  if(!el)return;
+  el.querySelectorAll('ruby').forEach(r=>r.classList.toggle('hl',on));
+}
+function readAll(){speak(paras.map(p=>p.sentences.map(s=>s.chunks.join('')).join('')).join('　'));}
+function togglePin(){pinOn=!pinOn;document.body.classList.toggle('pin-off',!pinOn);document.getElementById('pinBtn').textContent=pinOn?'隐藏拼音':'显示拼音';}
+function setSpd(r){
+  spd=r; document.querySelectorAll('.spd-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById({0.6:'ss',0.85:'sn',1.1:'sf'}[r]).classList.add('active');
+}
+function flash(el){el.style.background='#BFDBF7';setTimeout(()=>el.style.background='',420);}
+function resetAll(){
+  speechSynthesis.cancel(); hlActive=false; donePi.clear(); stars=0;
+  document.getElementById('slbl').textContent=`0 / ${MAX_STARS}`;
+  document.getElementById('pFill').style.width='0%';
+  document.getElementById('celCard').classList.remove('show');
+  document.querySelectorAll('.spip').forEach(s=>s.classList.remove('lit'));
+  resetMap(); buildParas(); quizIdx=0; loadQuiz(0);
+}
+
+/* ── QUIZ ── */
+function loadQuiz(idx){
+  const q=quizzes[idx];
+  document.getElementById('quizQ').textContent=q.q;
+  document.getElementById('quizFb').textContent=''; document.getElementById('quizFb').className='quiz-fb';
+  const grid=document.getElementById('ansGrid'); grid.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const b=document.createElement('button'); b.className='ans-btn'; b.textContent=opt;
+    b.onclick=()=>checkAns(i,q,grid); grid.appendChild(b);
+  });
+}
+function checkAns(i,q,grid){
+  Array.from(grid.children).forEach((b,bi)=>{
+    b.disabled=true;
+    if(bi===q.ans)b.classList.add('correct');
+    else if(bi===i&&i!==q.ans)b.classList.add('wrong');
+  });
+  const fb=document.getElementById('quizFb');
+  fb.textContent=q.fb[i]; fb.className='quiz-fb '+(i===q.ans?'ok':'bad');
+  if(i===q.ans){gainStar();setTimeout(()=>{quizIdx=(quizIdx+1)%quizzes.length;loadQuiz(quizIdx);},2000);}
+}
+
+/* ── CELEBRATE ── */
+function celebrate(){
+  document.getElementById('celCard').classList.add('show');
+  speak('太棒了！你读完了小猫问路！要记得礼貌问路哦！',0.85); fireConf();
+}
+function fireConf(){
+  const host=document.getElementById('confHost'); host.innerHTML='';
+  const colors=['#3D5A80','#5B8FB9','#E07B54','#56A659','#9B5DE5','#FFD166','#98D4E8'];
+  const W=window.innerWidth;
+  for(let i=0;i<45;i++){
+    const p=document.createElement('div'); p.className='cp';
+    const sx=Math.random()*W, sy=Math.random()*120+20;
+    const ex=sx+(Math.random()-0.5)*340, ey=sy+Math.random()*440+140;
+    p.style.cssText=`left:${sx}px;top:${sy}px;background:${colors[i%colors.length]};--sx:0px;--sy:0px;--ex:${ex-sx}px;--ey:${ey-sy}px;animation-delay:${Math.random()*0.5}s`;
+    host.appendChild(p);
+  }
+  setTimeout(()=>host.innerHTML='',2400);
+}
+
+// init map button state
+document.getElementById('dRight').disabled=true;
+document.getElementById('dLeft').disabled=true;
+document.getElementById('dDown').disabled=true;
+</script>
+</body>
+</html>

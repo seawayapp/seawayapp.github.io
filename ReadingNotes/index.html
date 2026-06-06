@@ -1,0 +1,126 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script src="../nav-config.js"></script>
+    <script>
+      window.NAV_CONFIG = {
+        breadcrumbs: [
+          {
+            label: "Home",
+            href: "../index.html",
+            children: NAV_MENUS.site(),
+          },
+          { label: "Reading Notes" },
+        ],
+      };
+    </script>
+    <script src="../nav-top.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Input Data -->
+    <script src="./data/A_index_Reading_Notes.js"></script>
+    <title>Reading Notes</title>
+    <style>
+      body {
+        font-family: "Book Antiqua", serif;
+        background: #eaeaea;
+        margin: 0;
+        padding: 0;
+      }
+
+      .wrap {
+        max-width: 1000px;
+        width: 95%;
+        margin: 0 auto;
+        padding-bottom: 40px;
+      }
+
+      h1 {
+        text-align: center;
+        margin: 30px 0 20px;
+        font-size: clamp(1.4rem, 4vw, 2rem);
+      }
+
+      .entry-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .entry {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 12px 16px;
+      }
+
+      .entry-num {
+        font-size: 15px;
+        color: #999;
+        min-width: 24px;
+        text-align: right;
+        flex-shrink: 0;
+      }
+
+      .entry a {
+        font-size: 18px;
+        color: #272727;
+        text-decoration: none;
+        line-height: 1.3;
+      }
+
+      .entry a:hover {
+        text-decoration: underline;
+      }
+
+      .page-footer {
+        text-align: center;
+        margin-top: 30px;
+        color: #555;
+        font-size: 14px;
+      }
+
+      @media (max-width: 640px) {
+        .entry-list {
+          grid-template-columns: 1fr;
+        }
+
+        .entry a {
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <h1>Reading Notes 读书笔记</h1>
+      <div id="mainContent"></div>
+      <div class="page-footer">咖啡先生<br />Last updated on 14/09/2025</div>
+    </div>
+  </body>
+  <script>
+    function getHref(item) {
+      if (item.category === "file") return `./NewConcept_Template.html?input=${item.filename}`;
+      if (item.category === "file_slide") return `./template_textslide.html?input=${item.filename}`;
+      if (item.category === "file_bilingual") return `./template_bilingual.html?input=${item.filename}`;
+      if (item.category === "folder") return `./${item.filename}`;
+      return "#";
+    }
+
+    let text = '<div class="entry-list">';
+    mainData.forEach((item, i) => {
+      text += `
+        <div class="entry">
+          <span class="entry-num">${i + 1}</span>
+          <a href="${getHref(item)}">${item.title}&nbsp;&nbsp;${item.subtitle}</a>
+        </div>`;
+    });
+    text += "</div>";
+    document.getElementById("mainContent").innerHTML = text;
+  </script>
+</html>
