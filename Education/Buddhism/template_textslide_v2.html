@@ -299,7 +299,7 @@
     }
 
     /* =========================================
-       PRINT / PDF
+       PRINT / PDF - ENLARGED CONTENT TEXT
        ========================================= */
     @media print {
       * {
@@ -345,6 +345,7 @@
 
       .print-page .print-content {
         flex: 1;
+        /* removed redundant font-size to avoid conflict */
         padding: 20px;
         display: flex;
         flex-direction: column;
@@ -364,13 +365,16 @@
         font-family: serif;
       }
 
+      /* --- ENLARGED TEXT FOR CONTENT (original & explanation) --- */
       .box-original {
-        font-size: 1.1rem !important;
+        font-size: 1.6rem !important;
+        line-height: 1.6 !important;
         padding: 15px !important;
       }
 
       .box-explanation {
-        font-size: 1.2rem !important;
+        font-size: 1.8rem !important;
+        line-height: 1.7 !important;
         padding: 15px !important;
         flex: 1;
       }
