@@ -299,7 +299,7 @@
     }
 
     /* =========================================
-       PRINT / PDF - ENLARGED CONTENT TEXT
+       PRINT / PDF
        ========================================= */
     @media print {
       * {
@@ -326,12 +326,13 @@
       .print-page {
         position: relative;
         width: 297mm;
-        height: 210mm;
         page-break-after: always;
         break-after: page;
         display: flex;
         flex-direction: column;
         background: white;
+        margin: 0;
+        overflow: hidden;
       }
 
       .print-page header {
@@ -345,7 +346,6 @@
 
       .print-page .print-content {
         flex: 1;
-        /* removed redundant font-size to avoid conflict */
         padding: 20px;
         display: flex;
         flex-direction: column;
@@ -365,18 +365,19 @@
         font-family: serif;
       }
 
-      /* --- ENLARGED TEXT FOR CONTENT (original & explanation) --- */
       .box-original {
-        font-size: 1.6rem !important;
-        line-height: 1.6 !important;
-        padding: 15px !important;
+        font-size: 0.9rem !important;
+        padding: 10px !important;
       }
 
       .box-explanation {
-        font-size: 1.8rem !important;
-        line-height: 1.7 !important;
-        padding: 15px !important;
-        flex: 1;
+        font-size: 1.0rem !important;
+        padding: 10px !important;
+      }
+
+      .box-original,
+      .box-explanation {
+        break-inside: avoid;
       }
 
       /* Hide interactive UI */

@@ -22,75 +22,177 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --ink:       #1a1208;
-      --ink-mid:   #4a3c28;
+      --ink: #1a1208;
+      --ink-mid: #4a3c28;
       --ink-light: #8a7a62;
-      --paper:     #f5f0e8;
-      --gold:      #b8912a;
-      --gold-light:#d4aa4a;
-      --gold-dim:  rgba(184,145,42,.12);
-      --border:    rgba(184,145,42,.28);
-      --shadow:    rgba(80,60,20,.12);
-      --radius:    10px;
+      --paper: #f5f0e8;
+      --gold: #b8912a;
+      --gold-light: #d4aa4a;
+      --gold-dim: rgba(184, 145, 42, .12);
+      --border: rgba(184, 145, 42, .28);
+      --shadow: rgba(80, 60, 20, .12);
+      --radius: 10px;
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       font-family: "Noto Serif SC", "Book Antiqua", "Palatino Linotype", Georgia, serif;
       background: var(--paper);
       color: var(--ink);
       min-height: 100vh;
     }
-    .wrap { max-width: 860px; margin: 0 auto; padding: 40px 24px 64px; }
-    .logo { text-align: center; margin-bottom: 36px; }
-    .logo h1 { font-size: 1.9rem; font-weight: 700; letter-spacing: .12em; color: var(--ink); }
-    .bu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 24px 64px;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .logo h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      color: var(--ink);
+    }
+
+    .bu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
     .bu-card {
-      display: flex; align-items: center; gap: 14px;
-      padding: 16px 18px; background: #fff;
-      border: 1px solid var(--border); border-radius: var(--radius);
-      text-decoration: none; color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--ink);
       transition: box-shadow .2s, border-color .2s, transform .15s;
     }
+
     .bu-card:hover {
-      border-color: var(--gold); box-shadow: 0 4px 18px var(--shadow);
-      transform: translateY(-2px); text-decoration: none; color: var(--ink);
+      border-color: var(--gold);
+      box-shadow: 0 4px 18px var(--shadow);
+      transform: translateY(-2px);
+      text-decoration: none;
+      color: var(--ink);
     }
+
     .bu-card-num {
-      width: 30px; height: 30px; border-radius: 50%;
-      background: var(--gold-dim); color: var(--gold);
-      font-size: 0.8rem; font-weight: 700;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-      font-family: system-ui, sans-serif; border: 1px solid rgba(184,145,42,.3);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--gold-dim);
+      color: var(--gold);
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-family: system-ui, sans-serif;
+      border: 1px solid rgba(184, 145, 42, .3);
     }
-    .bu-card-body { flex: 1; min-width: 0; }
+
+    .bu-card-body {
+      flex: 1;
+      min-width: 0;
+    }
+
     .bu-card-title {
-      display: block; font-size: 0.95rem; font-weight: 600; color: var(--ink);
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.4;
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.4;
     }
+
     .bu-card-sub {
-      display: block; font-size: 0.78rem; color: var(--ink-light);
-      margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      display: block;
+      font-size: 0.78rem;
+      color: var(--ink-light);
+      margin-top: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
+
     .bu-card-arrow {
-      color: var(--ink-light); font-size: 0.9rem; flex-shrink: 0;
+      color: var(--ink-light);
+      font-size: 0.9rem;
+      flex-shrink: 0;
       transition: transform .2s, color .2s;
     }
-    .bu-card:hover .bu-card-arrow { transform: translateX(4px); color: var(--gold); }
+
+    .bu-card:hover .bu-card-arrow {
+      transform: translateX(4px);
+      color: var(--gold);
+    }
+
     .update-date {
-      text-align: center; margin-top: 48px; font-size: 0.78rem;
-      color: var(--ink-light); font-family: system-ui, sans-serif;
+      text-align: center;
+      margin-top: 48px;
+      font-size: 0.78rem;
+      color: var(--ink-light);
+      font-family: system-ui, sans-serif;
     }
+
     @media (max-width: 700px) {
-      .bu-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-      .bu-card { padding: 13px 14px; gap: 10px; }
-      .bu-card-title { font-size: 0.88rem; }
+      .bu-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .bu-card {
+        padding: 13px 14px;
+        gap: 10px;
+      }
+
+      .bu-card-title {
+        font-size: 0.88rem;
+      }
     }
+
     @media (max-width: 480px) {
-      .wrap { padding: 28px 16px 48px; }
-      .logo h1 { font-size: 1.45rem; }
-      .bu-grid { grid-template-columns: 1fr; gap: 10px; }
-      .bu-card-title { white-space: normal; }
-      .bu-card-sub { white-space: normal; }
+      .wrap {
+        padding: 28px 16px 48px;
+      }
+
+      .logo h1 {
+        font-size: 1.45rem;
+      }
+
+      .bu-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .bu-card-title {
+        white-space: normal;
+      }
+
+      .bu-card-sub {
+        white-space: normal;
+      }
     }
   </style>
 </head>
