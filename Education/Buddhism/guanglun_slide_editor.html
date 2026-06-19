@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500&family=Noto+Sans+SC:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <title>广论消文编辑器</title>
+  <style>
+    :root {
+      --ink: #1a1208;
+      --ink-light: #4a3c28;
+      --ink-faint: #8a7a62;
+      --paper: #f5f0e8;
+      --paper-warm: #ede6d6;
+      --divider: #c8b896;
+      --gold: #b8912a;
+      --gold-light: #d4aa4a;
+      --gold-pale: #f0e4c0;
+      --green: #3a6040;
+      --green-light: #4a7a52;
+      --shadow: rgba(80, 60, 20, 0.14);
+      --radius: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Noto Sans SC', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── Top bar ── */
+    .top-bar {
+      background: var(--ink);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      height: 56px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, .4);
+    }
+
+    .btn-back {
+      background: rgba(255, 255, 255, .1);
+      border: 1px solid rgba(184, 145, 42, .35);
+      color: var(--gold-light);
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: 'Noto Sans SC', sans-serif;
+      flex-shrink: 0;
+      transition: background .15s;
+    }
+
+    .btn-back:hover {
+      background: rgba(255, 255, 255, .15);
+    }
+
+    .top-title {
+      color: var(--gold-light);
+      font-family: 'Noto Serif SC', serif;
+      font-size: 15px;
+      letter-spacing: 2px;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* ── Meta section ── */
+    .meta-section {
+      background: var(--paper-warm);
+      border-bottom: 2px solid var(--divider);
+      padding: 14px 16px;
+    }
+
+    .meta-inner {
+      max-width: 920px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .meta-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .meta-label {
+      font-size: 10px;
+      color: var(--gold);
+      letter-spacing: 2px;
+    }
+
+    .meta-input {
+      background: rgba(255, 255, 255, .75);
+      border: 1px solid var(--divider);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 13px;
+      color: var(--ink);
+      outline: none;
+      transition: border-color .15s;
+      width: 100%;
+    }
+
+    .meta-input:focus {
+      border-color: var(--gold);
+      background: white;
+    }
+
+    .meta-date-col {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 130px;
+    }
+
+    /* ── Main content ── */
+    main {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 18px 16px 130px;
+    }
+
+    .list-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .list-count {
+      font-size: 12px;
+      color: var(--ink-faint);
+      letter-spacing: .5px;
+      flex: 1;
+    }
+
+    .btn-add-top {
+      background: transparent;
+      border: 1px solid var(--divider);
+      color: var(--ink-faint);
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: 'Noto Sans SC', sans-serif;
+      transition: all .15s;
+      letter-spacing: .5px;
+    }
+
+    .btn-add-top:hover {
+      border-color: var(--gold-light);
+      color: var(--gold);
+      background: var(--gold-pale);
+    }
+
+    /* ── Paragraph card ── */
+    .para-card {
+      background: white;
+      border: 1px solid var(--divider);
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      background: var(--paper-warm);
+      border-bottom: 1px solid var(--divider);
+    }
+
+    .card-num {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--gold);
+      letter-spacing: 1px;
+      background: rgba(184, 145, 42, .12);
+      border: 1px solid rgba(184, 145, 42, .28);
+      border-radius: 4px;
+      padding: 2px 9px;
+      flex-shrink: 0;
+    }
+
+    .card-head-title {
+      flex: 1;
+      font-size: 11px;
+      color: var(--ink-faint);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .btn-del {
+      background: none;
+      border: 1px solid rgba(200, 50, 50, .3);
+      color: #c84040;
+      border-radius: 5px;
+      padding: 3px 10px;
+      font-size: 11px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all .15s;
+      font-family: 'Noto Sans SC', sans-serif;
+    }
+
+    .btn-del:hover {
+      background: rgba(200, 50, 50, .1);
+    }
+
+    .card-body {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 150px 1fr 130px;
+      gap: 10px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .field-label {
+      font-size: 10px;
+      color: var(--gold);
+      letter-spacing: 1.5px;
+    }
+
+    .field-select,
+    .field-input {
+      background: var(--paper);
+      border: 1px solid var(--divider);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-family: 'Noto Sans SC', sans-serif;
+      font-size: 13px;
+      color: var(--ink);
+      outline: none;
+      transition: border-color .15s, background .15s;
+      width: 100%;
+    }
+
+    .field-select:focus,
+    .field-input:focus {
+      border-color: var(--gold-light);
+      background: white;
+    }
+
+    .field-textarea {
+      background: var(--paper);
+      border: 1px solid var(--divider);
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 14px;
+      line-height: 1.85;
+      color: var(--ink);
+      outline: none;
+      resize: vertical;
+      width: 100%;
+      transition: border-color .15s, background .15s;
+    }
+
+    .field-textarea:focus {
+      border-color: var(--gold-light);
+      background: white;
+    }
+
+    .field-textarea.explanation {
+      font-family: 'Noto Sans SC', sans-serif;
+      font-size: 13px;
+      line-height: 1.9;
+      color: var(--green);
+      border-style: dashed;
+      min-height: 90px;
+    }
+
+    /* ── Title-category card accent ── */
+    .para-card.card-title {
+      border-left: 4px solid var(--green);
+    }
+
+    .para-card.card-title .card-head {
+      background: #eef4ef;
+    }
+
+    .para-card.card-title .card-num {
+      color: var(--green);
+      background: rgba(58, 96, 64, .1);
+      border-color: rgba(58, 96, 64, .25);
+    }
+
+    /* ── Add paragraph button ── */
+    .btn-add {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      background: transparent;
+      border: 2px dashed var(--divider);
+      border-radius: var(--radius);
+      color: var(--ink-faint);
+      font-family: 'Noto Sans SC', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      text-align: center;
+      transition: all .15s;
+      letter-spacing: 1px;
+      margin-top: 6px;
+    }
+
+    .btn-add:hover {
+      border-color: var(--gold-light);
+      color: var(--gold);
+      background: var(--gold-pale);
+    }
+
+    /* ── Bottom action bar ── */
+    .action-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--paper-warm);
+      border-top: 2px solid var(--divider);
+      padding: 12px 16px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom));
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 -4px 24px var(--shadow);
+      z-index: 90;
+    }
+
+    .action-info {
+      flex: 1;
+      font-size: 12px;
+      color: var(--ink-faint);
+      line-height: 1.6;
+    }
+
+    .action-info strong {
+      color: var(--gold);
+      font-size: 13px;
+    }
+
+    .btn-gen-slide {
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 11px 26px;
+      font-family: 'Noto Sans SC', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 1.5px;
+      transition: background .15s, transform .1s;
+      flex-shrink: 0;
+    }
+
+    .btn-gen-slide:hover {
+      background: var(--green-light);
+    }
+
+    .btn-gen-slide:active {
+      transform: scale(.97);
+    }
+
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--ink-faint);
+      font-size: 14px;
+      line-height: 2.2;
+    }
+
+    .empty-state .icon {
+      font-size: 40px;
+      opacity: .3;
+      margin-bottom: 12px;
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      top: 68px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-16px);
+      background: rgba(26, 18, 8, .92);
+      color: #f0e4c0;
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: 'Noto Sans SC', sans-serif;
+      opacity: 0;
+      transition: opacity .22s, transform .22s;
+      pointer-events: none;
+      z-index: 999;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .field-row {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .field-row .field-group:nth-child(2) {
+        grid-column: 1 / -1;
+        order: -1;
+      }
+
+      .meta-inner {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .field-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="top-bar">
+    <button class="btn-back" onclick="history.back()">← 返回</button>
+    <span class="top-title" id="topTitle">广论消文编辑器</span>
+  </div>
+
+  <div class="meta-section">
+    <div class="meta-inner">
+      <div class="meta-fields">
+        <div class="meta-row">
+          <span class="meta-label">标题 TITLE</span>
+          <input class="meta-input" id="metaTitle" type="text"
+            placeholder="P102L11 - P104L10 念佛道理---常白净行">
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">副标题 SUBTITLE</span>
+          <input class="meta-input" id="metaSubtitle" type="text" placeholder="（可选）">
+        </div>
+      </div>
+      <div class="meta-date-col">
+        <div class="meta-row">
+          <span class="meta-label">日期 DATE</span>
+          <input class="meta-input" id="metaDate" type="text" placeholder="DD/MM/YYYY">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <div class="list-header">
+      <span class="list-count" id="listCount">共 0 个段落</span>
+      <button class="btn-add-top" onclick="addPara()">＋ 新增段落</button>
+    </div>
+    <div id="paraList"></div>
+    <button class="btn-add" onclick="addPara()">＋ 新增段落</button>
+  </main>
+
+  <div class="action-bar">
+    <div class="action-info">
+      确认内容后点击生成<br>
+      <strong id="actionCount">0 个段落</strong>
+    </div>
+    <button class="btn-gen-slide" onclick="generateSlide()">生成幻灯片 ▶</button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    let paras = [];
+
+    function showToast(msg, duration) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), duration || 2000);
+    }
+
+    function esc(s) {
+      return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function loadData() {
+      try {
+        const raw = localStorage.getItem('guanglun_editor_input');
+        if (!raw) {
+          showToast('未找到数据，请从广论阅读器点击「生成消文」', 4000);
+          return;
+        }
+        const data = JSON.parse(raw);
+        document.getElementById('metaTitle').value = data.title || '';
+        document.getElementById('metaSubtitle').value = data.subtitle || '';
+        document.getElementById('metaDate').value = data.testdate || '';
+        document.getElementById('topTitle').textContent = data.title || '广论消文编辑器';
+        paras = data.paragraph ? data.paragraph.map(p => Object.assign({}, p)) : [];
+        renderList();
+      } catch (e) {
+        showToast('数据解析失败：' + e.message, 4000);
+      }
+    }
+
+    function renderList() {
+      const list = document.getElementById('paraList');
+      if (!paras.length) {
+        list.innerHTML = '<div class="empty-state"><div class="icon">📄</div>尚无段落，点击「新增段落」开始编辑</div>';
+        updateCount();
+        return;
+      }
+      list.innerHTML = '';
+      paras.forEach((p, i) => list.appendChild(createCard(p, i)));
+      updateCount();
+    }
+
+    function createCard(p, i) {
+      const isTitle = p.category === 'title';
+      const card = document.createElement('div');
+      card.className = 'para-card' + (isTitle ? ' card-title' : '');
+      card.dataset.index = i;
+
+      const catOptions = ['content', 'title'].map(v =>
+        `<option value="${v}"${p.category === v ? ' selected' : ''}>${v === 'content' ? '内容 content' : '标题 title'}</option>`
+      ).join('');
+
+      const headLabel = isTitle ? '封面' : `# ${i + 1}`;
+      const headTitle = isTitle ? esc(p.mainTitle || '') : esc(p.pageTitle || '');
+
+      let bodyFields;
+      if (isTitle) {
+        bodyFields = `
+          <div class="field-row" style="grid-template-columns:150px 1fr;">
+            <div class="field-group">
+              <span class="field-label">CATEGORY 类型</span>
+              <select class="field-select" onchange="changeCategory(${i},this.value)">
+                ${catOptions}
+              </select>
+            </div>
+            <div class="field-group">
+              <span class="field-label">MAIN TITLE 主标题</span>
+              <input class="field-input" type="text" value="${esc(p.mainTitle || '')}"
+                oninput="updateField(${i},'mainTitle',this.value)"
+                placeholder="广论消文">
+            </div>
+          </div>
+          <div class="field-group">
+            <span class="field-label">SUB TITLE 副标题（换行用 Enter）</span>
+            <textarea class="field-textarea" rows="2"
+              oninput="updateField(${i},'subTitle',this.value)">${esc(p.subTitle || '')}</textarea>
+          </div>`;
+      } else {
+        bodyFields = `
+          <div class="field-row">
+            <div class="field-group">
+              <span class="field-label">CATEGORY 类型</span>
+              <select class="field-select" onchange="changeCategory(${i},this.value)">
+                ${catOptions}
+              </select>
+            </div>
+            <div class="field-group">
+              <span class="field-label">PAGE TITLE 页面标题</span>
+              <input class="field-input" type="text" value="${esc(p.pageTitle || '')}"
+                oninput="updateField(${i},'pageTitle',this.value)"
+                placeholder="P102L11-L13 此是略说---现为教授">
+            </div>
+            <div class="field-group">
+              <span class="field-label">PERSON 负责人</span>
+              <input class="field-input" type="text" value="${esc(p.personInCharge || '')}"
+                oninput="updateField(${i},'personInCharge',this.value)"
+                placeholder="AL">
+            </div>
+          </div>
+          <div class="field-group">
+            <span class="field-label">ORIGINAL TEXT 原文</span>
+            <textarea class="field-textarea" rows="3"
+              oninput="updateField(${i},'originalText',this.value)">${esc(p.originalText || '')}</textarea>
+          </div>
+          <div class="field-group">
+            <span class="field-label">EXPLANATION 消文</span>
+            <textarea class="field-textarea explanation" rows="5"
+              oninput="updateField(${i},'explanation',this.value)">${esc(p.explanation || '')}</textarea>
+          </div>`;
+      }
+
+      card.innerHTML = `
+        <div class="card-head">
+          <span class="card-num">${headLabel}</span>
+          <span class="card-head-title" id="cht-${i}">${headTitle}</span>
+          <button class="btn-del" onclick="deletePara(${i})">删除</button>
+        </div>
+        <div class="card-body">${bodyFields}</div>
+      `;
+      return card;
+    }
+
+    function changeCategory(i, value) {
+      paras[i].category = value;
+      const oldCard = document.querySelector(`.para-card[data-index="${i}"]`);
+      if (oldCard) oldCard.replaceWith(createCard(paras[i], i));
+    }
+
+    function updateField(i, field, value) {
+      paras[i][field] = value;
+      if (field === 'pageTitle' || field === 'mainTitle') {
+        const el = document.getElementById('cht-' + i);
+        if (el) el.textContent = value;
+      }
+    }
+
+    function deletePara(i) {
+      if (!confirm(`确认删除第 ${i + 1} 段落？`)) return;
+      paras.splice(i, 1);
+      renderList();
+    }
+
+    function addPara() {
+      paras.push({
+        category: 'content',
+        pageTitle: '',
+        personInCharge: '',
+        originalText: '',
+        explanation: ''
+      });
+      renderList();
+      setTimeout(() => {
+        const cards = document.querySelectorAll('.para-card');
+        if (cards.length) cards[cards.length - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 60);
+    }
+
+    function updateCount() {
+      const n = paras.length;
+      document.getElementById('listCount').textContent = `共 ${n} 个段落`;
+      document.getElementById('actionCount').textContent = `${n} 个段落`;
+    }
+
+    function generateSlide() {
+      const data = {
+        title: document.getElementById('metaTitle').value,
+        subtitle: document.getElementById('metaSubtitle').value,
+        testdate: document.getElementById('metaDate').value,
+        paragraph: paras
+      };
+      localStorage.setItem('guanglun_slide_localdata', JSON.stringify(data));
+      showToast('已保存，正在打开幻灯片…', 1500);
+      setTimeout(() => window.open('template_textslide_v2.html?input=localdata', '_blank'), 500);
+    }
+
+    loadData();
+  </script>
+</body>
+
+</html>
