@@ -888,6 +888,24 @@
       background: var(--gold-light);
     }
 
+    .btn-xiaowen {
+      background: var(--vern-accent);
+      color: white;
+      border: none;
+      border-radius: 7px;
+      padding: 10px 20px;
+      font-family: 'Noto Sans SC', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: opacity .15s;
+      touch-action: manipulation;
+    }
+
+    .btn-xiaowen:active {
+      opacity: .8;
+    }
+
     .btn-sec {
       background: transparent;
       color: var(--ink-faint);
@@ -1207,6 +1225,7 @@
         <textarea class="slide-ta" id="slideTA" readonly></textarea>
         <div class="modal-foot">
           <button class="btn-sec" onclick="closeModal()">关闭</button>
+          <button class="btn-xiaowen" onclick="generateXiaowen()">生成消文</button>
           <button class="btn-copy" id="btnCopy" onclick="copyText()">复制全文</button>
         </div>
       </div>
@@ -1489,6 +1508,89 @@
       const btn = document.getElementById('btnCopy');
       btn.textContent = '已复制 ✓';
       setTimeout(() => btn.textContent = '复制全文', 2000);
+    }
+
+    // ── Generate Xiaowen ──────────────────────────────────────────────────────────
+    function generateXiaowen() {
+      if (!currentLines.length) return;
+
+      function makePara(lines, text) {
+        const first = lines[0];
+        const last = lines[lines.length - 1];
+        const ref = (first.p === last.p)
+          ? `P${first.p}L${first.l}-L${last.l}`
+          : `P${first.p}L${first.l}-P${last.p}L${last.l}`;
+        const clean = text.trimEnd();
+        return {
+          category: 'content',
+          pageTitle: `${ref} ${clean.slice(0, 4)}---${clean.slice(-4)}`,
+          personInCharge: '',
+          originalText: text,
+          explanation: ''
+        };
+      }
+
+      // Split: break at 。 as soon as possible, hard cap at 3 lines.
+      // If 3 lines are reached with no clean end, split at the last 。 within
+      // the accumulated text and carry the remainder to the next paragraph.
+      const MAX_LINES = 3;
+      const contentParas = [];
+      let accLines = [];
+      let accText = '';
+
+      for (const line of currentLines) {
+        accLines.push(line);
+        accText += line.orig;
+
+        const trimmed = accText.trimEnd();
+        if (trimmed.endsWith('。')) {
+          // Clean sentence boundary at end of this line
+          contentParas.push(makePara(accLines, accText));
+          accLines = [];
+          accText = '';
+        } else if (accLines.length >= MAX_LINES) {
+          // Hit the line cap — cut at the last 。 inside the block
+          const lastDot = trimmed.lastIndexOf('。');
+          if (lastDot >= 0) {
+            const paraText = trimmed.slice(0, lastDot + 1);
+            const carry = accText.slice(lastDot + 1); // text after the cut
+            contentParas.push(makePara(accLines, paraText));
+            accLines = [line]; // carry belongs to this line's range
+            accText = carry;
+          } else {
+            // No 。 anywhere in 3 lines — force split at line boundary
+            contentParas.push(makePara(accLines, accText));
+            accLines = [];
+            accText = '';
+          }
+        }
+      }
+      if (accLines.length > 0 && accText.trim()) {
+        contentParas.push(makePara(accLines, accText));
+      }
+
+      const fl = currentLines[0];
+      const ll = currentLines[currentLines.length - 1];
+      const today = new Date();
+      const d = today.getDate();
+      const mo = today.getMonth() + 1;
+      const y = today.getFullYear();
+      const dd = String(d).padStart(2, '0');
+      const mm = String(mo).padStart(2, '0');
+
+      const data = {
+        title: `P${fl.p}L${fl.l} - P${ll.p}L${ll.l} ${fl.orig.slice(0, 4)}---${ll.orig.trimEnd().slice(-4)}`,
+        subtitle: '',
+        testdate: `${dd}/${mm}/${y}`,
+        paragraph: [
+          { category: 'title', mainTitle: '广论消文', subTitle: `C组\n${y}年${mo}月${d}日` },
+          ...contentParas,
+          { category: 'title', mainTitle: '广论复习', subTitle: '' }
+        ]
+      };
+
+      localStorage.setItem('guanglun_editor_input', JSON.stringify(data));
+      window.open('guanglun_slide_editor.html', '_blank');
     }
   </script>
 </body>

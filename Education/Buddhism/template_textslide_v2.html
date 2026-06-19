@@ -387,6 +387,20 @@
       #mainHeader {
         display: none !important;
       }
+
+      /* Hide the interactive viewer, show pre-rendered print slides */
+      .slide-container {
+        display: none !important;
+      }
+
+      #printContent {
+        display: block !important;
+      }
+    }
+
+    /* Hidden in screen mode — only shown during print */
+    #printContent {
+      display: none;
     }
   </style>
 </head>
@@ -433,6 +447,9 @@
       </div>
     </footer>
   </div>
+
+  <!-- All slides pre-rendered here; hidden on screen, shown only during print -->
+  <div id="printContent"></div>
 
   <script>
     /* =========================================
@@ -534,7 +551,14 @@
         const scriptFile = getScriptParam();
         if (!scriptFile) throw new Error("No JS file specified.");
 
-        const mainData = await loadScript(`${CONFIG.dataPath}${scriptFile}.js`);
+        let mainData;
+        if (scriptFile === "localdata") {
+          const stored = localStorage.getItem("guanglun_slide_localdata");
+          if (!stored) throw new Error("No local slide data found in localStorage.");
+          mainData = JSON.parse(stored);
+        } else {
+          mainData = await loadScript(`${CONFIG.dataPath}${scriptFile}.js`);
+        }
         mainDataCache = mainData;
 
         document.getElementById("maintitle").innerHTML = mainData.title + " " + mainData.subtitle;
@@ -558,6 +582,12 @@
         });
 
         renderSlide();
+
+        // Pre-render all slides into #printContent so native Ctrl+P works
+        const total = slideData.length;
+        document.getElementById("printContent").innerHTML =
+          slideData.map((item, i) => buildPrintSlide(item, i, total)).join("");
+
       } catch (error) {
         console.error("Initialization error:", error);
       }
@@ -629,16 +659,10 @@
        Print
        ========================================= */
     function doFullPrint() {
-      const originalBody = document.body.innerHTML;
-      const total = slideData.length;
-      const html = slideData.map((item, i) => buildPrintSlide(item, i, total)).join("");
-
-      document.body.innerHTML = html;
-      setTimeout(() => {
-        window.print();
-        document.body.innerHTML = originalBody;
-        window.location.reload();
-      }, 500);
+      if (!slideData.length) return;
+      // #printContent is already populated with all slides on init.
+      // CSS hides .slide-container and shows #printContent in @media print.
+      window.print();
     }
 
     /* =========================================
