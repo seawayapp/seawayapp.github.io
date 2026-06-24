@@ -1,526 +1,538 @@
 ﻿<!doctype html>
 <html lang="zh-CN">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- <script src="../../nav-top.js"></script> -->
-  <title id="maintitle">加载中...</title>
-  <style>
-    /* =========================================
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <script src="../../nav-top.js"></script> -->
+    <title id="maintitle">加载中...</title>
+    <style>
+      /* =========================================
        THEME — change colors here
        ========================================= */
-    :root {
-      --header-green: #92d050;
-      --header-purple: #7030a0;
-      --btn-green: #5cb85c;
-      --btn-green-hover: #4cae4c;
-      --border-color: #92d050;
+      :root {
+        --header-green: #92d050;
+        --header-purple: #7030a0;
+        --btn-green: #5cb85c;
+        --btn-green-hover: #4cae4c;
+        --border-color: #92d050;
 
-      /* Layout */
-      --header-height: 60px;
-      --footer-height: 60px;
-      --content-padding: 20px 30px;
+        /* Layout */
+        --header-height: 60px;
+        --footer-height: 60px;
+        --content-padding: 20px 30px;
 
-      /* Typography */
-      --font-original: 1.25rem;
-      --font-explanation: 1.6rem;
-      --font-header: 22px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: "Microsoft YaHei", sans-serif;
-      background-color: #f0f2f5;
-      padding-top: 10px;
-      height: 100%;
-      height: 100dvh;
-      width: 100%;
-      overflow: hidden;
-    }
-
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .slide-container {
-      width: 98vw;
-      height: 98%;
-      height: 98dvh;
-      background-color: white;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    /* Header */
-    header {
-      display: flex;
-      height: var(--header-height);
-      color: white;
-      font-size: var(--font-header);
-      font-weight: bold;
-      flex-shrink: 0;
-    }
-
-    .header-left {
-      background-color: var(--header-green);
-      flex: 5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 0 10px;
-    }
-
-    .header-right {
-      background-color: var(--header-purple);
-      flex: 1.2;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 18px;
-      transition: background-color 0.3s;
-    }
-
-    /* Content */
-    .content {
-      flex: 1;
-      padding: var(--content-padding);
-      overflow-y: auto;
-      display: flex;
-      -webkit-overflow-scrolling: touch;
-      flex-direction: column;
-      gap: 10px;
-      background-color: #fff;
-      scroll-behavior: smooth;
-    }
-
-    .box-original {
-      border: 2px solid var(--border-color);
-      padding: 10px;
-      font-size: var(--font-original);
-      line-height: 1.7;
-      background-color: #fafdfa;
-      flex-shrink: 0;
-      font-weight: bold;
-    }
-
-    .box-explanation {
-      border: 2px dashed var(--border-color);
-      padding: 10px;
-      font-family: "Kaiti", "STKaiti", "楷体", "楷体_GB2312", serif;
-      font-size: var(--font-explanation);
-      line-height: 1.8;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      white-space: pre-wrap;
-    }
-
-    .label-check {
-      color: #2e7d32;
-      font-weight: bold;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* Cover / title slide */
-    .chapter-cover {
-      display: none;
-      height: 100%;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-
-    .chapter-cover h1 {
-      font-size: clamp(40px, 8vw, 80px);
-      margin: 0;
-      font-family: "Kaiti", "STKaiti", serif;
-      font-weight: normal;
-      letter-spacing: 10px;
-    }
-
-    .chapter-cover h2 {
-      font-size: 24px;
-      margin-top: 20px;
-      color: #666;
-      font-weight: normal;
-    }
-
-    /* Highlight helpers */
-    [class^="hl"] {
-      padding: 0 4px;
-      border-radius: 3px;
-      display: inline;
-    }
-
-    .hl1 {
-      color: red;
-      background-color: yellow;
-      font-weight: bold;
-    }
-
-    .hl2 {
-      color: red;
-      font-weight: bold;
-    }
-
-    .hl3 {
-      background-color: yellow;
-    }
-
-    /* Footer */
-    footer {
-      height: var(--footer-height);
-      padding: 0 30px;
-      border-top: 1px solid #eee;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: relative;
-      background: #fff;
-      flex-shrink: 0;
-    }
-
-    .btn-nav {
-      background-color: var(--btn-green);
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: background-color 0.2s;
-    }
-
-    .btn-nav:hover {
-      background-color: var(--btn-green-hover);
-    }
-
-    .page-counter-center {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      color: #666;
-      font-size: 16px;
-      font-family: serif;
-    }
-
-    .right-group {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .select-slide {
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      min-width: 110px;
-      max-width: 180px;
-    }
-
-    /* =========================================
-       MOBILE
-       ========================================= */
-    @media (max-width: 600px) {
-      body {
-        padding-top: 5px;
+        /* Typography */
+        --font-original: 1.25rem;
+        --font-explanation: 1.6rem;
+        --font-header: 22px;
       }
 
-      .slide-container {
-        width: 98vw;
-        height: 98vh;
-        height: 98dvh;
-      }
-
-      header {
-        height: 50px;
-        font-size: 16px;
-      }
-
-      .content {
-        padding: 20px 20px;
-      }
-
-      .page-counter-center {
-        display: none;
-      }
-
-      .btn-nav .btn-text {
-        display: none;
-      }
-
-      .btn-nav {
-        padding: 12px 18px;
-        z-index: 10;
-      }
-
-      footer {
-        display: flex;
-        justify-content: space-between;
-        height: 50px;
-        padding: 0 10px;
-      }
-
-      .right-group {
-        display: contents;
-      }
-
-      .select-slide {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        min-width: 120px;
-        max-width: 150px;
-        font-size: 13px;
-        z-index: 5;
-      }
-    }
-
-    /* =========================================
-       PRINT / PDF - ENLARGED CONTENT TEXT
-       ========================================= */
-    @media print {
       * {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-
-      @page {
-        size: A4 landscape;
-        margin: 0;
+        box-sizing: border-box;
       }
 
       html,
       body {
-        margin: 0 !important;
-        padding: 0 !important;
-        background: white !important;
-        width: 100% !important;
-        height: auto !important;
-        overflow: visible !important;
-        display: block !important;
+        margin: 0;
+        padding: 0;
+        font-family: "Microsoft YaHei", sans-serif;
+        background-color: #f0f2f5;
+        padding-top: 10px;
+        height: 100%;
+        height: 100dvh;
+        width: 100%;
+        overflow: hidden;
       }
 
-      .print-page {
-        position: relative;
-        width: 297mm;
-        height: 210mm;
-        page-break-after: always;
-        break-after: page;
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .slide-container {
+        width: 98vw;
+        height: 98%;
+        height: 98dvh;
+        background-color: white;
         display: flex;
         flex-direction: column;
-        background: white;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+        overflow: hidden;
       }
 
-      .print-page header {
-        height: var(--header-height);
+      /* Header */
+      header {
         display: flex;
+        height: var(--header-height);
         color: white;
-        font-size: 20px;
+        font-size: var(--font-header);
         font-weight: bold;
         flex-shrink: 0;
       }
 
-      .print-page .print-content {
+      .header-left {
+        background-color: var(--header-green);
+        flex: 5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0 10px;
+      }
+
+      .header-right {
+        background-color: var(--header-purple);
+        flex: 1.2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+        transition: background-color 0.3s;
+      }
+
+      /* Content */
+      .content {
         flex: 1;
-        /* removed redundant font-size to avoid conflict */
-        padding: 20px;
+        padding: var(--content-padding);
+        overflow-y: auto;
         display: flex;
+        -webkit-overflow-scrolling: touch;
         flex-direction: column;
-        gap: 15px;
+        gap: 10px;
+        background-color: #fff;
+        scroll-behavior: smooth;
       }
 
-      .print-page .chapter-cover {
-        display: flex;
-      }
-
-      .print-footer-page {
-        position: absolute;
-        bottom: 10mm;
-        right: 15mm;
-        font-size: 14px;
-        color: #666;
-        font-family: serif;
-      }
-
-      /* --- ENLARGED TEXT FOR CONTENT (original & explanation) --- */
       .box-original {
-        font-size: 1.6rem !important;
-        line-height: 1.6 !important;
-        padding: 15px !important;
+        border: 2px solid var(--border-color);
+        padding: 10px;
+        font-size: var(--font-original);
+        line-height: 1.7;
+        background-color: #fafdfa;
+        flex-shrink: 0;
+        font-weight: bold;
       }
 
       .box-explanation {
-        font-size: 1.8rem !important;
-        line-height: 1.7 !important;
-        padding: 15px !important;
-        flex: 1;
+        border: 2px dashed var(--border-color);
+        padding: 10px;
+        font-family: "Kaiti", "STKaiti", "楷体", "楷体_GB2312", serif;
+        font-size: var(--font-explanation);
+        line-height: 1.8;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        white-space: pre-wrap;
       }
 
-      /* Hide interactive UI */
-      footer,
-      .btn-nav,
-      .page-counter-center,
-      .select-slide,
-      #mainHeader {
-        display: none !important;
+      .label-check {
+        color: #2e7d32;
+        font-weight: bold;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
 
-      /* Hide the interactive viewer, show pre-rendered print slides */
-      .slide-container {
-        display: none !important;
+      /* Cover / title slide */
+      .chapter-cover {
+        display: none;
+        height: 100%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
       }
 
+      .chapter-cover h1 {
+        font-size: clamp(40px, 8vw, 80px);
+        margin: 0;
+        font-family: "Kaiti", "STKaiti", serif;
+        font-weight: normal;
+        letter-spacing: 10px;
+      }
+
+      .chapter-cover h2 {
+        font-size: 24px;
+        margin-top: 20px;
+        color: #666;
+        font-weight: normal;
+      }
+
+      /* Highlight helpers */
+      [class^="hl"] {
+        padding: 0 4px;
+        border-radius: 3px;
+        display: inline;
+      }
+
+      .hl1 {
+        color: red;
+        background-color: yellow;
+        font-weight: bold;
+      }
+
+      .hl2 {
+        color: red;
+        font-weight: bold;
+      }
+
+      .hl3 {
+        background-color: yellow;
+      }
+
+      /* Footer */
+      footer {
+        height: var(--footer-height);
+        padding: 0 30px;
+        border-top: 1px solid #eee;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        background: #fff;
+        flex-shrink: 0;
+      }
+
+      .btn-nav {
+        background-color: var(--btn-green);
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: background-color 0.2s;
+      }
+
+      .btn-nav:hover {
+        background-color: var(--btn-green-hover);
+      }
+
+      .page-counter-center {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #666;
+        font-size: 16px;
+        font-family: serif;
+      }
+
+      .right-group {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .select-slide {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        min-width: 110px;
+        max-width: 180px;
+      }
+
+      /* =========================================
+       MOBILE
+       ========================================= */
+      @media (max-width: 600px) {
+        body {
+          padding-top: 5px;
+        }
+
+        .slide-container {
+          width: 98vw;
+          height: 98vh;
+          height: 98dvh;
+        }
+
+        header {
+          height: 50px;
+          font-size: 16px;
+        }
+
+        .content {
+          padding: 20px 20px;
+        }
+
+        .page-counter-center {
+          display: none;
+        }
+
+        .btn-nav .btn-text {
+          display: none;
+        }
+
+        .btn-nav {
+          padding: 12px 18px;
+          z-index: 10;
+        }
+
+        footer {
+          display: flex;
+          justify-content: space-between;
+          height: 50px;
+          padding: 0 10px;
+        }
+
+        .right-group {
+          display: contents;
+        }
+
+        .select-slide {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          min-width: 120px;
+          max-width: 150px;
+          font-size: 13px;
+          z-index: 5;
+        }
+      }
+
+      /* =========================================
+       PRINT / PDF - ENLARGED CONTENT TEXT
+       ========================================= */
+      @media print {
+        * {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+
+        @page {
+          size: A4 landscape;
+          margin: 0;
+        }
+
+        html,
+        body {
+          margin: 0 !important;
+          padding: 0 !important;
+          background: white !important;
+          width: 100% !important;
+          height: auto !important;
+          overflow: visible !important;
+          display: block !important;
+        }
+
+        .print-page {
+          position: relative;
+          width: 297mm;
+          height: 210mm;
+          page-break-after: always;
+          break-after: page;
+          display: flex;
+          flex-direction: column;
+          background: white;
+        }
+
+        .print-page header {
+          height: var(--header-height);
+          display: flex;
+          color: white;
+          font-size: 20px;
+          font-weight: bold;
+          flex-shrink: 0;
+        }
+
+        .print-page .print-content {
+          flex: 1;
+          /* removed redundant font-size to avoid conflict */
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .print-page .chapter-cover {
+          display: flex;
+        }
+
+        .print-footer-page {
+          position: absolute;
+          bottom: 10mm;
+          right: 15mm;
+          font-size: 14px;
+          color: #666;
+          font-family: serif;
+        }
+
+        /* --- ENLARGED TEXT FOR CONTENT (original & explanation) --- */
+        .box-original {
+          font-size: 1.6rem !important;
+          line-height: 1.6 !important;
+          padding: 15px !important;
+        }
+
+        .box-explanation {
+          font-size: 1.8rem !important;
+          line-height: 1.7 !important;
+          padding: 15px !important;
+          flex: 1;
+        }
+
+        /* Hide interactive UI */
+        footer,
+        .btn-nav,
+        .page-counter-center,
+        .select-slide,
+        #mainHeader {
+          display: none !important;
+        }
+
+        /* Hide the interactive viewer, show pre-rendered print slides */
+        .slide-container {
+          display: none !important;
+        }
+
+        #printContent {
+          display: block !important;
+        }
+      }
+
+      /* Hidden in screen mode — only shown during print */
       #printContent {
-        display: block !important;
+        display: none;
       }
-    }
+    </style>
+  </head>
 
-    /* Hidden in screen mode — only shown during print */
-    #printContent {
-      display: none;
-    }
-  </style>
-</head>
-
-<body>
-  <div class="slide-container">
-    <header id="mainHeader">
-      <div class="header-left" id="displayTitle"></div>
-      <div class="header-right" id="displayPersonContainer">
-        <span id="displayPerson"></span>
-      </div>
-    </header>
-
-    <main class="content" id="scrollContainer">
-      <div id="contentMode" style="display:none; flex-direction:column; gap:20px; min-height:100%;">
-        <div class="box-original" id="displayOriginal"></div>
-        <div class="box-explanation">
-          <span class="label-check" id="labelCheck"></span>
-          <div id="displayExplanation"></div>
+  <body>
+    <div class="slide-container">
+      <header id="mainHeader">
+        <div class="header-left" id="displayTitle"></div>
+        <div class="header-right" id="displayPersonContainer">
+          <span id="displayPerson"></span>
         </div>
-      </div>
-      <div id="titleMode" class="chapter-cover">
-        <h1 id="bigTitle"></h1>
-        <h2 id="subTitle"></h2>
-      </div>
-    </main>
+      </header>
 
-    <footer>
-      <button class="btn-nav" id="btnPrev">
-        <span>◀</span> <span class="btn-text" id="btnPrevText"></span>
-      </button>
+      <main class="content" id="scrollContainer">
+        <div
+          id="contentMode"
+          style="
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            min-height: 100%;
+          "
+        >
+          <div class="box-original" id="displayOriginal"></div>
+          <div class="box-explanation">
+            <span class="label-check" id="labelCheck"></span>
+            <div id="displayExplanation"></div>
+          </div>
+        </div>
+        <div id="titleMode" class="chapter-cover">
+          <h1 id="bigTitle"></h1>
+          <h2 id="subTitle"></h2>
+        </div>
+      </main>
 
-      <div class="page-counter-center">
-        <span id="currentNum">1</span>
-        <span id="pageOfText"></span>
-        <span id="totalNum">1</span>
-      </div>
-
-      <div class="right-group">
-        <select class="select-slide" id="slideSelector" onchange="jumpToPage()"></select>
-        <button class="btn-nav" id="btnNext">
-          <span class="btn-text" id="btnNextText"></span> <span>▶</span>
+      <footer>
+        <button class="btn-nav" id="btnPrev">
+          <span>◀</span> <span class="btn-text" id="btnPrevText"></span>
         </button>
-      </div>
-    </footer>
-  </div>
 
-  <!-- All slides pre-rendered here; hidden on screen, shown only during print -->
-  <div id="printContent"></div>
+        <div class="page-counter-center">
+          <span id="currentNum">1</span>
+          <span id="pageOfText"></span>
+          <span id="totalNum">1</span>
+        </div>
 
-  <script>
-    /* =========================================
+        <div class="right-group">
+          <select
+            class="select-slide"
+            id="slideSelector"
+            onchange="jumpToPage()"
+          ></select>
+          <button class="btn-nav" id="btnNext">
+            <span class="btn-text" id="btnNextText"></span> <span>▶</span>
+          </button>
+        </div>
+      </footer>
+    </div>
+
+    <!-- All slides pre-rendered here; hidden on screen, shown only during print -->
+    <div id="printContent"></div>
+
+    <script>
+      /* =========================================
        CONFIG — change labels and paths here
        ========================================= */
-    const CONFIG = {
-      dataPath: "./data/",
-      labels: {
-        explanation: "✅ 消文",
-        prevBtn: "上一页",
-        nextBtn: "下一页",
-        pageOf: "of",
-        printPage: "Page",
-      },
-    };
+      const CONFIG = {
+        dataPath: "./data/",
+        labels: {
+          explanation: "✅ 消文",
+          prevBtn: "上一页",
+          nextBtn: "下一页",
+          pageOf: "of",
+          printPage: "Page",
+        },
+      };
 
-    /* =========================================
+      /* =========================================
        State
        ========================================= */
-    let slideData = [];
-    let currentIndex = 0;
-    let mainDataCache = null;
+      let slideData = [];
+      let currentIndex = 0;
+      let mainDataCache = null;
 
-    /* =========================================
+      /* =========================================
        Helpers
        ========================================= */
-    function loadScript(fileName) {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement("script");
-        script.src = fileName;
-        script.type = "text/javascript";
-        script.onload = () => {
-          if (typeof mainData !== "undefined") {
-            resolve(mainData);
-          } else {
-            reject(new Error("No data found in the loaded script."));
-          }
-        };
-        script.onerror = () => reject(new Error(`Failed to load script: ${fileName}`));
-        document.body.appendChild(script);
-      });
-    }
+      function loadScript(fileName) {
+        return new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = fileName;
+          script.type = "text/javascript";
+          script.onload = () => {
+            if (typeof mainData !== "undefined") {
+              resolve(mainData);
+            } else {
+              reject(new Error("No data found in the loaded script."));
+            }
+          };
+          script.onerror = () =>
+            reject(new Error(`Failed to load script: ${fileName}`));
+          document.body.appendChild(script);
+        });
+      }
 
-    function getScriptParam() {
-      return new URLSearchParams(window.location.search).get("input");
-    }
+      function getScriptParam() {
+        return new URLSearchParams(window.location.search).get("input");
+      }
 
-    function getPersonBg(person) {
-      return person === "" ? "var(--header-green)" : "var(--header-purple)";
-    }
+      function getPersonBg(person) {
+        return person === "" ? "var(--header-green)" : "var(--header-purple)";
+      }
 
-    /* =========================================
+      /* =========================================
        Print slide builder — single source of truth
        ========================================= */
-    function buildPrintSlide(item, index, total) {
-      const isTitle = item.category === "title";
-      const person = item.personInCharge ? item.personInCharge.trim() : "";
-      const personBg = getPersonBg(person);
+      function buildPrintSlide(item, index, total) {
+        const isTitle = item.category === "title";
+        const person = item.personInCharge ? item.personInCharge.trim() : "";
+        const personBg = getPersonBg(person);
 
-      const headerHTML = `
+        const headerHTML = `
         <header style="visibility:${isTitle ? "hidden" : "visible"}">
           <div class="header-left">${item.pageTitle || ""}</div>
           <div class="header-right" style="background-color:${personBg}">${person}</div>
         </header>`;
 
-      const contentHTML = isTitle
-        ? `<div class="chapter-cover">
+        const contentHTML = isTitle
+          ? `<div class="chapter-cover">
              <h1>${item.mainTitle}</h1>
              <h2>${(item.subTitle || "") + "<br>" + (mainDataCache ? mainDataCache.title : "")}</h2>
            </div>`
-        : `<div class="box-original" style="display:${!item.originalText ? "none" : "block"}">
+          : `<div class="box-original" style="display:${!item.originalText ? "none" : "block"}">
              ${item.originalText || ""}
            </div>
            <div class="box-explanation">
@@ -528,158 +540,176 @@
              <div style="margin-top:10px">${item.explanation}</div>
            </div>`;
 
-      return `<div class="print-page">
+        return `<div class="print-page">
         ${headerHTML}
         <div class="print-content">${contentHTML}</div>
         <div class="print-footer-page">${CONFIG.labels.printPage} ${index + 1} ${CONFIG.labels.pageOf} ${total}</div>
       </div>`;
-    }
+      }
 
-    /* =========================================
+      /* =========================================
        Init
        ========================================= */
-    async function init() {
-      // Apply CONFIG labels to static HTML elements
-      document.getElementById("labelCheck").textContent = CONFIG.labels.explanation;
-      document.getElementById("btnPrevText").textContent = CONFIG.labels.prevBtn;
-      document.getElementById("btnNextText").textContent = CONFIG.labels.nextBtn;
-      document.getElementById("pageOfText").textContent = CONFIG.labels.pageOf;
-      document.getElementById("btnPrev").addEventListener("click", () => changePage(-1));
-      document.getElementById("btnNext").addEventListener("click", () => changePage(1));
+      async function init() {
+        // Apply CONFIG labels to static HTML elements
+        document.getElementById("labelCheck").textContent =
+          CONFIG.labels.explanation;
+        document.getElementById("btnPrevText").textContent =
+          CONFIG.labels.prevBtn;
+        document.getElementById("btnNextText").textContent =
+          CONFIG.labels.nextBtn;
+        document.getElementById("pageOfText").textContent =
+          CONFIG.labels.pageOf;
+        document
+          .getElementById("btnPrev")
+          .addEventListener("click", () => changePage(-1));
+        document
+          .getElementById("btnNext")
+          .addEventListener("click", () => changePage(1));
 
-      try {
-        const scriptFile = getScriptParam();
-        if (!scriptFile) throw new Error("No JS file specified.");
+        try {
+          const scriptFile = getScriptParam();
+          if (!scriptFile) throw new Error("No JS file specified.");
 
-        let mainData;
-        if (scriptFile === "localdata") {
-          const stored = localStorage.getItem("guanglun_slide_localdata");
-          if (!stored) throw new Error("No local slide data found in localStorage.");
-          mainData = JSON.parse(stored);
-        } else {
-          mainData = await loadScript(`${CONFIG.dataPath}${scriptFile}.js`);
-        }
-        mainDataCache = mainData;
-
-        document.getElementById("maintitle").innerHTML = mainData.title + " " + mainData.subtitle;
-        slideData = mainData.paragraph;
-
-        document.getElementById("totalNum").innerText = slideData.length;
-        const selector = document.getElementById("slideSelector");
-        selector.innerHTML = "";
-
-        slideData.forEach((item, index) => {
-          const opt = document.createElement("option");
-          opt.value = index;
-          if (item.category === "title") {
-            opt.innerHTML = `${index + 1}: [${item.mainTitle}]`;
+          let mainData;
+          if (scriptFile === "localdata") {
+            const stored = localStorage.getItem("guanglun_slide_localdata");
+            if (!stored)
+              throw new Error("No local slide data found in localStorage.");
+            mainData = JSON.parse(stored);
+            console.log(JSON.stringify(mainData));
           } else {
-            const name = item.personInCharge && item.personInCharge.trim() !== ""
-              ? ` ${item.personInCharge}` : "";
-            opt.innerHTML = `${index + 1}: ${item.pageTitle} - ${name}`;
+            mainData = await loadScript(`${CONFIG.dataPath}${scriptFile}.js`);
           }
-          selector.appendChild(opt);
-        });
+          mainDataCache = mainData;
 
-        renderSlide();
+          document.getElementById("maintitle").innerHTML =
+            mainData.title + " " + mainData.subtitle;
+          slideData = mainData.paragraph;
 
-        // Pre-render all slides into #printContent so native Ctrl+P works
-        const total = slideData.length;
-        document.getElementById("printContent").innerHTML =
-          slideData.map((item, i) => buildPrintSlide(item, i, total)).join("");
+          document.getElementById("totalNum").innerText = slideData.length;
+          const selector = document.getElementById("slideSelector");
+          selector.innerHTML = "";
 
-      } catch (error) {
-        console.error("Initialization error:", error);
+          slideData.forEach((item, index) => {
+            const opt = document.createElement("option");
+            opt.value = index;
+            if (item.category === "title") {
+              opt.innerHTML = `${index + 1}: [${item.mainTitle}]`;
+            } else {
+              const name =
+                item.personInCharge && item.personInCharge.trim() !== ""
+                  ? ` ${item.personInCharge}`
+                  : "";
+              opt.innerHTML = `${index + 1}: ${item.pageTitle} - ${name}`;
+            }
+            selector.appendChild(opt);
+          });
+
+          renderSlide();
+
+          // Pre-render all slides into #printContent so native Ctrl+P works
+          const total = slideData.length;
+          document.getElementById("printContent").innerHTML = slideData
+            .map((item, i) => buildPrintSlide(item, i, total))
+            .join("");
+        } catch (error) {
+          console.error("Initialization error:", error);
+        }
       }
-    }
 
-    /* =========================================
+      /* =========================================
        Render (interactive view)
        ========================================= */
-    function renderSlide() {
-      if (!slideData || slideData.length === 0) return;
+      function renderSlide() {
+        if (!slideData || slideData.length === 0) return;
 
-      const data = slideData[currentIndex];
-      const header = document.getElementById("mainHeader");
-      const personContainer = document.getElementById("displayPersonContainer");
-      const personText = document.getElementById("displayPerson");
-      const contentMode = document.getElementById("contentMode");
-      const titleMode = document.getElementById("titleMode");
-      const originalBox = document.getElementById("displayOriginal");
-      const scrollContainer = document.getElementById("scrollContainer");
+        const data = slideData[currentIndex];
+        const header = document.getElementById("mainHeader");
+        const personContainer = document.getElementById(
+          "displayPersonContainer",
+        );
+        const personText = document.getElementById("displayPerson");
+        const contentMode = document.getElementById("contentMode");
+        const titleMode = document.getElementById("titleMode");
+        const originalBox = document.getElementById("displayOriginal");
+        const scrollContainer = document.getElementById("scrollContainer");
 
-      scrollContainer.scrollTop = 0;
+        scrollContainer.scrollTop = 0;
 
-      if (data.category === "title") {
-        contentMode.style.display = "none";
-        titleMode.style.display = "flex";
-        header.style.visibility = "hidden";
-        document.getElementById("bigTitle").innerText = data.mainTitle;
-        document.getElementById("subTitle").innerText =
-          (data.subTitle || "") + "\n" + (mainDataCache ? mainDataCache.title : "");
-      } else {
-        contentMode.style.display = "flex";
-        titleMode.style.display = "none";
-        header.style.visibility = "visible";
-        document.getElementById("displayTitle").innerText = data.pageTitle || "";
-
-        const name = data.personInCharge ? data.personInCharge.trim() : "";
-        personText.innerText = name;
-        personContainer.style.backgroundColor = getPersonBg(name);
-
-        if (!data.originalText || data.originalText.trim() === "") {
-          originalBox.style.display = "none";
+        if (data.category === "title") {
+          contentMode.style.display = "none";
+          titleMode.style.display = "flex";
+          header.style.visibility = "hidden";
+          document.getElementById("bigTitle").innerText = data.mainTitle;
+          document.getElementById("subTitle").innerText =
+            (data.subTitle || "") +
+            "\n" +
+            (mainDataCache ? mainDataCache.title : "");
         } else {
-          originalBox.style.display = "block";
-          originalBox.innerHTML = data.originalText;
+          contentMode.style.display = "flex";
+          titleMode.style.display = "none";
+          header.style.visibility = "visible";
+          document.getElementById("displayTitle").innerText =
+            data.pageTitle || "";
+
+          const name = data.personInCharge ? data.personInCharge.trim() : "";
+          personText.innerText = name;
+          personContainer.style.backgroundColor = getPersonBg(name);
+
+          if (!data.originalText || data.originalText.trim() === "") {
+            originalBox.style.display = "none";
+          } else {
+            originalBox.style.display = "block";
+            originalBox.innerHTML = data.originalText;
+          }
+          document.getElementById("displayExplanation").innerHTML =
+            data.explanation;
         }
-        document.getElementById("displayExplanation").innerHTML = data.explanation;
+
+        document.getElementById("currentNum").innerText = currentIndex + 1;
+        document.getElementById("slideSelector").value = currentIndex;
       }
 
-      document.getElementById("currentNum").innerText = currentIndex + 1;
-      document.getElementById("slideSelector").value = currentIndex;
-    }
-
-    /* =========================================
+      /* =========================================
        Navigation
        ========================================= */
-    function changePage(delta) {
-      const total = slideData.length;
-      if (total === 0) return;
-      currentIndex = (currentIndex + delta + total) % total;
-      renderSlide();
-    }
+      function changePage(delta) {
+        const total = slideData.length;
+        if (total === 0) return;
+        currentIndex = (currentIndex + delta + total) % total;
+        renderSlide();
+      }
 
-    function jumpToPage() {
-      currentIndex = parseInt(document.getElementById("slideSelector").value);
-      renderSlide();
-    }
+      function jumpToPage() {
+        currentIndex = parseInt(document.getElementById("slideSelector").value);
+        renderSlide();
+      }
 
-    /* =========================================
+      /* =========================================
        Print
        ========================================= */
-    function doFullPrint() {
-      if (!slideData.length) return;
-      // #printContent is already populated with all slides on init.
-      // CSS hides .slide-container and shows #printContent in @media print.
-      window.print();
-    }
+      function doFullPrint() {
+        if (!slideData.length) return;
+        // #printContent is already populated with all slides on init.
+        // CSS hides .slide-container and shows #printContent in @media print.
+        window.print();
+      }
 
-    /* =========================================
+      /* =========================================
        Keyboard
        ========================================= */
-    document.addEventListener("keydown", (e) => {
-      if (document.activeElement.tagName === "SELECT") return;
-      if ((e.ctrlKey || e.metaKey) && e.key === "p") {
-        e.preventDefault();
-        doFullPrint();
-      }
-      if (e.key === "ArrowLeft") changePage(-1);
-      if (e.key === "ArrowRight") changePage(1);
-    });
+      document.addEventListener("keydown", (e) => {
+        if (document.activeElement.tagName === "SELECT") return;
+        if ((e.ctrlKey || e.metaKey) && e.key === "p") {
+          e.preventDefault();
+          doFullPrint();
+        }
+        if (e.key === "ArrowLeft") changePage(-1);
+        if (e.key === "ArrowRight") changePage(1);
+      });
 
-    window.addEventListener("load", init);
-  </script>
-</body>
-
+      window.addEventListener("load", init);
+    </script>
+  </body>
 </html>
