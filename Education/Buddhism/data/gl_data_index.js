@@ -99,7 +99,7 @@ var mainData = [
     filename: "gl_data_P102L11_P104L10",
   },
   {
-    title: "P107L1 - P109L3 第二教授---是果。」",
+    title: "P107L1 - P109L3 第二教授---当得如是果",
     subtitle: "",
     testdate: "27/06/2026",
     category: "file_slide_v2",
