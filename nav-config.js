@@ -50,6 +50,10 @@ window.NAV_MENUS = (function () {
       {
         label: "🌟 Sentence Builder",
         href: url("Games/Sentence_Builder/index.html")
+      },
+      {
+        label: "🕵️ Guess What He Wants",
+        href: url("Games/Guess_What_He_Wants/index.html")
       }
     ];
   }
