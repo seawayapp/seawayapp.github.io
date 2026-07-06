@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>猜一猜 Guess What / Guess Who</title>
+<script src="../../nav-config.js"></script>
+<script>
+  window.NAV_CONFIG = {
+    breadcrumbs: [
+      { label: "Home", href: "../../index.html", children: NAV_MENUS.site() },
+      { label: "Games", href: "../index.html", children: NAV_MENUS.games() },
+      { label: "Guess What He Wants" }
+    ]
+  };
+</script>
+<script src="../../nav-top.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky-top: #eaf6ff;
+    --sky-bottom: #fff6df;
+    --ink: #3b3358;
+    --ink-soft: #6c6284;
+    --card: #ffffff;
+    --sun: #ffc94a;
+    --coral: #ff6f61;
+    --mint: #34c98f;
+    --mint-deep: #1f9d70;
+    --lav: #eef0ff;
+    --shadow: rgba(59, 51, 88, 0.16);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Nunito', 'PingFang SC', 'Microsoft Yahei', sans-serif;
+    background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 28px 16px 60px;
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  .app { width: 100%; max-width: 460px; }
+
+  .top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .brand {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+    font-size: 19px;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .brand .en { font-size: 12px; font-weight: 600; color: var(--ink-soft); margin-left: 2px; }
+  .brand span.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--sun); display: inline-block; flex-shrink:0; }
+
+  .counter {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--ink-soft);
+    background: white;
+    padding: 4px 10px;
+    border-radius: 999px;
+    box-shadow: 0 2px 6px var(--shadow);
+  }
+
+  .progress-track {
+    height: 8px;
+    background: #e4e0f5;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--sun), #ffb14a);
+    border-radius: 999px;
+    transition: width .4s ease;
+  }
+
+  .stage {
+    position: relative;
+    background: var(--card);
+    border-radius: 28px;
+    box-shadow: 0 18px 40px var(--shadow);
+    padding: 22px 20px 26px;
+    overflow: hidden;
+  }
+
+  .bubble {
+    background: var(--lav);
+    border-radius: 18px 18px 18px 4px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+  }
+  .bubble .zh {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .bubble .en {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-top: 3px;
+  }
+  .speak-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    padding: 2px;
+    flex-shrink: 0;
+    opacity: 0.75;
+  }
+  .speak-btn:hover { opacity: 1; }
+
+  .scene-frame {
+    border-radius: 20px;
+    background: linear-gradient(180deg, #fdf9ee, #f4efe0);
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+    position: relative;
+    min-height: 200px;
+  }
+  .scene-frame img {
+    max-width: 100%;
+    max-height: 250px;
+    display: block;
+    animation: breathe 3.2s ease-in-out infinite;
+  }
+  @keyframes breathe { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-6px);} }
+  .scene-frame.correct-pop img { animation: pop 0.7s ease; }
+  @keyframes pop {
+    0% { transform: scale(1) rotate(0); }
+    30% { transform: scale(1.12) rotate(-4deg); }
+    55% { transform: scale(0.98) rotate(3deg); }
+    75% { transform: scale(1.05) rotate(-1deg); }
+    100% { transform: scale(1) rotate(0); }
+  }
+  .scene-frame.wrong-shake img { animation: nudge 0.5s ease; }
+  @keyframes nudge {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-5px) rotate(-1deg); }
+    75% { transform: translateX(5px) rotate(1deg); }
+  }
+
+  /* Type A: stacked option rows */
+  .options { display: flex; flex-direction: column; gap: 12px; }
+  .opt {
+    display: flex; align-items: center; gap: 14px;
+    background: #fbfaff; border: 2px solid #e7e2f7; border-radius: 18px;
+    padding: 10px 16px 10px 10px; cursor: pointer;
+    transition: transform .15s ease, border-color .15s ease, background .15s ease;
+    text-align: left; font-family: 'Nunito', sans-serif;
+  }
+  .opt:hover { transform: translateY(-2px); border-color: #cfc4f2; }
+  .opt img { width: 56px; height: 56px; object-fit: contain; flex-shrink: 0; }
+  .opt .labels { display: flex; flex-direction: column; }
+  .opt .zh { font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 16px; color: var(--ink); }
+  .opt .en { font-size: 12px; color: var(--ink-soft); }
+  .opt.correct-answer { background: #e9fbf3; border-color: var(--mint); }
+  .opt.wrong-pick { background: #fff0ee; border-color: var(--coral); animation: nudge 0.5s ease; }
+  .opt.disabled { pointer-events: none; opacity: 0.55; }
+  .opt.disabled.correct-answer { opacity: 1; }
+
+  /* Type B: side-by-side compare cards */
+  .compare { display: flex; gap: 12px; }
+  .cmp-card {
+    flex: 1; background: #fbfaff; border: 2px solid #e7e2f7; border-radius: 18px;
+    padding: 10px; cursor: pointer; text-align: center;
+    transition: transform .15s ease, border-color .15s ease, background .15s ease;
+  }
+  .cmp-card:hover { transform: translateY(-2px); border-color: #cfc4f2; }
+  .cmp-card img { width: 100%; max-height: 220px; object-fit: contain; display: block; }
+  .cmp-card.correct-answer { background: #e9fbf3; border-color: var(--mint); }
+  .cmp-card.wrong-pick { background: #fff0ee; border-color: var(--coral); animation: nudge 0.5s ease; }
+  .cmp-card.disabled { pointer-events: none; opacity: 0.55; }
+  .cmp-card.disabled.correct-answer { opacity: 1; }
+
+  .feedback { margin-top: 16px; max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+  .feedback.show { max-height: 260px; }
+  .feedback-inner { border-radius: 16px; padding: 14px 16px; font-size: 14.5px; line-height: 1.55; }
+  .feedback-inner .en-line { display:block; margin-top: 4px; opacity: 0.85; font-size: 13px; }
+  .feedback-inner.good { background: #e9fbf3; color: var(--mint-deep); }
+  .feedback-inner.oops { background: #fff2ea; color: #c25a2c; }
+  .feedback-title { font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 16px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+
+  .next-btn {
+    margin-top: 14px; width: 100%; border: none; border-radius: 16px; padding: 14px;
+    font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 16px;
+    background: var(--mint); color: white; cursor: pointer; display: none;
+  }
+  .next-btn.show { display: block; }
+  .next-btn:active { transform: scale(0.98); }
+
+  .done-screen { text-align: center; padding: 26px 10px 10px; }
+  .done-screen .big-emoji { font-size: 54px; display: block; margin-bottom: 10px; }
+  .done-screen h2 { font-family: 'Baloo 2', sans-serif; margin: 0 0 4px; }
+  .done-screen .en-sub { color: var(--ink-soft); margin: 0 0 4px; font-size: 14px; }
+  .done-screen p.zh-sub { color: var(--ink-soft); margin: 6px 0 18px; }
+  .restart-btn {
+    border: none; border-radius: 16px; padding: 12px 22px; background: var(--sun);
+    color: #4a3300; font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer;
+  }
+
+  .confetti {
+    position: absolute; top: -10px; width: 8px; height: 14px; border-radius: 2px;
+    animation: fall linear forwards; pointer-events: none;
+  }
+  @keyframes fall { to { transform: translateY(320px) rotate(340deg); opacity: 0; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scene-frame img, .opt, .cmp-card, .next-btn, .confetti { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top-row">
+    <div class="brand"><span class="dot"></span>猜一猜 <span class="en">Guess It!</span></div>
+    <div class="counter" id="counter">1 / 1</div>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="stage" id="stage"></div>
+</div>
+
+<script>
+const QUESTIONS = [{"type": "A", "promptZh": "猜一猜他想买什么？为什么？", "promptEn": "Guess what he wants to buy. Why?", "sceneImg": "output/q01_scene.png", "options": [{"id": "o1", "img": "output/q01_opt1.png", "zh": "雨伞", "en": "Umbrella", "correct": false}, {"id": "o2", "img": "output/q01_opt2.png", "zh": "拖鞋", "en": "Slippers", "correct": false}, {"id": "o3", "img": "output/q01_opt3.png", "zh": "棉衣", "en": "Padded Jacket", "correct": true}], "whyZh": "爷爷浑身发抖、双臂紧紧抱着自己取暖，说明天气很冷，所以他想买棉衣保暖！", "whyEn": "He's shivering and hugging himself to stay warm — it must be cold, so he wants a padded jacket!"}, {"type": "A", "promptZh": "猜一猜他想买什么？为什么？", "promptEn": "Guess what he wants to buy. Why?", "sceneImg": "output/q02_scene.png", "options": [{"id": "o1", "img": "output/q02_opt1.png", "zh": "香蕉", "en": "Banana", "correct": false}, {"id": "o2", "img": "output/q02_opt2.png", "zh": "汉堡", "en": "Burger", "correct": false}, {"id": "o3", "img": "output/q02_opt3.png", "zh": "矿泉水", "en": "Bottled Water", "correct": true}], "whyZh": "男孩满头大汗、拼命扇扇子，说明天气很热，所以他想买矿泉水解渴！", "whyEn": "He's sweating and fanning himself hard — it must be hot, so he wants water to cool down!"}, {"type": "A", "promptZh": "猜一猜她想买什么？为什么？", "promptEn": "Guess what she wants to buy. Why?", "sceneImg": "output/q03_scene.png", "options": [{"id": "o1", "img": "output/q03_opt1.png", "zh": "西瓜", "en": "Watermelon", "correct": false}, {"id": "o2", "img": "output/q03_opt2.png", "zh": "药", "en": "Medicine", "correct": true}, {"id": "o3", "img": "output/q03_opt3.png", "zh": "冰淇淋", "en": "Ice Cream", "correct": false}], "whyZh": "她流鼻涕、打喷嚏，看起来生病了，所以她想买药治病。", "whyEn": "She has a runny nose and is sneezing — she looks sick, so she wants medicine."}, {"type": "A", "promptZh": "猜一猜她要去哪里？为什么？", "promptEn": "Guess where she is going. Why?", "sceneImg": "output/q04_scene.png", "options": [{"id": "o1", "img": "output/q04_opt1.png", "zh": "电影院", "en": "Cinema", "correct": false}, {"id": "o2", "img": "output/q04_opt2.png", "zh": "医院", "en": "Hospital", "correct": false}, {"id": "o3", "img": "output/q04_opt3.png", "zh": "超市", "en": "Supermarket", "correct": true}], "whyZh": "她提着买菜用的篮子，应该是去超市购物。", "whyEn": "She's carrying a shopping basket — she must be going to the supermarket."}, {"type": "A", "promptZh": "猜一猜他要去哪里？为什么？", "promptEn": "Guess where he is going. Why?", "sceneImg": "output/q05_scene.png", "options": [{"id": "o1", "img": "output/q05_opt1.png", "zh": "游泳池", "en": "Swimming Pool", "correct": false}, {"id": "o2", "img": "output/q05_opt2.png", "zh": "学校", "en": "School", "correct": false}, {"id": "o3", "img": "output/q05_opt3.png", "zh": "电影院", "en": "Cinema", "correct": true}], "whyZh": "他拿着爆米花和可乐，这是看电影时常吃的零食，所以他要去电影院。", "whyEn": "He's holding popcorn and soda — classic movie snacks — so he must be heading to the cinema."}, {"type": "A", "promptZh": "猜一猜他要去哪里？为什么？", "promptEn": "Guess where he is going. Why?", "sceneImg": "output/q06_scene.png", "options": [{"id": "o1", "img": "output/q06_opt1.png", "zh": "医院", "en": "Hospital", "correct": false}, {"id": "o2", "img": "output/q06_opt2.png", "zh": "爬山", "en": "Hiking", "correct": true}, {"id": "o3", "img": "output/q06_opt3.png", "zh": "海边", "en": "Beach", "correct": false}], "whyZh": "他背着登山包、拿着登山杖，穿着专业装备，所以他要去爬山。", "whyEn": "He's wearing a hiking backpack and carrying a trekking pole — he's dressed for the mountains."}, {"type": "A", "promptZh": "猜一猜他要去哪里？为什么？", "promptEn": "Guess where he is going. Why?", "sceneImg": "output/q07_scene.png", "options": [{"id": "o1", "img": "output/q07_opt1.png", "zh": "超市", "en": "Supermarket", "correct": false}, {"id": "o2", "img": "output/q07_opt2.png", "zh": "游泳池", "en": "Swimming Pool", "correct": true}, {"id": "o3", "img": "output/q07_opt3.png", "zh": "学校", "en": "School", "correct": false}], "whyZh": "他穿着泳裤、拿着泳镜，准备去游泳池游泳。", "whyEn": "He's wearing swim trunks and holding goggles — he's off to the swimming pool."}, {"type": "A", "promptZh": "猜一猜他要去哪里？为什么？", "promptEn": "Guess where he is going. Why?", "sceneImg": "output/q08_scene.png", "options": [{"id": "o1", "img": "output/q08_opt1.png", "zh": "足球场", "en": "Soccer Field", "correct": false}, {"id": "o2", "img": "output/q08_opt2.png", "zh": "海边", "en": "Beach", "correct": false}, {"id": "o3", "img": "output/q08_opt3.png", "zh": "医院", "en": "Hospital", "correct": true}], "whyZh": "他打着绷带、拄着拐杖，受伤了，需要去医院看医生。", "whyEn": "His arm is bandaged and he's using crutches — he's hurt and needs to go to the hospital."}, {"type": "A", "promptZh": "猜一猜这是谁的家？为什么？", "promptEn": "Guess whose home this is. Why?", "sceneImg": "output/q09_scene.png", "options": [{"id": "o1", "img": "output/q09_opt1.png", "zh": "老虎", "en": "Tiger", "correct": false}, {"id": "o2", "img": "output/q09_opt2.png", "zh": "青蛙", "en": "Frog", "correct": false}, {"id": "o3", "img": "output/q09_opt3.png", "zh": "猴子", "en": "Monkey", "correct": true}], "whyZh": "房子的屋顶是一根大香蕉，猴子最喜欢吃香蕉，所以这是猴子的家。", "whyEn": "The roof is shaped like a giant banana — monkeys love bananas, so this must be a monkey's home."}, {"type": "A", "promptZh": "猜一猜这是谁的家？为什么？", "promptEn": "Guess whose home this is. Why?", "sceneImg": "output/q10_scene.png", "options": [{"id": "o1", "img": "output/q10_opt1.png", "zh": "小猫", "en": "Cat", "correct": false}, {"id": "o2", "img": "output/q10_opt2.png", "zh": "兔子", "en": "Rabbit", "correct": true}, {"id": "o3", "img": "output/q10_opt3.png", "zh": "小鸡", "en": "Chick", "correct": false}], "whyZh": "房子的屋顶是一根大胡萝卜，兔子最喜欢吃胡萝卜，所以这是兔子的家。", "whyEn": "The roof looks like a big carrot — rabbits love carrots, so this must be a rabbit's home."}, {"type": "A", "promptZh": "猜一猜这是谁的家？为什么？", "promptEn": "Guess whose home this is. Why?", "sceneImg": "output/q11_scene.png", "options": [{"id": "o1", "img": "output/q11_opt1.png", "zh": "熊猫", "en": "Panda", "correct": false}, {"id": "o2", "img": "output/q11_opt2.png", "zh": "青蛙", "en": "Frog", "correct": true}, {"id": "o3", "img": "output/q11_opt3.png", "zh": "长颈鹿", "en": "Giraffe", "correct": false}], "whyZh": "房子在池塘边，屋顶像一片荷叶，青蛙喜欢住在水边，所以这是青蛙的家。", "whyEn": "The house sits by a pond with a lily-pad roof — frogs love living near water, so this must be a frog's home."}, {"type": "A", "promptZh": "猜一猜他想买什么？为什么？", "promptEn": "Guess what he wants to buy. Why?", "sceneImg": "output/q12_scene.png", "options": [{"id": "o1", "img": "output/q12_opt1.png", "zh": "鸡腿", "en": "Chicken Leg", "correct": false}, {"id": "o2", "img": "output/q12_opt2.png", "zh": "玩具", "en": "Toy", "correct": false}, {"id": "o3", "img": "output/q12_opt3.png", "zh": "雨伞", "en": "Umbrella", "correct": true}], "whyZh": "外面正在下雨，他没有带伞被淋湿了，所以他想买一把雨伞。", "whyEn": "It's raining outside and he's getting soaked with no umbrella — he wants to buy an umbrella."}, {"type": "A", "promptZh": "猜一猜他想买什么？为什么？", "promptEn": "Guess what he wants to buy. Why?", "sceneImg": "output/q13_scene.png", "options": [{"id": "o1", "img": "output/q13_opt1.png", "zh": "衣服", "en": "Clothes", "correct": false}, {"id": "o2", "img": "output/q13_opt2.png", "zh": "美食", "en": "Food", "correct": true}, {"id": "o3", "img": "output/q13_opt3.png", "zh": "玩具", "en": "Toy", "correct": false}], "whyZh": "他双手捂着肚子，表情难受，可能是饿了，所以他想买美食吃。", "whyEn": "He's holding his stomach and looks uncomfortable — he might be hungry and wants some food."}, {"type": "A", "promptZh": "猜一猜他要去哪里？为什么？", "promptEn": "Guess where he is going. Why?", "sceneImg": "output/q14_scene.png", "options": [{"id": "o1", "img": "output/q14_opt1.png", "zh": "上班", "en": "Work", "correct": true}, {"id": "o2", "img": "output/q14_opt2.png", "zh": "超市", "en": "Supermarket", "correct": false}, {"id": "o3", "img": "output/q14_opt3.png", "zh": "游泳池", "en": "Swimming Pool", "correct": false}], "whyZh": "他穿着西装、拿着公文包，这是上班时的打扮，所以他要去上班。", "whyEn": "He's dressed in a suit and carrying a briefcase — that's work attire, so he's headed to the office."}, {"type": "A", "promptZh": "猜一猜他要去哪里？为什么？", "promptEn": "Guess where he is going. Why?", "sceneImg": "output/q15_scene.png", "options": [{"id": "o1", "img": "output/q15_opt1.png", "zh": "游泳池", "en": "Swimming Pool", "correct": false}, {"id": "o2", "img": "output/q15_opt2.png", "zh": "足球场", "en": "Soccer Field", "correct": true}, {"id": "o3", "img": "output/q15_opt3.png", "zh": "爬山", "en": "Hiking", "correct": false}], "whyZh": "他穿着球衣、抱着足球，准备去足球场踢球。", "whyEn": "He's wearing a soccer jersey and holding a ball — he's headed to the soccer field."}, {"type": "B", "promptZh": "猜一猜谁不爱刷牙？为什么？", "promptEn": "Guess who doesn't like brushing teeth. Why?", "left": {"img": "output/q16_left.png", "correct": false}, "right": {"img": "output/q16_right.png", "correct": true}, "whyZh": "右边男孩害怕刷牙、牙齿也不整齐，看起来他不爱刷牙。", "whyEn": "The boy on the right looks scared of the toothbrush and his teeth look uneven — he's the one who doesn't like brushing."}, {"type": "B", "promptZh": "猜一猜谁要去旅行？为什么？", "promptEn": "Guess who is going on a trip. Why?", "left": {"img": "output/q17_left.png", "correct": true}, "right": {"img": "output/q17_right.png", "correct": false}, "whyZh": "左边男孩拉着行李箱，开开心心的，看起来要去旅行。", "whyEn": "The boy on the left is pulling a suitcase and looks excited — he's the one going on a trip."}, {"type": "B", "promptZh": "猜一猜谁喜欢踢足球？为什么？", "promptEn": "Guess who likes playing soccer. Why?", "left": {"img": "output/q18_left.png", "correct": true}, "right": {"img": "output/q18_right.png", "correct": false}, "whyZh": "左边男孩踢球时笑得很开心，看起来他很喜欢踢足球。", "whyEn": "The boy on the left is smiling while kicking the ball — he clearly enjoys playing soccer."}];
+
+function shuffleArray(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildShuffledQuestions() {
+  return shuffleArray(QUESTIONS).map(q => {
+    if (q.type === 'A') {
+      return { ...q, options: shuffleArray(q.options) };
+    }
+    return Math.random() < 0.5 ? { ...q, left: q.right, right: q.left } : { ...q };
+  });
+}
+
+let questions = buildShuffledQuestions();
+let current = 0;
+let answered = false;
+
+const stage = document.getElementById('stage');
+const counterEl = document.getElementById('counter');
+const progressFill = document.getElementById('progressFill');
+
+function updateProgress() {
+  counterEl.textContent = `${current + 1} / ${questions.length}`;
+  progressFill.style.width = `${(current / questions.length) * 100}%`;
+}
+
+function speakZh(text) {
+  if (!('speechSynthesis' in window) || !text) return;
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'zh-CN';
+  const voices = window.speechSynthesis.getVoices();
+  const zhVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('zh'));
+  if (zhVoice) utter.voice = zhVoice;
+  window.speechSynthesis.speak(utter);
+}
+
+function renderQuestion() {
+  answered = false;
+  const q = questions[current];
+  updateProgress();
+
+  const bubbleHtml = `
+    <div class="bubble">
+      <div class="zh">${q.promptZh} <button class="speak-btn" id="speakBtn" aria-label="Play Chinese audio">🔊</button></div>
+      <div class="en">${q.promptEn}</div>
+    </div>`;
+
+  if (q.type === 'A') {
+    stage.innerHTML = `
+      ${bubbleHtml}
+      <div class="scene-frame" id="sceneFrame">
+        <img src="${q.sceneImg}" alt="scene">
+      </div>
+      <div class="options" id="options">
+        ${q.options.map(o => `
+          <button class="opt" data-id="${o.id}">
+            <img src="${o.img}" alt="${o.zh}">
+            <span class="labels"><span class="zh">${o.zh}</span><span class="en">${o.en}</span></span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="feedback" id="feedback"><div class="feedback-inner" id="feedbackInner"></div></div>
+      <button class="next-btn" id="nextBtn">下一题 Next →</button>
+    `;
+    document.querySelectorAll('.opt').forEach(btn => {
+      btn.addEventListener('click', () => handlePickA(btn, q));
+    });
+  } else {
+    stage.innerHTML = `
+      ${bubbleHtml}
+      <div class="compare" id="options">
+        <div class="cmp-card" data-side="left"><img src="${q.left.img}" alt="left"></div>
+        <div class="cmp-card" data-side="right"><img src="${q.right.img}" alt="right"></div>
+      </div>
+      <div class="feedback" id="feedback"><div class="feedback-inner" id="feedbackInner"></div></div>
+      <button class="next-btn" id="nextBtn">下一题 Next →</button>
+    `;
+    document.querySelectorAll('.cmp-card').forEach(card => {
+      card.addEventListener('click', () => handlePickB(card, q));
+    });
+  }
+
+  document.getElementById('nextBtn').addEventListener('click', goNext);
+  document.getElementById('speakBtn').addEventListener('click', () => speakZh(q.promptZh));
+  speakZh(q.promptZh);
+}
+
+function showFeedback(correct, q) {
+  const feedback = document.getElementById('feedback');
+  const feedbackInner = document.getElementById('feedbackInner');
+  const nextBtn = document.getElementById('nextBtn');
+  if (correct) {
+    feedbackInner.className = 'feedback-inner good';
+    feedbackInner.innerHTML = `<div class="feedback-title">🎉 答对啦！ Correct!</div>${q.whyZh}<span class="en-line">${q.whyEn}</span>`;
+    nextBtn.classList.add('show');
+    nextBtn.textContent = (current === questions.length - 1) ? '看看结果 See Result →' : '下一题 Next →';
+  } else {
+    feedbackInner.className = 'feedback-inner oops';
+    feedbackInner.innerHTML = `<div class="feedback-title">🤔 再想一想～ Try again</div>看看图片里的线索，仔细观察一下吧！<span class="en-line">Look closely at the clues in the picture!</span>`;
+  }
+  feedback.classList.add('show');
+}
+
+function launchConfetti(container) {
+  const colors = ['#ff6f61', '#ffc94a', '#34c98f', '#7aa7ff', '#c58bff'];
+  for (let i = 0; i < 22; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[i % colors.length];
+    piece.style.animationDuration = (0.8 + Math.random() * 0.6) + 's';
+    piece.style.animationDelay = (Math.random() * 0.2) + 's';
+    container.appendChild(piece);
+    setTimeout(() => piece.remove(), 1600);
+  }
+}
+
+function handlePickA(btn, q) {
+  if (answered) return;
+  const id = btn.dataset.id;
+  const picked = q.options.find(o => o.id === id);
+  const sceneFrame = document.getElementById('sceneFrame');
+
+  if (picked.correct) {
+    answered = true;
+    btn.classList.add('correct-answer');
+    document.querySelectorAll('.opt').forEach(b => b.classList.add('disabled'));
+    sceneFrame.classList.add('correct-pop');
+    launchConfetti(sceneFrame);
+    showFeedback(true, q);
+  } else {
+    btn.classList.add('wrong-pick');
+    sceneFrame.classList.remove('wrong-shake');
+    void sceneFrame.offsetWidth;
+    sceneFrame.classList.add('wrong-shake');
+    showFeedback(false, q);
+    setTimeout(() => btn.classList.remove('wrong-pick'), 500);
+  }
+}
+
+function handlePickB(card, q) {
+  if (answered) return;
+  const side = card.dataset.side;
+  const picked = q[side];
+  const options = document.getElementById('options');
+
+  if (picked.correct) {
+    answered = true;
+    card.classList.add('correct-answer');
+    document.querySelectorAll('.cmp-card').forEach(c => c.classList.add('disabled'));
+    card.classList.add('correct-pop');
+    launchConfetti(options);
+    showFeedback(true, q);
+  } else {
+    card.classList.add('wrong-pick');
+    showFeedback(false, q);
+    setTimeout(() => card.classList.remove('wrong-pick'), 500);
+  }
+}
+
+function goNext() {
+  current++;
+  if (current >= questions.length) {
+    renderDone();
+  } else {
+    renderQuestion();
+  }
+}
+
+function renderDone() {
+  progressFill.style.width = '100%';
+  counterEl.textContent = `${questions.length} / ${questions.length}`;
+  stage.innerHTML = `
+    <div class="done-screen">
+      <span class="big-emoji">🌟</span>
+      <h2>你都答对啦！</h2>
+      <p class="en-sub">You got them all!</p>
+      <p class="zh-sub">观察得真仔细，是个小小侦探！<br><span style="font-size:13px;">You're a great detective — nice observing!</span></p>
+      <button class="restart-btn" id="restartBtn">再玩一次 Play Again</button>
+    </div>
+  `;
+  document.getElementById('restartBtn').addEventListener('click', () => {
+    questions = buildShuffledQuestions();
+    current = 0;
+    renderQuestion();
+  });
+}
+
+renderQuestion();
+</script>
+</body>
+</html>
