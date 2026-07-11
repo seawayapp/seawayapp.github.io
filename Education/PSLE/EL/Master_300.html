@@ -37,6 +37,23 @@
             letter-spacing: 0.5px;
         }
 
+        #slide-title {
+            cursor: pointer;
+        }
+
+        #slide-title .word-text {
+            font-family: 'Book Antiqua', '楷体', sans-serif;
+        }
+
+        #slide-title .pronunciation-text {
+            font-family: 'Lucida Sans Unicode', 'Segoe UI', Arial, sans-serif;
+            font-style: italic;
+            font-weight: 400;
+            font-size: 0.55em;
+            color: rgba(255, 255, 255, 0.85);
+            margin-left: 6px;
+        }
+
         .back-btn {
             position: absolute;
             left: 10px;
@@ -317,6 +334,7 @@
         let sentences = [];
         let title = "";
         let currentSlide = 0;
+        const audioPlayer = new Audio();
 
         const slideTitle   = document.getElementById('slide-title');
         const meaningEnText = document.getElementById('meaning-en');
@@ -348,7 +366,10 @@
             }
 
             const item = sentences[index];
-            slideTitle.textContent = item.phrase;
+            const { word, pronunciation } = parsePhrase(item.phrase);
+            slideTitle.dataset.word = word;
+            slideTitle.innerHTML = `<span class="word-text">${word}</span>` +
+                (pronunciation ? ` <span class="pronunciation-text">${pronunciation}</span>` : '');
             meaningEnText.innerHTML = item.meaning_en;
             meaningCnText.innerHTML = item.meaning_cn;
             sentenceEnText.innerHTML = item.sentence_en;
@@ -358,6 +379,48 @@
             slideSelect.value = index;
             currentSlide = index;
         }
+
+        function parsePhrase(phrase) {
+            const match = phrase.match(/^(.*?)\s*\/(.+)\/\s*$/);
+            if (match) {
+                return { word: match[1].trim(), pronunciation: `/${match[2].trim()}/` };
+            }
+            return { word: phrase.trim(), pronunciation: '' };
+        }
+
+        function playWordAudio(word) {
+            const text = word.trim();
+            const isSentence = text.includes(" ") || /[.,!?]/.test(text);
+
+            if (isSentence) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = "en-GB";
+                utterance.rate = 1;
+                utterance.pitch = 1;
+                speechSynthesis.speak(utterance);
+            } else {
+                const cleanWord = word.toLowerCase();
+                audioPlayer.src = `./audio/${cleanWord}.mp3`;
+
+                audioPlayer.play().catch(e => {
+                    console.warn("Local audio failed, falling back to Youdao audio...");
+                    const youdaoUrl = `https://dict.youdao.com/dictvoice?type=1&audio=${encodeURIComponent(cleanWord)}`;
+                    const fallbackAudio = new Audio(youdaoUrl);
+
+                    fallbackAudio.onerror = function () {
+                        console.error("Youdao audio also failed.");
+                    };
+
+                    fallbackAudio.play().catch(err => {
+                        console.error("Failed to play fallback audio:", err);
+                    });
+                });
+            }
+        }
+
+        slideTitle.addEventListener('click', () => {
+            if (slideTitle.dataset.word) playWordAudio(slideTitle.dataset.word);
+        });
 
         prevBtn.addEventListener('click', () => showSlide(currentSlide - 1));
         nextBtn.addEventListener('click', () => showSlide(currentSlide + 1));

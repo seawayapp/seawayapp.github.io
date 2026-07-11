@@ -2163,7 +2163,7 @@ const mainData = {
     },
     {
       number: 300,
-      phrase: "rolled out",
+      phrase: "rolled out /rould aut/",
       meaning_en: "officially made a new product available",
       meaning_cn: "正式推出（新产品或服务）",
       sentence_en: "They rolled out a new iPhone.",
@@ -2171,7 +2171,7 @@ const mainData = {
     },
     {
       number: 301,
-      phrase: "bailed out",
+      phrase: "bailed out /beild aut/",
       meaning_en: "rescued someone or something from a difficulty",
       meaning_cn: "帮助（某人或某事）摆脱困境，拔刀相助",
       sentence_en: "He bailed me out of a situation.",
@@ -2179,7 +2179,7 @@ const mainData = {
     },
     {
       number: 302,
-      phrase: "meted out",
+      phrase: "meted out /ˈmitɪd aut/",
       meaning_en: "gave somebody a punishment",
       meaning_cn: "给予（某人）惩罚，施加（刑罚）",
       sentence_en: "They meted out a punishment.",
@@ -2187,7 +2187,7 @@ const mainData = {
     },
     {
       number: 303,
-      phrase: "dished out",
+      phrase: "dished out /dɪʃt aut/",
       meaning_en:
         "gave something, often to a lot of people or in large amounts",
       meaning_cn: "（大批或慷慨地）分发，给予",
@@ -2196,7 +2196,7 @@ const mainData = {
     },
     {
       number: 304,
-      phrase: "made",
+      phrase: "made /meid/",
       meaning_en: "caused somebody / something to do something",
       meaning_cn: "迫使，使得某人/某物做某事",
       sentence_en: "She made someone do something.",
@@ -2204,7 +2204,7 @@ const mainData = {
     },
     {
       number: 305,
-      phrase: "drove",
+      phrase: "drove /drouv/",
       meaning_en:
         "made somebody very angry, crazy, etc. or to make them do something extreme",
       meaning_cn: "驱使，逼迫（某人做极端的事），使发狂",
@@ -2213,7 +2213,7 @@ const mainData = {
     },
     {
       number: 306,
-      phrase: "offerings",
+      phrase: "offerings /ˈɔfərɪŋz/",
       meaning_en: "contributions / gifts",
       meaning_cn: "（商店提供的）商品，贡献物，礼物",
       sentence_en: "These are offerings from the store.",
@@ -2221,7 +2221,7 @@ const mainData = {
     },
     {
       number: 307,
-      phrase: "proceeds",
+      phrase: "proceeds /ˈprousidz/",
       meaning_en:
         "profits / revenue / money obtained from an event or activity",
       meaning_cn: "（活动或事件的）收入，收益，实收款项",
@@ -2230,7 +2230,7 @@ const mainData = {
     },
     {
       number: 308,
-      phrase: "step in",
+      phrase: "step in /stɛp ɪn/",
       meaning_en:
         "become involved in a difficult situation, especially in order to help",
       meaning_cn: "介入，插手（以提供帮助或解决问题）",
@@ -2239,7 +2239,7 @@ const mainData = {
     },
     {
       number: 309,
-      phrase: "step up",
+      phrase: "step up /stɛp əp/",
       meaning_en: "increase the amount, speed, or intensity of something",
       meaning_cn: "提高，加强，增加（数量、速度或强度）",
       sentence_en: "They decided to step up security.",
@@ -2247,7 +2247,7 @@ const mainData = {
     },
     {
       number: 310,
-      phrase: "step out",
+      phrase: "step out /stɛp aut/",
       meaning_en: "leave a room or building for a short time",
       meaning_cn: "暂时离开（房间或大楼）",
       sentence_en: "She stepped out for lunch.",
@@ -2255,7 +2255,7 @@ const mainData = {
     },
     {
       number: 311,
-      phrase: "step down",
+      phrase: "step down /stɛp daun/",
       meaning_en: "withdraw or resign from an important position or office",
       meaning_cn: "辞职，下台，退位",
       sentence_en: "He will step down as president.",
@@ -2263,7 +2263,7 @@ const mainData = {
     },
     {
       number: 312,
-      phrase: "renew",
+      phrase: "renew /rɪˈnu/",
       meaning_en: "extend / continue / prolong",
       meaning_cn: "延长……的期限，续签（合同）",
       sentence_en: "They want to renew a contract.",
@@ -2271,7 +2271,7 @@ const mainData = {
     },
     {
       number: 313,
-      phrase: "restore",
+      phrase: "restore /rɪˈstɔr/",
       meaning_en: "bring back / reinstate / fix",
       meaning_cn: "恢复，修复，使复原",
       sentence_en: "The workers managed to restore the water supply.",
@@ -2279,7 +2279,7 @@ const mainData = {
     },
     {
       number: 314,
-      phrase: "replenish",
+      phrase: "replenish /riˈplɛnɪʃ/",
       meaning_en: "refill / fill up / restock",
       meaning_cn: "补充，重新装满",
       sentence_en: "The waiter came to replenish his glass of water.",
@@ -2287,7 +2287,7 @@ const mainData = {
     },
     {
       number: 315,
-      phrase: "rousing",
+      phrase: "rousing /ˈrauzɪŋ/",
       meaning_en: "stirring / lively / spirited",
       meaning_cn: "激荡人心的，充满活力的，热烈的",
       sentence_en: "The politician gave a rousing speech.",
@@ -2295,7 +2295,7 @@ const mainData = {
     },
     {
       number: 316,
-      phrase: "captivating",
+      phrase: "captivating /ˈkæptɪˌveitɪŋ/",
       meaning_en: "entrancing / enthralling / spellbinding",
       meaning_cn: "迷人的，富有吸引力的，引人入胜的",
       sentence_en: "They watched a captivating performance.",
@@ -2303,7 +2303,7 @@ const mainData = {
     },
     {
       number: 317,
-      phrase: "intoxicating",
+      phrase: "intoxicating /ˌɪnˈtɑksɪˌkeitɪŋ/",
       meaning_en:
         "stimulating / making one feel excited so that one cannot think clearly",
       meaning_cn: "令人陶醉的，使人兴奋得无法清醒思考的",
@@ -2312,7 +2312,7 @@ const mainData = {
     },
     {
       number: 318,
-      phrase: "raided",
+      phrase: "raided /ˈreidɪd/",
       meaning_en:
         "attacked / plundered / stole from / a rapid surprise attack to commit a crime",
       meaning_cn: "突袭，洗劫，偷窃",
@@ -2321,7 +2321,7 @@ const mainData = {
     },
     {
       number: 319,
-      phrase: "assaulted",
+      phrase: "assaulted /əˈsɔltɪd/",
       meaning_en:
         "physically attacked somebody violently, especially when this is a crime",
       meaning_cn: "暴力袭击，殴打（尤指触犯法律的肢体冲突）",
@@ -2330,7 +2330,7 @@ const mainData = {
     },
     {
       number: 320,
-      phrase: "victimised",
+      phrase: "victimised /ˈvɪktəmaizd/",
       meaning_en:
         "made somebody suffer unfairly because one did not like them, their opinions or something that they had done",
       meaning_cn: "迫害，使受害，故意使某人受苦（因成见或不合意）",
@@ -2339,7 +2339,7 @@ const mainData = {
     },
     {
       number: 321,
-      phrase: "anxiety",
+      phrase: "anxiety /æŋˈzaiəti/",
       meaning_en: "worry / apprehension / unease",
       meaning_cn: "焦虑，忧虑，不安",
       sentence_en: "He struggled with intense anxiety.",
@@ -2347,7 +2347,7 @@ const mainData = {
     },
     {
       number: 322,
-      phrase: "dismay",
+      phrase: "dismay /dɪsˈmei/",
       meaning_en: "distress / alarm / trepidation",
       meaning_cn: "沮丧，惊愕，忧虑",
       sentence_en: "His heart sank with dismay.",
@@ -2355,7 +2355,7 @@ const mainData = {
     },
     {
       number: 323,
-      phrase: "unarmed",
+      phrase: "unarmed /əˈnɑrmd/",
       meaning_en: "not carrying a weapon",
       meaning_cn: "赤手空拳的，未携武器的",
       sentence_en: "They attacked unarmed civilians.",
@@ -2363,7 +2363,7 @@ const mainData = {
     },
     {
       number: 324,
-      phrase: "unconscious",
+      phrase: "unconscious /ˌənˈkɑnʃəs/",
       meaning_en: "not awake / out cold",
       meaning_cn: "失去知觉的，昏迷的",
       sentence_en: "He was found unconscious on the floor.",
@@ -2371,7 +2371,7 @@ const mainData = {
     },
     {
       number: 325,
-      phrase: "incessantly",
+      phrase: "incessantly /ˌɪnˈsɛsəntli/",
       meaning_en: "constantly / endlessly",
       meaning_cn: "不停地，连续不断地",
       sentence_en: "They chatter incessantly.",
