@@ -2160,6 +2160,222 @@ const mainData = {
       meaning_cn: "总计，算下来是（某个金额）",
       sentence_en: "The bill works out to be about $100 a month.",
       sentence_cn: "账单算下来大约是每个月100美元。"
+    },
+    {
+      number: 300,
+      phrase: "rolled out",
+      meaning_en: "officially made a new product available",
+      meaning_cn: "正式推出（新产品或服务）",
+      sentence_en: "They rolled out a new iPhone.",
+      sentence_cn: "他们推出了一款新的iPhone。"
+    },
+    {
+      number: 301,
+      phrase: "bailed out",
+      meaning_en: "rescued someone or something from a difficulty",
+      meaning_cn: "帮助（某人或某事）摆脱困境，拔刀相助",
+      sentence_en: "He bailed me out of a situation.",
+      sentence_cn: "他帮我摆脱了一个困境。"
+    },
+    {
+      number: 302,
+      phrase: "meted out",
+      meaning_en: "gave somebody a punishment",
+      meaning_cn: "给予（某人）惩罚，施加（刑罚）",
+      sentence_en: "They meted out a punishment.",
+      sentence_cn: "他们执行了惩罚。"
+    },
+    {
+      number: 303,
+      phrase: "dished out",
+      meaning_en:
+        "gave something, often to a lot of people or in large amounts",
+      meaning_cn: "（大批或慷慨地）分发，给予",
+      sentence_en: "He dished out advice.",
+      sentence_cn: "他滔滔不绝地提出建议。"
+    },
+    {
+      number: 304,
+      phrase: "made",
+      meaning_en: "caused somebody / something to do something",
+      meaning_cn: "迫使，使得某人/某物做某事",
+      sentence_en: "She made someone do something.",
+      sentence_cn: "她让某人去做某事。"
+    },
+    {
+      number: 305,
+      phrase: "drove",
+      meaning_en:
+        "made somebody very angry, crazy, etc. or to make them do something extreme",
+      meaning_cn: "驱使，逼迫（某人做极端的事），使发狂",
+      sentence_en: "It drove someone to do something.",
+      sentence_cn: "这逼得某人做出某事。"
+    },
+    {
+      number: 306,
+      phrase: "offerings",
+      meaning_en: "contributions / gifts",
+      meaning_cn: "（商店提供的）商品，贡献物，礼物",
+      sentence_en: "These are offerings from the store.",
+      sentence_cn: "这些是商店提供的商品。"
+    },
+    {
+      number: 307,
+      phrase: "proceeds",
+      meaning_en:
+        "profits / revenue / money obtained from an event or activity",
+      meaning_cn: "（活动或事件的）收入，收益，实收款项",
+      sentence_en: "They donated the proceeds from the event.",
+      sentence_cn: "他们捐出了这次活动的收益。"
+    },
+    {
+      number: 308,
+      phrase: "step in",
+      meaning_en:
+        "become involved in a difficult situation, especially in order to help",
+      meaning_cn: "介入，插手（以提供帮助或解决问题）",
+      sentence_en: "He had to step in to resolve a problem.",
+      sentence_cn: "他不得不介入以解决问题。"
+    },
+    {
+      number: 309,
+      phrase: "step up",
+      meaning_en: "increase the amount, speed, or intensity of something",
+      meaning_cn: "提高，加强，增加（数量、速度或强度）",
+      sentence_en: "They decided to step up security.",
+      sentence_cn: "他们决定加强安保。"
+    },
+    {
+      number: 310,
+      phrase: "step out",
+      meaning_en: "leave a room or building for a short time",
+      meaning_cn: "暂时离开（房间或大楼）",
+      sentence_en: "She stepped out for lunch.",
+      sentence_cn: "她出去吃午饭了。"
+    },
+    {
+      number: 311,
+      phrase: "step down",
+      meaning_en: "withdraw or resign from an important position or office",
+      meaning_cn: "辞职，下台，退位",
+      sentence_en: "He will step down as president.",
+      sentence_cn: "他将辞去总统职务。"
+    },
+    {
+      number: 312,
+      phrase: "renew",
+      meaning_en: "extend / continue / prolong",
+      meaning_cn: "延长……的期限，续签（合同）",
+      sentence_en: "They want to renew a contract.",
+      sentence_cn: "他们想要续签合同。"
+    },
+    {
+      number: 313,
+      phrase: "restore",
+      meaning_en: "bring back / reinstate / fix",
+      meaning_cn: "恢复，修复，使复原",
+      sentence_en: "The workers managed to restore the water supply.",
+      sentence_cn: "工人们成功恢复了供水。"
+    },
+    {
+      number: 314,
+      phrase: "replenish",
+      meaning_en: "refill / fill up / restock",
+      meaning_cn: "补充，重新装满",
+      sentence_en: "The waiter came to replenish his glass of water.",
+      sentence_cn: "服务员过来重新倒满他的水杯。"
+    },
+    {
+      number: 315,
+      phrase: "rousing",
+      meaning_en: "stirring / lively / spirited",
+      meaning_cn: "激荡人心的，充满活力的，热烈的",
+      sentence_en: "The politician gave a rousing speech.",
+      sentence_cn: "这位政治家发表了一篇激荡人心的演讲。"
+    },
+    {
+      number: 316,
+      phrase: "captivating",
+      meaning_en: "entrancing / enthralling / spellbinding",
+      meaning_cn: "迷人的，富有吸引力的，引人入胜的",
+      sentence_en: "They watched a captivating performance.",
+      sentence_cn: "他们观看了一场引人入胜的表演。"
+    },
+    {
+      number: 317,
+      phrase: "intoxicating",
+      meaning_en:
+        "stimulating / making one feel excited so that one cannot think clearly",
+      meaning_cn: "令人陶醉的，使人兴奋得无法清醒思考的",
+      sentence_en: "She felt an intoxicating thrill.",
+      sentence_cn: "她感受到了一种令人陶醉的兴奋感。"
+    },
+    {
+      number: 318,
+      phrase: "raided",
+      meaning_en:
+        "attacked / plundered / stole from / a rapid surprise attack to commit a crime",
+      meaning_cn: "突袭，洗劫，偷窃",
+      sentence_en: "The pirates raided British ships carrying valuable cargo.",
+      sentence_cn: "海盗袭击了运载贵重货物的英国船只。"
+    },
+    {
+      number: 319,
+      phrase: "assaulted",
+      meaning_en:
+        "physically attacked somebody violently, especially when this is a crime",
+      meaning_cn: "暴力袭击，殴打（尤指触犯法律的肢体冲突）",
+      sentence_en: "He was assaulted by someone.",
+      sentence_cn: "他遭到了某人的袭击。"
+    },
+    {
+      number: 320,
+      phrase: "victimised",
+      meaning_en:
+        "made somebody suffer unfairly because one did not like them, their opinions or something that they had done",
+      meaning_cn: "迫害，使受害，故意使某人受苦（因成见或不合意）",
+      sentence_en: "She felt victimised by her colleagues.",
+      sentence_cn: "她觉得受到了同事们的排挤和迫害。"
+    },
+    {
+      number: 321,
+      phrase: "anxiety",
+      meaning_en: "worry / apprehension / unease",
+      meaning_cn: "焦虑，忧虑，不安",
+      sentence_en: "He struggled with intense anxiety.",
+      sentence_cn: "他与强烈的焦虑感作斗争。"
+    },
+    {
+      number: 322,
+      phrase: "dismay",
+      meaning_en: "distress / alarm / trepidation",
+      meaning_cn: "沮丧，惊愕，忧虑",
+      sentence_en: "His heart sank with dismay.",
+      sentence_cn: "他心里一沉，感到十分沮丧。"
+    },
+    {
+      number: 323,
+      phrase: "unarmed",
+      meaning_en: "not carrying a weapon",
+      meaning_cn: "赤手空拳的，未携武器的",
+      sentence_en: "They attacked unarmed civilians.",
+      sentence_cn: "他们袭击了手无寸铁的平民。"
+    },
+    {
+      number: 324,
+      phrase: "unconscious",
+      meaning_en: "not awake / out cold",
+      meaning_cn: "失去知觉的，昏迷的",
+      sentence_en: "He was found unconscious on the floor.",
+      sentence_cn: "他被发现昏迷在地上。"
+    },
+    {
+      number: 325,
+      phrase: "incessantly",
+      meaning_en: "constantly / endlessly",
+      meaning_cn: "不停地，连续不断地",
+      sentence_en: "They chatter incessantly.",
+      sentence_cn: "他们喋喋不休地闲聊。"
     }
   ]
 };
