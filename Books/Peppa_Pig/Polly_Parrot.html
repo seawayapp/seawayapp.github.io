@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>小猪佩奇 · Peppa Pig — Polly Parrot 鹦鹉波利</title>
+  <script>
+    window.NAV_CONFIG = {
+      breadcrumbs: [
+        { label: "Home", href: "../../index.html" },
+        { label: "Books", href: "../index.html" },
+        { label: "Peppa Pig", href: "./index.html" },
+        { label: "Polly Parrot" }
+      ]
+    };
+  </script>
+  <script src="../../nav-top.js"></script>
+  <style>
+    :root {
+      --pink: #ee5a86;
+      --pink-dark: #d33d69;
+      --pink-dim: rgba(238, 90, 134, 0.10);
+      --sky: #66c6e8;
+      --sun: #ffd166;
+      --grass: #6bc06b;
+      --text: #2f2a3a;
+      --text-muted: #6b6478;
+      --bg: #fdf3f6;
+      --surface: #ffffff;
+      --border: #f6dbe4;
+      --radius: 18px;
+      --shadow: 0 8px 24px rgba(238, 90, 134, 0.14);
+      --font: "Comic Sans MS", "Segoe UI Rounded", "Microsoft YaHei", sans-serif;
+    }
+
+    * , *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: linear-gradient(180deg, #cdeefc 0%, var(--bg) 220px);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100dvh;
+    }
+
+    /* ── Side navigation ── */
+    .side-nav {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 100;
+      background: rgba(238, 90, 134, 0.35);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.18s, transform 0.15s;
+    }
+
+    .side-nav:hover { background: rgba(238, 90, 134, 0.75); }
+    .side-nav:active { background: var(--pink-dark); transform: translateY(-50%) scale(0.93); }
+    .side-nav-left { left: 6px; }
+    .side-nav-right { right: 6px; }
+
+    header {
+      background: linear-gradient(135deg, var(--pink) 0%, #f77fa3 100%);
+      color: white;
+      padding: 14px 15px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 8px 14px;
+      background-color: #ffffff;
+      color: var(--pink-dark);
+      border: 2px solid #ffffff;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.5em;
+      padding: 0 80px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    h1 .en { display: block; font-size: 0.6em; opacity: 0.9; font-weight: 400; margin-top: 2px; }
+
+    /* ── Content ── */
+    .content {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .slide-card {
+      width: 90%;
+      max-width: 720px;
+      background-color: var(--surface);
+      border: 3px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 36px 32px;
+      text-align: center;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    .slide-emoji {
+      font-size: 2.4em;
+      margin-bottom: 6px;
+    }
+
+    .line {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      border-radius: 12px;
+      padding: 10px 12px;
+      transition: background 0.15s;
+    }
+
+    .line:hover { background: var(--pink-dim); }
+    .line:active { background: rgba(238, 90, 134, 0.18); }
+
+    .line-en {
+      font-size: clamp(20px, 3.6vw, 30px);
+      color: var(--pink-dark);
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .line-cn {
+      margin-top: 14px;
+      font-size: clamp(19px, 3.4vw, 27px);
+      color: #2a6ea0;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    .speak-icon {
+      font-size: 0.7em;
+      opacity: 0.55;
+      flex-shrink: 0;
+    }
+
+    .hint {
+      margin-top: 22px;
+      font-size: 0.8em;
+      color: var(--text-muted);
+    }
+
+    /* ── Footer ── */
+    footer {
+      background-color: var(--surface);
+      padding: 12px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 2px solid var(--border);
+      flex-shrink: 0;
+      gap: 8px;
+    }
+
+    .nav-group { display: flex; align-items: center; gap: 8px; }
+
+    .nav-btn {
+      padding: 10px 18px;
+      background-color: var(--grass);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+      white-space: nowrap;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .nav-btn:hover { filter: brightness(1.08); }
+    .nav-btn:active { filter: brightness(0.92); }
+
+    .nav-btn.play { background-color: var(--sun); color: #6b4c00; }
+    .nav-btn.play.active { background-color: var(--pink); color: #fff; }
+
+    .slide-info { font-size: 15px; color: var(--text-muted); flex-shrink: 0; }
+
+    .jump-select {
+      padding: 8px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 14px;
+      max-width: 150px;
+    }
+
+    /* ── Tablet ── */
+    @media (max-width: 768px) {
+      h1 { font-size: 1.15em; padding: 0 70px; }
+      .slide-card { padding: 26px 20px; }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 540px) {
+      .back-btn { font-size: 12px; padding: 7px 10px; }
+      .content { padding: 12px 44px; }
+      footer { justify-content: center; gap: 8px; flex-wrap: wrap; }
+      .nav-btn { padding: 9px 12px; font-size: 14px; }
+      .btn-label { display: none; }
+      .slide-info { display: none; }
+      .jump-select { font-size: 13px; max-width: 120px; }
+      .side-nav { width: 38px; height: 38px; font-size: 15px; }
+      .side-nav-left { left: 4px; }
+      .side-nav-right { right: 4px; }
+    }
+  </style>
+</head>
+
+<body>
+  <button class="side-nav side-nav-left" id="side-prev" aria-label="Previous slide">◀</button>
+  <button class="side-nav side-nav-right" id="side-next" aria-label="Next slide">▶</button>
+
+  <header>
+    <button class="back-btn" onclick="location.href='index.html'">← Back</button>
+    <h1>🐷 波利鹦鹉<span class="en">Polly Parrot</span></h1>
+  </header>
+
+  <div class="content">
+    <div class="slide-card">
+      <div class="slide-emoji" id="emoji">🐷</div>
+      <div class="line" id="lineEn">
+        <span id="textEn"></span>
+        <span class="speak-icon">🔊</span>
+      </div>
+      <div class="line" id="lineCn">
+        <span id="textCn"></span>
+        <span class="speak-icon">🔊</span>
+      </div>
+      <div class="hint">点击文字可以听发音 · Tap either line to hear it read aloud</div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="nav-group">
+      <button class="nav-btn" id="prev-btn">◀ <span class="btn-label">Prev</span></button>
+      <button class="nav-btn play" id="play-btn">▶ <span class="btn-label">自动播放</span></button>
+    </div>
+    <span class="slide-info" id="slide-counter">1 / 1</span>
+    <div class="nav-group">
+      <select class="jump-select" id="slide-select"></select>
+      <button class="nav-btn" id="next-btn"><span class="btn-label">Next</span> ▶</button>
+    </div>
+  </footer>
+
+  <script>
+    /* =========================================
+       Data — Peppa Pig S1E? "Polly Parrot" 鹦鹉波利
+       ========================================= */
+    const SLIDES = [
+      { en: "I'm Peppa Pig.", cn: "我是佩奇。" },
+      { en: "This is my little brother, George.", cn: "这是我的弟弟，乔治。" },
+      { en: "This is Mummy Pig.", cn: "这是我的妈妈。" },
+      { en: "And this is Daddy Pig.", cn: "这是我的爸爸。" },
+      { en: "Peppa Pig.", cn: "小猪佩奇。" },
+      { en: "Polly Parrot", cn: "鹦鹉波利" },
+      { en: "Peppa and her family", cn: "佩奇和家人" },
+      { en: "are visiting Granny Pig and Grandpa Pig.", cn: "去看望猪奶奶和猪爷爷。" },
+      { en: "Granny Pig! Grandpa Pig!", cn: "奶奶！爷爷！" },
+      { en: "Ganggy Ig! Baba Ig!", cn: "奶奶！爷爷！" },
+      { en: "Hello, my little ones. Come inside,", cn: "你们好，我的小宝贝们。快点进来吧，" },
+      { en: "we have a surprise.", cn: "我们有个惊喜给你们。" },
+      { en: "What is it?", cn: "是什么惊喜啊？" },
+      { en: "We have a new pet.", cn: "我们养了一只新宠物。" },
+      { en: "Can you guess what it is?", cn: "你们猜猜是什么？" },
+      { en: "Dine-saw?", cn: "恐龙？" },
+      { en: "No.", cn: "不是。" },
+      { en: "It's not a dinosaur. Come and see.", cn: "它不是恐龙。快进来看看。" },
+      { en: "Granny Pig and Grandpa Pig have a pet parrot.", cn: "猪奶奶和猪爷爷养了一只宠物鹦鹉。" },
+      { en: "Peppa, George, this is our pet parrot.", cn: "佩奇，乔治，这是我们的宠物鹦鹉。" },
+      { en: "She's called Polly. Pretty Polly.", cn: "她叫波利。漂亮的波利。" },
+      { en: "Pretty Polly.", cn: "漂亮的波利。" },
+      { en: "Oooh. Wow.", cn: "哦~。哇。" },
+      { en: "I'm a clever parrot.", cn: "我是一只聪明的鹦鹉。" },
+      { en: "Mummy, why does Polly copy everything that Granny says?", cn: "妈妈，为什么奶奶说什么鹦鹉就跟着说什么呢？" },
+      { en: "That's what parrots do.", cn: "这是因为鹦鹉会学人说话。" },
+      { en: "I'll show you.", cn: "我示范给你看看。" },
+      { en: "Hello, Polly.", cn: "你好，波利。" },
+      { en: "What a sweet little parrot!", cn: "真是一只可爱的小鹦鹉！" },
+      { en: "Come on, everyone, teatime!", cn: "来吧，大家，下午茶的时间到了！" },
+      { en: "Peppa, George. Come on!", cn: "佩奇，乔治。快来吧！" },
+      { en: "There's chocolate cake!", cn: "这有巧克力蛋糕！" },
+      { en: "Coming, Granny!", cn: "来了，奶奶！" },
+      { en: "Peppa and George love eating chocolate cake.", cn: "佩奇和乔治喜欢吃巧克力蛋糕。" },
+      { en: "But today, they are in a hurry", cn: "但是今天，他们吃得很快" },
+      { en: "to get back and play with Polly Parrot.", cn: "想去和鹦鹉波利玩。" },
+      { en: "Finished!", cn: "吃完了！" },
+      { en: "What noisy little ones you are!", cn: "你们俩个小家伙可真吵啊！" },
+      { en: "Granny, please, can we leave the table", cn: "奶奶，我们现在可以离开餐桌" },
+      { en: "and go and see Polly Parrot?", cn: "去和鹦鹉波利玩吗？" },
+      { en: "Are you sure you've completely finished your cake?", cn: "你们确定已经吃干净蛋糕了吗？" },
+      { en: "Off you go, then.", cn: "那就去玩吧。" },
+      { en: "Hurray!", cn: "太好了！" },
+      { en: "George, say something to Polly.", cn: "乔治，你和波利说些话吧。" },
+      { en: "George is a little bit shy.", cn: "乔治有点害羞。" },
+      { en: "Hello.", cn: "你好。" },
+      { en: "Peppa and George are really enjoying playing with Polly Parrot.", cn: "佩奇和乔治真的很喜欢和波利一起玩。" },
+      { en: "I'm Peppa Pig!", cn: "我是佩奇！" },
+      { en: "George, say something.", cn: "乔治，你和它说话呀。" },
+      { en: "Peppa and George are pretending to be parrots.", cn: "佩奇和乔治在假装自己是鹦鹉。" },
+      { en: "I'm Polly Parrot.", cn: "我是鹦鹉波利。" },
+      { en: "Peppa is thinking of something else to say to Polly Parrot.", cn: "佩奇在想有什么可以对鹦鹉波利说的。" },
+      { en: "I'm a noisy parrot!", cn: "我是一只吵人的鹦鹉！" },
+      { en: "Peppa, George,", cn: "佩奇，乔治，" },
+      { en: "have you been playing with Polly?", cn: "你们是不是正在和波利玩？" },
+      { en: "Yes, Granny.", cn: "是的，奶奶。" },
+      { en: "Polly is such a sweet parrot.", cn: "波利是一只多么可爱的鹦鹉。" },
+      { en: "Yes, Granny.", cn: "是的，奶奶。" },
+      { en: "I'm a clever parrot.", cn: "我是一只聪明的鹦鹉。" },
+      { en: "I'm a noisy parrot!", cn: "我是一只吵人的鹦鹉！" },
+      { en: "Ohh!", cn: "哦~！" },
+      { en: "Oh, my word!", cn: "哦，我的天啊！" }
+    ];
+
+    const EMOJIS = ["🐷", "🐽", "🦜", "👨‍👩‍👧‍👦", "🏡", "🎉", "🍰"];
+
+    let index = 0;
+    let playing = false;
+    let timer = null;
+
+    const textEn = document.getElementById("textEn");
+    const textCn = document.getElementById("textCn");
+    const emoji = document.getElementById("emoji");
+    const counter = document.getElementById("slide-counter");
+    const select = document.getElementById("slide-select");
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+    const playBtn = document.getElementById("play-btn");
+    const sidePrev = document.getElementById("side-prev");
+    const sideNext = document.getElementById("side-next");
+    const lineEn = document.getElementById("lineEn");
+    const lineCn = document.getElementById("lineCn");
+
+    function initSelect() {
+      select.innerHTML = "";
+      SLIDES.forEach((item, i) => {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = `${i + 1}. ${item.en.slice(0, 24)}${item.en.length > 24 ? "…" : ""}`;
+        select.appendChild(opt);
+      });
+    }
+
+    function showSlide(i) {
+      if (i < 0) i = SLIDES.length - 1;
+      if (i >= SLIDES.length) i = 0;
+      index = i;
+
+      const item = SLIDES[index];
+      textEn.textContent = item.en;
+      textCn.textContent = item.cn;
+      emoji.textContent = EMOJIS[index % EMOJIS.length];
+      counter.textContent = `${index + 1} / ${SLIDES.length}`;
+      select.value = index;
+
+      if (playing) speakSlide(item);
+    }
+
+    function speak(text, lang) {
+      if (!text) return;
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = lang;
+      speechSynthesis.speak(u);
+    }
+
+    function speakSlide(item) {
+      speak(item.en, "en-GB");
+      setTimeout(() => speak(item.cn, "zh-CN"), 1600);
+    }
+
+    function togglePlay() {
+      playing = !playing;
+      playBtn.classList.toggle("active", playing);
+      playBtn.innerHTML = playing
+        ? '⏸ <span class="btn-label">暂停</span>'
+        : '▶ <span class="btn-label">自动播放</span>';
+      if (playing) {
+        speakSlide(SLIDES[index]);
+        timer = setInterval(() => showSlide(index + 1), 4200);
+      } else {
+        clearInterval(timer);
+        speechSynthesis.cancel();
+      }
+    }
+
+    lineEn.addEventListener("click", () => speak(SLIDES[index].en, "en-GB"));
+    lineCn.addEventListener("click", () => speak(SLIDES[index].cn, "zh-CN"));
+
+    prevBtn.addEventListener("click", () => showSlide(index - 1));
+    nextBtn.addEventListener("click", () => showSlide(index + 1));
+    sidePrev.addEventListener("click", () => showSlide(index - 1));
+    sideNext.addEventListener("click", () => showSlide(index + 1));
+    playBtn.addEventListener("click", togglePlay);
+    select.addEventListener("change", () => showSlide(parseInt(select.value)));
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") showSlide(index - 1);
+      if (e.key === "ArrowRight") showSlide(index + 1);
+      if (e.key === " ") { e.preventDefault(); togglePlay(); }
+    });
+
+    let touchStartX = 0;
+    document.addEventListener("touchstart", (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    document.addEventListener("touchend", (e) => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 40) showSlide(index + (dx < 0 ? 1 : -1));
+    }, { passive: true });
+
+    initSelect();
+    showSlide(0);
+  </script>
+</body>
+
+</html>

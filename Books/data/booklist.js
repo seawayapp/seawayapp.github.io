@@ -22,5 +22,11 @@ var mainData = [
     subtitle: "彼得·卡纳沃斯 [加]",
     category: "folder",
     filename: "The_Children_Who_Loved_Books/index.html"
+  },
+  {
+    title: "Peppa Pig 小猪佩奇",
+    subtitle: "双语互动版",
+    category: "folder",
+    filename: "Peppa_Pig/index.html"
   }
 ];

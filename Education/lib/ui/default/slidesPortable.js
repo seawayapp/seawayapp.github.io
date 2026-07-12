@@ -18,8 +18,9 @@ var isOp = navigator.userAgent.indexOf('Opera') > -1 ? 1 : 0;
 var isGe = navigator.userAgent.indexOf('Gecko') > -1 && navigator.userAgent.indexOf('Safari') < 1 ? 1 : 0;
 
 function hasClass(object, className) {
-	if (!object.className) return false;
-	return (object.className.search('(^|\\s)' + className + '(\\s|$)') != -1);
+	if (!object || !object.className) return false;
+	var cn = typeof object.className === 'string' ? object.className : (object.className.baseVal || '');
+	return (cn.search('(^|\\s)' + className + '(\\s|$)') != -1);
 }
 
 function hasValue(object, value) {

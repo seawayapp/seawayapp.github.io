@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peppa Pig - 小猪佩奇</title>
+  <script>
+    window.NAV_CONFIG = {
+      breadcrumbs: [
+        { label: "Home",   href: "../../index.html" },
+        { label: "Books",  href: "../index.html" },
+        { label: "Peppa Pig" }
+      ]
+    };
+  </script>
+  <script src="../../nav-top.js"></script>
+  <style>
+    :root {
+      --accent:      #ee5a86;
+      --accent-dark: #d33d69;
+      --accent-dim:  rgba(238,90,134,0.10);
+      --text:        #1e293b;
+      --text-muted:  #64748b;
+      --text-light:  #94a3b8;
+      --bg:          #f8fafc;
+      --surface:     #ffffff;
+      --border:      #e2e8f0;
+      --radius:      12px;
+      --shadow:      0 2px 12px rgba(0,0,0,0.07);
+      --font:        "Inter", "Segoe UI", system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .page-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 36px 20px 60px;
+    }
+
+    .page-header { margin-bottom: 28px; }
+
+    .page-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent-dark);
+      background: var(--accent-dim);
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+
+    .page-title {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
+
+    .page-subtitle {
+      margin-top: 4px;
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .page-count {
+      margin-top: 6px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .chapter-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chapter-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      text-decoration: none;
+      color: var(--text);
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+      cursor: pointer;
+    }
+
+    .chapter-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(238,90,134,0.15);
+      transform: translateX(4px);
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .chapter-num {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--accent-dim);
+      color: var(--accent-dark);
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .chapter-body { flex: 1; min-width: 0; }
+
+    .chapter-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chapter-subtitle {
+      margin-top: 3px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .chapter-arrow {
+      color: var(--text-light);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      transition: transform 0.2s, color 0.2s;
+    }
+
+    .chapter-card:hover .chapter-arrow {
+      transform: translateX(4px);
+      color: var(--accent-dark);
+    }
+
+    @media (max-width: 480px) {
+      .page-wrap { padding: 24px 14px 48px; }
+      .chapter-card { padding: 14px 16px; gap: 12px; }
+      .chapter-title { font-size: 0.92rem; }
+      .chapter-num { width: 32px; height: 32px; font-size: 0.9rem; border-radius: 8px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-wrap">
+
+    <div class="page-header">
+      <div class="page-eyebrow">🐷 Peppa Pig</div>
+      <h1 class="page-title">Peppa Pig</h1>
+      <p class="page-subtitle">小猪佩奇 · 双语互动版</p>
+      <p class="page-count" id="pageCount"></p>
+    </div>
+
+    <div class="chapter-list" id="mainContent"></div>
+
+  </div>
+
+  <script>
+    const episodes = [
+      { num: "🦜", title: "Polly Parrot", subtitle: "波利鹦鹉", href: "Polly_Parrot.html" },
+    ];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const container = document.getElementById("mainContent");
+
+      document.getElementById("pageCount").textContent =
+        `${episodes.length} episode${episodes.length !== 1 ? "s" : ""}`;
+
+      episodes.forEach((ep) => {
+        const card = document.createElement("a");
+        card.className = "chapter-card";
+        card.href = ep.href;
+
+        card.innerHTML = `
+          <div class="chapter-num">${ep.num}</div>
+          <div class="chapter-body">
+            <div class="chapter-title">${ep.title}</div>
+            ${ep.subtitle ? `<div class="chapter-subtitle">${ep.subtitle}</div>` : ""}
+          </div>
+          <span class="chapter-arrow">→</span>`;
+
+        container.appendChild(card);
+      });
+    });
+  </script>
+</body>
+
+</html>
