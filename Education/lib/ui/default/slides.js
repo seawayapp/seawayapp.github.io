@@ -22,8 +22,12 @@ var isGe =
     : 0;
 
 function hasClass(object, className) {
-  if (!object.className) return false;
-  return object.className.search("(^|\\s)" + className + "(\\s|$)") != -1;
+  if (!object || !object.className) return false;
+  var cn =
+    typeof object.className === "string"
+      ? object.className
+      : object.className.baseVal || "";
+  return cn.search("(^|\\s)" + className + "(\\s|$)") != -1;
 }
 
 function hasValue(object, value) {
