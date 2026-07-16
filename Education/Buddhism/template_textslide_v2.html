@@ -432,6 +432,9 @@
         <div id="titleMode" class="chapter-cover">
           <h1 id="bigTitle"></h1>
           <h2 id="subTitle"></h2>
+          <button class="btn-nav" id="btnPrint" style="margin-top: 30px">
+            🖨️ <span>打印 / 导出PDF</span>
+          </button>
         </div>
       </main>
 
@@ -566,6 +569,9 @@
         document
           .getElementById("btnNext")
           .addEventListener("click", () => changePage(1));
+        document
+          .getElementById("btnPrint")
+          .addEventListener("click", doFullPrint);
 
         try {
           const scriptFile = getScriptParam();
