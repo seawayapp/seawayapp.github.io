@@ -13,17 +13,18 @@
       :root {
         --ink: #1a1208;
         --ink-light: #4a3c28;
-        --ink-faint: #8a7a62;
+        --ink-faint: #6b5c44;
         --paper: #f5f0e8;
         --paper-warm: #ede6d6;
         --divider: #c8b896;
-        --gold: #b8912a;
+        --gold: #96721a;
         --gold-light: #d4aa4a;
         --gold-pale: #f0e4c0;
         --green: #3a6040;
         --green-light: #4a7a52;
         --shadow: rgba(80, 60, 20, 0.14);
         --radius: 10px;
+        --tap: 40px;
       }
 
       * {
@@ -36,6 +37,8 @@
         background: var(--paper);
         color: var(--ink);
         font-family: "Noto Sans SC", sans-serif;
+        font-size: 17px;
+        line-height: 1.6;
         min-height: 100vh;
       }
 
@@ -49,7 +52,7 @@
         display: flex;
         align-items: center;
         gap: 12px;
-        height: 56px;
+        height: 54px;
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
       }
 
@@ -57,9 +60,10 @@
         background: rgba(255, 255, 255, 0.1);
         border: 1px solid rgba(184, 145, 42, 0.35);
         color: var(--gold-light);
-        border-radius: 6px;
-        padding: 6px 14px;
-        font-size: 13px;
+        border-radius: 8px;
+        padding: 8px 14px;
+        min-height: var(--tap);
+        font-size: 15px;
         cursor: pointer;
         font-family: "Noto Sans SC", sans-serif;
         flex-shrink: 0;
@@ -73,8 +77,8 @@
       .top-title {
         color: var(--gold-light);
         font-family: "Noto Serif SC", serif;
-        font-size: 15px;
-        letter-spacing: 2px;
+        font-size: 17px;
+        letter-spacing: 1px;
         flex: 1;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -85,7 +89,7 @@
       .meta-section {
         background: var(--paper-warm);
         border-bottom: 2px solid var(--divider);
-        padding: 14px 16px;
+        padding: 10px 16px;
       }
 
       .meta-inner {
@@ -93,35 +97,37 @@
         margin: 0 auto;
         display: grid;
         grid-template-columns: 1fr auto;
-        gap: 10px;
+        gap: 12px;
         align-items: end;
       }
 
       .meta-fields {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 10px;
       }
 
       .meta-row {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: 6px;
       }
 
       .meta-label {
-        font-size: 10px;
+        font-size: 13px;
+        font-weight: 600;
         color: var(--gold);
-        letter-spacing: 2px;
+        letter-spacing: 1px;
       }
 
       .meta-input {
         background: rgba(255, 255, 255, 0.75);
         border: 1px solid var(--divider);
-        border-radius: 6px;
+        border-radius: 8px;
         padding: 8px 12px;
+        min-height: var(--tap);
         font-family: "Noto Serif SC", serif;
-        font-size: 13px;
+        font-size: 17px;
         color: var(--ink);
         outline: none;
         transition: border-color 0.15s;
@@ -136,26 +142,26 @@
       .meta-date-col {
         display: flex;
         flex-direction: column;
-        gap: 4px;
-        min-width: 130px;
+        gap: 6px;
+        min-width: 160px;
       }
 
       /* ── Main content ── */
       main {
         max-width: 920px;
         margin: 0 auto;
-        padding: 18px 16px 130px;
+        padding: 14px 16px 90px;
       }
 
       .list-header {
         display: flex;
         align-items: center;
         gap: 10px;
-        margin-bottom: 14px;
+        margin-bottom: 10px;
       }
 
       .list-count {
-        font-size: 12px;
+        font-size: 14px;
         color: var(--ink-faint);
         letter-spacing: 0.5px;
         flex: 1;
@@ -165,9 +171,10 @@
         background: transparent;
         border: 1px solid var(--divider);
         color: var(--ink-faint);
-        border-radius: 6px;
-        padding: 6px 14px;
-        font-size: 12px;
+        border-radius: 8px;
+        padding: 8px 14px;
+        min-height: var(--tap);
+        font-size: 14px;
         cursor: pointer;
         font-family: "Noto Sans SC", sans-serif;
         transition: all 0.15s;
@@ -192,43 +199,48 @@
 
       .card-head {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
-        gap: 10px;
-        padding: 9px 14px;
+        gap: 8px;
+        row-gap: 6px;
+        padding: 8px 12px;
         background: var(--paper-warm);
         border-bottom: 1px solid var(--divider);
       }
 
       .card-num {
-        font-size: 11px;
-        font-weight: 500;
+        font-size: 14px;
+        font-weight: 600;
         color: var(--gold);
         letter-spacing: 1px;
         background: rgba(184, 145, 42, 0.12);
         border: 1px solid rgba(184, 145, 42, 0.28);
-        border-radius: 4px;
-        padding: 2px 9px;
+        border-radius: 6px;
+        padding: 4px 10px;
         flex-shrink: 0;
       }
 
       .card-head-title {
         flex: 1;
-        font-size: 11px;
+        font-size: 13px;
         color: var(--ink-faint);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        min-width: 60px;
       }
 
       .btn-del {
         background: none;
-        border: 1px solid rgba(200, 50, 50, 0.3);
+        border: 1px solid rgba(200, 50, 50, 0.35);
         color: #c84040;
-        border-radius: 5px;
-        padding: 3px 10px;
-        font-size: 11px;
+        border-radius: 6px;
+        padding: 6px 12px;
+        min-height: 34px;
+        font-size: 14px;
         cursor: pointer;
         flex-shrink: 0;
+        white-space: nowrap;
         transition: all 0.15s;
         font-family: "Noto Sans SC", sans-serif;
       }
@@ -239,19 +251,22 @@
 
       .card-head-actions {
         display: flex;
-        gap: 5px;
+        flex-wrap: wrap;
+        gap: 6px;
         align-items: center;
-        flex-shrink: 0;
+        justify-content: flex-end;
       }
 
       .btn-move {
         background: none;
         border: 1px solid var(--divider);
         color: var(--ink-faint);
-        border-radius: 4px;
-        padding: 2px 8px;
-        font-size: 12px;
+        border-radius: 6px;
+        padding: 6px 12px;
+        min-height: 34px;
+        font-size: 14px;
         cursor: pointer;
+        white-space: nowrap;
         transition: all 0.15s;
         line-height: 1.4;
         font-family: "Noto Sans SC", sans-serif;
@@ -264,7 +279,7 @@
       }
 
       .btn-move:disabled {
-        opacity: 0.25;
+        opacity: 0.3;
         cursor: default;
       }
 
@@ -272,10 +287,12 @@
         background: none;
         border: 1px solid rgba(58, 96, 64, 0.45);
         color: var(--green);
-        border-radius: 4px;
-        padding: 2px 9px;
+        border-radius: 6px;
+        padding: 6px 12px;
+        min-height: 34px;
         font-size: 14px;
         cursor: pointer;
+        white-space: nowrap;
         transition: all 0.15s;
         line-height: 1.4;
         font-family: "Noto Sans SC", sans-serif;
@@ -286,38 +303,40 @@
       }
 
       .card-body {
-        padding: 14px;
+        padding: 12px 14px;
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 10px;
       }
 
       .field-row {
         display: grid;
-        grid-template-columns: 150px 1fr 130px;
+        grid-template-columns: 160px 1fr 140px;
         gap: 10px;
       }
 
       .field-group {
         display: flex;
         flex-direction: column;
-        gap: 5px;
+        gap: 4px;
       }
 
       .field-label {
-        font-size: 10px;
+        font-size: 13px;
+        font-weight: 600;
         color: var(--gold);
-        letter-spacing: 1.5px;
+        letter-spacing: 1px;
       }
 
       .field-select,
       .field-input {
         background: var(--paper);
         border: 1px solid var(--divider);
-        border-radius: 6px;
-        padding: 8px 10px;
+        border-radius: 8px;
+        padding: 12px 14px;
+        min-height: var(--tap);
         font-family: "Noto Sans SC", sans-serif;
-        font-size: 13px;
+        font-size: 17px;
         color: var(--ink);
         outline: none;
         transition:
@@ -335,15 +354,17 @@
       .field-textarea {
         background: var(--paper);
         border: 1px solid var(--divider);
-        border-radius: 6px;
-        padding: 10px 12px;
+        border-radius: 8px;
+        padding: 12px 14px;
         font-family: "Noto Serif SC", serif;
-        font-size: 14px;
+        font-size: 18px;
         line-height: 1.85;
         color: var(--ink);
         outline: none;
         resize: vertical;
         width: 100%;
+        overflow: hidden;
+        min-height: 130px;
         transition:
           border-color 0.15s,
           background 0.15s;
@@ -356,11 +377,11 @@
 
       .field-textarea.explanation {
         font-family: "Noto Sans SC", sans-serif;
-        font-size: 13px;
+        font-size: 17px;
         line-height: 1.9;
         color: var(--green);
         border-style: dashed;
-        min-height: 90px;
+        min-height: 130px;
       }
 
       /* ── Title-category card accent ── */
@@ -382,13 +403,14 @@
       .btn-add {
         display: block;
         width: 100%;
-        padding: 13px;
+        padding: 10px;
+        min-height: var(--tap);
         background: transparent;
         border: 2px dashed var(--divider);
         border-radius: var(--radius);
         color: var(--ink-faint);
         font-family: "Noto Sans SC", sans-serif;
-        font-size: 13px;
+        font-size: 15px;
         cursor: pointer;
         text-align: center;
         transition: all 0.15s;
@@ -410,25 +432,18 @@
         right: 0;
         background: var(--paper-warm);
         border-top: 2px solid var(--divider);
-        padding: 12px 16px;
-        padding-bottom: calc(12px + env(safe-area-inset-bottom));
-        display: flex;
-        align-items: center;
-        gap: 14px;
+        padding: 8px 16px;
+        padding-bottom: calc(8px + env(safe-area-inset-bottom));
         box-shadow: 0 -4px 24px var(--shadow);
         z-index: 90;
       }
 
-      .action-info {
-        flex: 1;
-        font-size: 12px;
-        color: var(--ink-faint);
-        line-height: 1.6;
-      }
-
-      .action-info strong {
-        color: var(--gold);
-        font-size: 13px;
+      .action-bar-inner {
+        max-width: 920px;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
       }
 
       .btn-save-draft {
@@ -436,13 +451,15 @@
         color: var(--gold);
         border: 1px solid var(--gold);
         border-radius: 8px;
-        padding: 10px 20px;
+        padding: 6px 10px;
+        min-height: 40px;
         font-family: "Noto Sans SC", sans-serif;
-        font-size: 14px;
+        font-size: 13px;
         cursor: pointer;
-        letter-spacing: 1px;
+        letter-spacing: 0.5px;
         transition: background 0.15s;
-        flex-shrink: 0;
+        flex: 1 1 90px;
+        text-align: center;
       }
 
       .btn-save-draft:hover {
@@ -450,20 +467,24 @@
       }
 
       .btn-gen-slide {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         background: var(--green);
         color: white;
         border: none;
         border-radius: 8px;
-        padding: 11px 26px;
+        padding: 6px 10px;
+        min-height: 40px;
         font-family: "Noto Sans SC", sans-serif;
         font-size: 14px;
-        font-weight: 500;
+        font-weight: 700;
         cursor: pointer;
-        letter-spacing: 1.5px;
+        letter-spacing: 0.5px;
+        flex: 1.6 1 130px;
         transition:
           background 0.15s,
           transform 0.1s;
-        flex-shrink: 0;
       }
 
       .btn-gen-slide:hover {
@@ -471,7 +492,7 @@
       }
 
       .btn-gen-slide:active {
-        transform: scale(0.97);
+        transform: scale(0.98);
       }
 
       /* ── Empty state ── */
@@ -479,12 +500,12 @@
         text-align: center;
         padding: 60px 20px;
         color: var(--ink-faint);
-        font-size: 14px;
+        font-size: 17px;
         line-height: 2.2;
       }
 
       .empty-state .icon {
-        font-size: 40px;
+        font-size: 48px;
         opacity: 0.3;
         margin-bottom: 12px;
       }
@@ -492,14 +513,14 @@
       /* ── Toast ── */
       .toast {
         position: fixed;
-        top: 68px;
+        top: 72px;
         left: 50%;
         transform: translateX(-50%) translateY(-16px);
         background: rgba(26, 18, 8, 0.92);
         color: #f0e4c0;
-        padding: 9px 20px;
-        border-radius: 8px;
-        font-size: 13px;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-size: 16px;
         font-family: "Noto Sans SC", sans-serif;
         opacity: 0;
         transition:
@@ -508,6 +529,9 @@
         pointer-events: none;
         z-index: 999;
         white-space: nowrap;
+        max-width: 90vw;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .toast.show {
@@ -516,7 +540,7 @@
       }
 
       /* ── Responsive ── */
-      @media (max-width: 640px) {
+      @media (max-width: 700px) {
         .field-row {
           grid-template-columns: 1fr 1fr;
         }
@@ -531,9 +555,24 @@
         }
       }
 
-      @media (max-width: 420px) {
+      @media (max-width: 480px) {
         .field-row {
           grid-template-columns: 1fr;
+        }
+
+        .card-head-actions {
+          justify-content: flex-start;
+          flex-basis: 100%;
+        }
+
+        .btn-move,
+        .btn-insert,
+        .btn-del {
+          flex: 1 1 auto;
+        }
+
+        main {
+          padding-bottom: 140px;
         }
       }
     </style>
@@ -591,15 +630,15 @@
     </main>
 
     <div class="action-bar">
-      <div class="action-info">
-        确认内容后点击生成<br />
-        <strong id="actionCount">0 个段落</strong>
+      <div class="action-bar-inner">
+        <button class="btn-save-draft" onclick="saveDraft()">保存草稿</button>
+        <button class="btn-save-draft" onclick="syncFromSlide()">
+          从Slide同步
+        </button>
+        <button class="btn-gen-slide" onclick="generateSlide()">
+          生成幻灯片 ▶
+        </button>
       </div>
-      <button class="btn-save-draft" onclick="syncFromSlide()">从Slide同步</button>
-      <button class="btn-save-draft" onclick="saveDraft()">保存草稿</button>
-      <button class="btn-gen-slide" onclick="generateSlide()">
-        生成幻灯片 ▶
-      </button>
     </div>
 
     <div class="toast" id="toast"></div>
@@ -655,6 +694,13 @@
         list.innerHTML = "";
         paras.forEach((p, i) => list.appendChild(createCard(p, i)));
         updateCount();
+        list.querySelectorAll(".field-textarea").forEach(autoResize);
+      }
+
+      // Grows the box to fit what's typed so nobody has to drag the tiny resize handle.
+      function autoResize(el) {
+        el.style.height = "auto";
+        el.style.height = el.scrollHeight + "px";
       }
 
       function createCard(p, i) {
@@ -678,7 +724,7 @@
         let bodyFields;
         if (isTitle) {
           bodyFields = `
-          <div class="field-row" style="grid-template-columns:150px 1fr;">
+          <div class="field-row" style="grid-template-columns:160px 1fr;">
             <div class="field-group">
               <span class="field-label">CATEGORY 类型</span>
               <select class="field-select" onchange="changeCategory(${i},this.value)">
@@ -695,7 +741,7 @@
           <div class="field-group">
             <span class="field-label">SUB TITLE 副标题（换行用 Enter）</span>
             <textarea class="field-textarea" rows="2"
-              oninput="updateField(${i},'subTitle',this.value)">${esc(p.subTitle || "")}</textarea>
+              oninput="updateField(${i},'subTitle',this.value); autoResize(this)">${esc(p.subTitle || "")}</textarea>
           </div>`;
         } else {
           bodyFields = `
@@ -722,12 +768,12 @@
           <div class="field-group">
             <span class="field-label">ORIGINAL TEXT 原文</span>
             <textarea class="field-textarea" rows="3"
-              oninput="updateField(${i},'originalText',this.value)">${esc(p.originalText || "")}</textarea>
+              oninput="updateField(${i},'originalText',this.value); autoResize(this)">${esc(p.originalText || "")}</textarea>
           </div>
           <div class="field-group">
             <span class="field-label">EXPLANATION 消文</span>
-            <textarea class="field-textarea explanation" rows="5"
-              oninput="updateField(${i},'explanation',this.value)">${esc(p.explanation || "")}</textarea>
+            <textarea class="field-textarea explanation" rows="3"
+              oninput="updateField(${i},'explanation',this.value); autoResize(this)">${esc(p.explanation || "")}</textarea>
           </div>`;
         }
 
@@ -737,10 +783,10 @@
           <span class="card-num">${headLabel}</span>
           <span class="card-head-title" id="cht-${i}">${headTitle}</span>
           <div class="card-head-actions">
-            <button class="btn-move" onclick="movePara(${i},-1)" ${i === 0 ? 'disabled' : ''} title="上移">▲</button>
-            <button class="btn-move" onclick="movePara(${i},+1)" ${i === n - 1 ? 'disabled' : ''} title="下移">▼</button>
-            <button class="btn-insert" onclick="insertAfter(${i})" title="在此后插入新段落">＋</button>
-            <button class="btn-del" onclick="deletePara(${i})">删除</button>
+            <button class="btn-move" onclick="movePara(${i},-1)" ${i === 0 ? "disabled" : ""} title="上移">▲ 上移</button>
+            <button class="btn-move" onclick="movePara(${i},+1)" ${i === n - 1 ? "disabled" : ""} title="下移">▼ 下移</button>
+            <button class="btn-insert" onclick="insertAfter(${i})" title="在此后插入新段落">＋ 插入</button>
+            <button class="btn-del" onclick="deletePara(${i})">🗑 删除</button>
           </div>
         </div>
         <div class="card-body">${bodyFields}</div>
@@ -774,23 +820,28 @@
         [paras[i], paras[j]] = [paras[j], paras[i]];
         renderList();
         setTimeout(() => {
-          const cards = document.querySelectorAll('.para-card');
-          if (cards[j]) cards[j].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          const cards = document.querySelectorAll(".para-card");
+          if (cards[j])
+            cards[j].scrollIntoView({ behavior: "smooth", block: "nearest" });
         }, 60);
       }
 
       function insertAfter(i) {
         paras.splice(i + 1, 0, {
-          category: 'content',
-          pageTitle: '',
-          personInCharge: '',
-          originalText: '',
-          explanation: ''
+          category: "content",
+          pageTitle: "",
+          personInCharge: "",
+          originalText: "",
+          explanation: "",
         });
         renderList();
         setTimeout(() => {
-          const cards = document.querySelectorAll('.para-card');
-          if (cards[i + 1]) cards[i + 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+          const cards = document.querySelectorAll(".para-card");
+          if (cards[i + 1])
+            cards[i + 1].scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
         }, 60);
       }
 
@@ -816,7 +867,6 @@
       function updateCount() {
         const n = paras.length;
         document.getElementById("listCount").textContent = `共 ${n} 个段落`;
-        document.getElementById("actionCount").textContent = `${n} 个段落`;
       }
 
       function currentData() {
@@ -829,14 +879,47 @@
       }
 
       function saveDraft() {
-        localStorage.setItem("guanglun_editor_input", JSON.stringify(currentData()));
+        localStorage.setItem(
+          "guanglun_editor_input",
+          JSON.stringify(currentData()),
+        );
         showToast("草稿已保存 ✓", 1800);
+      }
+
+      // Backend: CloudBackendService (D:\Shared\Projects_Local\CloudBackendService).
+      // POST /api/documents/{id} -> passkey required (fixed, not prompted); the
+      // server rejects it with 401 if it doesn't match Auth:PasskeyHash.
+      const CLOUD_CONFIG = {
+        baseUrl: "https://open.seawayapp.com",
+        passkey: "GuangLun",
+      };
+
+      // Title looks like "P119L1 - P122L13 前四句---后四句"; the id is just
+      // the page/line range, e.g. "P119L1-P122L13" (as set by guanglun_reader_v2.html).
+      function deriveDocumentId() {
+        const title = (document.getElementById("metaTitle").value || "").trim();
+        const m = title.match(/P\d+L\d+\s*-\s*P\d+L\d+/);
+        if (m) return m[0].replace(/\s+/g, "");
+        return title ? title.replace(/\s+/g, "_") : `untitled-${Date.now()}`;
+      }
+
+      // Every cloud save is a brand-new item, never an overwrite of a previous
+      // one, so the id carries a to-the-second timestamp: P111L9-P113L8-YYYYMMDD-HHMMSS.
+      function deriveCloudSaveId() {
+        const d = new Date();
+        const pad = (n) => String(n).padStart(2, "0");
+        const stamp = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+        return `${deriveDocumentId()}-${stamp}`;
       }
 
       function syncFromSlide() {
         const raw = localStorage.getItem("guanglun_slide_localdata");
-        if (!raw) { showToast("未找到 Slide 数据", 2500); return; }
-        if (!confirm("将用 guanglun_slide_localdata 覆盖当前编辑内容，继续？")) return;
+        if (!raw) {
+          showToast("未找到 Slide 数据", 2500);
+          return;
+        }
+        if (!confirm("将用 guanglun_slide_localdata 覆盖当前编辑内容，继续？"))
+          return;
         localStorage.setItem("guanglun_editor_input", raw);
         loadData();
         showToast("已从 Slide 数据同步 ✓", 1800);
@@ -847,12 +930,28 @@
 
         console.log(JSON.stringify(data));
         localStorage.setItem("guanglun_slide_localdata", JSON.stringify(data));
+        saveToCloudSilently(data);
         showToast("已保存，正在打开幻灯片…", 1500);
         setTimeout(
           () =>
             window.open("template_textslide_v2.html?input=localdata", "_blank"),
           500,
         );
+      }
+
+      // Silent cloud sync, no prompt — fixed passkey, new timestamped id every time.
+      function saveToCloudSilently(data) {
+        const id = deriveCloudSaveId();
+        fetch(`${CLOUD_CONFIG.baseUrl}/api/documents/${id}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ passkey: CLOUD_CONFIG.passkey, data }),
+        })
+          .then((res) => {
+            if (!res.ok)
+              console.error(`云端自动保存失败：服务器返回 ${res.status}`);
+          })
+          .catch((e) => console.error("云端自动保存失败：", e));
       }
 
       loadData();

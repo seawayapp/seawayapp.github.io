@@ -1661,6 +1661,33 @@
       }
 
       // ── Generate Xiaowen ──────────────────────────────────────────────────────────
+      // Punctuation doesn't count toward the 4-character preview snippets below,
+      // so "P119L1-L3 此是略说---现为教授" always shows 4 real characters on each side
+      // even when the sentence starts/ends right next to a 。「」，等 mark.
+      const PUNCT_RE =
+        /[。，、；：！？「」『』（）()《》〈〉“”‘’—…·.,;:!?'"\s]/;
+
+      function firstChars(text, n) {
+        let out = "";
+        for (const ch of text) {
+          if (PUNCT_RE.test(ch)) continue;
+          out += ch;
+          if (out.length >= n) break;
+        }
+        return out;
+      }
+
+      function lastChars(text, n) {
+        let out = "";
+        for (let i = text.length - 1; i >= 0; i--) {
+          const ch = text[i];
+          if (PUNCT_RE.test(ch)) continue;
+          out = ch + out;
+          if (out.length >= n) break;
+        }
+        return out;
+      }
+
       function generateXiaowen() {
         if (!currentLines.length) return;
 
@@ -1678,7 +1705,7 @@
             .join("");
           return {
             category: "content",
-            pageTitle: `${ref} ${clean.slice(0, 4)}---${clean.slice(-4)}`,
+            pageTitle: `${ref} ${firstChars(clean, 4)}---${lastChars(clean, 4)}`,
             personInCharge: "",
             originalText: text,
             explanation: vernText,
@@ -1734,14 +1761,14 @@
         const mm = String(mo).padStart(2, "0");
 
         const data = {
-          title: `P${fl.p}L${fl.l} - P${ll.p}L${ll.l} ${fl.orig.slice(0, 4)}---${ll.orig.trimEnd().slice(-4)}`,
+          title: `P${fl.p}L${fl.l} - P${ll.p}L${ll.l} ${firstChars(fl.orig, 4)}---${lastChars(ll.orig.trimEnd(), 4)}`,
           subtitle: "",
           testdate: `${dd}/${mm}/${y}`,
           paragraph: [
             {
               category: "title",
               mainTitle: "广论消文",
-              subTitle: `C组\n${y}年${mo}月${d}日`,
+              subTitle: `组\n${y}年${mo}月${d}日`,
             },
             ...contentParas,
             { category: "title", mainTitle: "广论复习", subTitle: "" },
