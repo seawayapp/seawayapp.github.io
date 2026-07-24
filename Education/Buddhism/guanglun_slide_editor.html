@@ -677,9 +677,34 @@
           paras = data.paragraph
             ? data.paragraph.map((p) => Object.assign({}, p))
             : [];
+          ensureTrailingContentSlots();
           renderList();
         } catch (e) {
           showToast("数据解析失败：" + e.message, 4000);
+        }
+      }
+
+      // The reader always ends the slide deck with a "广论复习" cover
+      // section. Auto-append two blank content slots right after it so
+      // there's always room to add follow-up content without a manual
+      // insert step. Only fires when that cover is still the last section
+      // (i.e. hasn't already been extended), so reloads don't keep piling on.
+      function ensureTrailingContentSlots() {
+        if (!paras.length) return;
+        const last = paras[paras.length - 1];
+        if (
+          last.category === "title" &&
+          (last.mainTitle || "").includes("广论复习")
+        ) {
+          for (let n = 0; n < 2; n++) {
+            paras.push({
+              category: "content",
+              pageTitle: "",
+              personInCharge: "",
+              originalText: "",
+              explanation: "",
+            });
+          }
         }
       }
 
