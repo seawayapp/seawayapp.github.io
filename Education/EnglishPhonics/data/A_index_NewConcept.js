@@ -131,5 +131,12 @@ var mainData = [
     category: "file",
     filename: "English-Level-7-Unit-01",
     foldername: ""
+  },
+  {
+    title: "高考英语词汇",
+    subtitle: "近5年未考词汇（315词）",
+    category: "file",
+    filename: "English-Gaokao-Untested-Words",
+    foldername: ""
   }
 ];
