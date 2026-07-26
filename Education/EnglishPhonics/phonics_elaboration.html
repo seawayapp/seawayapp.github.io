@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>辅音发音精讲 (Consonants Elaboration)</title>
+    <script>
+        window.NAV_CONFIG = {
+            breadcrumbs: [
+                { label: "Home", href: "../../index.html" },
+                { label: "Education", href: "../index.html" },
+                { label: "国际音标表", href: "index_BBC_Phonics.html" },
+                { label: "辅音发音精讲" }
+            ]
+        };
+    </script>
+    <script src="../../nav-top.js"></script>
+    <style>
+        #__snavTitle a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+        }
+
+        #__snavTitle a:hover {
+            color: #fff;
+        }
+
+        #__snavTitle .bc-sep {
+            color: rgba(255, 255, 255, 0.3);
+            margin: 0 4px;
+        }
+
+        #__snavTitle .bc-cur {
+            color: #fff;
+            font-weight: 600;
+        }
+    </style>
+    <style>
+        body {
+            font-family: "KaiTi", "楷体", "STKaiti", Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f4e8;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background-color: #fff9f0;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            color: #5a3921;
+        }
+
+        h1 {
+            font-size: 2.1em;
+            margin-bottom: 6px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #8a6d4a;
+            font-size: 1.05em;
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            margin-top: 50px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 1.5em;
+            color: #fff;
+            text-shadow: none;
+        }
+
+        h2 .cat-en {
+            font-size: 0.55em;
+            font-weight: normal;
+            opacity: 0.85;
+            display: block;
+        }
+
+        /* ---------- Intro / tips box ---------- */
+        .tips-box {
+            background: #fff3d6;
+            border: 1px solid #e8d5b5;
+            border-radius: 10px;
+            padding: 18px 22px;
+            margin-bottom: 20px;
+        }
+
+        .tips-box h3 {
+            text-align: left;
+            margin: 0 0 10px;
+            color: #7a5c3c;
+        }
+
+        .tips-box ul {
+            margin: 0;
+            padding-left: 22px;
+            line-height: 1.9;
+        }
+
+        .tips-box li b {
+            color: #b23c17;
+        }
+
+        /* ---------- Search ---------- */
+        .search-row {
+            display: flex;
+            justify-content: center;
+            margin: 14px 0 4px;
+        }
+
+        #search-input {
+            width: 100%;
+            max-width: 420px;
+            padding: 10px 14px;
+            font-size: 16px;
+            border: 2px solid #e8d5b5;
+            border-radius: 20px;
+            outline: none;
+            font-family: Arial, sans-serif;
+        }
+
+        #search-input:focus {
+            border-color: #c77b1e;
+        }
+
+        #search-empty {
+            text-align: center;
+            color: #a08a6c;
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            display: none;
+        }
+
+        /* ---------- Quick-pick card grid ---------- */
+        #quickjump {
+            margin: 18px 0 10px;
+        }
+
+        .cat-block {
+            margin-bottom: 20px;
+        }
+
+        .cat-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1em;
+            margin: 4px 0 10px;
+            text-align: left;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+        }
+
+        .cat-title .dot {
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .cat-title .cat-en-inline {
+            font-size: 0.8em;
+            color: #a08a6c;
+            font-weight: normal;
+        }
+
+        .qj-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+            gap: 10px;
+        }
+
+        .qj-card {
+            cursor: pointer;
+            border-radius: 12px;
+            padding: 14px 6px;
+            text-align: center;
+            color: #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            transition: transform 0.15s, box-shadow 0.15s;
+            user-select: none;
+        }
+
+        .qj-card:hover {
+            transform: translateY(-3px) scale(1.04);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.22);
+        }
+
+        .qj-card.active {
+            outline: 3px solid #5a3921;
+            outline-offset: 2px;
+        }
+
+        .qj-symbol {
+            font-family: "Arial Unicode MS", Arial, sans-serif;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .qj-demo {
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            margin-top: 4px;
+            opacity: 0.95;
+        }
+
+        /* ---------- Detail panel ---------- */
+        #detail {
+            margin: 20px 0 10px;
+            min-height: 60px;
+        }
+
+        .detail-placeholder {
+            text-align: center;
+            color: #a08a6c;
+            font-family: Arial, sans-serif;
+            padding: 40px 20px;
+            font-size: 15px;
+            background: #fff;
+            border: 1px dashed #e0d0b0;
+            border-radius: 12px;
+        }
+
+        .pair-divider {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            color: #7a5c3c;
+            margin: 16px 0 6px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .phoneme-card {
+            background: #fff;
+            border: 1px solid #e8d5b5;
+            border-radius: 12px;
+            margin: 0 0 18px;
+            padding: 16px 18px 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .phoneme-head {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            border-bottom: 1px dashed #e8d5b5;
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+        }
+
+        .ipa-big {
+            font-family: "Arial Unicode MS", Arial, sans-serif;
+            font-size: 40px;
+            font-weight: bold;
+            color: #0066cc;
+            background: #e6f7ff;
+            border-radius: 10px;
+            padding: 4px 16px;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.15s;
+        }
+
+        .ipa-big:hover {
+            transform: scale(1.06);
+        }
+
+        .ipa-big::after {
+            content: " 🔊";
+            font-size: 0.5em;
+        }
+
+        .badge {
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 12px;
+            color: #fff;
+        }
+
+        .badge.voiceless { background: #4d7ea8; }
+        .badge.voiced { background: #d1573f; }
+        .badge.nasal-voiced { background: #c77b1e; }
+
+        .pair-link {
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            color: #7a5c3c;
+            text-decoration: none;
+            border: 1px solid #d8c39a;
+            border-radius: 12px;
+            padding: 3px 10px;
+            cursor: pointer;
+        }
+
+        .pair-link:hover { background: #f0e6d2; }
+
+        .head-text {
+            flex: 1;
+            min-width: 220px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .head-text .tip-line { color: #444; }
+        .head-text .mnemonic-line { color: #8a6d4a; font-style: italic; }
+
+        .demo-word {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: #336699;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .demo-word .cn { color: #666; }
+
+        /* ---------- Spelling groups ---------- */
+        .spelling-groups {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .spelling-group {
+            flex: 1 1 260px;
+            min-width: 240px;
+            background: #fbf8f1;
+            border-left: 4px solid #c77b1e;
+            border-radius: 6px;
+            padding: 10px 12px;
+        }
+
+        .pattern-chip {
+            display: inline-block;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            font-size: 18px;
+            color: #fff;
+            background: #c77b1e;
+            border-radius: 6px;
+            padding: 2px 10px;
+            margin-bottom: 4px;
+        }
+
+        .pattern-note {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            color: #a08a6c;
+            margin-bottom: 6px;
+        }
+
+        .word-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .word-card {
+            background: #fff;
+            border: 1px solid #eadfc4;
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.15s;
+            display: flex;
+            flex-direction: column;
+            min-width: 84px;
+        }
+
+        .word-card:hover {
+            background: #fff3d6;
+        }
+
+        .word-card .w {
+            font-weight: bold;
+            color: #1b1b1b;
+            font-size: 15px;
+        }
+
+        .word-card .ipa {
+            color: #0066cc;
+        }
+
+        .word-card .cn {
+            color: #666;
+        }
+
+        /* Highlight: the letters that produce the target sound */
+        .hl {
+            color: #d40000;
+            font-weight: bold;
+        }
+
+        /* ---------- Bonus: confusable pairs ---------- */
+        .confuse-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        .confuse-table th, .confuse-table td {
+            border: 1px solid #e0d0b0;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .confuse-table th {
+            background: #f0e6d2;
+            color: #5a3921;
+        }
+
+        .confuse-table td.pair-word {
+            font-size: 16px;
+            color: #1b1b1b;
+            cursor: pointer;
+        }
+
+        .confuse-table td.pair-word:hover {
+            background: #fff3d6;
+        }
+
+        .confuse-table td.pair-word .ipa {
+            color: #0066cc;
+            display: block;
+            font-size: 13px;
+        }
+
+        .confuse-table td.tip-cell {
+            font-family: "KaiTi", "楷体", sans-serif;
+            font-size: 14px;
+            color: #7a5c3c;
+            text-align: left;
+        }
+
+        footer.note {
+            text-align: center;
+            color: #a08a6c;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            margin-top: 30px;
+        }
+
+        /* ---------- Back to top ---------- */
+        #back-to-top {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #5a3921;
+            color: #fff;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        #back-to-top:hover {
+            background: #7a5c3c;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 12px; }
+            h1 { font-size: 1.5em; }
+            .ipa-big { font-size: 28px; padding: 4px 12px; }
+            .spelling-group { flex: 1 1 100%; }
+            .qj-grid { grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>辅音 (Consonants) - 28 个发音精讲</h1>
+        <div class="subtitle">拼读规律 · 发音要领 · 高频例词 &nbsp;|&nbsp; 点击卡片查看详解,点击 🔊 听发音</div>
+
+        <div class="tips-box">
+            <h3>💡 给家长 / 老师的小贴士</h3>
+            <ul>
+                <li><b>先摸喉咙,再学发音：</b>清辅音(如 /p/ /t/ /k/ /f/ /s/)发音时声带<b>不振动</b>；浊辅音(如 /b/ /d/ /g/ /v/ /z/)发音时声带<b>会振动</b>。让孩子把手放在喉咙上感受区别,这是区分清浊辅音最直观的方法。</li>
+                <li><b>中文母语孩子常见的发音难点：</b>
+                    <br>① /θ/ /ð/(th 咬舌音)—— 中文没有这个音,孩子容易读成 /s/ /z/ 或 /f/ /v/；
+                    <br>② /l/ 与 /n/ —— 部分方言背景的孩子容易混淆；
+                    <br>③ /v/ 与 /w/ —— 中文没有 /v/,容易读成 /w/；
+                    <br>④ /r/ 与 /l/ —— 卷舌 /r/ 不能碰到上颚,与中文"儿化音"不同。
+                    <br>页面底部有专门的<a href="#confuse-section">易混淆音对比练习</a>。
+                </li>
+                <li><b>怎么用这个页面：</b>点击下方任意卡片,查看该辅音的发音要领和拼读规律；红色字母就是发出这个音的关键字母。听 🔊 例词跟读 3 次,再试着拼读同一字母组合的其他单词。</li>
+            </ul>
+        </div>
+
+        <div class="search-row">
+            <input id="search-input" type="text" placeholder="🔍 输入字母组合或单词搜索,例如 ph / th / sh / tion">
+        </div>
+        <div id="search-empty">没有找到匹配的内容,换个关键词试试～</div>
+
+        <div id="quickjump"></div>
+
+        <div id="detail">
+            <div class="detail-placeholder">👆 点击上方任意卡片,查看发音要领、拼读规律与例词</div>
+        </div>
+
+        <h2 id="confuse-section" style="background:#8a4fbf;">
+            易混淆辅音对比练习
+            <span class="cat-en">Commonly Confused Consonant Pairs (for Chinese-speaking learners)</span>
+        </h2>
+        <table class="confuse-table">
+            <thead>
+                <tr>
+                    <th>对比 1</th>
+                    <th>对比 2</th>
+                    <th>区别小贴士</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="pair-word" data-word="think">think<span class="ipa">/θɪŋk/ 想</span></td>
+                    <td class="pair-word" data-word="sink">sink<span class="ipa">/sɪŋk/ 下沉</span></td>
+                    <td class="tip-cell">/θ/ 要把舌尖轻轻放在上下齿之间；/s/ 舌尖不碰牙齿,只是靠近齿龈。舌头露一点点才是 th！</td>
+                </tr>
+                <tr>
+                    <td class="pair-word" data-word="light">light<span class="ipa">/laɪt/ 光</span></td>
+                    <td class="pair-word" data-word="night">night<span class="ipa">/naɪt/ 夜晚</span></td>
+                    <td class="tip-cell">/l/ 舌尖抵上齿龈,气流从舌头两侧流出；/n/ 舌尖也抵上齿龈,但气流从鼻子出来,鼻子会有振动感。</td>
+                </tr>
+                <tr>
+                    <td class="pair-word" data-word="rice">rice<span class="ipa">/raɪs/ 米饭</span></td>
+                    <td class="pair-word" data-word="lice">lice<span class="ipa">/laɪs/ 虱子</span></td>
+                    <td class="tip-cell">/r/ 舌尖卷起,不碰上颚,像含着一颗糖；/l/ 舌尖要碰到上齿龈后方。</td>
+                </tr>
+                <tr>
+                    <td class="pair-word" data-word="vine">vine<span class="ipa">/vaɪn/ 藤</span></td>
+                    <td class="pair-word" data-word="wine">wine<span class="ipa">/waɪn/ 葡萄酒</span></td>
+                    <td class="tip-cell">/v/ 上齿轻咬下唇摩擦出声；/w/ 双唇收圆突出,牙齿不碰嘴唇。</td>
+                </tr>
+                <tr>
+                    <td class="pair-word" data-word="cheap">cheap<span class="ipa">/tʃiːp/ 便宜的</span></td>
+                    <td class="pair-word" data-word="jeep">jeep<span class="ipa">/dʒiːp/ 吉普车</span></td>
+                    <td class="tip-cell">嘴型舌位一样,区别在于声带：/tʃ/ 不振动(清),/dʒ/ 振动(浊)。摸喉咙感受一下！</td>
+                </tr>
+                <tr>
+                    <td class="pair-word" data-word="pig">pig<span class="ipa">/pɪg/ 猪</span></td>
+                    <td class="pair-word" data-word="big">big<span class="ipa">/bɪg/ 大的</span></td>
+                    <td class="tip-cell">嘴型舌位一样,/p/ 不振动(清),/b/ 振动(浊)——所有清浊配对都用这个方法区分。</td>
+                </tr>
+                <tr>
+                    <td class="pair-word" data-word="fat">fat<span class="ipa">/fæt/ 胖的</span></td>
+                    <td class="pair-word" data-word="hat">hat<span class="ipa">/hæt/ 帽子</span></td>
+                    <td class="tip-cell">/f/ 要上齿咬下唇；/h/ 只是喉咙轻轻呼气,牙齿和嘴唇都不用碰。</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <footer class="note">发音小贴士参考国际音标(IPA)与常见英语拼读规律(Phonics),供家庭伴读与低龄英语启蒙使用。</footer>
+    </div>
+
+    <button id="back-to-top" title="回到顶部">↑</button>
+    <audio id="audio-player" style="display:none;"></audio>
+
+    <script src="./data/phonics_elaboration_data.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const t = document.getElementById('__snavTitle');
+            if (t) t.innerHTML = `<a href="../../index.html">Home</a><span class="bc-sep">›</span>`
+                + `<a href="./index_BBC_Phonics.html">国际音标表</a><span class="bc-sep">›</span>`
+                + `<span class="bc-cur">辅音发音精讲</span>`;
+
+            if (typeof CONSONANTS_DATA === 'undefined') {
+                document.getElementById('quickjump').innerHTML = '<p style="text-align:center;color:#b23c17;">数据加载失败 (CONSONANTS_DATA not found)</p>';
+                return;
+            }
+
+            renderQuickjump(CONSONANTS_DATA);
+            wireSearch();
+            wireDetailDelegation();
+            wireQuickjumpDelegation();
+            wireBackToTop();
+        });
+
+        const audioPlayer = document.getElementById('audio-player');
+
+        function playAudio(word) {
+            const clean = word.toLowerCase().replace(/[^a-z']/g, '');
+            const youdaoUrl = `https://dict.youdao.com/dictvoice?type=1&audio=${encodeURIComponent(clean)}`;
+            audioPlayer.src = youdaoUrl;
+            audioPlayer.play().catch(() => {
+                if (window.speechSynthesis) {
+                    const utterance = new SpeechSynthesisUtterance(word);
+                    utterance.lang = 'en-US';
+                    speechSynthesis.speak(utterance);
+                }
+            });
+        }
+
+        // Wrap the substring `mark` (as it literally appears in `word`) in a red <span>.
+        function markHtml(word, mark) {
+            if (!mark) return word;
+            const idx = word.toLowerCase().indexOf(mark.toLowerCase());
+            if (idx === -1) return word;
+            const before = word.slice(0, idx);
+            const target = word.slice(idx, idx + mark.length);
+            const after = word.slice(idx + mark.length);
+            return `${before}<span class="hl">${target}</span>${after}`;
+        }
+
+        function findItem(slug) {
+            return CONSONANTS_DATA.find(d => d.slug === slug);
+        }
+
+        function findCat(key) {
+            return CATEGORY_META.find(c => c.key === key);
+        }
+
+        // ---------------- Quick-pick card grid ----------------
+        function renderQuickjump(data) {
+            const qj = document.getElementById('quickjump');
+            qj.innerHTML = '';
+
+            CATEGORY_META.forEach(cat => {
+                const items = data.filter(d => d.category === cat.key);
+                if (items.length === 0) return;
+
+                const block = document.createElement('div');
+                block.className = 'cat-block';
+                block.dataset.cat = cat.key;
+
+                const h3 = document.createElement('h3');
+                h3.className = 'cat-title';
+                h3.innerHTML = `<span class="dot" style="background:${cat.color}"></span>${cat.cn} (${cat.en}) - ${items.length}
+                    <span class="cat-en-inline">${cat.desc}</span>`;
+                block.appendChild(h3);
+
+                const grid = document.createElement('div');
+                grid.className = 'qj-grid';
+
+                items.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'qj-card';
+                    card.dataset.slug = item.slug;
+                    card.style.background = cat.color;
+                    card.innerHTML = `<div class="qj-symbol">/${item.symbol}/</div><div class="qj-demo">${item.demo.word}</div>`;
+                    grid.appendChild(card);
+                });
+
+                block.appendChild(grid);
+                qj.appendChild(block);
+            });
+        }
+
+        function wireQuickjumpDelegation() {
+            document.getElementById('quickjump').addEventListener('click', function (e) {
+                const card = e.target.closest('.qj-card');
+                if (card) selectConsonant(card.dataset.slug);
+            });
+        }
+
+        // ---------------- Detail (one phoneme at a time) ----------------
+        function selectConsonant(slug) {
+            const item = findItem(slug);
+            if (!item) return;
+            const cat = findCat(item.category);
+
+            const detail = document.getElementById('detail');
+            detail.innerHTML = '';
+            detail.appendChild(buildPhonemeCard(item, cat));
+
+            if (item.pair) {
+                const pairItem = findItem(item.pair);
+                if (pairItem) {
+                    const pairCat = findCat(pairItem.category);
+                    const divider = document.createElement('div');
+                    divider.className = 'pair-divider';
+                    divider.textContent = '🔗 配对音 · 清浊对比,一起学习';
+                    detail.appendChild(divider);
+                    detail.appendChild(buildPhonemeCard(pairItem, pairCat));
+                }
+            }
+
+            document.querySelectorAll('.qj-card').forEach(c => {
+                c.classList.toggle('active', c.dataset.slug === slug);
+            });
+
+            detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function buildPhonemeCard(item, cat) {
+            const card = document.createElement('div');
+            card.className = 'phoneme-card';
+            card.dataset.slug = item.slug;
+
+            const head = document.createElement('div');
+            head.className = 'phoneme-head';
+
+            const ipaBig = document.createElement('div');
+            ipaBig.className = 'ipa-big';
+            ipaBig.textContent = `/${item.symbol}/`;
+            ipaBig.dataset.demo = item.demo.word;
+            head.appendChild(ipaBig);
+
+            const badge = document.createElement('span');
+            if (item.voiced === true) {
+                badge.className = 'badge voiced';
+                badge.textContent = '浊 Voiced 📳';
+            } else if (item.voiced === false) {
+                badge.className = 'badge voiceless';
+                badge.textContent = '清 Voiceless 🤫';
+            } else {
+                badge.className = 'badge nasal-voiced';
+                badge.textContent = '浊 Voiced 📳';
+            }
+            head.appendChild(badge);
+
+            if (item.pair) {
+                const pairLink = document.createElement('a');
+                pairLink.className = 'pair-link';
+                pairLink.href = '#';
+                pairLink.dataset.slug = item.pair;
+                pairLink.textContent = `配对音 → /${item.pairSymbol}/`;
+                head.appendChild(pairLink);
+            }
+
+            const headText = document.createElement('div');
+            headText.className = 'head-text';
+            headText.innerHTML = `<div class="tip-line">👄 ${item.tip}</div>
+                <div class="mnemonic-line">✨ ${item.mnemonic}</div>`;
+            head.appendChild(headText);
+
+            const demo = document.createElement('div');
+            demo.className = 'demo-word';
+            demo.dataset.word = item.demo.word;
+            demo.innerHTML = `例词: <b>${markHtml(item.demo.word, item.demo.mark)}</b> /${item.demo.ipa}/ <span class="cn">${item.demo.cn}</span> 🔊`;
+            head.appendChild(demo);
+
+            card.appendChild(head);
+
+            const groupsWrap = document.createElement('div');
+            groupsWrap.className = 'spelling-groups';
+
+            item.spellings.forEach(group => {
+                const g = document.createElement('div');
+                g.className = 'spelling-group';
+                g.style.borderLeftColor = cat.color;
+
+                const chip = document.createElement('span');
+                chip.className = 'pattern-chip';
+                chip.style.background = cat.color;
+                chip.textContent = group.pattern;
+                g.appendChild(chip);
+
+                if (group.note) {
+                    const note = document.createElement('div');
+                    note.className = 'pattern-note';
+                    note.textContent = group.note;
+                    g.appendChild(note);
+                }
+
+                const wl = document.createElement('div');
+                wl.className = 'word-list';
+                group.words.forEach(w => {
+                    const wc = document.createElement('div');
+                    wc.className = 'word-card';
+                    wc.dataset.word = w.word;
+                    wc.innerHTML = `<span class="w">${markHtml(w.word, w.mark)} 🔊</span><span class="ipa">/${w.ipa}/</span><span class="cn">${w.cn}</span>`;
+                    wl.appendChild(wc);
+                });
+                g.appendChild(wl);
+                groupsWrap.appendChild(g);
+            });
+
+            card.appendChild(groupsWrap);
+            return card;
+        }
+
+        function wireDetailDelegation() {
+            document.getElementById('detail').addEventListener('click', function (e) {
+                const pairLink = e.target.closest('.pair-link');
+                if (pairLink) {
+                    e.preventDefault();
+                    selectConsonant(pairLink.dataset.slug);
+                    return;
+                }
+                const wordCard = e.target.closest('.word-card');
+                if (wordCard) {
+                    playAudio(wordCard.dataset.word);
+                    return;
+                }
+                const ipaBig = e.target.closest('.ipa-big');
+                if (ipaBig) {
+                    playAudio(ipaBig.dataset.demo);
+                    return;
+                }
+                const demoWord = e.target.closest('.demo-word');
+                if (demoWord) {
+                    playAudio(demoWord.dataset.word);
+                }
+            });
+
+            document.querySelector('.confuse-table').addEventListener('click', function (e) {
+                const cell = e.target.closest('.pair-word');
+                if (cell) playAudio(cell.dataset.word);
+            });
+        }
+
+        // ---------------- Search (filters the card grid) ----------------
+        function haystackFor(item) {
+            const parts = [item.symbol, item.demo.word, item.demo.cn];
+            item.spellings.forEach(g => {
+                parts.push(g.pattern);
+                g.words.forEach(w => parts.push(w.word, w.cn));
+            });
+            return parts.join(' ').toLowerCase();
+        }
+
+        function wireSearch() {
+            const input = document.getElementById('search-input');
+            const emptyMsg = document.getElementById('search-empty');
+            input.addEventListener('input', function () {
+                const q = input.value.trim().toLowerCase();
+                let anyVisible = false;
+
+                document.querySelectorAll('.qj-card').forEach(card => {
+                    const item = findItem(card.dataset.slug);
+                    const match = q === '' || haystackFor(item).includes(q);
+                    card.style.display = match ? '' : 'none';
+                    if (match) anyVisible = true;
+                });
+
+                document.querySelectorAll('.cat-block').forEach(block => {
+                    const anyInCat = Array.from(block.querySelectorAll('.qj-card'))
+                        .some(c => c.style.display !== 'none');
+                    block.style.display = anyInCat ? '' : 'none';
+                });
+
+                emptyMsg.style.display = (q !== '' && !anyVisible) ? 'block' : 'none';
+            });
+        }
+
+        // ---------------- Back to top ----------------
+        function wireBackToTop() {
+            const btn = document.getElementById('back-to-top');
+            window.addEventListener('scroll', function () {
+                btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
+            });
+            btn.addEventListener('click', function () {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    </script>
+</body>
+
+</html>
