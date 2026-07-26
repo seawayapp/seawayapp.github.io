@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>英文句子字帖生成器</title>
+    <script src="../../nav-top.js"></script>
+    <style>
+      @font-face {
+        font-family: "HengShuiA";
+        src: url("hengshui.ttf") format("truetype");
+        font-display: swap;
+      }
+
+      :root {
+        --blue: #3b82f6;
+        --blue-dim: rgba(59, 130, 246, 0.1);
+        --text: #1e293b;
+        --text-muted: #64748b;
+        --bg: #f1f5f9;
+        --surface: #ffffff;
+        --border: #e2e8f0;
+        --radius: 14px;
+        --shadow: 0 2px 14px rgba(0, 0, 0, 0.06);
+        --ui-font: "Inter", "Segoe UI", system-ui, sans-serif;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: var(--ui-font);
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      .app {
+        display: flex;
+        align-items: flex-start;
+        gap: 24px;
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 22px 20px 60px;
+      }
+
+      /* ── Control panel ── */
+      .panel {
+        width: 320px;
+        flex-shrink: 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 20px;
+        position: sticky;
+        top: 76px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
+        color: var(--blue);
+        background: var(--blue-dim);
+        padding: 4px 10px;
+        border-radius: 20px;
+        margin-bottom: 10px;
+      }
+
+      .panel h1 {
+        font-size: 1.15rem;
+        margin: 0 0 4px;
+      }
+
+      .panel .sub {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin: 0 0 16px;
+        line-height: 1.5;
+      }
+
+      .field {
+        margin-bottom: 14px;
+      }
+
+      .field label {
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+      }
+
+      textarea#inputText {
+        width: 100%;
+        min-height: 140px;
+        resize: vertical;
+        padding: 10px 12px;
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        font-size: 14px;
+        font-family: var(--ui-font);
+        line-height: 1.5;
+      }
+
+      textarea#inputText:focus,
+      select:focus {
+        outline: none;
+        border-color: var(--blue);
+      }
+
+      select {
+        width: 100%;
+        padding: 8px 10px;
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        font-size: 13.5px;
+        background: var(--surface);
+        color: var(--text);
+      }
+
+      .toggle-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.82rem;
+        padding: 6px 2px;
+      }
+
+      .toggle-row input {
+        width: 17px;
+        height: 17px;
+        accent-color: var(--blue);
+      }
+
+      .stat {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        background: #f8fafc;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 8px 10px;
+        margin: 4px 0 14px;
+        line-height: 1.5;
+      }
+
+      .stat.warn {
+        color: #b45309;
+        background: #fffbeb;
+        border-color: #fde68a;
+      }
+
+      .btn-row {
+        display: flex;
+        gap: 8px;
+      }
+
+      button.act {
+        flex: 1;
+        border: none;
+        border-radius: 10px;
+        padding: 11px 10px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          filter 0.15s,
+          transform 0.1s;
+      }
+
+      button.act:active {
+        transform: scale(0.97);
+      }
+
+      #btnGenerate {
+        background: var(--blue-dim);
+        color: var(--blue);
+      }
+
+      #btnPrint {
+        background: var(--blue);
+        color: white;
+      }
+
+      button.act:hover {
+        filter: brightness(1.05);
+      }
+
+      .mobile-note {
+        display: none;
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        margin-top: 10px;
+        text-align: center;
+      }
+
+      /* ── A4 page preview ── */
+      .page-scroll {
+        flex: 1;
+        min-width: 0;
+        overflow-x: auto;
+        padding-bottom: 10px;
+      }
+
+      .page {
+        width: 210mm;
+        height: 297mm;
+        margin: 0 auto;
+        background: white;
+        box-shadow: var(--shadow);
+        box-sizing: border-box;
+        padding: 10mm 12mm 8mm;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .name-date {
+        display: none;
+        align-items: baseline;
+        gap: 26px;
+        font-family: var(--ui-font);
+        font-size: 11px;
+        color: #94a3b8;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 6px;
+        margin-bottom: 3mm;
+        height: 9mm;
+      }
+
+      .name-date span {
+        display: inline-block;
+        border-bottom: 1px solid #cbd5e1;
+        min-width: 70px;
+        height: 12px;
+      }
+
+      #rowsContainer {
+        position: relative;
+      }
+
+      .practice-row {
+        position: relative;
+        width: 100%;
+        height: var(--row-h);
+        margin-bottom: var(--row-gap);
+      }
+
+      .practice-row.has-text {
+        background: var(--row-tint);
+        border-radius: 2px;
+      }
+
+      .practice-row.has-text::before {
+        content: "";
+        position: absolute;
+        left: -3mm;
+        top: 0;
+        bottom: 0;
+        width: 1.1mm;
+        border-radius: 1mm;
+        background: var(--row-accent);
+      }
+
+      .guide {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 0;
+      }
+
+      /* Top line: solid blue — where capitals / ascenders start */
+      .guide.l0 {
+        top: 0;
+        border-top: 1.1px solid rgba(37, 99, 235, 0.8);
+      }
+
+      /* x-height guide: light dashed blue — top of lowercase body */
+      .guide.l1 {
+        top: 50%;
+        border-top: 1px dashed rgba(37, 99, 235, 0.35);
+      }
+
+      /* baseline: the line letters sit on — heaviest, darkest, doubles as the row's bottom edge */
+      .guide.l2 {
+        top: 100%;
+        border-top: 1.4px solid rgba(30, 64, 175, 1);
+      }
+
+      .text-box {
+        position: absolute;
+        top: 0;
+        left: 1mm;
+        right: 1mm;
+        height: 100%;
+        display: flex;
+        align-items: flex-end;
+        overflow: visible;
+        white-space: pre;
+        font-family: "HengShuiA", cursive;
+        font-size: calc(var(--row-h) * 0.85);
+        line-height: 1;
+        letter-spacing: 0.4px;
+      }
+
+      .text-box.model {
+        color: #9a9a9a;
+        font-weight: 400;
+      }
+
+      .row-idx {
+        position: absolute;
+        left: -7mm;
+        top: 50%;
+        transform: translateY(-50%);
+        font-family: var(--ui-font);
+        font-size: 2.3mm;
+        color: #b6c2d1;
+      }
+
+      @media (max-width: 900px) {
+        .app {
+          flex-direction: column;
+        }
+
+        .panel {
+          width: 100%;
+          position: static;
+        }
+
+        .mobile-note {
+          display: block;
+        }
+      }
+
+      @media print {
+        @page {
+          size: A4;
+          margin: 0;
+        }
+
+        body {
+          background: none;
+          padding-top: 0 !important;
+        }
+
+        .app {
+          display: block;
+          max-width: none;
+          padding: 0;
+          margin: 0;
+        }
+
+        .panel,
+        .mobile-note,
+        .__snav {
+          display: none !important;
+        }
+
+        .page-scroll {
+          overflow: visible;
+          padding: 0;
+        }
+
+        .page {
+          box-shadow: none;
+          margin: 0;
+        }
+
+        /* Keep the printed sentences in the same handwriting font as the on-screen preview */
+        .text-box {
+          font-family: "HengShuiA", cursive !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="app">
+      <div class="panel">
+        <div class="eyebrow">Copybook Generator</div>
+        <h1>英文句子字帖</h1>
+        <p class="sub">
+          每行输入一个单词或句子，自动排满一整张 A4
+          三线两格字帖，标题栏已省略以容纳更多书写行。
+        </p>
+
+        <div class="field">
+          <label>练习内容（每行一句 / One per line）</label>
+          <textarea
+            id="inputText"
+            placeholder="The quick brown fox jumps over the lazy dog.
+Practice makes perfect.
+Hengshui English handwriting."
+          ></textarea>
+        </div>
+
+        <div class="field">
+          <label>行距密度 Density（决定每页行数）</label>
+          <select id="densitySelect">
+            <option value="compact">紧凑 Compact</option>
+            <option value="standard" selected>标准 Standard</option>
+            <option value="spacious">宽松 Spacious</option>
+          </select>
+        </div>
+
+        <div class="toggle-row">
+          <span>姓名/日期栏 Name &amp; date line</span>
+          <input type="checkbox" id="headerToggle" />
+        </div>
+
+        <div class="stat" id="statRow"></div>
+
+        <div class="btn-row">
+          <button class="act" id="btnGenerate">生成 Generate</button>
+          <button class="act" id="btnPrint">🖨 打印 Print</button>
+        </div>
+
+        <p class="mobile-note">
+          建议使用电脑浏览器打印以获得最佳 A4 排版效果。
+        </p>
+      </div>
+
+      <div class="page-scroll">
+        <div class="page" id="page">
+          <div class="name-date" id="headerLine">
+            <span>Name: <span></span></span>
+            <span>Date: <span></span></span>
+          </div>
+          <div id="rowsContainer"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const DENSITY = {
+        compact: { rowH: 9, gap: 4.4 },
+        standard: { rowH: 11, gap: 6 },
+        spacious: { rowH: 14, gap: 7.2 },
+      };
+
+      // A rotating palette so consecutive sentences are visibly different,
+      // not just alternating light/lighter.
+      const PALETTE = [
+        { tint: "rgba(59, 130, 246, 0.09)", accent: "#3b82f6" }, // blue
+        { tint: "rgba(16, 185, 129, 0.09)", accent: "#10b981" }, // green
+        { tint: "rgba(245, 158, 11, 0.10)", accent: "#f59e0b" }, // amber
+        { tint: "rgba(168, 85, 247, 0.09)", accent: "#a855f7" }, // purple
+        { tint: "rgba(236, 72, 153, 0.09)", accent: "#ec4899" }, // rose
+      ];
+
+      const inputText = document.getElementById("inputText");
+      const densitySelect = document.getElementById("densitySelect");
+      const headerToggle = document.getElementById("headerToggle");
+      const statRow = document.getElementById("statRow");
+      const headerLine = document.getElementById("headerLine");
+      const container = document.getElementById("rowsContainer");
+
+      // Each line the user types becomes the very next row — no gap, no
+      // repeats. Any rows left over after the last typed line become
+      // blank ruled lines at the bottom for extra freehand practice.
+      // Each sentence gets its model row, then exactly one blank ruled
+      // row right below it to copy the sentence into. Any rows left
+      // over at the end become extra blank practice lines.
+      function buildRowsPlan(totalRows, sentences) {
+        const plan = [];
+        let warning = "";
+        let shownCount = 0;
+
+        for (let i = 0; i < sentences.length; i++) {
+          const remaining = totalRows - plan.length;
+          if (remaining >= 2) {
+            plan.push({ text: sentences[i], isModel: true, blockIndex: i });
+            plan.push({ blank: true });
+            shownCount++;
+          } else if (remaining === 1) {
+            plan.push({ text: sentences[i], isModel: true, blockIndex: i });
+            shownCount++;
+            break;
+          } else {
+            break;
+          }
+        }
+
+        if (shownCount < sentences.length) {
+          warning = `句子较多：当前设置每页最多容纳 ${shownCount} 句（每句 1 行模板 + 1 行空白临摹）。可精简内容或改用紧凑密度。`;
+        }
+
+        for (let i = plan.length; i < totalRows; i++)
+          plan.push({ blank: true });
+
+        return { plan, warning };
+      }
+
+      function generateRows() {
+        const density = densitySelect.value;
+        const preset = DENSITY[density];
+        const includeHeader = headerToggle.checked;
+
+        headerLine.style.display = includeHeader ? "flex" : "none";
+
+        const PAGE_H = 297,
+          PAD_TOP = 10,
+          PAD_BOTTOM = 8;
+        const headerBudget = includeHeader ? 12 : 0;
+        const contentH = PAGE_H - PAD_TOP - PAD_BOTTOM - headerBudget;
+        const totalRows = Math.max(
+          1,
+          Math.floor((contentH + preset.gap) / (preset.rowH + preset.gap)),
+        );
+
+        const sentences = inputText.value
+          .split("\n")
+          .map((s) => s.trim())
+          .filter((s) => s.length > 0);
+        const { plan, warning } = buildRowsPlan(totalRows, sentences);
+
+        container.style.setProperty("--row-h", preset.rowH + "mm");
+        container.style.setProperty("--row-gap", preset.gap + "mm");
+        container.innerHTML = "";
+
+        plan.forEach((r) => {
+          const row = document.createElement("div");
+          row.className = "practice-row" + (r.isModel ? " has-text" : "");
+          if (r.isModel) {
+            const color = PALETTE[r.blockIndex % PALETTE.length];
+            row.style.setProperty("--row-tint", color.tint);
+            row.style.setProperty("--row-accent", color.accent);
+          }
+          row.innerHTML =
+            '<span class="guide l0"></span><span class="guide l1"></span><span class="guide l2"></span>';
+
+          if (!r.blank) {
+            const tb = document.createElement("div");
+            tb.className = "text-box model";
+            tb.textContent = r.text;
+            row.appendChild(tb);
+          }
+          if (r.isModel) {
+            const lab = document.createElement("span");
+            lab.className = "row-idx";
+            lab.textContent = r.blockIndex + 1;
+            row.appendChild(lab);
+          }
+          container.appendChild(row);
+        });
+
+        if (warning) {
+          statRow.textContent = warning;
+          statRow.classList.add("warn");
+        } else {
+          const extraBlank = Math.max(0, totalRows - sentences.length * 2);
+          statRow.textContent = sentences.length
+            ? `本页可容纳 ${totalRows} 行 · 共 ${sentences.length} 句（每句 1 行模板 + 1 行临摹）· 额外 ${extraBlank} 行空白练习`
+            : `本页可容纳 ${totalRows} 行 · 未输入内容，已生成空白练字行`;
+          statRow.classList.remove("warn");
+        }
+      }
+
+      let debounceId;
+      function scheduleGenerate() {
+        clearTimeout(debounceId);
+        debounceId = setTimeout(generateRows, 250);
+      }
+
+      inputText.addEventListener("input", scheduleGenerate);
+      densitySelect.addEventListener("change", generateRows);
+      headerToggle.addEventListener("change", generateRows);
+      document
+        .getElementById("btnGenerate")
+        .addEventListener("click", generateRows);
+      document
+        .getElementById("btnPrint")
+        .addEventListener("click", () => window.print());
+
+      window.addEventListener("load", generateRows);
+    </script>
+  </body>
+</html>

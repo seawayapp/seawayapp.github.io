@@ -126,4 +126,11 @@ var mainData = [
     category: "file_slide_v2",
     filename: "gl_data_P113L9_P115L8",
   },
+  {
+    title: "P152L2 - P155L7 敬礼胜尊---增上慢耳",
+    subtitle: "中士道 - 希求解脱",
+    testdate: "",
+    category: "file_slide_v2",
+    filename: "gl_data_P152L2_P155L7",
+  },
 ];

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>英文衡水体字帖生成器</title>
+    <style>
+      /* 引入自定义字体文件（如果你有 Hengshui.ttf，取消下面注释） */
+
+      @font-face {
+        font-family: "HengShui";
+        src: url("舒窈衡水体.ttf") format("truetype");
+      }
+
+      body {
+        font-family: "HengShui", "Segoe Print", "Comic Sans MS", cursive;
+        background-color: #f5f5f5;
+        padding: 20px;
+      }
+
+      .page {
+        width: 210mm; /* A4 纸宽度 */
+        min-height: 297mm;
+        margin: 0 auto;
+        background: white;
+        padding: 20mm 15mm;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        box-sizing: border-box;
+      }
+
+      /* 四线三格核心样式 */
+      .four-line-grid {
+        height: 48px; /* 调整三格的高度 */
+        line-height: 48px;
+        font-size: 32px; /* 字体大小适配格线 */
+        letter-spacing: 2px;
+        color: #333;
+        padding-left: 10px;
+        margin-bottom: 25px;
+
+        /* 用 CSS 画出四条线：第一/四条虚线或浅实线，中间线突出 */
+        background-image:
+          linear-gradient(to bottom, #e57373 1px, transparent 1px),
+          /* 顶线 (红/浅灰) */
+          linear-gradient(to bottom, #64b5f6 1px, transparent 1px),
+          /* 中高线 */ linear-gradient(to bottom, #64b5f6 1px, transparent 1px),
+          /* 基线 */ linear-gradient(to bottom, #e57373 1px, transparent 1px); /* 底线 */
+
+        background-size: 100% 12px; /* 每一格 12px，共 3 格 = 36px */
+        background-repeat: no-repeat;
+        background-position:
+          0 6px,
+          0 18px,
+          0 30px,
+          0 42px;
+      }
+
+      /* 描红/临摹效果 (浅色字) */
+      .tracing {
+        color: #ccc !important;
+      }
+
+      /* 打印优化 */
+      @media print {
+        body {
+          background: none;
+          padding: 0;
+        }
+        .page {
+          box-shadow: none;
+          margin: 0;
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <h2 style="text-align: center; font-family: sans-serif; color: #666">
+        衡水体英文练字帖
+      </h2>
+
+      <!-- 示范行 -->
+      <div class="four-line-grid">
+        A quick brown fox jumps over the lazy dog.
+      </div>
+
+      <!-- 描红浅色行 -->
+      <div class="four-line-grid tracing">
+        A quick brown fox jumps over the lazy dog.
+      </div>
+
+      <!-- 空白练习行 -->
+      <div class="four-line-grid"></div>
+      <div class="four-line-grid"></div>
+      <div class="four-line-grid"></div>
+    </div>
+  </body>
+</html>

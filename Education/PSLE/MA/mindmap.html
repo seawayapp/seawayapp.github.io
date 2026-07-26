@@ -191,6 +191,12 @@
     background: var(--chip-bg); color: var(--text); font-weight: 700; font-size: 0.85rem; cursor: pointer; margin-top: 6px;
   }
   .mark-btn.on { background: var(--good-bg); border-color: var(--good); color: var(--good); }
+  .drawer-close-bottom {
+    display: block; width: 100%; margin-top: 20px; padding: 13px 16px; font-size: 0.92rem;
+    font-weight: 700; text-align: center; background: var(--accent); color: #fff; border: none;
+    border-radius: 10px; cursor: pointer;
+  }
+  .drawer-close-bottom:hover { opacity: .9; }
 
   .comparisons { margin: 30px 0; }
   .comparisons h2 { font-size: 1.1rem; margin: 0 0 10px; }
@@ -379,7 +385,7 @@ function buildTree() {
         const items = grouped.get(cat);
         const color = colorFor(ci, palette);
         return `
-          <div class="branch" data-cat="${cat}" style="--branch-color:${color}">
+          <div class="branch collapsed" data-cat="${cat}" style="--branch-color:${color}">
             <div class="node category-node" data-toggle="${cat}">
               <span class="caret">▾</span>
               <span>${cat}</span>
@@ -527,6 +533,7 @@ function openDrawer(id) {
       </div>
     ` : ''}
     <button class="mark-btn ${progress[t.id] ? 'on' : ''}" id="markBtn">${progress[t.id] ? '✓ Reviewed' : 'Mark as Understood'}</button>
+    <button class="drawer-close-bottom" id="drawerCloseBottom">Close</button>
   `;
 
   drawerContent.querySelectorAll('.qa .reveal-btn').forEach(btn => {
@@ -541,6 +548,7 @@ function openDrawer(id) {
     if (leaf) leaf.classList.toggle('reviewed', !!progress[t.id]);
     updateProgress(data.topics);
   });
+  document.getElementById('drawerCloseBottom').addEventListener('click', closeDrawer);
 
   overlay.classList.add('open');
   drawer.classList.add('open');
@@ -573,7 +581,8 @@ function openAllFormulas() {
       items.push(`<div class="section"><h3>${t.category.replace(/^Chapter (\d+):.*/, 'Ch $1')} · ${t.en}</h3><div class="body">${s.body}</div></div>`);
     });
   });
-  drawerContent.innerHTML = `<h2>All Formulas — ${GRADES[currentGrade].label}</h2><div class="summary">Every formula across the syllabus, in one place.</div>${items.join('')}`;
+  drawerContent.innerHTML = `<h2>All Formulas — ${GRADES[currentGrade].label}</h2><div class="summary">Every formula across the syllabus, in one place.</div>${items.join('')}<button class="drawer-close-bottom" id="drawerCloseBottom">Close</button>`;
+  document.getElementById('drawerCloseBottom').addEventListener('click', closeDrawer);
   overlay.classList.add('open');
   drawer.classList.add('open');
   drawer.scrollTop = 0;
