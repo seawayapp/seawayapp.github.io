@@ -332,7 +332,190 @@
 
         .demo-word .cn { color: #666; }
 
-        /* ---------- Spelling groups ---------- */
+        /* ---------- Mindmap (word display) ---------- */
+        .mm-outer {
+            position: relative;
+        }
+
+        .mm-export-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 5;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 14px;
+            border: 1px solid #d8c39a;
+            background: #fff;
+            color: #7a5c3c;
+            cursor: pointer;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .mm-export-btn:hover {
+            background: #fff3d6;
+        }
+
+        .mm-export-btn:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        .mm-canvas {
+            position: relative;
+            overflow-x: auto;
+            overflow-y: hidden;
+            border: 1px solid #e8d5b5;
+            border-radius: 14px;
+            background-color: #fbf8f1;
+            background-image: radial-gradient(#e8d5b5 1px, transparent 1px);
+            background-size: 16px 16px;
+            padding: 30px 40px;
+        }
+
+        .mm-connectors {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .mm-tree-root {
+            display: flex;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            width: max-content;
+        }
+
+        .mm-branches {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-left: 56px;
+        }
+
+        .mm-branch {
+            display: flex;
+            align-items: center;
+        }
+
+        .mm-leaves {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-left: 56px;
+        }
+
+        .mm-branch.collapsed .mm-leaves {
+            display: none;
+        }
+
+        .mm-node {
+            border-radius: 10px;
+            cursor: default;
+            user-select: none;
+            font-family: Arial, sans-serif;
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+        }
+
+        .mm-root {
+            font-family: "Arial Unicode MS", Arial, sans-serif;
+            color: #fff;
+            font-weight: bold;
+            font-size: 26px;
+            padding: 14px 22px;
+            border-radius: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .mm-root:hover {
+            transform: scale(1.05);
+        }
+
+        .mm-category {
+            font-weight: bold;
+            font-size: 16px;
+            color: #fff;
+            padding: 6px 14px;
+            border-left: 5px solid rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .mm-category:hover {
+            filter: brightness(1.1);
+        }
+
+        .mm-category .mm-caret {
+            font-size: 12px;
+            transition: transform 0.15s ease;
+            flex-shrink: 0;
+        }
+
+        .mm-branch.collapsed .mm-category .mm-caret {
+            transform: rotate(-90deg);
+        }
+
+        .mm-category .mm-label {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mm-category .mm-note {
+            display: block;
+            font-weight: normal;
+            font-size: 11px;
+            opacity: 0.9;
+            margin-top: 2px;
+            white-space: normal;
+            max-width: 220px;
+        }
+
+        .mm-leaf {
+            background: #fff;
+            border: 1px solid #eadfc4;
+            border-left: 4px solid #eadfc4;
+            padding: 6px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            white-space: nowrap;
+        }
+
+        .mm-leaf:hover {
+            background: #fff3d6;
+            transform: translateX(2px);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .mm-leaf .w {
+            font-weight: bold;
+            color: #1b1b1b;
+            font-size: 15px;
+        }
+
+        .mm-leaf .ipa {
+            color: #0066cc;
+        }
+
+        .mm-leaf .cn {
+            color: #666;
+        }
+
+        /* Highlight: the letters that produce the target sound */
+        .hl {
+            color: #d40000;
+            font-weight: bold;
+        }
+
+        /* ---------- Table view (alternative to the mindmap) ---------- */
         .spelling-groups {
             display: flex;
             flex-wrap: wrap;
@@ -405,10 +588,56 @@
             color: #666;
         }
 
-        /* Highlight: the letters that produce the target sound */
-        .hl {
-            color: #d40000;
+        /* ---------- View toggle ---------- */
+        .view-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 4px 0 18px;
+        }
+
+        .view-toggle-btn {
+            font-family: Arial, sans-serif;
+            font-size: 13px;
             font-weight: bold;
+            padding: 8px 18px;
+            border-radius: 18px;
+            border: 2px solid #e8d5b5;
+            background: #fff;
+            color: #7a5c3c;
+            cursor: pointer;
+        }
+
+        .view-toggle-btn:hover {
+            border-color: #c77b1e;
+        }
+
+        .view-toggle-btn.active {
+            background: #c77b1e;
+            border-color: #c77b1e;
+            color: #fff;
+        }
+
+        .view-toggle.mini {
+            justify-content: flex-start;
+            margin: 0 0 12px;
+        }
+
+        .view-toggle.mini .view-toggle-btn {
+            font-size: 12px;
+            padding: 5px 12px;
+        }
+
+        @media (max-width: 700px) {
+            .mm-connectors { display: none; }
+            .mm-canvas { overflow-x: hidden; padding: 14px; background-image: none; }
+            .mm-tree-root { flex-direction: column; align-items: stretch; width: 100%; }
+            .mm-root { width: 100%; text-align: center; }
+            .mm-branches { margin-left: 0; width: 100%; margin-top: 14px; }
+            .mm-branch { flex-direction: column; align-items: stretch; }
+            .mm-category { width: 100%; white-space: normal; }
+            .mm-leaves { margin-left: 14px; border-left: 2px solid #e8d5b5; padding-left: 10px; margin-top: 8px; }
+            .mm-leaf { white-space: normal; }
         }
 
         /* ---------- Bonus: confusable pairs ---------- */
@@ -490,8 +719,8 @@
             .container { padding: 12px; }
             h1 { font-size: 1.5em; }
             .ipa-big { font-size: 28px; padding: 4px 12px; }
-            .spelling-group { flex: 1 1 100%; }
             .qj-grid { grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); }
+            .spelling-group { flex: 1 1 100%; }
         }
     </style>
 </head>
@@ -500,6 +729,11 @@
     <div class="container">
         <h1>辅音 (Consonants) - 28 个发音精讲</h1>
         <div class="subtitle">拼读规律 · 发音要领 · 高频例词 &nbsp;|&nbsp; 点击卡片查看详解,点击 🔊 听发音</div>
+
+        <div class="view-toggle" id="view-toggle">
+            <button type="button" class="view-toggle-btn" data-mode="mindmap">🗺️ 思维导图</button>
+            <button type="button" class="view-toggle-btn" data-mode="table">📋 表格视图</button>
+        </div>
 
         <div class="tips-box">
             <h3>💡 给家长 / 老师的小贴士</h3>
@@ -602,6 +836,12 @@
             wireDetailDelegation();
             wireQuickjumpDelegation();
             wireBackToTop();
+            wireViewToggle();
+
+            window.addEventListener('resize', () => requestAnimationFrame(redrawAllMindmaps));
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(() => requestAnimationFrame(redrawAllMindmaps));
+            }
         });
 
         const audioPlayer = document.getElementById('audio-player');
@@ -682,9 +922,14 @@
         }
 
         // ---------------- Detail (one phoneme at a time) ----------------
-        function selectConsonant(slug) {
+        let currentSlug = null;
+        let viewMode = localStorage.getItem('phonicsViewMode') || 'mindmap';
+
+        function selectConsonant(slug, opts) {
+            opts = opts || {};
             const item = findItem(slug);
             if (!item) return;
+            currentSlug = slug;
             const cat = findCat(item.category);
 
             const detail = document.getElementById('detail');
@@ -707,7 +952,44 @@
                 c.classList.toggle('active', c.dataset.slug === slug);
             });
 
-            detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            requestAnimationFrame(redrawAllMindmaps);
+            if (opts.scroll !== false) {
+                detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function setViewMode(mode) {
+            viewMode = mode;
+            localStorage.setItem('phonicsViewMode', mode);
+            document.querySelectorAll('.view-toggle-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.mode === mode);
+            });
+            if (currentSlug) selectConsonant(currentSlug, { scroll: false });
+        }
+
+        function wireViewToggle() {
+            document.querySelectorAll('.view-toggle-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.mode === viewMode);
+            });
+            // Delegated on document so it also catches the per-card mini toggles,
+            // which are (re)created dynamically every time a card is rendered.
+            document.addEventListener('click', function (e) {
+                const btn = e.target.closest('.view-toggle-btn');
+                if (btn) setViewMode(btn.dataset.mode);
+            });
+        }
+
+        // Builds a mindmap/table toggle control. `extraClass` lets the per-card
+        // copies (placed right above each word display) render more compactly
+        // than the one pinned near the top of the page.
+        function buildViewToggle(extraClass) {
+            const wrap = document.createElement('div');
+            wrap.className = 'view-toggle' + (extraClass ? ' ' + extraClass : '');
+            wrap.innerHTML = `
+                <button type="button" class="view-toggle-btn${viewMode === 'mindmap' ? ' active' : ''}" data-mode="mindmap">🗺️ 思维导图</button>
+                <button type="button" class="view-toggle-btn${viewMode === 'table' ? ' active' : ''}" data-mode="table">📋 表格视图</button>
+            `;
+            return wrap;
         }
 
         function buildPhonemeCard(item, cat) {
@@ -759,7 +1041,78 @@
             head.appendChild(demo);
 
             card.appendChild(head);
+            card.appendChild(buildViewToggle('mini'));
+            card.appendChild(viewMode === 'table' ? buildTableView(item, cat) : buildMindmap(item, cat));
+            return card;
+        }
 
+        // ---------------- Mindmap (word display) ----------------
+        // Root = phoneme symbol, branches = spelling patterns, leaves = example words.
+        // Layout/connector logic mirrors Education/PSLE/MA/mindmap.html's tree-canvas.
+        function buildMindmap(item, cat) {
+            const canvas = document.createElement('div');
+            canvas.className = 'mm-canvas';
+
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('class', 'mm-connectors');
+            canvas.appendChild(svg);
+
+            const treeRoot = document.createElement('div');
+            treeRoot.className = 'mm-tree-root';
+
+            const root = document.createElement('div');
+            root.className = 'mm-node mm-root';
+            root.style.background = cat.color;
+            root.textContent = `/${item.symbol}/`;
+            root.dataset.word = item.demo.word;
+            treeRoot.appendChild(root);
+
+            const branches = document.createElement('div');
+            branches.className = 'mm-branches';
+
+            item.spellings.forEach(group => {
+                const branch = document.createElement('div');
+                branch.className = 'mm-branch';
+
+                const category = document.createElement('div');
+                category.className = 'mm-node mm-category';
+                category.style.background = cat.color;
+                category.innerHTML = `<span class="mm-caret">▾</span><span class="mm-label">${group.pattern}${group.note ? `<span class="mm-note">${group.note}</span>` : ''}</span>`;
+                branch.appendChild(category);
+
+                const leaves = document.createElement('div');
+                leaves.className = 'mm-leaves';
+                group.words.forEach(w => {
+                    const leaf = document.createElement('div');
+                    leaf.className = 'mm-node mm-leaf';
+                    leaf.style.borderLeftColor = cat.color;
+                    leaf.dataset.word = w.word;
+                    leaf.innerHTML = `<span class="w">${markHtml(w.word, w.mark)} 🔊</span><span class="ipa">/${w.ipa}/</span><span class="cn">${w.cn}</span>`;
+                    leaves.appendChild(leaf);
+                });
+                branch.appendChild(leaves);
+                branches.appendChild(branch);
+            });
+
+            treeRoot.appendChild(branches);
+            canvas.appendChild(treeRoot);
+
+            const outer = document.createElement('div');
+            outer.className = 'mm-outer';
+
+            const exportBtn = document.createElement('button');
+            exportBtn.type = 'button';
+            exportBtn.className = 'mm-export-btn';
+            exportBtn.dataset.slug = item.slug;
+            exportBtn.textContent = '⬇️ 保存图片';
+            outer.appendChild(exportBtn);
+
+            outer.appendChild(canvas);
+            return outer;
+        }
+
+        // ---------------- Table view (alternative to the mindmap) ----------------
+        function buildTableView(item, cat) {
             const groupsWrap = document.createElement('div');
             groupsWrap.className = 'spelling-groups';
 
@@ -794,8 +1147,173 @@
                 groupsWrap.appendChild(g);
             });
 
-            card.appendChild(groupsWrap);
-            return card;
+            return groupsWrap;
+        }
+
+        function mmRectRelativeTo(el, container) {
+            const r = el.getBoundingClientRect();
+            const c = container.getBoundingClientRect();
+            return { left: r.left - c.left + container.scrollLeft, top: r.top - c.top + container.scrollTop, width: r.width, height: r.height };
+        }
+
+        function mmCurve(x1, y1, x2, y2, color) {
+            const mx = (x1 + x2) / 2;
+            return `<path d="M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}" stroke="${color}" stroke-width="2" fill="none" opacity="0.55" stroke-linecap="round"/>`;
+        }
+
+        function drawMindmapConnectors(canvas) {
+            const svg = canvas.querySelector('.mm-connectors');
+            const treeRoot = canvas.querySelector('.mm-tree-root');
+            const rootNode = canvas.querySelector('.mm-root');
+            if (!svg || !treeRoot || !rootNode) return;
+
+            const w = treeRoot.scrollWidth + 60;
+            const h = treeRoot.scrollHeight + 20;
+            svg.setAttribute('width', w);
+            svg.setAttribute('height', h);
+            svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+
+            const rootRect = mmRectRelativeTo(rootNode, canvas);
+            const x1root = rootRect.left + rootRect.width;
+            const y1root = rootRect.top + rootRect.height / 2;
+            const color = rootNode.style.background;
+
+            let paths = '';
+            canvas.querySelectorAll('.mm-branch').forEach(branch => {
+                const catNode = branch.querySelector('.mm-category');
+                const catRect = mmRectRelativeTo(catNode, canvas);
+                paths += mmCurve(x1root, y1root, catRect.left, catRect.top + catRect.height / 2, color);
+
+                if (!branch.classList.contains('collapsed')) {
+                    const x1cat = catRect.left + catRect.width;
+                    const y1cat = catRect.top + catRect.height / 2;
+                    branch.querySelectorAll('.mm-leaf').forEach(leaf => {
+                        const leafRect = mmRectRelativeTo(leaf, canvas);
+                        paths += mmCurve(x1cat, y1cat, leafRect.left, leafRect.top + leafRect.height / 2, color);
+                    });
+                }
+            });
+            svg.innerHTML = paths;
+        }
+
+        function redrawAllMindmaps() {
+            document.querySelectorAll('.mm-canvas').forEach(drawMindmapConnectors);
+        }
+
+        // ---------------- Export a mindmap as a downloadable image ----------------
+        // Builds a self-contained SVG (page CSS embedded via <foreignObject>) that
+        // mirrors exactly what's on screen (including any collapsed branches), then
+        // rasterizes it to PNG. Falls back to downloading the raw .svg if the
+        // browser refuses to read pixels back from a foreignObject-based canvas.
+        function triggerDownload(url, filename) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 4000);
+        }
+
+        function buildMindmapSvgString(canvasEl) {
+            const treeRoot = canvasEl.querySelector('.mm-tree-root');
+            const connectorsSvg = canvasEl.querySelector('.mm-connectors');
+            if (!treeRoot || !connectorsSvg) return null;
+
+            const svgNS = 'http://www.w3.org/2000/svg';
+            const xhtmlNS = 'http://www.w3.org/1999/xhtml';
+            const pad = 20;
+            const width = treeRoot.scrollWidth;
+            const height = treeRoot.scrollHeight;
+            const totalW = width + pad * 2;
+            const totalH = height + pad * 2;
+
+            const outSvg = document.createElementNS(svgNS, 'svg');
+            outSvg.setAttribute('xmlns', svgNS);
+            outSvg.setAttribute('width', totalW);
+            outSvg.setAttribute('height', totalH);
+            outSvg.setAttribute('viewBox', `0 0 ${totalW} ${totalH}`);
+
+            const bgRect = document.createElementNS(svgNS, 'rect');
+            bgRect.setAttribute('width', '100%');
+            bgRect.setAttribute('height', '100%');
+            bgRect.setAttribute('fill', '#fbf8f1');
+            outSvg.appendChild(bgRect);
+
+            const pathsGroup = document.createElementNS(svgNS, 'g');
+            pathsGroup.setAttribute('transform', `translate(${pad},${pad})`);
+            Array.from(connectorsSvg.children).forEach(p => pathsGroup.appendChild(p.cloneNode(true)));
+            outSvg.appendChild(pathsGroup);
+
+            const fo = document.createElementNS(svgNS, 'foreignObject');
+            fo.setAttribute('x', pad);
+            fo.setAttribute('y', pad);
+            fo.setAttribute('width', width);
+            fo.setAttribute('height', height);
+
+            const wrapperDiv = document.createElementNS(xhtmlNS, 'div');
+            const styleEl = document.createElementNS(xhtmlNS, 'style');
+            let cssText = '';
+            document.querySelectorAll('style').forEach(s => { cssText += s.textContent + '\n'; });
+            styleEl.textContent = cssText;
+            wrapperDiv.appendChild(styleEl);
+            wrapperDiv.appendChild(treeRoot.cloneNode(true));
+
+            fo.appendChild(wrapperDiv);
+            outSvg.appendChild(fo);
+
+            return { svgString: new XMLSerializer().serializeToString(outSvg), totalW, totalH };
+        }
+
+        function exportMindmapImage(canvasEl, item, btn) {
+            const built = buildMindmapSvgString(canvasEl);
+            if (!built) return;
+            const { svgString, totalW, totalH } = built;
+            const baseName = `phonics-${item.slug}-mindmap`;
+
+            const originalLabel = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = '⏳ 生成中...';
+            const resetBtn = () => { btn.disabled = false; btn.textContent = originalLabel; };
+
+            const downloadSvg = () => {
+                const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+                triggerDownload(URL.createObjectURL(blob), baseName + '.svg');
+                resetBtn();
+            };
+
+            const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+            const svgUrl = URL.createObjectURL(svgBlob);
+
+            const img = new Image();
+            img.onload = function () {
+                try {
+                    const scale = 2;
+                    const c = document.createElement('canvas');
+                    c.width = totalW * scale;
+                    c.height = totalH * scale;
+                    const ctx = c.getContext('2d');
+                    ctx.scale(scale, scale);
+                    ctx.drawImage(img, 0, 0, totalW, totalH);
+                    URL.revokeObjectURL(svgUrl);
+                    c.toBlob(function (blob) {
+                        if (blob) {
+                            triggerDownload(URL.createObjectURL(blob), baseName + '.png');
+                            resetBtn();
+                        } else {
+                            downloadSvg();
+                        }
+                    }, 'image/png');
+                } catch (err) {
+                    URL.revokeObjectURL(svgUrl);
+                    downloadSvg();
+                }
+            };
+            img.onerror = function () {
+                URL.revokeObjectURL(svgUrl);
+                downloadSvg();
+            };
+            img.src = svgUrl;
         }
 
         function wireDetailDelegation() {
@@ -806,9 +1324,33 @@
                     selectConsonant(pairLink.dataset.slug);
                     return;
                 }
+                const exportBtn = e.target.closest('.mm-export-btn');
+                if (exportBtn) {
+                    const item = findItem(exportBtn.dataset.slug);
+                    const canvasEl = exportBtn.closest('.mm-outer').querySelector('.mm-canvas');
+                    if (item && canvasEl) exportMindmapImage(canvasEl, item, exportBtn);
+                    return;
+                }
+                const category = e.target.closest('.mm-category');
+                if (category) {
+                    const branch = category.closest('.mm-branch');
+                    branch.classList.toggle('collapsed');
+                    requestAnimationFrame(() => drawMindmapConnectors(category.closest('.mm-canvas')));
+                    return;
+                }
+                const leaf = e.target.closest('.mm-leaf');
+                if (leaf) {
+                    playAudio(leaf.dataset.word);
+                    return;
+                }
                 const wordCard = e.target.closest('.word-card');
                 if (wordCard) {
                     playAudio(wordCard.dataset.word);
+                    return;
+                }
+                const mmRoot = e.target.closest('.mm-root');
+                if (mmRoot) {
+                    playAudio(mmRoot.dataset.word);
                     return;
                 }
                 const ipaBig = e.target.closest('.ipa-big');
