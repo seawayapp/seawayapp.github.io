@@ -127,10 +127,24 @@ var mainData = [
     filename: "gl_data_P113L9_P115L8",
   },
   {
+    title: "P117L6 - P120L7 第二引发---有情自受果",
+    subtitle: "",
+    testdate: "01/08/2026",
+    category: "file_slide_v2",
+    filename: "gl_data_P117L6_P120L7",
+  },
+  {
     title: "P152L2 - P155L7 敬礼胜尊---增上慢耳",
     subtitle: "中士道 - 希求解脱",
     testdate: "",
     category: "file_slide_v2",
     filename: "gl_data_P152L2_P155L7",
+  },
+  {
+    title: "P155L8 - P157L7 第二正修---受苦道理",
+    subtitle: "中士道 - 思惟苦谛",
+    testdate: "",
+    category: "file_slide_v2",
+    filename: "gl_data_P155L8-P157L7",
   },
 ];
