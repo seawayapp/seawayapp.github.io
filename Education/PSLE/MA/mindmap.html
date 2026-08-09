@@ -135,6 +135,8 @@
   .category-node .count { font-weight: 400; color: var(--muted); font-size: 0.78rem; }
   .category-node .caret { font-size: 0.72rem; color: var(--muted); transition: transform 0.15s ease; }
   .branch.collapsed .category-node .caret { transform: rotate(-90deg); }
+  .tricky-node { border-left-style: dashed; }
+  .tricky-branch { margin-top: 2px; }
 
   .leaf-node { border-left: 4px solid var(--branch-color); max-width: 320px; white-space: normal; position: relative; }
   .leaf-node .en { font-weight: 600; display: block; }
@@ -339,8 +341,9 @@ function groupByCategory(topics) {
   const map = new Map();
   topics.forEach(t => {
     const cat = t.category || 'Uncategorised';
-    if (!map.has(cat)) map.set(cat, []);
-    map.get(cat).push(t);
+    if (!map.has(cat)) map.set(cat, { main: [], tricky: [] });
+    const bucket = map.get(cat);
+    (t.subcategory === 'tricky' ? bucket.tricky : bucket.main).push(t);
   });
   return map;
 }
@@ -377,28 +380,45 @@ function buildTree() {
   const grouped = groupByCategory(TOPICS);
   const categories = [...grouped.keys()];
   const palette = data.categoryPalette;
+  const trickyColor = data.trickyColor ? (isDark() ? data.trickyColor.dark : data.trickyColor.light) : '#b8912a';
+
+  function leafHtml(t) {
+    return `
+      <div class="node leaf-node ${progress[t.id] ? 'reviewed' : ''}" data-id="${t.id}">
+        <span class="done-dot"></span>
+        <span class="en">${t.en}${t.diagram ? '<span class="diagram-flag" title="Has a diagram">📐</span>' : ''}</span>
+        <span class="blurb">${t.summary}</span>
+      </div>
+    `;
+  }
 
   treeRoot.innerHTML = `
     <div class="node root-node" id="rootNode">${data.root}</div>
     <div class="branches" id="branchesWrap">
       ${categories.map((cat, ci) => {
-        const items = grouped.get(cat);
+        const { main, tricky } = grouped.get(cat);
         const color = colorFor(ci, palette);
         return `
           <div class="branch collapsed" data-cat="${cat}" style="--branch-color:${color}">
             <div class="node category-node" data-toggle="${cat}">
               <span class="caret">▾</span>
               <span>${cat}</span>
-              <span class="count">(${items.length})</span>
+              <span class="count">(${main.length + tricky.length})</span>
             </div>
             <div class="leaves">
-              ${items.map(t => `
-                <div class="node leaf-node ${progress[t.id] ? 'reviewed' : ''}" data-id="${t.id}">
-                  <span class="done-dot"></span>
-                  <span class="en">${t.en}${t.diagram ? '<span class="diagram-flag" title="Has a diagram">📐</span>' : ''}</span>
-                  <span class="blurb">${t.summary}</span>
+              ${main.map(leafHtml).join('')}
+              ${tricky.length ? `
+                <div class="branch tricky-branch collapsed" data-cat="${cat}::tricky" style="--branch-color:${trickyColor}">
+                  <div class="node category-node tricky-node" data-toggle="${cat}::tricky">
+                    <span class="caret">▾</span>
+                    <span>⭐ Tricky Questions</span>
+                    <span class="count">(${tricky.length})</span>
+                  </div>
+                  <div class="leaves">
+                    ${tricky.map(leafHtml).join('')}
+                  </div>
                 </div>
-              `).join('')}
+              ` : ''}
             </div>
           </div>
         `;
@@ -408,7 +428,7 @@ function buildTree() {
 
   legend.innerHTML = categories.map((cat, ci) => `
     <div class="legend-item"><span class="legend-dot" style="background:${colorFor(ci, palette)}"></span>${cat}</div>
-  `).join('');
+  `).join('') + `<div class="legend-item"><span class="legend-dot" style="background:${trickyColor}"></span>⭐ Tricky Questions (nested inside relevant chapters)</div>`;
 
   document.getElementById('topicTotal').textContent = TOPICS.length;
   document.getElementById('catTotal').textContent = categories.length;
@@ -456,21 +476,29 @@ function drawConnectors() {
   const y1root = rootRect.top + rootRect.height / 2;
 
   let paths = '';
-  document.querySelectorAll('.branch').forEach(branch => {
-    const catNode = branch.querySelector('.category-node');
+
+  function drawBranch(branch, parentX, parentY) {
+    const catNode = branch.querySelector(':scope > .category-node');
     const catRect = rectRelativeTo(catNode, treeCanvas);
     const color = getComputedStyle(branch).getPropertyValue('--branch-color').trim();
-    paths += curve(x1root, y1root, catRect.left, catRect.top + catRect.height / 2, color);
+    paths += curve(parentX, parentY, catRect.left, catRect.top + catRect.height / 2, color);
 
-    if (!branch.classList.contains('collapsed')) {
-      const x1cat = catRect.left + catRect.width;
-      const y1cat = catRect.top + catRect.height / 2;
-      branch.querySelectorAll('.leaf-node').forEach(leaf => {
-        const leafRect = rectRelativeTo(leaf, treeCanvas);
-        paths += curve(x1cat, y1cat, leafRect.left, leafRect.top + leafRect.height / 2, color);
-      });
-    }
-  });
+    if (branch.classList.contains('collapsed')) return;
+    const x1 = catRect.left + catRect.width;
+    const y1 = catRect.top + catRect.height / 2;
+    const leavesEl = branch.querySelector(':scope > .leaves');
+    if (!leavesEl) return;
+    Array.from(leavesEl.children).forEach(child => {
+      if (child.classList.contains('leaf-node')) {
+        const leafRect = rectRelativeTo(child, treeCanvas);
+        paths += curve(x1, y1, leafRect.left, leafRect.top + leafRect.height / 2, color);
+      } else if (child.classList.contains('branch')) {
+        drawBranch(child, x1, y1);
+      }
+    });
+  }
+
+  document.querySelectorAll('#branchesWrap > .branch').forEach(branch => drawBranch(branch, x1root, y1root));
   connectors.innerHTML = paths;
 }
 

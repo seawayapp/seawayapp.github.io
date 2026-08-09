@@ -1,16 +1,25 @@
 /* =====================================================================
    PSLE MATHEMATICS — PRIMARY 5 DATA SOURCE
-   Loaded by ../index.html (visual mind-map: root -> chapter branch ->
-   topic leaf, same engine as the RES mind maps). This is the ONLY place
-   P5 content lives — to add a topic, append an object to TOPICS below.
-   To add another grade later (P3/P4/P6), create data/p3.js etc. with the
-   same three consts and register it in the GRADES map in index.html.
+   Loaded by ../mindmap.html (visual mind-map: root -> chapter branch ->
+   topic leaf, plus a nested "⭐ Tricky Questions" sub-branch inside any
+   chapter that has one). This is the ONLY place P5 content lives — to add
+   a topic, append an object to TOPICS below. To add another grade later
+   (P3/P4/P6), create data/p3.js etc. with the same shape and register it
+   in the GRADES map in mindmap.html.
 
    Topic shape:
    {
      id: "c<chapter>-t<n>" (unique),
      en: "<chapter>.<n> Topic Title",
      category: "Chapter N: Chapter Title"  (groups leaves into branches),
+     subcategory: "tricky"  // OPTIONAL — omit for a normal numbered topic.
+                             // Set this to nest the topic under that
+                             // chapter's own "⭐ Tricky Questions" sub-branch
+                             // instead of sitting as a direct topic — use it
+                             // for non-routine / easy-to-get-wrong questions
+                             // that don't belong in the main numbered
+                             // sequence (drop the "N.n" prefix from `en`
+                             // for these, since they're bonus content).
      tags: [...],
      summary: "1 sentence shown on the collapsed leaf node.",
      diagram: "<svg ...>...</svg>"  // optional — shown at the top of the drawer;
@@ -551,9 +560,82 @@ const TOPICS = [
   category: "Chapter 9: Percentage",
   tags: ["percentage", "conversions"],
   summary: "Converting between fractions, decimals and percentages.",
+  diagram: `<div style="overflow-x:auto;width:100%;"><svg width="660" height="150" viewBox="0 0 660 150" style="width:660px;max-width:none;display:block;" xmlns="http://www.w3.org/2000/svg">
+    <line x1="20" y1="55" x2="630" y2="55" style="stroke:var(--text);stroke-width:2;"/>
+    <line x1="20" y1="115" x2="630" y2="115" style="stroke:var(--text);stroke-width:2;"/>
+    <line x1="30" y1="62" x2="30" y2="108" style="stroke:var(--muted);stroke-width:1;stroke-dasharray:2 3;opacity:0.5;"/>
+    <line x1="88" y1="62" x2="88" y2="108" style="stroke:var(--muted);stroke-width:1;stroke-dasharray:2 3;opacity:0.5;"/>
+    <line x1="146" y1="62" x2="146" y2="108" style="stroke:var(--muted);stroke-width:1;stroke-dasharray:2 3;opacity:0.5;"/>
+    <line x1="204" y1="62" x2="204" y2="108" style="stroke:var(--muted);stroke-width:1;stroke-dasharray:2 3;opacity:0.5;"/>
+    <line x1="262" y1="62" x2="262" y2="108" style="stroke:var(--muted);stroke-width:1;stroke-dasharray:2 3;opacity:0.5;"/>
+    <line x1="320" y1="62" x2="320" y2="108" style="stroke:var(--muted);stroke-width:1;stroke-dasharray:2 3;opacity:0.5;"/>
+    <line x1="378" y1="62" x2="378" y2="108" style="stroke:var(--muted);stroke-width:1;stroke-dasharray:2 3;opacity:0.5;"/>
+    <line x1="436" y1="62" x2="436" y2="108" style="stroke:var(--muted);stroke-width:1;stroke-dasharray:2 3;opacity:0.5;"/>
+    <line x1="494" y1="62" x2="494" y2="108" style="stroke:var(--muted);stroke-width:1;stroke-dasharray:2 3;opacity:0.5;"/>
+    <line x1="552" y1="62" x2="552" y2="108" style="stroke:var(--muted);stroke-width:1;stroke-dasharray:2 3;opacity:0.5;"/>
+    <line x1="610" y1="62" x2="610" y2="108" style="stroke:var(--muted);stroke-width:1;stroke-dasharray:2 3;opacity:0.5;"/>
+    <line x1="30" y1="48" x2="30" y2="62" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="88" y1="48" x2="88" y2="62" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="146" y1="48" x2="146" y2="62" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="204" y1="48" x2="204" y2="62" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="262" y1="48" x2="262" y2="62" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="320" y1="48" x2="320" y2="62" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="378" y1="48" x2="378" y2="62" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="436" y1="48" x2="436" y2="62" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="494" y1="48" x2="494" y2="62" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="552" y1="48" x2="552" y2="62" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="610" y1="48" x2="610" y2="62" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="30" y1="108" x2="30" y2="122" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="88" y1="108" x2="88" y2="122" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="146" y1="108" x2="146" y2="122" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="204" y1="108" x2="204" y2="122" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="262" y1="108" x2="262" y2="122" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="320" y1="108" x2="320" y2="122" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="378" y1="108" x2="378" y2="122" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="436" y1="108" x2="436" y2="122" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="494" y1="108" x2="494" y2="122" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="552" y1="108" x2="552" y2="122" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="610" y1="108" x2="610" y2="122" style="stroke:var(--text);stroke-width:1.5;"/>
+    <text x="30" y="38" text-anchor="middle" style="fill:var(--text);font-size:12px;font-weight:600;">0</text>
+    <text x="88" y="38" text-anchor="middle" style="fill:var(--text);font-size:12px;font-weight:600;">0.1</text>
+    <text x="146" y="38" text-anchor="middle" style="fill:var(--text);font-size:12px;font-weight:600;">0.2</text>
+    <text x="204" y="38" text-anchor="middle" style="fill:var(--text);font-size:12px;font-weight:600;">0.3</text>
+    <text x="262" y="38" text-anchor="middle" style="fill:var(--text);font-size:12px;font-weight:600;">0.4</text>
+    <text x="320" y="38" text-anchor="middle" style="fill:var(--text);font-size:12px;font-weight:600;">0.5</text>
+    <text x="378" y="38" text-anchor="middle" style="fill:var(--text);font-size:12px;font-weight:600;">0.6</text>
+    <text x="436" y="38" text-anchor="middle" style="fill:var(--text);font-size:12px;font-weight:600;">0.7</text>
+    <text x="494" y="38" text-anchor="middle" style="fill:var(--text);font-size:12px;font-weight:600;">0.8</text>
+    <text x="552" y="38" text-anchor="middle" style="fill:var(--text);font-size:12px;font-weight:600;">0.9</text>
+    <text x="610" y="38" text-anchor="middle" style="fill:var(--text);font-size:12px;font-weight:600;">1.0</text>
+    <text x="30" y="80" text-anchor="middle" style="fill:var(--accent);font-size:11px;">0/10</text>
+    <text x="88" y="80" text-anchor="middle" style="fill:var(--accent);font-size:11px;">1/10</text>
+    <text x="146" y="80" text-anchor="middle" style="fill:var(--accent);font-size:11px;">2/10</text>
+    <text x="204" y="80" text-anchor="middle" style="fill:var(--accent);font-size:11px;">3/10</text>
+    <text x="262" y="80" text-anchor="middle" style="fill:var(--accent);font-size:11px;">4/10</text>
+    <text x="320" y="80" text-anchor="middle" style="fill:var(--accent);font-size:11px;">5/10</text>
+    <text x="378" y="80" text-anchor="middle" style="fill:var(--accent);font-size:11px;">6/10</text>
+    <text x="436" y="80" text-anchor="middle" style="fill:var(--accent);font-size:11px;">7/10</text>
+    <text x="494" y="80" text-anchor="middle" style="fill:var(--accent);font-size:11px;">8/10</text>
+    <text x="552" y="80" text-anchor="middle" style="fill:var(--accent);font-size:11px;">9/10</text>
+    <text x="610" y="80" text-anchor="middle" style="fill:var(--accent);font-size:11px;">10/10</text>
+    <text x="30" y="137" text-anchor="middle" style="fill:var(--accent2);font-size:12px;font-weight:600;">0%</text>
+    <text x="88" y="137" text-anchor="middle" style="fill:var(--accent2);font-size:12px;font-weight:600;">10%</text>
+    <text x="146" y="137" text-anchor="middle" style="fill:var(--accent2);font-size:12px;font-weight:600;">20%</text>
+    <text x="204" y="137" text-anchor="middle" style="fill:var(--accent2);font-size:12px;font-weight:600;">30%</text>
+    <text x="262" y="137" text-anchor="middle" style="fill:var(--accent2);font-size:12px;font-weight:600;">40%</text>
+    <text x="320" y="137" text-anchor="middle" style="fill:var(--accent2);font-size:12px;font-weight:600;">50%</text>
+    <text x="378" y="137" text-anchor="middle" style="fill:var(--accent2);font-size:12px;font-weight:600;">60%</text>
+    <text x="436" y="137" text-anchor="middle" style="fill:var(--accent2);font-size:12px;font-weight:600;">70%</text>
+    <text x="494" y="137" text-anchor="middle" style="fill:var(--accent2);font-size:12px;font-weight:600;">80%</text>
+    <text x="552" y="137" text-anchor="middle" style="fill:var(--accent2);font-size:12px;font-weight:600;">90%</text>
+    <text x="610" y="137" text-anchor="middle" style="fill:var(--accent2);font-size:12px;font-weight:600;">100%</text>
+    <text x="20" y="20" style="fill:var(--muted);font-size:11px;">decimal (above) &amp; fraction (below, in tenths)</text>
+    <text x="20" y="148" style="fill:var(--muted);font-size:11px;">percentage</text>
+  </svg></div>`,
   sections: [
     { h: "Key Points", body: `<ul>
       <li>'Per cent' (%) means 'out of 100'.</li>
+      <li>The scale above lines up the same value 3 ways: swipe it to see that 0.3 = 3/10 = 30%, and so on.</li>
       <li>Fraction or decimal &rarr; %: multiply by 100%.</li>
       <li>% &rarr; fraction: write over 100 and simplify. % &rarr; decimal: divide by 100.</li>
     </ul>` },
@@ -562,7 +644,8 @@ const TOPICS = [
   ],
   examples: [
     { q: "Convert 5/8 to a percentage; convert 8% to a decimal.", a: "62.5%;  0.08" },
-    { q: "Convert 0.06 to a percentage, and convert 45% to a fraction in simplest form.", a: "6%;  45/100 = 9/20" }
+    { q: "Convert 0.06 to a percentage, and convert 45% to a fraction in simplest form.", a: "6%;  45/100 = 9/20" },
+    { q: "Using the scale idea: what fraction (in tenths) and decimal is equal to 70%?", a: "70% = 7/10 = 0.7" }
   ]
 },
 {
@@ -586,14 +669,20 @@ const TOPICS = [
   sections: [
     { h: "Key Points", body: `<ul>
       <li>Percentage of a quantity = (%/100) &times; quantity.</li>
+      <li>Going the <strong>other way</strong> &mdash; "what % is one number OF another?" &mdash; use: % = (part &divide; whole) &times; 100%.</li>
       <li>In a pie chart, all percentages (or parts) add up to 100% (the whole).</li>
       <li>Find a missing % or quantity using the 'total = 100%' relationship.</li>
     </ul>` },
-    { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> Find 20% of 50 students.</p><p class="ex-steps">20/100 &times; 50 = 10 students</p>` }
+    { h: "Formula", body: `<div class="formula-box">What % is X of Y?  &rarr;  (X &divide; Y) &times; 100%</div>` },
+    { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> What percentage of 80 is 60?</p><p class="ex-steps">60 &divide; 80 = 0.75<br>0.75 &times; 100% = 75%</p>` }
   ],
   examples: [
     { q: "A pie chart: Sports 35%, Art 25%, the rest is Music. Out of 200 students, how many take Music?", a: "Music = 100&minus;35&minus;25 = 40%; 40/100&times;200 = 80 students" },
-    { q: "Out of 320 students, 15% walk to school. How many students walk to school?", a: "15/100 &times; 320 = 48 students" }
+    { q: "Out of 320 students, 15% walk to school. How many students walk to school?", a: "15/100 &times; 320 = 48 students" },
+    { q: "What percentage of 40 is 10?", a: "(10 &divide; 40) &times; 100% = 25%" },
+    { q: "In a pie chart of 200 students' favourite subjects, 80 students chose Sports. What percentage slice of the pie chart is Sports?", a: "(80 &divide; 200) &times; 100% = 40% &mdash; so Sports takes up a 40% slice of the pie chart." },
+    { q: "1780 contestants take part in a talent show. 45% of the contestants are adults and the rest are children. How many children are there?", a: "Children's percentage = 100% &minus; 45% = 55%. Children = 55/100 &times; 1780 = 979." },
+    { q: "Mr Karm saves 40% of his salary and spends 3/10 of the remainder. What percentage of his salary does he spend?", a: "Remainder after saving = 100% &minus; 40% = 60%. He spends 3/10 of this remainder: 3/10 &times; 60% = 18%." }
   ]
 },
 {
@@ -608,16 +697,154 @@ const TOPICS = [
       <li>Annual (simple) Interest = Principal &times; Rate% &times; Number of years.</li>
     </ul>` },
     { h: "Formula", body: `<div class="formula-box">Interest = P &times; R% &times; T</div>` },
-    { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> A $80 jacket has a 25% discount. Find the sale price.</p><p class="ex-steps">Discount = 25/100 &times; 80 = $20<br>Sale price = 80 &minus; 20 = $60</p>` }
+    { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> A $80 jacket has a 25% discount. Find the sale price.</p><p class="ex-steps">Discount = 25/100 &times; 80 = $20<br>Sale price = 80 &minus; 20 = $60</p>` },
+    { h: "🌍 Maths Around Us", body: `<p style="margin:0 0 10px;">An LED (light emitting diode) bulb is an energy-efficient light bulb. LED bulbs use <strong>80% less electricity</strong> than conventional bulbs, and last longer too. <span style="color:var(--muted);font-size:0.85em;">(Source: NEA, 2023)</span></p>
+      <div class="diagram-box" style="padding:10px 4px;margin:0 0 10px;"><svg viewBox="0 0 300 165" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(55,45)">
+          <circle cx="0" cy="0" r="32" style="fill:var(--chip-bg);stroke:var(--text);stroke-width:2;"/>
+          <path d="M-10,25 L10,25 L10,38 L-10,38 Z" style="fill:var(--muted);stroke:var(--text);stroke-width:1.5;"/>
+          <line x1="-8" y1="30" x2="8" y2="30" style="stroke:var(--text);stroke-width:1;"/>
+          <line x1="-8" y1="34" x2="8" y2="34" style="stroke:var(--text);stroke-width:1;"/>
+          <path d="M-10,-10 L-4,10 M10,-10 L4,10" style="stroke:var(--muted);stroke-width:1.2;fill:none;"/>
+          <text x="0" y="70" text-anchor="middle" style="fill:var(--text);font-size:12px;font-weight:600;">Conventional</text>
+          <text x="0" y="86" text-anchor="middle" style="fill:var(--muted);font-size:12px;">$100/month</text>
+        </g>
+        <line x1="110" y1="45" x2="185" y2="45" style="stroke:var(--accent);stroke-width:2;"/>
+        <path d="M178,39 L188,45 L178,51" style="fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round;"/>
+        <text x="147" y="33" text-anchor="middle" style="fill:var(--accent);font-size:12px;font-weight:600;">80% less</text>
+        <g transform="translate(245,45)">
+          <circle cx="0" cy="0" r="26" style="fill:var(--accent-bg);stroke:var(--accent);stroke-width:2;"/>
+          <path d="M-8,20 L8,20 L8,32 L-8,32 Z" style="fill:var(--accent2);stroke:var(--text);stroke-width:1.5;"/>
+          <line x1="-6" y1="24" x2="6" y2="24" style="stroke:var(--text);stroke-width:1;"/>
+          <line x1="-6" y1="28" x2="6" y2="28" style="stroke:var(--text);stroke-width:1;"/>
+          <text x="0" y="64" text-anchor="middle" style="fill:var(--text);font-size:12px;font-weight:600;">LED</text>
+          <text x="0" y="80" text-anchor="middle" style="fill:var(--good);font-size:12px;font-weight:700;">$20/month</text>
+        </g>
+        <text x="150" y="155" text-anchor="middle" style="fill:var(--muted);font-size:11px;">Save 80% of $100 = $80 a month</text>
+      </svg></div>
+      <p class="ex-q"><strong>Q:</strong> A family pays $100 a month for lighting using conventional bulbs. How much would they save by switching to LED bulbs?</p>
+      <p class="ex-steps">LED bulbs use 80% less electricity, so the saving is 80% of the monthly bill.<br>Savings = 80/100 &times; $100 = $80<br>The family would save <strong>$80 a month</strong> (paying about $20 instead of $100).</p>` }
   ],
   examples: [
     { q: "A $2,000 deposit earns 2% interest per year. Find the interest after 3 years.", a: "2000 &times; 2% &times; 3 = $120" },
-    { q: "A television is marked at $650 with 9% GST to be added. Find the total price to be paid.", a: "GST = 9/100 &times; 650 = $58.50; total = $708.50" }
+    { q: "A television is marked at $650 with 9% GST to be added. Find the total price to be paid.", a: "GST = 9/100 &times; 650 = $58.50; total = $708.50" },
+    { q: "A family currently pays $60 a month for lighting with conventional bulbs. If LED bulbs use 80% less electricity, how much would their new monthly lighting cost be after switching?", a: "Savings = 80/100 &times; $60 = $48; new cost = $60 &minus; $48 = $12 a month." },
+    { q: "The usual price of an oven was $450. During a sale, Suzanne paid $360 for it. What was the percentage discount given? (1) 20% (2) 25% (3) 75% (4) 80%", a: "Discount = 450 &minus; 360 = $90. Percentage discount = (90 &divide; 450) &times; 100% = 20%. Answer: (1) 20%." }
+  ]
+},
+{
+  id: "c9-t4", en: "Percentage More Than / Less Than (The 1% Method)",
+  category: "Chapter 9: Percentage",
+  subcategory: "tricky",
+  tags: ["percentage", "unitary-method", "comparison", "word-problems", "more-than", "less-than"],
+  summary: "Solving 'X% more/less than' comparison problems using the 1%-unitary method.",
+  diagram: `<svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
+    <rect x="60" y="35" width="40" height="30" style="fill:var(--accent-bg);stroke:var(--text);stroke-width:1.5;"/>
+    <rect x="100" y="35" width="40" height="30" style="fill:var(--accent-bg);stroke:var(--text);stroke-width:1.5;"/>
+    <rect x="140" y="35" width="40" height="30" style="fill:var(--accent-bg);stroke:var(--text);stroke-width:1.5;"/>
+    <rect x="180" y="35" width="40" height="30" style="fill:var(--accent-bg);stroke:var(--text);stroke-width:1.5;"/>
+    <text x="10" y="55" style="fill:var(--text);font-size:12px;font-weight:600;">Jenny</text>
+    <text x="140" y="80" text-anchor="middle" style="fill:var(--muted);font-size:11px;">100% (400 dresses)</text>
+    <rect x="60" y="95" width="40" height="30" style="fill:var(--accent-bg);stroke:var(--text);stroke-width:1.5;"/>
+    <rect x="100" y="95" width="40" height="30" style="fill:var(--accent-bg);stroke:var(--text);stroke-width:1.5;"/>
+    <rect x="140" y="95" width="40" height="30" style="fill:var(--accent-bg);stroke:var(--text);stroke-width:1.5;"/>
+    <rect x="180" y="95" width="40" height="30" style="fill:var(--accent-bg);stroke:var(--text);stroke-width:1.5;"/>
+    <rect x="220" y="95" width="40" height="30" style="fill:var(--accent2);stroke:var(--text);stroke-width:1.5;"/>
+    <text x="14" y="115" style="fill:var(--text);font-size:12px;font-weight:600;">Ella</text>
+    <text x="150" y="140" text-anchor="middle" style="fill:var(--muted);font-size:11px;">125% (500 dresses)</text>
+    <text x="240" y="80" text-anchor="middle" style="fill:var(--accent2);font-size:10px;">25%</text>
+    <text x="240" y="90" text-anchor="middle" style="fill:var(--accent2);font-size:10px;">more</text>
+  </svg>`,
+  sections: [
+    { h: "Key Points", body: `<ul>
+      <li>If A is X% <strong>MORE</strong> than B, treat B as the base (100%): A's percentage = 100% + X%.</li>
+      <li>If A is X% <strong>LESS</strong> than B, treat B as the base (100%): A's percentage = 100% &minus; X%.</li>
+      <li>Add up everyone's percentage to find the <strong>total percentage</strong> &mdash; this can be more than 100% when comparing two people/items.</li>
+      <li>Use the <strong>1% method</strong>: value of 1% = actual total &divide; total percentage. Then multiply by any percentage you need.</li>
+    </ul>` },
+    { h: "Formula", body: `<div class="formula-box">Value of 1% = Total &divide; Total%</div>` },
+    { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> Jenny and Ella sewed dresses for a fashion show. Ella sewed 25% more dresses than Jenny. Together they sewed 900 dresses. How many dresses did Ella sew?</p><p class="ex-steps"><strong>Step 1</strong> &mdash; Percentage of dresses Ella sewed:<br>= 100% + 25%<br>= 125%<br><br><strong>Step 2</strong> &mdash; Total percentage of dresses sewed:<br>= 100% (Jenny) + 125% (Ella)<br>= 225%<br><br><strong>Step 3</strong> &mdash; Number of dresses represented by 1%:<br>225% &rarr; 900<br>1% &rarr; 900 &divide; 225<br>= 4<br><br><strong>Step 4</strong> &mdash; Number of dresses Ella sewed:<br>125% &rarr; 4 &times; 125<br>= <strong>500 dresses</strong></p>` }
+  ],
+  examples: [
+    { q: "Using the same question: how many dresses did Jenny sew?", a: "100% &rarr; 4 &times; 100 = 400 dresses. (Check: 400 + 500 = 900 &check;, and 500 is 25% more than 400 since 400 &times; 1.25 = 500.)" },
+    { q: "Ravi has 40% more marbles than Suresh. Together they have 480 marbles. How many marbles does Ravi have?", a: "Ravi's % = 100% + 40% = 140%. Total % = 100% + 140% = 240%. 1% = 480 &divide; 240 = 2. Ravi = 140 &times; 2 = 280 marbles. (Check: Suresh = 100 &times; 2 = 200; 200 + 280 = 480 &check;, and 200 &times; 1.4 = 280 &check;.)" },
+    { q: "A shop sold 60% fewer umbrellas in February than in January. In January it sold 250 umbrellas. How many did it sell in February?", a: "February's % = 100% &minus; 60% = 40% of January's amount. February = 40/100 &times; 250 = 100 umbrellas." }
+  ]
+},
+{
+  id: "c9-t5", en: "Comparing Discounts & Successive Discounts",
+  category: "Chapter 9: Percentage",
+  subcategory: "tricky",
+  tags: ["percentage", "discount", "comparison", "successive-discount", "word-problems"],
+  summary: "Comparing discounted prices between two shops, and finding the price after a second (successive) discount.",
+  diagram: `<div style="overflow-x:auto;"><table class="cmp" style="min-width:0;">
+    <tr><th></th><th>Original Price</th><th>Discount</th><th>Discounted Price</th></tr>
+    <tr><td>Shop X</td><td>$2000</td><td>15%</td><td>$1700</td></tr>
+    <tr><td>Shop Y</td><td>$1850</td><td>10%</td><td>$1665</td></tr>
+  </table></div><p style="text-align:center;color:var(--good);font-size:12px;margin:8px 0 0;font-weight:600;">Shop Y is cheaper, by $35</p>`,
+  sections: [
+    { h: "Key Points", body: `<ul>
+      <li>To compare deals, find the discounted price at each shop separately, then compare.</li>
+      <li>Discounted price = (100% &minus; discount%) &times; original price.</li>
+      <li>A <strong>further/successive discount</strong> is a SECOND, separate calculation &mdash; apply it to the already-discounted price, not the original price.</li>
+      <li>Add up the individual prices to find the total amount paid for multiple items.</li>
+    </ul>` },
+    { h: "Formula", body: `<div class="formula-box">Discounted price = (100% &minus; discount%) &times; original price</div>` },
+    { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> Shop X sells a tableware set at $2000 with a 15% discount. Shop Y sells the same set at $1850 with a 10% discount. (a) Which shop should Lois buy from to spend less? (b) Shop X gives a further 15% discount on a second set. Morris bought 2 sets from Shop X. How much did he pay in total?</p><p class="ex-steps"><strong>Step 1</strong> &mdash; Discounted price from Shop X:<br>100% &minus; 15% = 85%<br>= 85/100 &times; $2000<br>= $1700<br><br><strong>Step 2</strong> &mdash; Discounted price from Shop Y:<br>100% &minus; 10% = 90%<br>= 90/100 &times; $1850<br>= $1665<br>Since $1665 &lt; $1700, she should buy from <strong>Shop Y</strong>. (Part a)<br><br><strong>Step 3</strong> &mdash; Price of the second tableware set from Shop X (a further 15% off the already-discounted $1700):<br>= 85/100 &times; $1700<br>= $1445<br><br>Total amount paid = $1700 + $1445<br>= <strong>$3145</strong> (Part b)</p>` }
+  ],
+  examples: [
+    { q: "A shop gives a 20% discount on a $500 item, and a further 10% discount if you buy a second one. If Ken buys 2 of these items, how much does he pay in total?", a: "First item: 80/100 &times; $500 = $400. Second item: a further 10% off $400 &rarr; 90/100 &times; $400 = $360. Total = $400 + $360 = $760." },
+    { q: "Store A sells a bag at $80 with a 25% discount. Store B sells the same bag at $75 with a 20% discount. Which store offers the cheaper price?", a: "Store A: 75/100 &times; $80 = $60. Store B: 80/100 &times; $75 = $60. Both stores offer exactly the same price, $60 &mdash; a bigger % discount doesn't always mean a lower price!" },
+    { q: "Shop P sells a lamp at $120 with a 25% discount. Shop Q sells the same lamp at $140 with a 30% discount. Which shop is cheaper, and by how much?", a: "Shop P: 75/100 &times; $120 = $90. Shop Q: 70/100 &times; $140 = $98. Shop P is cheaper, by $98 &minus; $90 = $8." }
   ]
 },
 
 {
-  id: "c10-t1", en: "10.1 Angles on a Line, at a Point & Vertically Opposite",
+  id: "c10-t1", en: "10.1 Types of Angles: Acute, Right & Obtuse",
+  category: "Chapter 10: Angles",
+  tags: ["angles", "classification", "acute", "obtuse", "right-angle"],
+  summary: "Classifying an angle as acute, right or obtuse by comparing it to 90°.",
+  diagram: `<svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg">
+    <g>
+      <line x1="15" y1="95" x2="70" y2="95" style="stroke:var(--text);stroke-width:2;"/>
+      <line x1="15" y1="95" x2="46.6" y2="50" style="stroke:var(--text);stroke-width:2;"/>
+      <path d="M37,95 A22,22 0 0 0 27.6,77" style="fill:none;stroke:var(--accent);stroke-width:1.8;"/>
+      <text x="40" y="82" style="fill:var(--accent);font-size:11px;">55&deg;</text>
+      <text x="8" y="122" style="fill:var(--text);font-size:11px;">Acute (&lt;90&deg;)</text>
+    </g>
+    <g transform="translate(110,0)">
+      <line x1="15" y1="95" x2="70" y2="95" style="stroke:var(--text);stroke-width:2;"/>
+      <line x1="15" y1="95" x2="15" y2="40" style="stroke:var(--text);stroke-width:2;"/>
+      <path d="M15,83 L27,83 L27,95" style="fill:none;stroke:var(--text);stroke-width:1.5;"/>
+      <text x="31" y="88" style="fill:var(--accent);font-size:11px;">90&deg;</text>
+      <text x="7" y="122" style="fill:var(--text);font-size:11px;">Right (=90&deg;)</text>
+    </g>
+    <g transform="translate(230,0)">
+      <line x1="15" y1="95" x2="70" y2="95" style="stroke:var(--text);stroke-width:2;"/>
+      <line x1="15" y1="95" x2="-20.4" y2="52.9" style="stroke:var(--text);stroke-width:2;"/>
+      <path d="M37,95 A22,22 0 0 0 0.9,78.1" style="fill:none;stroke:var(--accent2);stroke-width:1.8;"/>
+      <text x="-2" y="68" style="fill:var(--accent2);font-size:11px;">130&deg;</text>
+      <text x="-6" y="122" style="fill:var(--text);font-size:11px;">Obtuse (&gt;90&deg;)</text>
+    </g>
+  </svg>`,
+  sections: [
+    { h: "Key Points", body: `<ul>
+      <li>An <strong>acute</strong> angle is less than 90&deg; &mdash; smaller than a right angle.</li>
+      <li>A <strong>right</strong> angle is exactly 90&deg; &mdash; marked with a small square at the vertex.</li>
+      <li>An <strong>obtuse</strong> angle is more than 90&deg; but less than 180&deg;.</li>
+      <li>A <strong>straight</strong> angle is exactly 180&deg; &mdash; it looks like a straight line.</li>
+    </ul>` },
+    { h: "Formula", body: `<div class="formula-box">Acute &lt; 90&deg;&nbsp; &middot; &nbsp;Right = 90&deg;&nbsp; &middot; &nbsp;90&deg; &lt; Obtuse &lt; 180&deg;</div>` },
+    { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> Classify 35&deg;, 90&deg;, 120&deg; and 180&deg;.</p><p class="ex-steps">35&deg; &rarr; acute (less than 90&deg;)<br>90&deg; &rarr; right angle<br>120&deg; &rarr; obtuse (between 90&deg; and 180&deg;)<br>180&deg; &rarr; straight angle</p>` }
+  ],
+  examples: [
+    { q: "Is an angle of 72&deg; acute, right or obtuse?", a: "Acute &mdash; it is less than 90&deg;." },
+    { q: "A door is opened so that the angle between the door and the wall is 110&deg;. Is this acute, right or obtuse?", a: "Obtuse &mdash; 110&deg; is more than 90&deg; but less than 180&deg;." },
+    { q: "Classify each of these angles as acute, right or obtuse: 45&deg;, 90&deg;, 91&deg;, 179&deg;.", a: "45&deg; acute; 90&deg; right; 91&deg; obtuse; 179&deg; obtuse (still less than 180&deg;, the straight angle)." }
+  ]
+},
+{
+  id: "c10-t2", en: "10.2 Angles on a Line, at a Point & Vertically Opposite",
   category: "Chapter 10: Angles",
   tags: ["angles"],
   summary: "The 180°, 360° and vertically-opposite angle facts.",
@@ -638,18 +865,19 @@ const TOPICS = [
     { h: "Key Points", body: `<ul>
       <li>Angles on a straight line add up to 180&deg;.</li>
       <li>Angles all the way around a point add up to 360&deg;.</li>
-      <li>Vertically opposite angles (formed by 2 crossing lines) are always equal.</li>
+      <li>When two straight lines intersect, they form <strong>two pairs</strong> of vertically opposite angles &mdash; each pair is equal.</li>
     </ul>` },
     { h: "Formula", body: `<div class="formula-box">Straight line = 180&deg;   &middot;   Full turn = 360&deg;</div>` },
     { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> On a straight line: a + 65&deg; + 90&deg; = 180&deg;. Find a.</p><p class="ex-steps">a = 180 &minus; 65 &minus; 90 = 25&deg;</p>` }
   ],
   examples: [
     { q: "Three angles meet at a point: 110&deg;, 95&deg;, and x&deg;. Find x.", a: "x = 360 &minus; 110 &minus; 95 = 155&deg;" },
-    { q: "Two straight lines intersect. One of the four angles formed is 118&deg;. Find the other three angles.", a: "Opposite angle = 118&deg;. The other two = 180 &minus; 118 = 62&deg; each." }
+    { q: "Two straight lines intersect. One of the four angles formed is 118&deg;. Find the other three angles.", a: "Opposite angle = 118&deg;. The other two = 180 &minus; 118 = 62&deg; each." },
+    { q: "Two straight lines cross at a point. One angle is 3 times the size of its adjacent angle (they lie on the same straight line). Find both angles.", a: "Let the smaller angle = x, the larger = 3x. x + 3x = 180 &rarr; x = 45&deg;. The angles are 45&deg; and 135&deg;." }
   ]
 },
 {
-  id: "c10-t2", en: "10.2 Finding Unknown Angles",
+  id: "c10-t3", en: "10.3 Finding Unknown Angles",
   category: "Chapter 10: Angles",
   tags: ["angles", "problem-solving"],
   summary: "Combining angle facts to solve for unknowns in a diagram.",
@@ -675,7 +903,8 @@ const TOPICS = [
   ],
   examples: [
     { q: "y and 73&deg; are vertically opposite. z is on the same straight line as y. Find y and z.", a: "y = 73&deg;;  z = 180 &minus; 73 = 107&deg;" },
-    { q: "At a point, three angles are in the ratio 2:3:4 and together make a full turn. Find the smallest angle.", a: "Total parts = 9; 360 &divide; 9 = 40; smallest = 2 &times; 40 = 80&deg;" }
+    { q: "At a point, three angles are in the ratio 2:3:4 and together make a full turn. Find the smallest angle.", a: "Total parts = 9; 360 &divide; 9 = 40; smallest = 2 &times; 40 = 80&deg;" },
+    { q: "At point O, three lines meet forming angles a, 90&deg; and b in order around the point, where a = b. Find a and b.", a: "a + 90 + b = 360 (angles at a point); since a = b: 2a = 270 &rarr; a = b = 135&deg;." }
   ]
 },
 
@@ -867,6 +1096,48 @@ const TOPICS = [
     { q: "Describe how to draw a parallelogram with sides 5cm and 3cm, and one angle of 60&deg;.", a: "Draw a 5cm base, mark 60&deg; at one end, draw a 3cm side along that angle, then draw the remaining two sides parallel and equal to the first two." },
     { q: "You are given a rhombus with a diagonal of 8cm and a side of 5cm. Describe one way to construct it.", a: "Draw the 8cm diagonal. From each end, use compasses set to 5cm to draw arcs above and below the diagonal. The arc intersections give the other two vertices — join up all four sides." }
   ]
+},
+
+{
+  id: "c6-x1", en: "Fitting Whole Cubes into a Box (Non-Exact Fit)",
+  category: "Chapter 6: Volume",
+  subcategory: "tricky",
+  tags: ["volume", "cubes", "non-routine", "psle-trap", "wrong-questions"],
+  summary: "A 'trap' question: cubes must fit as WHOLE numbers along each edge — any leftover space is wasted, so you can't just divide total volumes.",
+  diagram: `<svg viewBox="0 0 340 190" xmlns="http://www.w3.org/2000/svg">
+    <rect x="50" y="30" width="60" height="60" style="fill:var(--accent-bg);stroke:var(--text);stroke-width:1.5;"/>
+    <rect x="110" y="30" width="60" height="60" style="fill:var(--accent-bg);stroke:var(--text);stroke-width:1.5;"/>
+    <rect x="170" y="30" width="60" height="60" style="fill:var(--accent-bg);stroke:var(--text);stroke-width:1.5;"/>
+    <rect x="50" y="90" width="60" height="60" style="fill:var(--accent-bg);stroke:var(--text);stroke-width:1.5;"/>
+    <rect x="110" y="90" width="60" height="60" style="fill:var(--accent-bg);stroke:var(--text);stroke-width:1.5;"/>
+    <rect x="170" y="90" width="60" height="60" style="fill:var(--accent-bg);stroke:var(--text);stroke-width:1.5;"/>
+    <text x="80" y="65" text-anchor="middle" style="fill:var(--accent);font-size:16px;font-weight:700;">&#10003;</text>
+    <text x="140" y="65" text-anchor="middle" style="fill:var(--accent);font-size:16px;font-weight:700;">&#10003;</text>
+    <text x="200" y="65" text-anchor="middle" style="fill:var(--accent);font-size:16px;font-weight:700;">&#10003;</text>
+    <text x="80" y="125" text-anchor="middle" style="fill:var(--accent);font-size:16px;font-weight:700;">&#10003;</text>
+    <text x="140" y="125" text-anchor="middle" style="fill:var(--accent);font-size:16px;font-weight:700;">&#10003;</text>
+    <text x="200" y="125" text-anchor="middle" style="fill:var(--accent);font-size:16px;font-weight:700;">&#10003;</text>
+    <rect x="230" y="30" width="30" height="120" style="fill:var(--chip-bg);stroke:var(--muted);stroke-width:1.5;stroke-dasharray:3 2;"/>
+    <text x="266" y="88" style="fill:var(--muted);font-size:10px;">&larr; 1cm</text>
+    <text x="266" y="100" style="fill:var(--muted);font-size:10px;">wasted</text>
+    <text x="140" y="168" text-anchor="middle" style="fill:var(--text);font-size:12px;font-weight:600;">7 cm</text>
+    <text x="15" y="94" text-anchor="middle" style="fill:var(--text);font-size:12px;font-weight:600;">4 cm</text>
+    <text x="140" y="16" text-anchor="middle" style="fill:var(--muted);font-size:11px;">top view (footprint): 3 &times; 2 = 6 cubes fit per layer</text>
+  </svg>`,
+  sections: [
+    { h: "Key Points", body: `<ul>
+      <li>When packing whole cubes into a box, work out how many WHOLE cubes fit along <strong>each edge separately</strong> &mdash; any leftover space smaller than one cube side is wasted.</li>
+      <li>Cubes along an edge = the edge length &divide; cube side, <strong>rounded DOWN</strong> to a whole number (ignore the remainder).</li>
+      <li>Total cubes = (cubes along length) &times; (cubes along breadth) &times; (cubes along height).</li>
+      <li>Do NOT just divide the box's total volume by one cube's volume &mdash; that overcounts whenever a side does not divide exactly.</li>
+    </ul>` },
+    { h: "Formula", body: `<div class="formula-box">Cubes along an edge = &lfloor; edge length &divide; cube side &rfloor;  (round down)</div>` },
+    { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> Chrystal wanted to fill a box (7cm &times; 4cm &times; ?cm) with 2-cm cubes. She could only fit a <em>maximum</em> of 18 cubes. What is a possible height of the box? (1) 3cm (2) 4cm (3) 6cm (4) 8cm</p><p class="ex-steps">Along the 7cm length: 7 &divide; 2 = 3.5 &rarr; only 3 whole cubes fit (6cm used, 1cm wasted)<br>Along the 4cm breadth: 4 &divide; 2 = 2 &rarr; exactly 2 whole cubes fit (no waste)<br>So each 2cm-tall layer holds 3 &times; 2 = 6 cubes<br>To reach a maximum of 18 cubes: 18 &divide; 6 = 3 layers needed<br>Height = 3 layers &times; 2cm = 6cm<br><br><strong>Check the options:</strong> height 8cm &rarr; 4 layers &rarr; 24 cubes (too many); height 4cm &rarr; 2 layers &rarr; 12 cubes (too few); height 3cm &rarr; 1 layer &rarr; 6 cubes (too few); height 6cm &rarr; 3 layers &rarr; exactly 18 cubes &check;<br><strong>Answer: (3) 6 cm</strong></p>` }
+  ],
+  examples: [
+    { q: "A box measures 9cm by 5cm by 6cm. What is the maximum number of 2-cm cubes that can be packed into it?", a: "9 &divide; 2 = 4 whole (1cm wasted); 5 &divide; 2 = 2 whole (1cm wasted); 6 &divide; 2 = 3 whole (exact). Total = 4 &times; 2 &times; 3 = 24 cubes." },
+    { q: "A box measures 10cm by 7cm by 4cm. What is the maximum number of 3-cm cubes that can be packed into it?", a: "10 &divide; 3 = 3 whole (1cm wasted); 7 &divide; 3 = 2 whole (1cm wasted); 4 &divide; 3 = 1 whole (1cm wasted). Total = 3 &times; 2 &times; 1 = 6 cubes &mdash; even though the volumes (280cm&sup3; &divide; 27cm&sup3; &asymp; 10.4) might suggest more would fit!" }
+  ]
 }
 ];
 
@@ -913,13 +1184,19 @@ const CATEGORY_PALETTE = [
   { light: "#eda100", dark: "#c98500" }  // 12 yellow (cycled)
 ];
 
+/* Fixed gold used for every chapter's nested "⭐ Tricky Questions" sub-branch,
+   regardless of that chapter's own colour — marks it as a distinct, cross-
+   cutting collection rather than another regular topic. */
+const TRICKY_COLOR = { light: "#b8912a", dark: "#d4aa4a" };
+
 window.GRADE_DATA = window.GRADE_DATA || {};
 window.GRADE_DATA.p5 = {
   root: "P5 Math",
   source: "试卷宝 · 数学五年级下学期试卷 — Chapters 1–12",
   topics: TOPICS,
   comparisons: COMPARISONS,
-  categoryPalette: CATEGORY_PALETTE
+  categoryPalette: CATEGORY_PALETTE,
+  trickyColor: TRICKY_COLOR
 };
 
 })();

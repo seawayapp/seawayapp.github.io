@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    window.NAV_CONFIG = {
+      breadcrumbs: [
+        { label: "Home", href: "../../../../index.html" },
+        { label: "Education", href: "../../../index.html" },
+        { label: "PSLE", href: "../../index.html" },
+        { label: "EL", href: "../index.html" },
+        { label: "Compositions" }
+      ]
+    };
+  </script>
+  <script src="../../../../nav-top.js"></script>
+  <meta name="description" content="A collection of PSLE English compositions, with good phrases highlighted for easy, read-aloud practice.">
+  <title>PSLE — Compositions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1a1208;
+      --ink-mid: #4a3c28;
+      --ink-light: #8a7a62;
+      --paper: #f5f0e8;
+      --gold: #b8912a;
+      --gold-light: #d4aa4a;
+      --gold-dim: rgba(184, 145, 42, .12);
+      --border: rgba(184, 145, 42, .28);
+      --shadow: rgba(80, 60, 20, .12);
+      --radius: 10px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Noto Serif SC", "Book Antiqua", "Palatino Linotype", Georgia, serif;
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 40px 24px 64px;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .logo h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      color: var(--ink);
+    }
+
+    .logo p {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: var(--ink-light);
+      font-family: system-ui, sans-serif;
+    }
+
+    .count {
+      text-align: right;
+      font-size: 0.78rem;
+      color: var(--ink-light);
+      font-family: system-ui, sans-serif;
+      margin: 28px 0 10px;
+    }
+
+    .piece-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .piece-card {
+      display: block;
+      padding: 20px 22px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--ink);
+      transition: box-shadow .2s, border-color .2s, transform .15s;
+    }
+
+    .piece-card:hover {
+      border-color: var(--gold);
+      box-shadow: 0 4px 18px var(--shadow);
+      transform: translateY(-2px);
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .piece-title-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .piece-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.4;
+    }
+
+    .piece-arrow {
+      color: var(--ink-light);
+      font-size: 0.95rem;
+      flex-shrink: 0;
+      transition: transform .2s, color .2s;
+    }
+
+    .piece-card:hover .piece-arrow {
+      transform: translateX(4px);
+      color: var(--gold);
+    }
+
+    .piece-excerpt {
+      margin-top: 8px;
+      font-size: 0.92rem;
+      line-height: 1.6;
+      color: var(--ink-mid);
+    }
+
+    .piece-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      font-family: system-ui, sans-serif;
+    }
+
+    .tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: var(--gold-dim);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 3px 10px;
+    }
+
+    .piece-sub {
+      font-size: 0.76rem;
+      color: var(--ink-light);
+    }
+
+    .empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--ink-light);
+      font-family: system-ui, sans-serif;
+      font-size: 0.9rem;
+    }
+
+    .update-date {
+      text-align: center;
+      margin-top: 48px;
+      font-size: 0.78rem;
+      color: var(--ink-light);
+      font-family: system-ui, sans-serif;
+    }
+
+    @media (max-width: 480px) {
+      .wrap {
+        padding: 28px 16px 48px;
+      }
+
+      .logo h1 {
+        font-size: 1.45rem;
+      }
+
+      .piece-card {
+        padding: 16px 16px;
+      }
+
+      .piece-title {
+        font-size: 1.02rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <header class="logo">
+      <h1>Compositions</h1>
+      <p>A growing collection of finished compositions — good phrases highlighted for easy, read-aloud practice.</p>
+    </header>
+
+    <div class="count" id="count"></div>
+    <div class="piece-list" id="piece-list"></div>
+    <div class="empty" id="empty" style="display:none;">No compositions have been added yet.</div>
+  </main>
+
+  <footer class="update-date" aria-label="Last updated">
+    Last updated on 09/08/2026
+  </footer>
+
+  <script src="data/compositions.js"></script>
+  <script>
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function wordCount(paragraphs) {
+      const plain = paragraphs.join(" ").replace(/[*_]/g, "");
+      return plain.split(/\s+/).filter(Boolean).length;
+    }
+
+    const data = (window.COMPOSITIONS_DATA || []).slice().sort(function (a, b) {
+      return (b.date || "").localeCompare(a.date || "");
+    });
+
+    const list = document.getElementById("piece-list");
+    const countEl = document.getElementById("count");
+    const emptyEl = document.getElementById("empty");
+
+    if (!data.length) {
+      emptyEl.style.display = "block";
+    } else {
+      countEl.textContent = data.length + (data.length === 1 ? " composition" : " compositions");
+      list.innerHTML = data.map(function (piece) {
+        const words = wordCount(piece.paragraphs);
+        return (
+          '<a class="piece-card" href="reader.html?id=' + encodeURIComponent(piece.id) + '">' +
+          '<div class="piece-title-row">' +
+          '<span class="piece-title">' + escapeHtml(piece.title) + "</span>" +
+          '<span class="piece-arrow">&rsaquo;</span>' +
+          "</div>" +
+          '<p class="piece-excerpt">' + escapeHtml(piece.excerpt || "") + "</p>" +
+          '<div class="piece-meta">' +
+          '<span class="tag">' + escapeHtml(piece.genre || "Composition") + "</span>" +
+          '<span class="piece-sub">' + escapeHtml(piece.theme || "") + " &middot; " + words + " words</span>" +
+          "</div>" +
+          "</a>"
+        );
+      }).join("");
+    }
+  </script>
+</body>
+
+</html>

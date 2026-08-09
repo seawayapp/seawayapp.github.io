@@ -149,7 +149,14 @@
       gap: 0;
       flex: 1;
       min-width: 0;
-      overflow: visible;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .__snav-crumbs::-webkit-scrollbar {
+      display: none;
     }
     .__snav-crumb-wrap {
       position: relative;
@@ -410,6 +417,11 @@
     const existing = parseInt(getComputedStyle(document.body).paddingTop) || 0;
     if (existing < NAV_H) {
       document.body.style.paddingTop = (existing + NAV_H) + "px";
+    }
+
+    // Scroll the breadcrumb trail so the current page (rightmost) is visible by default
+    if (titleSlot) {
+      titleSlot.scrollLeft = titleSlot.scrollWidth;
     }
 
     // Back-button logic
