@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  window.NAV_CONFIG = {
+    breadcrumbs: [
+      { label: "Home", href: "../../../index.html" },
+      { label: "Education", href: "../../index.html" },
+      { label: "PSLE", href: "../index.html" },
+      { label: "MA", href: "index.html" },
+      { label: "Question Bank" }
+    ]
+  };
+</script>
+<script src="../../../nav-top.js"></script>
+<meta name="description" content="PSLE Mathematics question bank — browse practice questions by chapter and topic, or build a custom worksheet with answer key.">
+<title>PSLE Mathematics — Question Bank</title>
+<style>
+  :root {
+    --bg: #f7f7f5; --panel: #ffffff; --text: #2a2a28; --muted: #6b6b66; --border: #e4e2dd;
+    --accent: #2a78d6; --accent2: #eb6834; --accent-bg: #e6eefa; --chip-bg: #f2f1ec;
+    --row-hover: #f2f1ec; --code-bg: #f2f1ec; --good: #0ca30c; --good-bg: #e5f6e5;
+    --mcq: #7c3aed; --mcq-bg: #efe8fd; --oe: #0891b2; --oe-bg: #e2f6fa;
+  }
+  :root[data-theme="dark"] {
+    --bg: #1c1b19; --panel: #262523; --text: #ece9e3; --muted: #a39d92; --border: #3a3835;
+    --accent: #5b9ee8; --accent2: #e08a6f; --accent-bg: #24344a; --chip-bg: #302e2b;
+    --row-hover: #302e2b; --code-bg: #302e2b; --good: #33c733; --good-bg: #1e3320;
+    --mcq: #b79bf5; --mcq-bg: #2e2545; --oe: #5fd0e8; --oe-bg: #133138;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1c1b19; --panel: #262523; --text: #ece9e3; --muted: #a39d92; --border: #3a3835;
+      --accent: #5b9ee8; --accent2: #e08a6f; --accent-bg: #24344a; --chip-bg: #302e2b;
+      --row-hover: #302e2b; --code-bg: #302e2b; --good: #33c733; --good-bg: #1e3320;
+      --mcq: #b79bf5; --mcq-bg: #2e2545; --oe: #5fd0e8; --oe-bg: #133138;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.45; }
+  .page { max-width: 1200px; margin: 0 auto; padding: 20px 20px 60px; }
+  header h1 { font-size: 1.6rem; margin: 0 0 4px; letter-spacing: -0.01em; }
+  header p.sub { margin: 0 0 16px; color: var(--muted); font-size: 0.92rem; }
+
+  .mode-tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+  .mode-tab {
+    flex: 1; text-align: center; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border);
+    background: var(--panel); color: var(--muted); font-weight: 700; font-size: 0.92rem; cursor: pointer;
+  }
+  .mode-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .mode-tab:not(.active):hover { border-color: var(--accent); color: var(--accent); }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ── Toolbar / filters ── */
+  .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+  #search { flex: 1 1 260px; padding: 10px 14px; font-size: 0.92rem; border: 1px solid var(--border); border-radius: 10px; background: var(--panel); color: var(--text); outline: none; }
+  #search:focus { border-color: var(--accent); }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip {
+    font-size: 0.78rem; padding: 7px 13px; border-radius: 999px; border: 1px solid var(--border);
+    background: var(--panel); color: var(--muted); cursor: pointer; font-weight: 600; white-space: nowrap;
+  }
+  .chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .chip:not(.active):hover { border-color: var(--accent); color: var(--accent); }
+  .stats { color: var(--muted); font-size: 0.8rem; margin: 4px 0 16px; }
+
+  /* ── Question list ── */
+  .chapter-block { margin-bottom: 20px; border: 1px solid var(--border); border-radius: 14px; background: var(--panel); overflow: hidden; }
+  .chapter-head { padding: 12px 16px; background: var(--chip-bg); font-weight: 700; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+  .chapter-head .n { font-weight: 400; color: var(--muted); font-size: 0.78rem; }
+  .chapter-body { padding: 4px 16px 12px; }
+  .chapter-block.collapsed .chapter-body { display: none; }
+  .chapter-head .caret { transition: transform .15s; margin-right: 8px; color: var(--muted); }
+  .chapter-block.collapsed .caret { transform: rotate(-90deg); }
+
+  .topic-group { margin-top: 12px; }
+  .topic-group h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: .03em; color: var(--accent); margin: 0 0 8px; }
+  .topic-group h3 a { color: inherit; text-decoration: none; font-size: 0.72rem; text-transform: none; letter-spacing: 0; color: var(--muted); margin-left: 8px; font-weight: 600; }
+  .topic-group h3 a:hover { color: var(--accent); text-decoration: underline; }
+
+  .qcard { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; background: var(--bg); }
+  .qcard .qhead { display: flex; align-items: flex-start; gap: 8px; }
+  .badge { font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; flex-shrink: 0; margin-top: 1px; }
+  .badge.mcq { background: var(--mcq-bg); color: var(--mcq); }
+  .badge.oe { background: var(--oe-bg); color: var(--oe); }
+  .qtext { font-size: 0.92rem; flex: 1; }
+  .qopts { margin: 8px 0 0 0; padding-left: 0; list-style: none; font-size: 0.86rem; }
+  .qopts li { margin: 3px 0; padding: 4px 8px; border-radius: 6px; }
+  .qopts li.correct-reveal { background: var(--good-bg); color: var(--good); font-weight: 600; }
+  .qdiagram { margin: 10px 0; padding: 10px; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; display: flex; justify-content: center; }
+  .qdiagram svg { width: 100%; max-width: 240px; height: auto; }
+  .reveal-btn { font-size: 0.78rem; color: var(--accent); cursor: pointer; font-weight: 600; margin-top: 8px; display: inline-block; }
+  .qanswer { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); font-size: 0.86rem; color: var(--text); }
+  .qcard.revealed .qanswer { display: block; }
+  .qcard.revealed .reveal-btn { display: none; }
+
+  /* ── Worksheet builder ── */
+  .builder-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 860px) { .builder-grid { grid-template-columns: 1fr; } }
+  .builder-panel { border: 1px solid var(--border); border-radius: 14px; background: var(--panel); padding: 16px 18px; }
+  .builder-panel h2 { font-size: 1rem; margin: 0 0 12px; }
+  .tree-chapter { margin-bottom: 12px; }
+  .tree-chapter-head { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.9rem; padding: 4px 0; }
+  .tree-topics { margin-left: 26px; margin-top: 4px; }
+  .tree-topic { display: flex; align-items: center; gap: 8px; padding: 3px 0; font-size: 0.85rem; color: var(--muted); }
+  .tree-topic label, .tree-chapter-head label { cursor: pointer; }
+  .opt-row { display: flex; align-items: center; gap: 8px; margin: 10px 0; font-size: 0.88rem; }
+  .btn { font-size: 0.85rem; padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--panel); color: var(--text); cursor: pointer; font-weight: 600; }
+  .btn:hover { border-color: var(--accent); }
+  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn.primary:hover { opacity: .92; }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .link-btn { background: none; border: none; color: var(--accent); font-size: 0.78rem; font-weight: 600; cursor: pointer; padding: 0; }
+
+  .summary-box { background: var(--accent-bg); border-radius: 10px; padding: 12px 14px; font-size: 0.85rem; margin-bottom: 12px; color: var(--text); }
+
+  /* ── Generated worksheet preview ── */
+  #worksheetPreview { display: none; margin-top: 20px; border: 1px solid var(--border); border-radius: 14px; background: var(--panel); padding: 24px 28px; }
+  #worksheetPreview.show { display: block; }
+  .ws-cover h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  .ws-cover p { color: var(--muted); font-size: 0.85rem; margin: 0 0 4px; }
+  .ws-section-title { font-size: 1.1rem; border-bottom: 2px solid var(--text); padding-bottom: 4px; margin: 24px 0 12px; }
+  .ws-chapter-title { font-size: 0.95rem; background: var(--chip-bg); padding: 6px 10px; border-left: 4px solid var(--accent); margin: 16px 0 10px; }
+  .ws-q { margin: 0 0 14px; }
+  .ws-q .qn { font-weight: 700; font-size: 0.9rem; }
+  .ws-opts { margin: 6px 0 0 22px; font-size: 0.88rem; }
+  .ws-opts div { margin: 2px 0; }
+  .ws-oe-space { border-bottom: 1px dotted var(--muted); height: 20px; margin: 4px 0 0; }
+  .ws-ans-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-bottom: 10px; }
+  .ws-ans-table td { border: 1px solid var(--border); padding: 5px 8px; vertical-align: top; }
+  .ws-ans-table td.qn { width: 32px; font-weight: 700; text-align: center; background: var(--chip-bg); }
+
+  @media print {
+    body * { visibility: hidden; }
+    #worksheetPreview, #worksheetPreview * { visibility: visible; }
+    #worksheetPreview { display: block !important; position: absolute; left: 0; top: 0; width: 100%; border: none; padding: 0; }
+    .no-print { display: none !important; }
+    :root, :root[data-theme="dark"] { --bg:#fff; --panel:#fff; --text:#111; --muted:#555; --border:#ccc; --accent:#2a5d9c; --accent-bg:#eef3fa; --chip-bg:#eee; }
+    .ws-q { page-break-inside: avoid; }
+  }
+
+  footer { margin-top: 30px; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); padding-top: 14px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <h1>🗂️ PSLE Mathematics — Question Bank</h1>
+    <p class="sub">Primary 5 · Browse every practice question by chapter and topic, jump to the concept in the Mind Map, or select topics below to build and print a custom worksheet with an answer key.</p>
+  </header>
+
+  <div class="mode-tabs no-print">
+    <div class="mode-tab active" data-mode="browse">📚 Browse Question Bank</div>
+    <div class="mode-tab" data-mode="build">🛠 Build a Worksheet</div>
+  </div>
+
+  <!-- ═══════════════ BROWSE PANEL ═══════════════ -->
+  <div class="panel active" id="panelBrowse">
+    <div class="toolbar no-print">
+      <input id="search" type="text" placeholder="Search question text… (e.g. rounding, fraction, triangle)" autocomplete="off">
+    </div>
+    <div class="toolbar no-print">
+      <div class="chips" id="chapterChips"></div>
+      <div class="chips" id="typeChips">
+        <div class="chip active" data-type="all">All types</div>
+        <div class="chip" data-type="mcq">MCQ</div>
+        <div class="chip" data-type="oe">Open-ended</div>
+      </div>
+    </div>
+    <div class="stats" id="stats"></div>
+    <div id="questionList"></div>
+    <div class="stats" id="emptyMsg" style="display:none;text-align:center;padding:30px 0;">No questions match your search/filter.</div>
+  </div>
+
+  <!-- ═══════════════ BUILDER PANEL ═══════════════ -->
+  <div class="panel" id="panelBuild">
+    <div class="builder-grid no-print">
+      <div class="builder-panel">
+        <h2>1. Select topics</h2>
+        <div class="btn-row" style="margin-top:0;margin-bottom:10px;">
+          <button class="link-btn" id="selectAll">Select all</button>
+          <button class="link-btn" id="selectNone">Clear all</button>
+        </div>
+        <div id="topicTree"></div>
+      </div>
+      <div class="builder-panel">
+        <h2>2. Options</h2>
+        <div class="opt-row"><input type="checkbox" id="optMcq" checked> <label for="optMcq">Include Multiple Choice questions</label></div>
+        <div class="opt-row"><input type="checkbox" id="optOe" checked> <label for="optOe">Include Open-Ended questions</label></div>
+        <div class="opt-row"><input type="checkbox" id="optShuffle"> <label for="optShuffle">Shuffle question order</label></div>
+        <div class="opt-row"><input type="checkbox" id="optAnswerKey" checked> <label for="optAnswerKey">Include answer key at the end</label></div>
+        <div class="summary-box" id="selectionSummary"></div>
+        <div class="btn-row">
+          <button class="btn primary" id="generateBtn">Generate Worksheet</button>
+          <button class="btn" id="exportJsonBtn">⬇ Export selection as JSON</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="worksheetPreview">
+      <div class="btn-row no-print" style="margin-bottom:16px;">
+        <button class="btn" id="backToBuilder">⬅ Edit selection</button>
+        <button class="btn primary" id="printBtn">🖨 Print / Save as PDF</button>
+      </div>
+      <div id="worksheetContent"></div>
+    </div>
+  </div>
+
+  <footer>
+    <span id="topicTotal"></span> questions in the bank · Based on the Singapore Primary Mathematics syllabus · Question style calibrated against real past-year P5 papers
+  </footer>
+</div>
+
+<script src="data/questions-p5.js"></script>
+<script>
+let DATA = (window.QUESTION_BANK || {}).p5 || null;
+
+const state = {
+  mode: "browse",
+  chapterFilter: "all",
+  typeFilter: "all",
+  search: "",
+  selectedTopics: new Set(),
+};
+
+if (DATA) {
+  state.selectedTopics = new Set(DATA.chapters.flatMap(c => c.topics.map(t => t.id)));
+  init();
+} else {
+  document.getElementById("questionList").innerHTML =
+    `<div class="stats" style="color:var(--accent2);">Could not load question data. Make sure data/questions-p5.js is present alongside this page.</div>`;
+}
+
+function topicLabel(topicId) {
+  for (const c of DATA.chapters) {
+    const t = c.topics.find(x => x.id === topicId);
+    if (t) return t.label;
+  }
+  return topicId;
+}
+function chapterOf(topicId) {
+  return DATA.chapters.find(c => c.topics.some(t => t.id === topicId));
+}
+function diagramHtml(q) {
+  if (!q.diagram) return "";
+  const svg = DATA.diagrams[q.diagram];
+  return svg ? `<div class="qdiagram">${svg}</div>` : "";
+}
+
+function init() {
+  document.getElementById("topicTotal").textContent = DATA.questions.length;
+  renderChapterChips();
+  renderQuestionList();
+  renderTopicTree();
+  updateSelectionSummary();
+  wireEvents();
+}
+
+/* ── Mode tabs ── */
+function wireEvents() {
+  document.querySelectorAll(".mode-tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".mode-tab").forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      state.mode = tab.dataset.mode;
+      document.getElementById("panelBrowse").classList.toggle("active", state.mode === "browse");
+      document.getElementById("panelBuild").classList.toggle("active", state.mode === "build");
+    });
+  });
+
+  document.getElementById("search").addEventListener("input", e => {
+    state.search = e.target.value.trim().toLowerCase();
+    renderQuestionList();
+  });
+
+  document.getElementById("typeChips").addEventListener("click", e => {
+    const chip = e.target.closest(".chip");
+    if (!chip) return;
+    document.querySelectorAll("#typeChips .chip").forEach(c => c.classList.remove("active"));
+    chip.classList.add("active");
+    state.typeFilter = chip.dataset.type;
+    renderQuestionList();
+  });
+
+  document.getElementById("selectAll").addEventListener("click", () => {
+    state.selectedTopics = new Set(DATA.chapters.flatMap(c => c.topics.map(t => t.id)));
+    renderTopicTree(); updateSelectionSummary();
+  });
+  document.getElementById("selectNone").addEventListener("click", () => {
+    state.selectedTopics.clear();
+    renderTopicTree(); updateSelectionSummary();
+  });
+
+  ["optMcq", "optOe"].forEach(id => document.getElementById(id).addEventListener("change", updateSelectionSummary));
+
+  document.getElementById("generateBtn").addEventListener("click", generateWorksheet);
+  document.getElementById("exportJsonBtn").addEventListener("click", exportSelectionJson);
+  document.getElementById("backToBuilder").addEventListener("click", () => {
+    document.getElementById("worksheetPreview").classList.remove("show");
+  });
+  document.getElementById("printBtn").addEventListener("click", () => window.print());
+}
+
+/* ── Browse: chapter chips ── */
+function renderChapterChips() {
+  const el = document.getElementById("chapterChips");
+  el.innerHTML = `<div class="chip active" data-chapter="all">All chapters</div>` +
+    DATA.chapters.map(c => `<div class="chip" data-chapter="${c.id}">${c.title.replace(/^Chapter \d+:\s*/, "")}</div>`).join("");
+  el.addEventListener("click", e => {
+    const chip = e.target.closest(".chip");
+    if (!chip) return;
+    el.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+    chip.classList.add("active");
+    state.chapterFilter = chip.dataset.chapter;
+    renderQuestionList();
+  });
+}
+
+/* ── Browse: question list ── */
+function matches(q) {
+  if (state.typeFilter !== "all" && q.type !== state.typeFilter) return false;
+  if (state.chapterFilter !== "all" && q.chapterId !== state.chapterFilter) return false;
+  if (state.search) {
+    const hay = (q.q + " " + (q.options || []).join(" ") + " " + (q.answer || q.solution || "")).toLowerCase();
+    if (!hay.includes(state.search)) return false;
+  }
+  return true;
+}
+
+function renderQuestionList() {
+  const list = document.getElementById("questionList");
+  const filtered = DATA.questions.filter(matches);
+  document.getElementById("emptyMsg").style.display = filtered.length ? "none" : "block";
+  document.getElementById("stats").textContent =
+    `${filtered.length} of ${DATA.questions.length} questions shown`;
+
+  list.innerHTML = DATA.chapters.map(chapter => {
+    const chapterQs = filtered.filter(q => q.chapterId === chapter.id);
+    if (!chapterQs.length) return "";
+    const topicsHtml = chapter.topics.map(topic => {
+      const topicQs = chapterQs.filter(q => q.topicId === topic.id).sort((a,b) => a.type === b.type ? a.num - b.num : (a.type > b.type ? 1 : -1));
+      if (!topicQs.length) return "";
+      return `
+        <div class="topic-group">
+          <h3>${topic.label} <a href="mindmap.html#${topic.id}">View in Mind Map ↗</a></h3>
+          ${topicQs.map(questionCardHtml).join("")}
+        </div>
+      `;
+    }).join("");
+    return `
+      <div class="chapter-block" data-chapter-block="${chapter.id}">
+        <div class="chapter-head"><span><span class="caret">▾</span>${chapter.title}</span><span class="n">${chapterQs.length} question${chapterQs.length===1?"":"s"}</span></div>
+        <div class="chapter-body">${topicsHtml}</div>
+      </div>
+    `;
+  }).join("");
+
+  list.querySelectorAll(".chapter-head").forEach(head => {
+    head.addEventListener("click", () => head.closest(".chapter-block").classList.toggle("collapsed"));
+  });
+  list.querySelectorAll(".reveal-btn").forEach(btn => {
+    btn.addEventListener("click", () => btn.closest(".qcard").classList.toggle("revealed"));
+  });
+}
+
+function questionCardHtml(q) {
+  const label = q.type === "mcq" ? "MCQ" : "OPEN-ENDED";
+  const num = `Q${q.num}`;
+  let optsHtml = "";
+  if (q.type === "mcq") {
+    const letters = ["A", "B", "C", "D"];
+    optsHtml = `<ul class="qopts">${q.options.map((o, i) =>
+      `<li data-correct="${i === q.answerIndex ? '1':'0'}">${letters[i]}) ${o}</li>`).join("")}</ul>`;
+  }
+  const answerText = q.type === "mcq"
+    ? `Correct answer: <strong>${["A","B","C","D"][q.answerIndex]}) ${q.options[q.answerIndex]}</strong><br>${q.solution || ""}`
+    : (q.answer || "");
+  return `
+    <div class="qcard" data-qid="${q.id}">
+      <div class="qhead">
+        <span class="badge ${q.type}">${label}</span>
+        <span class="qtext"><strong>${num}.</strong> ${q.q}</span>
+      </div>
+      ${diagramHtml(q)}
+      ${optsHtml}
+      <div class="reveal-btn">Show answer ▾</div>
+      <div class="qanswer">${answerText}</div>
+    </div>
+  `;
+}
+
+/* ── Builder: topic checkbox tree ── */
+function renderTopicTree() {
+  const el = document.getElementById("topicTree");
+  el.innerHTML = DATA.chapters.map(c => {
+    const allChecked = c.topics.every(t => state.selectedTopics.has(t.id));
+    const noneChecked = c.topics.every(t => !state.selectedTopics.has(t.id));
+    return `
+      <div class="tree-chapter">
+        <div class="tree-chapter-head">
+          <input type="checkbox" data-chapter-cb="${c.id}" ${allChecked ? "checked" : ""} ${(!allChecked && !noneChecked) ? "data-indeterminate=\"1\"" : ""}>
+          <label>${c.title}</label>
+        </div>
+        <div class="tree-topics">
+          ${c.topics.map(t => `
+            <div class="tree-topic">
+              <input type="checkbox" data-topic-cb="${t.id}" data-chapter="${c.id}" ${state.selectedTopics.has(t.id) ? "checked" : ""}>
+              <label>${t.label}</label>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  el.querySelectorAll("[data-indeterminate]").forEach(cb => cb.indeterminate = true);
+
+  el.querySelectorAll("[data-chapter-cb]").forEach(cb => {
+    cb.addEventListener("change", () => {
+      const chapterId = cb.dataset.chapterCb;
+      const chapter = DATA.chapters.find(c => c.id === chapterId);
+      chapter.topics.forEach(t => cb.checked ? state.selectedTopics.add(t.id) : state.selectedTopics.delete(t.id));
+      renderTopicTree(); updateSelectionSummary();
+    });
+  });
+  el.querySelectorAll("[data-topic-cb]").forEach(cb => {
+    cb.addEventListener("change", () => {
+      cb.checked ? state.selectedTopics.add(cb.dataset.topicCb) : state.selectedTopics.delete(cb.dataset.topicCb);
+      renderTopicTree(); updateSelectionSummary();
+    });
+  });
+}
+
+function selectedQuestions() {
+  const includeMcq = document.getElementById("optMcq").checked;
+  const includeOe = document.getElementById("optOe").checked;
+  return DATA.questions.filter(q =>
+    state.selectedTopics.has(q.topicId) &&
+    ((q.type === "mcq" && includeMcq) || (q.type === "oe" && includeOe))
+  );
+}
+
+function updateSelectionSummary() {
+  const qs = selectedQuestions();
+  const mcqCount = qs.filter(q => q.type === "mcq").length;
+  const oeCount = qs.filter(q => q.type === "oe").length;
+  const chapterCount = new Set(qs.map(q => q.chapterId)).size;
+  document.getElementById("selectionSummary").textContent =
+    `${qs.length} question${qs.length===1?"":"s"} selected — ${mcqCount} MCQ, ${oeCount} open-ended, across ${chapterCount} chapter${chapterCount===1?"":"s"}.`;
+}
+
+/* ── Worksheet generation ── */
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function generateWorksheet() {
+  let qs = selectedQuestions();
+  if (!qs.length) { alert("Select at least one topic and question type first."); return; }
+  const doShuffle = document.getElementById("optShuffle").checked;
+  const includeKey = document.getElementById("optAnswerKey").checked;
+
+  let mcqs = qs.filter(q => q.type === "mcq");
+  let oes = qs.filter(q => q.type === "oe");
+  if (doShuffle) { mcqs = shuffle(mcqs); oes = shuffle(oes); }
+
+  const chaptersUsed = DATA.chapters.filter(c => qs.some(q => q.chapterId === c.id));
+
+  let html = `
+    <div class="ws-cover">
+      <h1>📚 PSLE Mathematics Practice</h1>
+      <p>Primary 5 — ${chaptersUsed.map(c => c.title.replace(/^Chapter \d+:\s*/, "")).join(" · ")}</p>
+      <p>Name: _____________________&nbsp;&nbsp;&nbsp;&nbsp; Date: _____________</p>
+    </div>
+  `;
+
+  if (mcqs.length) {
+    html += `<h2 class="ws-section-title">Section A — Multiple Choice Questions</h2>`;
+    html += renderWsQuestions(mcqs, "mcq");
+  }
+  if (oes.length) {
+    html += `<h2 class="ws-section-title">Section B — Open-Ended Questions</h2>`;
+    html += renderWsQuestions(oes, "oe");
+  }
+  if (includeKey) {
+    html += `<h2 class="ws-section-title">Answer Key</h2>`;
+    if (mcqs.length) html += `<p><strong>Section A</strong></p>` + renderWsAnswerTable(mcqs, "mcq");
+    if (oes.length) html += `<p><strong>Section B</strong></p>` + renderWsAnswerTable(oes, "oe");
+  }
+
+  document.getElementById("worksheetContent").innerHTML = html;
+  document.getElementById("worksheetPreview").classList.add("show");
+  document.getElementById("worksheetPreview").scrollIntoView({ behavior: "smooth" });
+}
+
+function renderWsQuestions(qs, type) {
+  let out = "";
+  let lastChapter = null;
+  qs.forEach((q, i) => {
+    if (q.chapterId !== lastChapter) {
+      const c = DATA.chapters.find(c => c.id === q.chapterId);
+      out += `<h3 class="ws-chapter-title">${c.title}</h3>`;
+      lastChapter = q.chapterId;
+    }
+    out += `<div class="ws-q"><div class="qn">${i + 1}. ${q.q}</div>`;
+    out += diagramHtml(q);
+    if (type === "mcq") {
+      const letters = ["A", "B", "C", "D"];
+      out += `<div class="ws-opts">${q.options.map((o, j) => `<div>${letters[j]}) ${o}</div>`).join("")}</div>`;
+    } else {
+      out += `<div class="ws-oe-space"></div><div class="ws-oe-space"></div>`;
+    }
+    out += `</div>`;
+  });
+  return out;
+}
+
+function renderWsAnswerTable(qs, type) {
+  const rows = qs.map((q, i) => {
+    const ans = type === "mcq"
+      ? `${["A","B","C","D"][q.answerIndex]}) ${q.options[q.answerIndex]}${q.solution ? " — " + q.solution : ""}`
+      : q.answer;
+    return `<tr><td class="qn">${i + 1}</td><td>${ans}</td></tr>`;
+  }).join("");
+  return `<table class="ws-ans-table">${rows}</table>`;
+}
+
+function exportSelectionJson() {
+  const qs = selectedQuestions();
+  if (!qs.length) { alert("Select at least one topic and question type first."); return; }
+  const blob = new Blob([JSON.stringify(qs, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "psle-p5-maths-selection.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
