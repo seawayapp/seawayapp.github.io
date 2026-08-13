@@ -6,12 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="maintitle"></title>
     <script>
+        var FROM_CRUMB_MAP = {
+            LL: { label: "LL Sentences", href: "index_LL.html" }
+        };
+        var fromParam = new URLSearchParams(window.location.search).get('from');
+        var fromCrumb = FROM_CRUMB_MAP[fromParam] || { label: "固定短语", href: "index_fixed_expression.html" };
+
         window.NAV_CONFIG = {
             breadcrumbs: [
                 { label: "Home", href: "../../index.html" },
                 { label: "Education", href: "../index.html" },
                 { label: "New Concept English", href: "index_NewConcept.html" },
-                { label: "固定短语", href: "index_fixed_expression.html" },
+                { label: fromCrumb.label, href: fromCrumb.href },
                 { label: "..." }
             ]
         };

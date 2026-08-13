@@ -40,5 +40,19 @@ var mainData = [
     category: "file_slide",
     filename: "LL_Sentences_6",
     foldername: ""
+  },
+  {
+    title: "Phrasal Verbs",
+    subtitle: "Give · Keep · Bring · Carry",
+    category: "file_slide",
+    filename: "LL_Sentences_7",
+    foldername: ""
+  },
+  {
+    title: "Phrasal Verbs",
+    subtitle: "Fall & Take + Idioms",
+    category: "file_slide",
+    filename: "LL_Sentences_8",
+    foldername: ""
   }
 ];
