@@ -384,6 +384,47 @@
         min-height: 130px;
       }
 
+      /* ── Highlight toolbar (消文 selection formatting) ── */
+      .highlight-toolbar {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .btn-highlight {
+        border: 1px solid var(--divider);
+        border-radius: 6px;
+        padding: 5px 10px;
+        min-height: 30px;
+        font-size: 13px;
+        cursor: pointer;
+        font-family: "Noto Sans SC", sans-serif;
+        background: white;
+        color: var(--ink);
+        transition: all 0.15s;
+      }
+
+      .btn-highlight:hover {
+        border-color: var(--gold-light);
+      }
+
+      /* mirrors .hl1/.hl2/.hl3 in template_textslide_v2.html so the button
+         preview matches what the highlight will actually look like */
+      .btn-highlight.hl-red {
+        color: red;
+        font-weight: bold;
+      }
+
+      .btn-highlight.hl-yellow {
+        background-color: yellow;
+      }
+
+      .btn-highlight.hl-both {
+        color: red;
+        background-color: yellow;
+        font-weight: bold;
+      }
+
       /* ── Title-category card accent ── */
       .para-card.card-title {
         border-left: 4px solid var(--green);
@@ -797,7 +838,14 @@
           </div>
           <div class="field-group">
             <span class="field-label">EXPLANATION 消文</span>
-            <textarea class="field-textarea explanation" rows="3"
+            <div class="highlight-toolbar">
+              <button type="button" class="btn-highlight hl-red" onclick="applyHighlight(${i},'hl2')" title="选中文字标红">红字</button>
+              <button type="button" class="btn-highlight hl-yellow" onclick="applyHighlight(${i},'hl3')" title="选中文字标黄底">黄底</button>
+              <button type="button" class="btn-highlight hl-both" onclick="applyHighlight(${i},'hl1')" title="选中文字标红并加黄底">红字+黄底</button>
+              <button type="button" class="btn-highlight" onclick="applyIndent(${i},1)" title="选中的整行缩进一级，用于表示子级分组（也可直接按 Tab 键）">→ 缩进</button>
+              <button type="button" class="btn-highlight" onclick="applyIndent(${i},-1)" title="选中的整行取消一级缩进（也可直接按 Shift+Tab 键）">← 反缩进</button>
+            </div>
+            <textarea class="field-textarea explanation" id="explanation-${i}" rows="3"
               oninput="updateField(${i},'explanation',this.value); autoResize(this)">${esc(p.explanation || "")}</textarea>
           </div>`;
         }
@@ -824,6 +872,86 @@
         const oldCard = document.querySelector(`.para-card[data-index="${i}"]`);
         if (oldCard) oldCard.replaceWith(createCard(paras[i], i));
       }
+
+      // Wraps the currently selected text in the 消文 textarea with a
+      // <span class="hl1|hl2|hl3"> matching the same classes rendered by
+      // template_textslide_v2.html (hl1 = red+yellow, hl2 = red, hl3 = yellow).
+      function applyHighlight(i, cls) {
+        const ta = document.getElementById(`explanation-${i}`);
+        if (!ta) return;
+        const start = ta.selectionStart;
+        const end = ta.selectionEnd;
+        if (start === end) {
+          showToast("请先选取要标记的文字", 1800);
+          return;
+        }
+        const before = ta.value.slice(0, start);
+        const selected = ta.value.slice(start, end);
+        const after = ta.value.slice(end);
+        const wrapped = `<span class="${cls}">${selected}</span>`;
+        ta.value = before + wrapped + after;
+        updateField(i, "explanation", ta.value);
+        autoResize(ta);
+        const caret = (before + wrapped).length;
+        ta.focus();
+        ta.setSelectionRange(caret, caret);
+      }
+
+      // Leading-space indentation for the 消文 textarea, to visually group
+      // sub-items under a parent line (e.g. 想/烦恼/等起 nested under 意乐).
+      // The slide viewer renders this field with white-space: pre-wrap, so
+      // literal leading spaces here reproduce as real indentation there.
+      const INDENT_UNIT = "　　"; // two ideographic (full-width) spaces ≈ one nesting level
+
+      // Indents (dir > 0) or outdents (dir < 0) every line touched by the
+      // textarea's current selection, then re-selects the affected block so
+      // repeated presses keep working like a code editor.
+      function indentLines(ta, dir) {
+        const value = ta.value;
+        const selStart = ta.selectionStart;
+        const selEnd = ta.selectionEnd;
+
+        const blockStart = value.lastIndexOf("\n", selStart - 1) + 1;
+        const searchFrom = selEnd > selStart ? selEnd - 1 : selEnd;
+        let blockEnd = value.indexOf("\n", searchFrom);
+        if (blockEnd === -1) blockEnd = value.length;
+
+        const block = value.slice(blockStart, blockEnd);
+        const newBlock = block
+          .split("\n")
+          .map((line) => {
+            if (dir > 0) return INDENT_UNIT + line;
+            if (line.startsWith(INDENT_UNIT)) return line.slice(INDENT_UNIT.length);
+            return line.replace(/^[　 ]+/, "");
+          })
+          .join("\n");
+
+        ta.value = value.slice(0, blockStart) + newBlock + value.slice(blockEnd);
+        ta.focus();
+        ta.setSelectionRange(blockStart, blockStart + newBlock.length);
+      }
+
+      function applyIndent(i, dir) {
+        const ta = document.getElementById(`explanation-${i}`);
+        if (!ta) return;
+        indentLines(ta, dir);
+        updateField(i, "explanation", ta.value);
+        autoResize(ta);
+      }
+
+      // Let Tab / Shift+Tab indent within the 消文 textarea instead of
+      // moving focus to the next field, matching applyIndent()'s behavior.
+      document.getElementById("paraList").addEventListener("keydown", (e) => {
+        if (e.key !== "Tab") return;
+        const ta = e.target;
+        if (!(ta instanceof HTMLTextAreaElement)) return;
+        if (!ta.classList.contains("explanation")) return;
+        e.preventDefault();
+        const i = Number(ta.closest(".para-card").dataset.index);
+        indentLines(ta, e.shiftKey ? -1 : 1);
+        updateField(i, "explanation", ta.value);
+        autoResize(ta);
+      });
 
       function updateField(i, field, value) {
         paras[i][field] = value;
