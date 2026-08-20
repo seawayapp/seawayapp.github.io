@@ -365,18 +365,20 @@ const TOPICS = [
       <li>Volume is the amount of space a 3-D object occupies, measured in cubes.</li>
       <li>Count unit cubes to find volume, or use cm&sup3; / m&sup3; for real measurements.</li>
       <li>1 m&sup3; = 100cm &times; 100cm &times; 100cm = 1,000,000 cm&sup3;.</li>
+      <li>For an <strong>irregular solid</strong> built from unit cubes, just count every cube in it &mdash; it doesn't need to be a neat cuboid shape.</li>
     </ul>` }
   ],
   examples: [
     { q: "A box measures 2m &times; 1m &times; 1m. Express its volume in cm&sup3;.", a: "2 &times; 1,000,000 = 2,000,000 cm&sup3;" },
-    { q: "Express 3.2 m&sup3; in cm&sup3;.", a: "3.2 &times; 1,000,000 = 3,200,000 cm&sup3;" }
+    { q: "Express 3.2 m&sup3; in cm&sup3;.", a: "3.2 &times; 1,000,000 = 3,200,000 cm&sup3;" },
+    { q: "A staircase-shaped solid is built from unit cubes: 3 cubes in the bottom row, 2 in the middle row, and 1 on top. Find its volume in cubic units.", a: "3 + 2 + 1 = 6 cubic units" }
   ]
 },
 {
-  id: "c6-t2", en: "6.2 Isometric Drawings & Different Views",
+  id: "c6-t2", en: "6.2 Drawing Views on a Square Grid (Top / Side / Front)",
   category: "Chapter 6: Volume",
-  tags: ["volume", "isometric", "views"],
-  summary: "Drawing 3-D solids on isometric grids and sketching front/side/top views.",
+  tags: ["volume", "isometric", "views", "square-grid"],
+  summary: "Drawing 3-D solids made of unit cubes on isometric and square grids, from the top, side and front.",
   diagram: `<svg viewBox="0 0 300 190" xmlns="http://www.w3.org/2000/svg">
     <polygon points="60,140 160,140 160,80 60,80" style="fill:var(--accent-bg);stroke:var(--text);stroke-width:1.8;"/>
     <polygon points="60,80 100,55 200,55 160,80" style="fill:var(--chip-bg);stroke:var(--text);stroke-width:1.8;"/>
@@ -398,9 +400,11 @@ const TOPICS = [
   sections: [
     { h: "Key Points", body: `<ul>
       <li>Isometric grid paper is used to draw 3-D solids so edges keep correct proportions.</li>
-      <li>A solid can be drawn from its front view, side view and top view on square grids.</li>
+      <li>A solid can be drawn from its front view, side view and top view on <strong>square grids</strong> &mdash; each view is drawn as flat unit squares.</li>
+      <li>The <strong>top view</strong> always shows the full footprint of the solid, no matter how tall any part of it is.</li>
       <li>Practising these views helps you count hidden cubes accurately.</li>
-    </ul>` }
+    </ul>` },
+    { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> A solid has 2 layers: the bottom layer is a 3&times;2 grid of cubes, and the top layer has just 2 cubes at one end. Describe its top view.</p><p class="ex-steps">The top view shows the full footprint of the BOTTOM layer, since it covers the largest area &mdash; a 3&times;2 grid of 6 squares, even though the top layer is smaller.</p>` }
   ],
   examples: [
     { q: "Sketch the top view of a cuboid 3 cubes long and 2 cubes wide.", a: "A 3&times;2 grid of squares (6 squares in total)." },
@@ -408,10 +412,10 @@ const TOPICS = [
   ]
 },
 {
-  id: "c6-t3", en: "6.3 Volume of Cubes, Cuboids & Liquids",
+  id: "c6-t3", en: "6.3 Volume of Cubes & Cuboids (the Formula)",
   category: "Chapter 6: Volume",
-  tags: ["volume", "cuboid", "cube", "liquids"],
-  summary: "V = L × B × H, and volume of liquid in a container.",
+  tags: ["volume", "cuboid", "cube", "formula"],
+  summary: "V = L × B × H, and volume of a cube.",
   diagram: `<svg viewBox="0 0 300 190" xmlns="http://www.w3.org/2000/svg">
     <polygon points="60,150 170,150 170,80 60,80" style="fill:var(--accent-bg);stroke:var(--text);stroke-width:2;"/>
     <polygon points="60,80 105,50 215,50 170,80" style="fill:var(--chip-bg);stroke:var(--text);stroke-width:2;"/>
@@ -426,21 +430,39 @@ const TOPICS = [
       <li>Volume of cuboid = Length &times; Breadth &times; Height.</li>
       <li>Volume of cube = side &times; side &times; side.</li>
       <li>1 litre = 1,000 cm&sup3; = 1,000 ml.</li>
-      <li>Volume of liquid in a container = base area &times; height of liquid.</li>
     </ul>` },
     { h: "Formula", body: `<div class="formula-box">V = L &times; B &times; H</div>` },
     { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> A tank 20cm&times;15cm&times;10cm is completely filled. Find the volume in litres.</p><p class="ex-steps">V = 20 &times; 15 &times; 10 = 3,000 cm&sup3;<br>= 3,000 &divide; 1,000 = 3 litres</p>` }
   ],
   examples: [
-    { q: "A fish tank (base 30cm &times; 20cm) has water filled to a height of 12cm. Find the volume of water in litres.", a: "30&times;20&times;12 = 7,200 cm&sup3; = 7.2 l" },
-    { q: "A cube has sides of 6cm. Find its volume.", a: "6 &times; 6 &times; 6 = 216 cm&sup3;" }
+    { q: "A cube has sides of 6cm. Find its volume.", a: "6 &times; 6 &times; 6 = 216 cm&sup3;" },
+    { q: "A cuboid measures 8cm &times; 5cm &times; 4cm. Find its volume.", a: "8 &times; 5 &times; 4 = 160 cm&sup3;" }
   ]
 },
 {
-  id: "c6-t4", en: "6.4 Word Problems (Volume)",
+  id: "c6-t4", en: "6.4 Finding the Volume of One Unit Cube (Given the Total)",
   category: "Chapter 6: Volume",
-  tags: ["volume", "word-problems"],
-  summary: "Multi-step volume problems involving fractions of a container.",
+  tags: ["volume", "cubes", "division"],
+  summary: "Working backwards from a solid's total volume to find the volume of one identical unit cube.",
+  sections: [
+    { h: "Key Points", body: `<ul>
+      <li>If a solid is made of several IDENTICAL cubes and you know the TOTAL volume, divide to find the volume of ONE cube.</li>
+      <li>Volume of 1 cube = Total volume &divide; Number of cubes.</li>
+      <li>To find the side length of that 1 cube, look for a number which, multiplied by itself 3 times, gives that volume (e.g. 5&times;5&times;5 = 125, so a cube of volume 125cm&sup3; has 5cm sides).</li>
+    </ul>` },
+    { h: "Formula", body: `<div class="formula-box">Volume of 1 cube = Total volume &divide; Number of cubes</div>` },
+    { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> A solid is built from 24 identical cubes and has a total volume of 192 cm&sup3;. Find the volume of 1 cube.</p><p class="ex-steps">Volume of 1 cube = 192 &divide; 24 = 8 cm&sup3;</p>` }
+  ],
+  examples: [
+    { q: "A solid made of 15 identical cubes has a total volume of 375 cm&sup3;. Find the volume of 1 cube.", a: "375 &divide; 15 = 25 cm&sup3;" },
+    { q: "A cuboid is built from 10 identical cubes and has a total volume of 1250 cm&sup3;. Find the length of one side of a cube.", a: "Volume of 1 cube = 1250 &divide; 10 = 125 cm&sup3;. Since 5 &times; 5 &times; 5 = 125, each cube has 5cm sides." }
+  ]
+},
+{
+  id: "c6-t5", en: "6.5 Volume of Liquids in Tanks (Word Problems)",
+  category: "Chapter 6: Volume",
+  tags: ["volume", "liquids", "word-problems", "tanks"],
+  summary: "Finding the volume of liquid in a rectangular/cubical tank, and how much more is needed to fill it.",
   diagram: `<svg viewBox="0 0 300 190" xmlns="http://www.w3.org/2000/svg">
     <rect x="80" y="30" width="140" height="130" style="fill:none;stroke:var(--text);stroke-width:2;"/>
     <rect x="80" y="108" width="140" height="52" style="fill:var(--accent-bg);stroke:none;"/>
@@ -450,20 +472,73 @@ const TOPICS = [
   </svg>`,
   sections: [
     { h: "Key Points", body: `<ul>
+      <li>Volume of liquid in a container = base area &times; height of the liquid.</li>
       <li>Draw and label the container's dimensions first.</li>
-      <li>Find the volume of the whole container, then the filled/empty part as needed.</li>
+      <li>Find the volume of the whole (rectangular/cubical) tank, then the filled or empty part as needed.</li>
+      <li>To find how much MORE water is needed to fill a tank completely: full volume &minus; current volume of water.</li>
       <li>Convert units (cm&sup3; &harr; litres &harr; m&sup3;) carefully before comparing.</li>
     </ul>` },
-    { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> A tank 40cm&times;30cm&times;25cm is 2/5 filled with water. Find the volume of water.</p><p class="ex-steps">Full volume: 40&times;30&times;25 = 30,000 cm&sup3;<br>Water: 2/5 &times; 30,000 = 12,000 cm&sup3;</p>` }
+    { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> A tank 40cm&times;30cm&times;25cm is 2/5 filled with water. Find the volume of water, and how much more water is needed to fill the tank completely.</p><p class="ex-steps">Full volume: 40&times;30&times;25 = 30,000 cm&sup3;<br>Water: 2/5 &times; 30,000 = 12,000 cm&sup3;<br>More water needed: 30,000 &minus; 12,000 = 18,000 cm&sup3; = 18 litres</p>` }
   ],
   examples: [
-    { q: "How many more litres of water are needed to fill the tank above completely?", a: "30,000 &minus; 12,000 = 18,000 cm&sup3; = 18 l" },
-    { q: "A rectangular tank 25cm&times;20cm&times;30cm is empty. Water is poured in until it is 3/5 full. Find the volume of water poured in.", a: "Full: 25&times;20&times;30 = 15,000 cm&sup3;. Water: 3/5 &times; 15,000 = 9,000 cm&sup3; = 9 litres." }
+    { q: "A fish tank (base 30cm &times; 20cm) has water filled to a height of 12cm. Find the volume of water in litres.", a: "30&times;20&times;12 = 7,200 cm&sup3; = 7.2 l" },
+    { q: "A rectangular tank 25cm&times;20cm&times;30cm is empty. Water is poured in until it is 3/5 full. Find the volume of water poured in.", a: "Full: 25&times;20&times;30 = 15,000 cm&sup3;. Water: 3/5 &times; 15,000 = 9,000 cm&sup3; = 9 litres." },
+    { q: "A cubical tank of side 20cm contains water to a depth of 8cm. How many more litres of water are needed to fill the tank completely?", a: "Full volume: 20&times;20&times;20 = 8,000 cm&sup3;. Current water: 20&times;20&times;8 = 3,200 cm&sup3;. More needed: 8,000 &minus; 3,200 = 4,800 cm&sup3; = 4.8 l" }
+  ]
+},
+{
+  id: "c6-t6", en: "6.6 Painted Surface Area of a Solid",
+  category: "Chapter 6: Volume",
+  tags: ["volume", "surface-area", "painting", "cubes"],
+  summary: "Finding the total exposed area painted when a solid is fully dipped in paint — touching (internal) faces aren't painted.",
+  diagram: `<svg viewBox="0 0 320 210" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="60,150 170,150 170,80 60,80" style="fill:var(--accent-bg);stroke:var(--text);stroke-width:2;"/>
+    <polygon points="60,80 105,50 215,50 170,80" style="fill:var(--chip-bg);stroke:var(--text);stroke-width:2;"/>
+    <polygon points="170,80 215,50 215,120 170,150" style="fill:var(--border);stroke:var(--text);stroke-width:2;"/>
+    <text x="115" y="112" text-anchor="middle" style="fill:var(--text);font-size:11px;">Front</text>
+    <text x="115" y="126" text-anchor="middle" style="fill:var(--text);font-size:11px;">5&times;3=15</text>
+    <text x="137" y="62" text-anchor="middle" style="fill:var(--text);font-size:11px;">Top</text>
+    <text x="137" y="75" text-anchor="middle" style="fill:var(--text);font-size:11px;">5&times;4=20</text>
+    <text x="193" y="95" text-anchor="middle" style="fill:var(--text);font-size:11px;">Side</text>
+    <text x="193" y="108" text-anchor="middle" style="fill:var(--text);font-size:11px;">4&times;3=12</text>
+    <text x="150" y="195" text-anchor="middle" style="fill:var(--muted);font-size:12px;">painted area = 2 &times; (15+20+12) = 94 cm&sup2;</text>
+  </svg>`,
+  sections: [
+    { h: "Key Points", body: `<ul>
+      <li>When a solid is completely immersed (dipped) in paint, every EXPOSED face gets painted &mdash; including the bottom.</li>
+      <li>For a simple cuboid, the total painted area = surface area = 2 &times; (L&times;B + B&times;H + L&times;H) &mdash; each of the 3 visible faces has a hidden twin of the same size on the opposite side.</li>
+      <li>For a solid built from several stacked/glued unit cubes, faces where two cubes TOUCH each other are hidden &mdash; only count the OUTER faces.</li>
+    </ul>` },
+    { h: "Formula", body: `<div class="formula-box">Surface area of a cuboid = 2 &times; (L&times;B + B&times;H + L&times;H)</div>` },
+    { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> Two cubes of side 3cm are glued face-to-face to form a 3cm&times;3cm&times;6cm cuboid. The whole solid is dipped in paint. Find the total area covered by paint.</p><p class="ex-steps"><strong>Method 1 (as one cuboid):</strong><br>2 &times; (3&times;3 + 3&times;6 + 3&times;6) = 2 &times; (9+18+18) = 2 &times; 45 = 90 cm&sup2;<br><br><strong>Method 2 (start from 2 separate cubes, remove the hidden faces):</strong><br>2 cubes' total surface area = 2 &times; (6 &times; 3 &times; 3) = 2 &times; 54 = 108 cm&sup2;<br>The 2 touching faces (3&times;3=9cm&sup2; each) are hidden: 108 &minus; (2 &times; 9) = 90 cm&sup2; &check; same answer</p>` }
+  ],
+  examples: [
+    { q: "A cube with sides 4cm is completely dipped in paint. Find the total area covered by paint.", a: "Surface area = 6 &times; (4&times;4) = 6 &times; 16 = 96 cm&sup2;" },
+    { q: "A solid is made of two 1cm unit cubes stacked to form a 1cm&times;1cm&times;2cm tower, then dipped in paint. Find the total painted area.", a: "2 &times; (1&times;1 + 1&times;2 + 1&times;2) = 2 &times; (1+2+2) = 2 &times; 5 = 10 cm&sup2;" }
   ]
 },
 
 {
-  id: "c7-t1", en: "7.1 Multiply & Divide Decimals by 10, 100, 1000",
+  id: "c7-t1", en: "7.1 Express a Fraction as a Decimal",
+  category: "Chapter 7: Decimals",
+  tags: ["decimals", "fractions", "conversion"],
+  summary: "Dividing the numerator by the denominator to write a fraction as a decimal.",
+  sections: [
+    { h: "Key Points", body: `<ul>
+      <li>Divide the numerator by the denominator (long division) to convert a fraction to a decimal &mdash; same method as in fractions.</li>
+      <li>Fractions with denominators that divide evenly into 10, 100 or 1000 (like 2, 4, 5, 8, 20, 25) usually give an exact (terminating) decimal.</li>
+      <li>For a mixed number, convert just the fraction part to a decimal, then add it to the whole number.</li>
+    </ul>` },
+    { h: "Formula", body: `<div class="formula-box">a&frasl;b = a &divide; b</div>` },
+    { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> Express 3/4 and 2 1/8 as decimals.</p><p class="ex-steps">3/4 = 3 &divide; 4 = 0.75<br>1/8 = 1 &divide; 8 = 0.125, so 2 1/8 = 2.125</p>` }
+  ],
+  examples: [
+    { q: "Express 17/20 as a decimal.", a: "17 &divide; 20 = 0.85" },
+    { q: "Express 4 3/5 as a decimal.", a: "3/5 = 3 &divide; 5 = 0.6, so 4 3/5 = 4.6" }
+  ]
+},
+{
+  id: "c7-t2", en: "7.2 Multiply & Divide Decimals by 10, 100, 1000",
   category: "Chapter 7: Decimals",
   tags: ["decimals", "multiplication", "division"],
   summary: "Moving the decimal point when multiplying or dividing by 10, 100 or 1000.",
@@ -481,25 +556,65 @@ const TOPICS = [
   ]
 },
 {
-  id: "c7-t2", en: "7.2 Converting Measurements",
+  id: "c7-t3", en: "7.3 Dividing a Whole Number by Tens, Hundreds or Thousands (Decimal Quotient)",
   category: "Chapter 7: Decimals",
-  tags: ["decimals", "measurement", "units"],
-  summary: "Converting between km/m, kg/g, l/ml and m/cm using decimals.",
+  tags: ["decimals", "division", "quotient"],
+  summary: "Dividing a whole number by a multiple of 10, 100 or 1000 when the answer isn't a whole number.",
   sections: [
     { h: "Key Points", body: `<ul>
-      <li>km &harr; m and kg &harr; g and l &harr; ml: &times; or &divide; by 1,000.</li>
-      <li>m &harr; cm: &times; or &divide; by 100.</li>
-      <li>Always check whether to multiply (bigger&rarr;smaller unit) or divide (smaller&rarr;bigger unit).</li>
+      <li>When a whole number doesn't divide evenly by a multiple of ten (like 20, 300, 4000), the quotient will have decimal places.</li>
+      <li>Method: divide by the basic (single-digit) fact first, then divide that answer by the power of 10 &mdash; moving the decimal point.</li>
+      <li>You may need to add a decimal point and zeros to the dividend to keep dividing until there's no remainder.</li>
     </ul>` },
-    { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> Convert 3.6kg to g, and 850ml to l.</p><p class="ex-steps">3.6 &times; 1000 = 3,600 g<br>850 &divide; 1000 = 0.85 l</p>` }
+    { h: "Formula", body: `<div class="formula-box">a &divide; (b &times; 10<sup>n</sup>) = (a &divide; b) &divide; 10<sup>n</sup></div>` },
+    { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> Find 7 &divide; 20.</p><p class="ex-steps">7 &divide; 20 = (7 &divide; 2) &divide; 10<br>= 3.5 &divide; 10<br>= 0.35</p>` }
   ],
   examples: [
-    { q: "Convert 4.2m to cm; convert 7,250g to kg.", a: "420 cm; 7.25 kg" },
-    { q: "Convert 0.75km to m, and 3,400ml to litres.", a: "750 m; 3.4 l" }
+    { q: "Find 9 &divide; 200.", a: "(9 &divide; 2) &divide; 100 = 4.5 &divide; 100 = 0.045" },
+    { q: "Find 21 &divide; 4000.", a: "(21 &divide; 4) &divide; 1000 = 5.25 &divide; 1000 = 0.00525" }
   ]
 },
 {
-  id: "c7-t3", en: "7.3 Word Problems (Decimals)",
+  id: "c7-t4", en: "7.4 Converting Compound Units to Decimal Form, and Vice Versa",
+  category: "Chapter 7: Decimals",
+  tags: ["decimals", "measurement", "units", "compound-units", "reading-scales"],
+  summary: "Converting between km/m, kg/g, l/ml and m/cm, including compound-unit measurements and readings taken from a scale.",
+  diagram: `<svg viewBox="0 0 320 110" xmlns="http://www.w3.org/2000/svg">
+    <line x1="30" y1="60" x2="300" y2="60" style="stroke:var(--text);stroke-width:2;"/>
+    <line x1="30" y1="52" x2="30" y2="68" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="84" y1="52" x2="84" y2="68" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="138" y1="52" x2="138" y2="68" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="192" y1="52" x2="192" y2="68" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="246" y1="52" x2="246" y2="68" style="stroke:var(--text);stroke-width:1.5;"/>
+    <line x1="300" y1="52" x2="300" y2="68" style="stroke:var(--text);stroke-width:1.5;"/>
+    <text x="30" y="82" text-anchor="middle" style="fill:var(--text);font-size:11px;">0</text>
+    <text x="84" y="82" text-anchor="middle" style="fill:var(--text);font-size:11px;">1</text>
+    <text x="138" y="82" text-anchor="middle" style="fill:var(--text);font-size:11px;">2</text>
+    <text x="192" y="82" text-anchor="middle" style="fill:var(--text);font-size:11px;">3</text>
+    <text x="246" y="82" text-anchor="middle" style="fill:var(--text);font-size:11px;">4</text>
+    <text x="300" y="82" text-anchor="middle" style="fill:var(--text);font-size:11px;">5 kg</text>
+    <path d="M154,50 L147,38 L161,38 Z" style="fill:var(--accent);"/>
+    <text x="154" y="28" text-anchor="middle" style="fill:var(--accent);font-size:12px;font-weight:600;">2 kg 300 g = 2.3 kg</text>
+  </svg>`,
+  sections: [
+    { h: "Key Points", body: `<ul>
+      <li>km &harr; m and kg &harr; g and l &harr; ml: &times; or &divide; by 1,000. m &harr; cm: &times; or &divide; by 100.</li>
+      <li>A <strong>compound unit</strong> measurement (e.g. 3 m 45 cm) can be written as one decimal number in the larger unit: 45 cm = 0.45 m, so 3 m 45 cm = 3.45 m.</li>
+      <li>Going the other way, split a decimal measurement back into compound units: 2.6 kg = 2 kg + 0.6 kg = 2 kg 600 g.</li>
+      <li>When <strong>reading a scale</strong> (ruler, weighing scale, measuring cylinder), first read off the compound-unit value shown, then convert it to decimal form the same way.</li>
+      <li>Watch out for small smaller-unit values: 8 cm is 0.08 m (not 0.8 m), since 100 cm = 1 m.</li>
+    </ul>` },
+    { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> A weighing scale shows a reading of 2 kg 300 g. Express this as a decimal in kg. Then express 4.65 m in m and cm.</p><p class="ex-steps">2 kg 300 g: 300 g = 300 &divide; 1000 = 0.3 kg, so the reading is 2.3 kg<br><br>4.65 m: 0.65 m = 0.65 &times; 100 = 65 cm, so 4.65 m = 4 m 65 cm</p>` }
+  ],
+  examples: [
+    { q: "Convert 4.2m to cm; convert 7,250g to kg.", a: "420 cm; 7.25 kg" },
+    { q: "Convert 0.75km to m, and 3,400ml to litres.", a: "750 m; 3.4 l" },
+    { q: "Express 5 m 8 cm as a decimal in metres.", a: "8 cm = 0.08 m (not 0.8 m!), so 5 m 8 cm = 5.08 m" },
+    { q: "A weighing scale reads 3 kg 45 g. Express this as a decimal in kg.", a: "45 g = 0.045 kg, so the reading is 3.045 kg" }
+  ]
+},
+{
+  id: "c7-t5", en: "7.5 Word Problems (Decimals)",
   category: "Chapter 7: Decimals",
   tags: ["decimals", "word-problems"],
   summary: "Adding, subtracting, multiplying and dividing decimals in context.",
@@ -513,7 +628,8 @@ const TOPICS = [
   ],
   examples: [
     { q: "A bottle holds 1.5l of juice. 6 bottles are filled. How many litres of juice are used?", a: "1.5 &times; 6 = 9 l" },
-    { q: "Sarah has $18.50. She buys 3 notebooks at $2.35 each. How much money does she have left?", a: "3 &times; 2.35 = $7.05; 18.50 &minus; 7.05 = $11.45" }
+    { q: "Sarah has $18.50. She buys 3 notebooks at $2.35 each. How much money does she have left?", a: "3 &times; 2.35 = $7.05; 18.50 &minus; 7.05 = $11.45" },
+    { q: "A container holds 12.5 litres of water. It is poured equally into 5 smaller bottles, then 0.6 litres is used from one bottle. How much water is left in that bottle?", a: "Each bottle: 12.5 &divide; 5 = 2.5 l. After using 0.6 l: 2.5 &minus; 0.6 = 1.9 l" }
   ]
 },
 
@@ -669,12 +785,13 @@ const TOPICS = [
   sections: [
     { h: "Key Points", body: `<ul>
       <li>Percentage of a quantity = (%/100) &times; quantity.</li>
+      <li><strong>Shortcut:</strong> convert the percentage to a decimal first, then multiply directly &mdash; no need to write the &divide;100 every time. E.g. 75% = 0.75, so 75% of 1640 = 0.75 &times; 1640 = 1230.</li>
       <li>Going the <strong>other way</strong> &mdash; "what % is one number OF another?" &mdash; use: % = (part &divide; whole) &times; 100%.</li>
       <li>In a pie chart, all percentages (or parts) add up to 100% (the whole).</li>
       <li>Find a missing % or quantity using the 'total = 100%' relationship.</li>
     </ul>` },
-    { h: "Formula", body: `<div class="formula-box">What % is X of Y?  &rarr;  (X &divide; Y) &times; 100%</div>` },
-    { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> What percentage of 80 is 60?</p><p class="ex-steps">60 &divide; 80 = 0.75<br>0.75 &times; 100% = 75%</p>` }
+    { h: "Formula", body: `<div class="formula-box">% of a quantity = (% as a decimal) &times; quantity<br>What % is X of Y?  &rarr;  (X &divide; Y) &times; 100%</div>` },
+    { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> Find 75% of 1640 using the decimal method.</p><p class="ex-steps">75% &rarr; 75 &divide; 100 = 0.75<br>0.75 &times; 1640 = 1230</p><p class="ex-q" style="margin-top:14px;"><strong>Q:</strong> What percentage of 80 is 60?</p><p class="ex-steps">60 &divide; 80 = 0.75<br>0.75 &times; 100% = 75%</p>` }
   ],
   examples: [
     { q: "A pie chart: Sports 35%, Art 25%, the rest is Music. Out of 200 students, how many take Music?", a: "Music = 100&minus;35&minus;25 = 40%; 40/100&times;200 = 80 students" },
@@ -698,6 +815,34 @@ const TOPICS = [
     </ul>` },
     { h: "Formula", body: `<div class="formula-box">Interest = P &times; R% &times; T</div>` },
     { h: "Worked Example", body: `<p class="ex-q"><strong>Q:</strong> A $80 jacket has a 25% discount. Find the sale price.</p><p class="ex-steps">Discount = 25/100 &times; 80 = $20<br>Sale price = 80 &minus; 20 = $60</p>` },
+    { h: "🔑 Amount of Discount vs. Discounted Price", body: `<p style="margin:0 0 10px;">These are <strong>two different answers</strong> to two different questions &mdash; mixing them up is the most common mistake in discount questions.</p>
+      <ul>
+        <li><strong>Amount of Discount</strong> = how much money is <em>taken off</em> the marked price. This is how much you <strong>save</strong>.</li>
+        <li><strong>Discounted Price</strong> (a.k.a. Sale Price) = how much you actually <strong>pay</strong> at the counter, after the discount is taken off.</li>
+        <li>They always add back up to the marked price: Amount of Discount + Discounted Price = Marked Price.</li>
+      </ul>
+      <div class="diagram-box" style="padding:10px 4px;margin:10px 0;"><svg viewBox="0 0 320 145" xmlns="http://www.w3.org/2000/svg">
+        <text x="160" y="14" text-anchor="middle" style="fill:var(--text);font-size:12px;font-weight:700;">Marked Price = 100% = $450</text>
+        <line x1="20" y1="22" x2="300" y2="22" style="stroke:var(--muted);stroke-width:1;"/>
+        <line x1="20" y1="18" x2="20" y2="26" style="stroke:var(--muted);stroke-width:1;"/>
+        <line x1="300" y1="18" x2="300" y2="26" style="stroke:var(--muted);stroke-width:1;"/>
+        <rect x="20" y="34" width="182" height="38" style="fill:var(--accent-bg);stroke:var(--text);stroke-width:1.5;"/>
+        <rect x="202" y="34" width="98" height="38" style="fill:var(--accent2);opacity:0.3;stroke:var(--text);stroke-width:1.5;"/>
+        <line x1="202" y1="30" x2="202" y2="76" style="stroke:var(--text);stroke-width:1.5;stroke-dasharray:3 2;"/>
+        <text x="111" y="58" text-anchor="middle" style="fill:var(--text);font-size:13px;font-weight:700;">65%</text>
+        <text x="251" y="58" text-anchor="middle" style="fill:var(--text);font-size:13px;font-weight:700;">35%</text>
+        <text x="111" y="95" text-anchor="middle" style="fill:var(--accent);font-size:12px;font-weight:700;">Discounted Price</text>
+        <text x="111" y="110" text-anchor="middle" style="fill:var(--muted);font-size:11px;">what you PAY = $292.50</text>
+        <text x="251" y="95" text-anchor="middle" style="fill:var(--accent2);font-size:12px;font-weight:700;">Amount of</text>
+        <text x="251" y="109" text-anchor="middle" style="fill:var(--accent2);font-size:12px;font-weight:700;">Discount</text>
+        <text x="251" y="124" text-anchor="middle" style="fill:var(--muted);font-size:11px;">what you SAVE = $157.50</text>
+      </svg></div>
+      <div class="formula-box" style="margin-bottom:8px;">Amount of Discount = Discount% &times; Marked Price</div>
+      <div class="formula-box">Discounted Price = Marked Price &minus; Amount of Discount</div>
+      <p class="ex-q" style="margin-top:14px;"><strong>Q:</strong> A leather bag is marked at $450 and is on sale at a 35% discount. Anita buys 2 of these bags. Find the amount of discount she received for both bags.</p>
+      <p class="ex-steps">This question asks for the <strong>amount of discount</strong> (the savings), not the price paid.<br>Discount for 1 bag = 35/100 &times; $450 = $157.50<br>Discount for 2 bags = 2 &times; $157.50 = <strong>$315</strong></p>
+      <p class="ex-q" style="margin-top:14px;"><strong>Q:</strong> A backpack's marked price is 40% of the leather bag's marked price ($450). It has the same 35% discount. Find the discounted price of the backpack.</p>
+      <p class="ex-steps">Step 1 &mdash; find the backpack's marked price:<br>40/100 &times; $450 = $180<br>Step 2 &mdash; this question asks for the <strong>discounted price</strong> (what you pay), so subtract the discount:<br>Discount on backpack = 35/100 &times; $180 = $63<br>Discounted price = $180 &minus; $63 = <strong>$117</strong><br><span style="color:var(--muted);">Shortcut: since 35% is taken off, you keep 65% &mdash; so 65/100 &times; $180 = $117 in one step.</span></p>` },
     { h: "🌍 Maths Around Us", body: `<p style="margin:0 0 10px;">An LED (light emitting diode) bulb is an energy-efficient light bulb. LED bulbs use <strong>80% less electricity</strong> than conventional bulbs, and last longer too. <span style="color:var(--muted);font-size:0.85em;">(Source: NEA, 2023)</span></p>
       <div class="diagram-box" style="padding:10px 4px;margin:0 0 10px;"><svg viewBox="0 0 300 165" xmlns="http://www.w3.org/2000/svg">
         <g transform="translate(55,45)">
@@ -729,7 +874,8 @@ const TOPICS = [
     { q: "A $2,000 deposit earns 2% interest per year. Find the interest after 3 years.", a: "2000 &times; 2% &times; 3 = $120" },
     { q: "A television is marked at $650 with 9% GST to be added. Find the total price to be paid.", a: "GST = 9/100 &times; 650 = $58.50; total = $708.50" },
     { q: "A family currently pays $60 a month for lighting with conventional bulbs. If LED bulbs use 80% less electricity, how much would their new monthly lighting cost be after switching?", a: "Savings = 80/100 &times; $60 = $48; new cost = $60 &minus; $48 = $12 a month." },
-    { q: "The usual price of an oven was $450. During a sale, Suzanne paid $360 for it. What was the percentage discount given? (1) 20% (2) 25% (3) 75% (4) 80%", a: "Discount = 450 &minus; 360 = $90. Percentage discount = (90 &divide; 450) &times; 100% = 20%. Answer: (1) 20%." }
+    { q: "The usual price of an oven was $450. During a sale, Suzanne paid $360 for it. What was the percentage discount given? (1) 20% (2) 25% (3) 75% (4) 80%", a: "Discount = 450 &minus; 360 = $90. Percentage discount = (90 &divide; 450) &times; 100% = 20%. Answer: (1) 20%." },
+    { q: "A sofa is marked at $1,200 and is on sale at a 20% discount. (a) Find the amount of discount. (b) Find the discounted price.", a: "(a) Amount of discount = 20/100 &times; $1,200 = $240. (b) Discounted price = $1,200 &minus; $240 = $960 (or directly: 80/100 &times; $1,200 = $960)." }
   ]
 },
 {
