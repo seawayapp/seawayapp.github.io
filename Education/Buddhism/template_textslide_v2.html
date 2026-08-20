@@ -299,7 +299,86 @@
 
       /* =========================================
        PRINT / PDF - ENLARGED CONTENT TEXT
+       =========================================
+       NOTE: the .print-page geometry rules below are intentionally NOT
+       scoped inside @media print. They stay off-screen (position: fixed,
+       shifted out of the viewport) during normal browsing, but are always
+       laid out in the DOM. This lets fitPrintExplanationText() measure
+       real scrollHeight/clientHeight and shrink fonts to fit *before*
+       window.print() is called — waiting for @media print to activate
+       (e.g. via the beforeprint event) is unreliable across browsers,
+       since some capture the print layout before script mutations land.
        ========================================= */
+      #printContent {
+        position: fixed;
+        top: 0;
+        left: -100000px; /* off-screen until printing; still fully laid out */
+        width: 297mm;
+        pointer-events: none;
+      }
+
+      .print-page {
+        position: relative;
+        width: 297mm;
+        height: 210mm;
+        page-break-after: always;
+        break-after: page;
+        display: flex;
+        flex-direction: column;
+        background: white;
+        overflow: hidden; /* keep each page's content from bleeding into the next printed page */
+      }
+
+      .print-page header {
+        height: var(--header-height);
+        display: flex;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        flex-shrink: 0;
+      }
+
+      .print-page .print-content {
+        flex: 1;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        min-height: 0; /* prevent flex item from growing past the page to fit its content */
+        overflow: hidden;
+      }
+
+      .print-page .chapter-cover {
+        display: flex;
+      }
+
+      .print-footer-page {
+        position: absolute;
+        bottom: 10mm;
+        right: 15mm;
+        font-size: 14px;
+        color: #666;
+        font-family: serif;
+      }
+
+      /* --- ENLARGED TEXT FOR CONTENT (original & explanation) --- */
+      .print-page .box-original {
+        font-size: 1.6rem;
+        line-height: 1.6;
+        padding: 15px;
+      }
+
+      .print-page .box-explanation {
+        /* base/default size; fitPrintExplanationText() overrides this
+           per-page with an inline style to make long content fit */
+        font-size: 1.8rem;
+        line-height: 1.7;
+        padding: 15px;
+        flex: 1;
+        min-height: 0; /* let JS-measured height reflect the real flex-allocated box instead of growing to fit long text */
+        overflow: hidden; /* fallback clip if content still exceeds the page after shrinking to the minimum font size */
+      }
+
       @media print {
         * {
           -webkit-print-color-adjust: exact !important;
@@ -322,62 +401,6 @@
           display: block !important;
         }
 
-        .print-page {
-          position: relative;
-          width: 297mm;
-          height: 210mm;
-          page-break-after: always;
-          break-after: page;
-          display: flex;
-          flex-direction: column;
-          background: white;
-        }
-
-        .print-page header {
-          height: var(--header-height);
-          display: flex;
-          color: white;
-          font-size: 20px;
-          font-weight: bold;
-          flex-shrink: 0;
-        }
-
-        .print-page .print-content {
-          flex: 1;
-          /* removed redundant font-size to avoid conflict */
-          padding: 20px;
-          display: flex;
-          flex-direction: column;
-          gap: 15px;
-        }
-
-        .print-page .chapter-cover {
-          display: flex;
-        }
-
-        .print-footer-page {
-          position: absolute;
-          bottom: 10mm;
-          right: 15mm;
-          font-size: 14px;
-          color: #666;
-          font-family: serif;
-        }
-
-        /* --- ENLARGED TEXT FOR CONTENT (original & explanation) --- */
-        .box-original {
-          font-size: 1.6rem !important;
-          line-height: 1.6 !important;
-          padding: 15px !important;
-        }
-
-        .box-explanation {
-          font-size: 1.8rem !important;
-          line-height: 1.7 !important;
-          padding: 15px !important;
-          flex: 1;
-        }
-
         /* Hide interactive UI */
         footer,
         .btn-nav,
@@ -393,13 +416,11 @@
         }
 
         #printContent {
+          position: static !important;
+          left: auto !important;
           display: block !important;
+          pointer-events: auto;
         }
-      }
-
-      /* Hidden in screen mode — only shown during print */
-      #printContent {
-        display: none;
       }
     </style>
   </head>
@@ -695,10 +716,40 @@
       /* =========================================
        Print
        ========================================= */
+      const PRINT_EXPLANATION_MAX_FONT_REM = 1.8; // matches the default in the print stylesheet
+      const PRINT_EXPLANATION_MIN_FONT_REM = 0.8; // floor so text stays legible
+      const PRINT_EXPLANATION_FONT_STEP_REM = 0.05;
+
+      // Shrinks each printed slide's "explanation" box font-size just enough
+      // for its full text to fit within that single printed page, since
+      // pages have a fixed size and long explanations would otherwise
+      // overflow/get clipped.
+      function fitPrintExplanationText() {
+        document
+          .querySelectorAll("#printContent .box-explanation")
+          .forEach((box) => {
+            let fontSize = PRINT_EXPLANATION_MAX_FONT_REM;
+            box.style.fontSize = fontSize + "rem";
+            while (
+              box.scrollHeight > box.clientHeight &&
+              fontSize > PRINT_EXPLANATION_MIN_FONT_REM
+            ) {
+              fontSize = Math.max(
+                PRINT_EXPLANATION_MIN_FONT_REM,
+                +(fontSize - PRINT_EXPLANATION_FONT_STEP_REM).toFixed(2),
+              );
+              box.style.fontSize = fontSize + "rem";
+            }
+          });
+      }
+
+      window.addEventListener("beforeprint", fitPrintExplanationText);
+
       function doFullPrint() {
         if (!slideData.length) return;
         // #printContent is already populated with all slides on init.
         // CSS hides .slide-container and shows #printContent in @media print.
+        fitPrintExplanationText();
         window.print();
       }
 
