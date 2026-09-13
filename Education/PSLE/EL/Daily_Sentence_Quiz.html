@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="maintitle">P5 Daily Sentence Quiz</title>
+    <style>
+        body {
+            font-family: 'Book Antiqua', '楷体', sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100dvh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        /* ── Header ── */
+        header {
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+            color: white;
+            padding: 12px 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.6em;
+            padding: 0 80px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        h1 span.sub {
+            display: block;
+            font-size: 0.55em;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 2px;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 8px 14px;
+            background-color: #ffffff;
+            color: #4285f4;
+            border: 2px solid #ffffff;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            white-space: nowrap;
+            line-height: 1;
+        }
+
+        /* ── Control bar ── */
+        .control-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 10px 18px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 16px;
+            flex-shrink: 0;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        .date-select {
+            padding: 6px 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: #444;
+            font-weight: 600;
+        }
+
+        .progress-text .score-num { color: #34a853; }
+
+        .reset-btn {
+            padding: 5px 10px;
+            font-size: 13px;
+            border: 1px solid #d93025;
+            background: #fff;
+            color: #d93025;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .reset-btn:hover { background: #fdecea; }
+
+        .switch-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* ── Content ── */
+        .content {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .slide-card {
+            width: 85%;
+            max-width: 900px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+            text-align: left;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        .badge-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .category-badge {
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            color: #4285f4;
+            background-color: rgba(66, 133, 244, 0.1);
+            border: 1px solid rgba(66, 133, 244, 0.3);
+            border-radius: 20px;
+            padding: 4px 14px;
+        }
+
+        .speak-btn {
+            background: none;
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            font-size: 15px;
+            line-height: 1;
+            cursor: pointer;
+            color: #4285f4;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .speak-btn:hover { background-color: rgba(66, 133, 244, 0.1); }
+
+        .sentence-display {
+            font-size: 24px;
+            color: #3c4043;
+            line-height: 1.55;
+            margin-bottom: 26px;
+        }
+
+        .blank {
+            display: inline-block;
+            min-width: 70px;
+            padding: 0 6px;
+            border-bottom: 3px solid #4285f4;
+            color: #4285f4;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .blank.filled {
+            border-bottom-style: solid;
+        }
+
+        .blank.correct { color: #1e7e34; border-bottom-color: #1e7e34; }
+        .blank.wrong { color: #d93025; border-bottom-color: #d93025; }
+
+        /* Interactive areas */
+        .interactive-area { margin-bottom: 10px; }
+
+        .options-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .option-btn {
+            padding: 10px 18px;
+            font-size: 18px;
+            border: 2px solid #4285f4;
+            background: #fff;
+            color: #4285f4;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .option-btn:hover:not(:disabled) { background: rgba(66, 133, 244, 0.08); }
+        .option-btn:disabled { cursor: default; opacity: 0.75; }
+        .option-btn.correct { border-color: #1e7e34; background: #e6f4ea; color: #1e7e34; }
+        .option-btn.wrong { border-color: #d93025; background: #fdecea; color: #d93025; }
+
+        .answer-input-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .answer-input {
+            flex: 1;
+            min-width: 180px;
+            padding: 10px 12px;
+            font-size: 18px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .answer-input:focus { outline: none; border-color: #4285f4; }
+
+        .hint-text {
+            font-size: 15px;
+            color: #888;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: inherit;
+        }
+        .action-btn:hover { background-color: #3367d6; }
+        .action-btn:disabled { background-color: #aac4f5; cursor: default; }
+
+        .self-score-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .self-btn-right {
+            border: 2px solid #1e7e34;
+            color: #1e7e34;
+            background: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .self-btn-right:hover { background: #e6f4ea; }
+
+        .self-btn-wrong {
+            border: 2px solid #d93025;
+            color: #d93025;
+            background: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .self-btn-wrong:hover { background: #fdecea; }
+
+        /* Feedback panel */
+        .feedback-panel {
+            margin-top: 22px;
+            padding: 16px 18px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .feedback-panel.show { display: block; }
+        .feedback-panel.correct { background: #e6f4ea; border: 1px solid #b7dfc3; }
+        .feedback-panel.wrong { background: #fdecea; border: 1px solid #f4c7c3; }
+        .feedback-panel.neutral { background: #f1f3f4; border: 1px solid #dcdfe1; }
+
+        .feedback-heading {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .feedback-panel.correct .feedback-heading { color: #1e7e34; }
+        .feedback-panel.wrong .feedback-heading { color: #d93025; }
+
+        .feedback-answer {
+            font-size: 17px;
+            color: #3c4043;
+            margin-bottom: 6px;
+        }
+
+        .feedback-explanation {
+            font-size: 15px;
+            color: #5f6368;
+            line-height: 1.5;
+        }
+
+        /* ── Footer ── */
+        footer {
+            background-color: #f8f9fa;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #ddd;
+            flex-shrink: 0;
+            gap: 8px;
+        }
+
+        .nav-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            white-space: nowrap;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .nav-btn:hover { background-color: #43a047; }
+        .nav-btn:active { background-color: #388e3c; }
+
+        .slide-info {
+            font-size: 16px;
+            color: #666;
+            flex-shrink: 0;
+        }
+
+        .jump-select {
+            padding: 8px 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            margin-right: 8px;
+        }
+
+        /* ── Side navigation ── */
+        .side-nav {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            background: rgba(76, 175, 80, 0.35);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.18s, transform 0.15s;
+            user-select: none;
+        }
+
+        .side-nav:hover  { background: rgba(76, 175, 80, 0.75); }
+        .side-nav:active { background: rgba(56, 142, 60, 0.9); transform: translateY(-50%) scale(0.93); }
+
+        .side-nav-left  { left: 6px; }
+        .side-nav-right { right: 6px; }
+
+        /* ── Tablet ── */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.2em;
+                padding: 0 70px;
+            }
+
+            .slide-card {
+                width: 100%;
+                padding: 24px 20px;
+            }
+
+            .sentence-display { font-size: 19px; }
+        }
+
+        /* ── Mobile ── */
+        @media (max-width: 540px) {
+            .back-btn {
+                font-size: 12px;
+                padding: 7px 10px;
+            }
+
+            .content {
+                padding: 12px 46px;
+            }
+
+            .control-bar {
+                gap: 8px 12px;
+                padding: 8px 10px;
+            }
+
+            /* Footer: centered, icon-only buttons */
+            footer {
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .nav-group {
+                display: contents;
+            }
+
+            .btn-label {
+                display: none;
+            }
+
+            .slide-info {
+                display: none;
+            }
+
+            .nav-btn {
+                padding: 10px 12px;
+                font-size: 16px;
+            }
+
+            .jump-select {
+                font-size: 14px;
+                padding: 8px 6px;
+                max-width: 150px;
+                margin-right: 0;
+            }
+
+            .side-nav {
+                width: 38px;
+                height: 38px;
+                font-size: 15px;
+            }
+
+            .side-nav-left  { left: 4px; }
+            .side-nav-right { right: 4px; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Side navigation -->
+    <button class="side-nav side-nav-left"  id="side-prev" aria-label="Previous slide">◀</button>
+    <button class="side-nav side-nav-right" id="side-next" aria-label="Next slide">▶</button>
+
+    <header>
+        <button class="back-btn" onclick="history.back()">← Back</button>
+        <h1 id="page-title">Loading... <span class="sub" id="page-subtitle"></span></h1>
+    </header>
+
+    <div class="control-bar">
+        <div class="control-group">
+            <label for="date-select">📅 Day:</label>
+            <select class="date-select" id="date-select"></select>
+        </div>
+        <div class="control-group">
+            <label class="switch-label">
+                <input type="checkbox" id="study-mode-toggle">
+                📖 Study mode (show answers)
+            </label>
+        </div>
+        <div class="control-group">
+            <span class="progress-text" id="progress-text">0 / 0 answered</span>
+        </div>
+        <button class="reset-btn" id="reset-btn">Reset today's progress</button>
+    </div>
+
+    <div class="content">
+        <div class="slide-card">
+            <div class="badge-row">
+                <span class="category-badge" id="category-badge"></span>
+                <button class="speak-btn" id="speak-btn" aria-label="Read sentence aloud">🔊</button>
+            </div>
+
+            <div class="sentence-display" id="sentence-display"></div>
+
+            <div class="interactive-area" id="interactive-area"></div>
+
+            <div class="feedback-panel" id="feedback-panel">
+                <div class="feedback-heading" id="feedback-heading"></div>
+                <div class="feedback-answer" id="feedback-answer"></div>
+                <div class="feedback-explanation" id="feedback-explanation"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="nav-group">
+            <button class="nav-btn" id="prev-btn">◀ <span class="btn-label">Previous</span></button>
+        </div>
+        <span class="slide-info" id="slide-counter">1 of 1</span>
+        <div class="nav-group">
+            <select class="jump-select" id="slide-select"></select>
+            <button class="nav-btn" id="next-btn"><span class="btn-label">Next</span> ▶</button>
+        </div>
+    </footer>
+
+    <script>
+        const STORAGE_KEY = 'llSentencesProgress';
+
+        let allSessions = [];
+        let currentSessionIndex = 0;
+        let currentItemIndex = 0;
+        let answered = false; // whether current item has been checked this view
+
+        const pageTitle      = document.getElementById('page-title');
+        const pageSubtitle    = document.getElementById('page-subtitle');
+        const dateSelect      = document.getElementById('date-select');
+        const studyToggle     = document.getElementById('study-mode-toggle');
+        const progressText    = document.getElementById('progress-text');
+        const resetBtn        = document.getElementById('reset-btn');
+        const categoryBadge   = document.getElementById('category-badge');
+        const speakBtn        = document.getElementById('speak-btn');
+        const sentenceDisplay = document.getElementById('sentence-display');
+        const interactiveArea = document.getElementById('interactive-area');
+        const feedbackPanel   = document.getElementById('feedback-panel');
+        const feedbackHeading = document.getElementById('feedback-heading');
+        const feedbackAnswer  = document.getElementById('feedback-answer');
+        const feedbackExplanation = document.getElementById('feedback-explanation');
+        const slideCounter    = document.getElementById('slide-counter');
+        const slideSelect     = document.getElementById('slide-select');
+        const prevBtn         = document.getElementById('prev-btn');
+        const nextBtn         = document.getElementById('next-btn');
+        const sidePrev        = document.getElementById('side-prev');
+        const sideNext        = document.getElementById('side-next');
+
+        function loadProgress() {
+            try {
+                return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function saveProgress(progress) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+            } catch (e) { /* ignore quota / privacy-mode errors */ }
+        }
+
+        function currentSession() {
+            return allSessions[currentSessionIndex];
+        }
+
+        function currentItem() {
+            return currentSession().items[currentItemIndex];
+        }
+
+        function isScorable(item) {
+            return item.type === 'mcq' || item.type === 'text' || item.type === 'spelling' || item.type === 'transform';
+        }
+
+        function recordResult(correct) {
+            const session = currentSession();
+            const progress = loadProgress();
+            if (!progress[session.date]) progress[session.date] = {};
+            progress[session.date][currentItemIndex] = correct;
+            saveProgress(progress);
+            updateProgressText();
+        }
+
+        function updateProgressText() {
+            const session = currentSession();
+            const progress = loadProgress()[session.date] || {};
+            const scorableCount = session.items.filter(isScorable).length;
+            const answeredEntries = Object.values(progress);
+            const answeredCount = answeredEntries.length;
+            const correctCount = answeredEntries.filter(Boolean).length;
+            progressText.innerHTML = `${answeredCount} / ${scorableCount} answered &middot; <span class="score-num">${correctCount}</span> correct`;
+        }
+
+        function populateDateSelect() {
+            dateSelect.innerHTML = '';
+            allSessions.forEach((session, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = session.label || session.date;
+                dateSelect.appendChild(option);
+            });
+        }
+
+        function initSlideSelect() {
+            slideSelect.innerHTML = '';
+            currentSession().items.forEach((item, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = `Q${index + 1} - ${item.category}`;
+                slideSelect.appendChild(option);
+            });
+        }
+
+        function goToSession(index) {
+            currentSessionIndex = index;
+            currentItemIndex = 0;
+            dateSelect.value = index;
+            initSlideSelect();
+            showSlide(0);
+        }
+
+        function showSlide(index) {
+            const items = currentSession().items;
+            if (index < 0) {
+                index = items.length - 1;
+            } else if (index >= items.length) {
+                index = 0;
+            }
+            currentItemIndex = index;
+            answered = false;
+
+            renderItem();
+
+            slideCounter.textContent = `${index + 1} of ${items.length}`;
+            slideSelect.value = index;
+            updateProgressText();
+        }
+
+        function renderItem() {
+            const item = currentItem();
+            categoryBadge.textContent = item.category;
+            feedbackPanel.classList.remove('show', 'correct', 'wrong', 'neutral');
+            interactiveArea.innerHTML = '';
+
+            if (item.type === 'transform') {
+                sentenceDisplay.textContent = item.sentence;
+            } else {
+                const parts = item.sentence.split('___');
+                sentenceDisplay.innerHTML = `${parts[0] || ''}<span class="blank" id="blank-slot">_____</span>${parts[1] || ''}`;
+            }
+
+            buildInteractiveArea(item);
+
+            const progress = loadProgress()[currentSession().date] || {};
+            const priorResult = progress[currentItemIndex];
+
+            if (studyToggle.checked) {
+                revealAnswer(item, null, true);
+            } else if (priorResult !== undefined) {
+                revealAnswer(item, priorResult, false);
+            }
+        }
+
+        function buildInteractiveArea(item) {
+            if (item.type === 'mcq') {
+                const grid = document.createElement('div');
+                grid.className = 'options-grid';
+                item.options.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.textContent = opt;
+                    btn.addEventListener('click', () => handleMcqAnswer(item, opt, grid));
+                    grid.appendChild(btn);
+                });
+                interactiveArea.appendChild(grid);
+            } else if (item.type === 'text' || item.type === 'spelling') {
+                const wrapper = document.createElement('div');
+                if (item.type === 'spelling' && item.hint) {
+                    const hint = document.createElement('div');
+                    hint.className = 'hint-text';
+                    hint.textContent = `Hint: ${item.hint}`;
+                    wrapper.appendChild(hint);
+                }
+                const row = document.createElement('div');
+                row.className = 'answer-input-row';
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'answer-input';
+                input.placeholder = 'Type your answer...';
+                input.id = 'text-answer-input';
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') handleTextAnswer(item, input.value);
+                });
+                const checkBtn = document.createElement('button');
+                checkBtn.className = 'action-btn';
+                checkBtn.textContent = 'Check';
+                checkBtn.addEventListener('click', () => handleTextAnswer(item, input.value));
+                row.appendChild(input);
+                row.appendChild(checkBtn);
+                wrapper.appendChild(row);
+                interactiveArea.appendChild(wrapper);
+                input.focus();
+            } else if (item.type === 'transform') {
+                const revealBtn = document.createElement('button');
+                revealBtn.className = 'action-btn';
+                revealBtn.textContent = 'Show Model Answer';
+                revealBtn.addEventListener('click', () => revealAnswer(item, null, true, true));
+                interactiveArea.appendChild(revealBtn);
+            }
+        }
+
+        function normalise(str) {
+            return (str || '').trim().toLowerCase().replace(/\s+/g, ' ');
+        }
+
+        function handleMcqAnswer(item, chosen, grid) {
+            if (answered) return;
+            answered = true;
+            const correct = normalise(chosen) === normalise(item.answer);
+            Array.from(grid.children).forEach(btn => {
+                btn.disabled = true;
+                if (normalise(btn.textContent) === normalise(item.answer)) {
+                    btn.classList.add('correct');
+                } else if (normalise(btn.textContent) === normalise(chosen) && !correct) {
+                    btn.classList.add('wrong');
+                }
+            });
+            recordResult(correct);
+            revealAnswer(item, correct, false);
+        }
+
+        function handleTextAnswer(item, value) {
+            if (answered) return;
+            if (!value || !value.trim()) return;
+            answered = true;
+            const candidates = [item.answer].concat(item.altAnswers || []).map(normalise);
+            const correct = candidates.includes(normalise(value));
+            const input = document.getElementById('text-answer-input');
+            if (input) input.disabled = true;
+            recordResult(correct);
+            revealAnswer(item, correct, false);
+        }
+
+        function revealAnswer(item, correct, isStudyOrTransform, fromTransformReveal) {
+            const blankSlot = document.getElementById('blank-slot');
+            if (blankSlot) {
+                blankSlot.textContent = item.answer;
+                blankSlot.classList.add('filled');
+                if (correct === true) blankSlot.classList.add('correct');
+                else if (correct === false) blankSlot.classList.add('wrong');
+            }
+
+            feedbackPanel.classList.add('show');
+            feedbackAnswer.textContent = item.type === 'transform'
+                ? `Model answer: ${item.answer}`
+                : `Answer: ${item.answer}`;
+            feedbackExplanation.textContent = item.explanation || '';
+
+            if (item.type === 'transform') {
+                feedbackPanel.classList.add('neutral');
+                feedbackHeading.textContent = '📝 Compare with the model answer';
+                if (fromTransformReveal && !answered) {
+                    answered = true;
+                    const selfRow = document.createElement('div');
+                    selfRow.className = 'self-score-row';
+                    const rightBtn = document.createElement('button');
+                    rightBtn.className = 'self-btn-right';
+                    rightBtn.textContent = '✅ I got it right';
+                    rightBtn.addEventListener('click', () => { recordResult(true); rightBtn.parentElement.remove(); });
+                    const wrongBtn = document.createElement('button');
+                    wrongBtn.className = 'self-btn-wrong';
+                    wrongBtn.textContent = '❌ I need more practice';
+                    wrongBtn.addEventListener('click', () => { recordResult(false); wrongBtn.parentElement.remove(); });
+                    selfRow.appendChild(rightBtn);
+                    selfRow.appendChild(wrongBtn);
+                    interactiveArea.appendChild(selfRow);
+                }
+            } else if (correct === true) {
+                feedbackPanel.classList.add('correct');
+                feedbackHeading.textContent = '✅ Correct!';
+            } else if (correct === false) {
+                feedbackPanel.classList.add('wrong');
+                feedbackHeading.textContent = '❌ Not quite';
+            } else {
+                feedbackPanel.classList.add('neutral');
+                feedbackHeading.textContent = '📖 Study mode';
+            }
+        }
+
+        function readAloud(text) {
+            if (!text) return;
+            speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text.replace(/___/g, 'blank'));
+            utterance.lang = 'en-GB';
+            utterance.rate = 0.95;
+            utterance.pitch = 1;
+            speechSynthesis.speak(utterance);
+        }
+
+        speakBtn.addEventListener('click', () => readAloud(currentItem().sentence));
+
+        prevBtn.addEventListener('click', () => showSlide(currentItemIndex - 1));
+        nextBtn.addEventListener('click', () => showSlide(currentItemIndex + 1));
+        sidePrev.addEventListener('click', () => showSlide(currentItemIndex - 1));
+        sideNext.addEventListener('click', () => showSlide(currentItemIndex + 1));
+        slideSelect.addEventListener('change', () => showSlide(parseInt(slideSelect.value)));
+        dateSelect.addEventListener('change', () => goToSession(parseInt(dateSelect.value)));
+        studyToggle.addEventListener('change', () => renderItem());
+
+        resetBtn.addEventListener('click', () => {
+            const session = currentSession();
+            const progress = loadProgress();
+            delete progress[session.date];
+            saveProgress(progress);
+            renderItem();
+            updateProgressText();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            const tag = (e.target && e.target.tagName) || '';
+            if (tag === 'INPUT') return;
+            if (e.key === 'ArrowLeft') showSlide(currentItemIndex - 1);
+            if (e.key === 'ArrowRight') showSlide(currentItemIndex + 1);
+        });
+
+        function loadScript(fileName) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = fileName;
+                script.type = 'text/javascript';
+                script.onload = () => {
+                    if (typeof mainData !== 'undefined') resolve(mainData);
+                    else reject(new Error('No data found in script.'));
+                };
+                script.onerror = () => reject(new Error(`Failed to load: ${fileName}`));
+                document.body.appendChild(script);
+            });
+        }
+
+        function getScriptParam() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('input') || 'LL_Sentences';
+        }
+
+        async function init() {
+            try {
+                const scriptFile = getScriptParam();
+                const fileName = `./data/${scriptFile}.js`;
+                const data = await loadScript(fileName);
+                allSessions = data.sessions;
+                pageTitle.childNodes[0].nodeValue = data.title + ' ';
+                pageSubtitle.textContent = data.subtitle;
+                document.getElementById('maintitle').textContent = data.title + ' — ' + data.subtitle;
+                populateDateSelect();
+                goToSession(0);
+            } catch (error) {
+                console.error(error);
+                sentenceDisplay.textContent = 'Error loading practice data.';
+            }
+        }
+
+        window.addEventListener('load', init);
+    </script>
+</body>
+
+</html>
