@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    window.NAV_CONFIG = {
+      breadcrumbs: [
+        { label: "Home", href: "../../../../index.html" },
+        { label: "Education", href: "../../../index.html" },
+        { label: "PSLE", href: "../../index.html" },
+        { label: "EL", href: "../index.html" },
+        { label: "Grammar Cloze" }
+      ]
+    };
+  </script>
+  <script src="../../../../nav-top.js"></script>
+  <meta name="description" content="PSLE English Grammar Cloze practice — click-to-fill word bank exercises with instant marking and explanations.">
+  <title>PSLE — Grammar Cloze</title>
+  <style>
+    :root {
+      --ink: #1f2b23;
+      --ink-mid: #4a5c4f;
+      --ink-light: #7c8f80;
+      --paper: #faf7ef;
+      --card: #ffffff;
+      --forest: #3a6b52;
+      --forest-dim: rgba(58, 107, 82, .10);
+      --forest-line: rgba(58, 107, 82, .28);
+      --gold: #c99a3d;
+      --gold-dim: rgba(201, 154, 61, .14);
+      --good: #2f8a4e;
+      --good-bg: #e7f5ea;
+      --bad: #c1483c;
+      --bad-bg: #fbeae8;
+      --shadow: rgba(40, 60, 45, .10);
+      --radius: 12px;
+    }
+
+    * , *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Georgia, "Book Antiqua", "Palatino Linotype", serif;
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 32px 20px 72px;
+    }
+
+    header.page-head {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    header.page-head h1 {
+      font-size: 1.7rem;
+      color: var(--forest);
+      letter-spacing: .02em;
+    }
+
+    header.page-head .sub {
+      margin-top: 6px;
+      font-family: system-ui, sans-serif;
+      font-size: .85rem;
+      color: var(--ink-light);
+    }
+
+    .leaf-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 14px 0 26px;
+      color: var(--gold);
+    }
+    .leaf-divider svg { width: 20px; height: 20px; }
+    .leaf-divider .line { flex: 0 0 60px; height: 1px; background: var(--forest-line); }
+
+    select#passageSelect {
+      display: block;
+      margin: 0 auto 20px;
+      font-family: system-ui, sans-serif;
+      font-size: .85rem;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--forest-line);
+      background: var(--card);
+      color: var(--ink);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--forest-line);
+      border-radius: var(--radius);
+      box-shadow: 0 6px 20px var(--shadow);
+      padding: 26px 26px 22px;
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      font-size: 1.15rem;
+      color: var(--forest);
+      margin-bottom: 6px;
+    }
+
+    .instructions {
+      font-family: system-ui, sans-serif;
+      font-size: .82rem;
+      line-height: 1.55;
+      color: var(--ink-mid);
+      background: var(--forest-dim);
+      border-left: 3px solid var(--forest);
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin: 12px 0 4px;
+    }
+
+    .marks-badge {
+      float: right;
+      font-family: system-ui, sans-serif;
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--forest);
+      background: var(--gold-dim);
+      border: 1px solid var(--gold);
+      border-radius: 20px;
+      padding: 3px 12px;
+    }
+
+    .passage {
+      font-size: 1.05rem;
+      line-height: 2.05;
+      margin-top: 18px;
+    }
+
+    .passage p { margin-bottom: 16px; }
+
+    .blank {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 62px;
+      height: 30px;
+      padding: 0 8px;
+      margin: 0 2px;
+      border-radius: 7px;
+      border: 1.5px dashed var(--forest-line);
+      background: var(--forest-dim);
+      font-family: system-ui, sans-serif;
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--ink-light);
+      cursor: pointer;
+      vertical-align: middle;
+      transition: box-shadow .15s, border-color .15s, background .15s, transform .1s;
+      position: relative;
+      top: -2px;
+    }
+
+    .blank .num {
+      font-size: .62rem;
+      color: var(--ink-light);
+      margin-right: 4px;
+      font-weight: 600;
+    }
+
+    .blank:hover { border-color: var(--gold); transform: translateY(-1px); }
+
+    .blank.active {
+      border-style: solid;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px var(--gold-dim);
+      background: #fff;
+    }
+
+    .blank.filled {
+      border-style: solid;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    .blank.correct {
+      border-color: var(--good);
+      background: var(--good-bg);
+      color: var(--good);
+    }
+
+    .blank.incorrect {
+      border-color: var(--bad);
+      background: var(--bad-bg);
+      color: var(--bad);
+    }
+
+    .blank .correction {
+      display: block;
+      font-size: .62rem;
+      font-weight: 600;
+      color: var(--bad);
+      margin-left: 5px;
+    }
+
+    .blank.revealed {
+      display: inline;
+      min-width: 0;
+      height: auto;
+      padding: 0;
+      margin: 0 1px;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      cursor: default;
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: 700;
+      color: var(--forest);
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      text-decoration-color: var(--gold);
+      text-underline-offset: 4px;
+      top: 0;
+    }
+
+    .blank.revealed:hover { transform: none; border: none; }
+
+    .blank.revealed .num { display: none; }
+
+    .wordbank-label {
+      font-family: system-ui, sans-serif;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin: 16px 0 8px;
+    }
+
+    .wordbank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-bottom: 16px;
+      border-bottom: 1px dashed var(--forest-line);
+    }
+
+    .top-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+
+    .top-actions .action {
+      padding: 7px 14px;
+      font-size: .78rem;
+    }
+
+    .chip {
+      font-family: system-ui, sans-serif;
+      font-size: .82rem;
+      font-weight: 600;
+      padding: 7px 13px;
+      border-radius: 20px;
+      border: 1.5px solid var(--forest-line);
+      background: #fff;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .chip:hover:not(:disabled) {
+      border-color: var(--forest);
+      background: var(--forest-dim);
+    }
+
+    .chip .letter {
+      color: var(--forest);
+      font-weight: 800;
+      margin-right: 3px;
+    }
+
+    .chip:disabled {
+      opacity: .32;
+      cursor: default;
+      text-decoration: line-through;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-top: 22px;
+      font-family: system-ui, sans-serif;
+    }
+
+    button.action {
+      font-family: system-ui, sans-serif;
+      font-size: .85rem;
+      font-weight: 700;
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: transform .1s, box-shadow .15s;
+    }
+
+    button.action:active { transform: translateY(1px); }
+
+    .btn-check { background: var(--forest); color: #fff; }
+    .btn-check:hover { box-shadow: 0 4px 14px rgba(58,107,82,.35); }
+
+    .btn-results { background: var(--gold); color: #fff; }
+    .btn-results:hover { box-shadow: 0 4px 14px rgba(201,154,61,.4); }
+
+    .btn-explain { background: var(--gold-dim); color: var(--forest); border: 1px solid var(--gold); }
+    .btn-reset { background: transparent; color: var(--bad); border: 1px solid var(--bad); }
+
+    .score-pill {
+      margin-left: auto;
+      font-family: system-ui, sans-serif;
+      font-weight: 700;
+      font-size: .9rem;
+      color: var(--forest);
+      background: var(--forest-dim);
+      border-radius: 20px;
+      padding: 8px 16px;
+    }
+
+    .score-pill .best {
+      display: block;
+      font-size: .68rem;
+      font-weight: 500;
+      color: var(--ink-light);
+    }
+
+    .explanations {
+      margin-top: 18px;
+      display: none;
+      font-family: system-ui, sans-serif;
+    }
+
+    .explanations.show { display: block; }
+
+    .explain-row {
+      display: flex;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--forest-line);
+      font-size: .82rem;
+    }
+    .explain-row:last-child { border-bottom: none; }
+
+    .explain-num {
+      flex: 0 0 30px;
+      font-weight: 800;
+      color: var(--forest);
+    }
+
+    .explain-ans {
+      flex: 0 0 90px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .explain-note { flex: 1; color: var(--ink-mid); line-height: 1.5; }
+    .explain-note .cn { display: block; color: var(--ink-light); margin-top: 2px; }
+
+    .credit {
+      margin-top: 16px;
+      font-family: system-ui, sans-serif;
+      font-size: .72rem;
+      color: var(--ink-light);
+      font-style: italic;
+      text-align: right;
+    }
+
+    .update-date {
+      text-align: center;
+      margin-top: 40px;
+      font-size: .78rem;
+      color: var(--ink-light);
+      font-family: system-ui, sans-serif;
+    }
+
+    @media (max-width: 600px) {
+      .card { padding: 18px 16px 16px; }
+      .passage { font-size: .98rem; line-height: 2.15; }
+      .score-pill { margin-left: 0; width: 100%; text-align: center; }
+      .toolbar { flex-direction: column; align-items: stretch; }
+      button.action { width: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <header class="page-head">
+      <h1>PSLE Grammar Cloze</h1>
+      <div class="sub">Click a blank, then click a word from the bank to fill it in</div>
+    </header>
+
+    <div class="leaf-divider">
+      <div class="line"></div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M12 2C7 6 4 10 4 14a8 8 0 0 0 16 0c0-4-3-8-8-12Z" />
+        <path d="M12 6v14" />
+      </svg>
+      <div class="line"></div>
+    </div>
+
+    <select id="passageSelect" aria-label="Choose passage"></select>
+
+    <section class="card">
+      <span class="marks-badge" id="marksBadge"></span>
+      <h2 id="passageTitle"></h2>
+      <div class="instructions" id="instructions"></div>
+
+      <div class="wordbank-label">Word Bank — each word used only once</div>
+      <div class="wordbank" id="wordbank"></div>
+
+      <div class="top-actions">
+        <button class="action btn-results" id="btnResultsTop">Show Results</button>
+      </div>
+
+      <div class="passage" id="passage"></div>
+
+      <div class="toolbar">
+        <button class="action btn-check" id="btnCheck">Check Answers</button>
+        <button class="action btn-results" id="btnResults">Show Results</button>
+        <button class="action btn-explain" id="btnExplain">Show Explanations</button>
+        <button class="action btn-reset" id="btnReset">Reset</button>
+        <div class="score-pill" id="scorePill" style="display:none;"></div>
+      </div>
+
+      <div class="explanations" id="explanations"></div>
+
+      <div class="credit" id="credit"></div>
+    </section>
+  </main>
+
+  <footer class="update-date" aria-label="Last updated">
+    Last updated on 13/09/2026
+  </footer>
+
+  <script src="data/gc_passages.js"></script>
+  <script>
+    (function () {
+      const state = {
+        passage: null,
+        fills: {},      // blankNum -> letter
+        activeBlank: null,
+        checked: false,
+        resultsMode: false
+      };
+
+      const els = {
+        select: document.getElementById('passageSelect'),
+        title: document.getElementById('passageTitle'),
+        marks: document.getElementById('marksBadge'),
+        instructions: document.getElementById('instructions'),
+        passage: document.getElementById('passage'),
+        wordbank: document.getElementById('wordbank'),
+        btnCheck: document.getElementById('btnCheck'),
+        btnResults: document.getElementById('btnResults'),
+        btnResultsTop: document.getElementById('btnResultsTop'),
+        btnExplain: document.getElementById('btnExplain'),
+        btnReset: document.getElementById('btnReset'),
+        scorePill: document.getElementById('scorePill'),
+        explanations: document.getElementById('explanations'),
+        credit: document.getElementById('credit')
+      };
+
+      function storageKey(p) { return 'gc_best_' + p.id; }
+
+      function loadPassage(p) {
+        state.passage = p;
+        state.fills = {};
+        state.activeBlank = null;
+        state.checked = false;
+        state.resultsMode = false;
+
+        els.title.textContent = p.title + '  ·  ' + p.source;
+        els.marks.textContent = '(' + p.marks + ' marks)';
+        els.instructions.textContent = p.instructions;
+        els.credit.textContent = p.credit || '';
+        els.scorePill.style.display = 'none';
+        els.explanations.classList.remove('show');
+        els.btnExplain.textContent = 'Show Explanations';
+
+        renderPassage();
+        renderWordbank();
+      }
+
+      function renderPassage() {
+        const p = state.passage;
+        const paras = p.text.split('\n\n');
+        els.passage.innerHTML = paras.map(para => {
+          const html = para.replace(/\[\[(\d+)\]\]/g, (m, numStr) => {
+            const num = parseInt(numStr, 10);
+            return blankHtml(num);
+          });
+          return '<p>' + html + '</p>';
+        }).join('');
+
+        els.passage.querySelectorAll('.blank').forEach(el => {
+          el.addEventListener('click', () => onBlankClick(parseInt(el.dataset.num, 10)));
+        });
+      }
+
+      function blankHtml(num) {
+        const letter = state.fills[num];
+        const word = letter ? findWord(letter) : null;
+
+        if (state.resultsMode) {
+          return '<span class="blank revealed" data-num="' + num + '" id="blank-' + num + '">' + word + '</span>';
+        }
+
+        const inner = word
+          ? '<span class="num">' + num + '</span>' + word
+          : '<span class="num">' + num + '</span>&nbsp;?';
+        return '<span class="blank' + (letter ? ' filled' : '') + '" data-num="' + num + '" id="blank-' + num + '">' + inner + '</span>';
+      }
+
+      function findWord(letter) {
+        const entry = state.passage.wordBank.find(w => w.letter === letter);
+        return entry ? entry.word : '';
+      }
+
+      function renderWordbank() {
+        const p = state.passage;
+        els.wordbank.innerHTML = p.wordBank.map(w => {
+          const used = Object.values(state.fills).includes(w.letter) || state.resultsMode;
+          return '<button class="chip" data-letter="' + w.letter + '" ' + (used ? 'disabled' : '') + '>' +
+            '<span class="letter">(' + w.letter + ')</span>' + w.word + '</button>';
+        }).join('');
+
+        els.wordbank.querySelectorAll('.chip').forEach(el => {
+          el.addEventListener('click', () => onChipClick(el.dataset.letter));
+        });
+      }
+
+      function onBlankClick(num) {
+        if (state.checked || state.resultsMode) return;
+        // If already filled, clicking returns the word to the bank.
+        if (state.fills[num]) {
+          delete state.fills[num];
+          state.activeBlank = num;
+          renderPassage();
+          renderWordbank();
+          setActive(num);
+          return;
+        }
+        state.activeBlank = num;
+        renderPassage();
+        setActive(num);
+      }
+
+      function setActive(num) {
+        const el = document.getElementById('blank-' + num);
+        if (el) el.classList.add('active');
+      }
+
+      function onChipClick(letter) {
+        if (state.checked || state.resultsMode) return;
+        let target = state.activeBlank;
+        if (target == null || state.fills[target]) {
+          target = state.passage.blanks.map(b => b.num).find(n => !state.fills[n]);
+        }
+        if (target == null) return;
+        state.fills[target] = letter;
+
+        const remaining = state.passage.blanks.map(b => b.num).find(n => !state.fills[n]);
+        state.activeBlank = remaining != null ? remaining : null;
+
+        renderPassage();
+        renderWordbank();
+        if (state.activeBlank != null) setActive(state.activeBlank);
+      }
+
+      function checkAnswers() {
+        if (state.resultsMode) return;
+        const p = state.passage;
+        let score = 0;
+        p.blanks.forEach(b => {
+          const el = document.getElementById('blank-' + b.num);
+          if (!el) return;
+          const given = state.fills[b.num];
+          if (given === b.answer) {
+            score++;
+            el.classList.add('correct');
+          } else if (given) {
+            el.classList.add('incorrect');
+            const corr = document.createElement('span');
+            corr.className = 'correction';
+            corr.textContent = '→ (' + b.answer + ') ' + findWord(b.answer);
+            el.appendChild(corr);
+          } else {
+            el.classList.add('incorrect');
+            const corr = document.createElement('span');
+            corr.className = 'correction';
+            corr.textContent = '→ (' + b.answer + ') ' + findWord(b.answer);
+            el.appendChild(corr);
+          }
+        });
+
+        state.checked = true;
+        const best = parseInt(localStorage.getItem(storageKey(p)) || '0', 10);
+        const newBest = Math.max(best, score);
+        localStorage.setItem(storageKey(p), String(newBest));
+
+        els.scorePill.style.display = 'block';
+        els.scorePill.innerHTML = 'Score: ' + score + ' / ' + p.blanks.length +
+          '<span class="best">Best: ' + newBest + ' / ' + p.blanks.length + '</span>';
+      }
+
+      function showResults() {
+        const p = state.passage;
+        p.blanks.forEach(b => { state.fills[b.num] = b.answer; });
+        state.activeBlank = null;
+        state.checked = false;
+        state.resultsMode = true;
+
+        els.scorePill.style.display = 'none';
+
+        renderPassage();
+        renderWordbank();
+      }
+
+      function renderExplanations() {
+        const p = state.passage;
+        els.explanations.innerHTML = p.blanks.map(b => {
+          return '<div class="explain-row">' +
+            '<div class="explain-num">' + b.num + '</div>' +
+            '<div class="explain-ans">(' + b.answer + ') ' + findWord(b.answer) + '</div>' +
+            '<div class="explain-note">' + b.note_en + '<span class="cn">' + (b.note_cn || '') + '</span></div>' +
+            '</div>';
+        }).join('');
+      }
+
+      function reset() {
+        state.fills = {};
+        state.activeBlank = null;
+        state.checked = false;
+        state.resultsMode = false;
+        els.scorePill.style.display = 'none';
+        els.explanations.classList.remove('show');
+        els.btnExplain.textContent = 'Show Explanations';
+        renderPassage();
+        renderWordbank();
+      }
+
+      els.btnCheck.addEventListener('click', checkAnswers);
+      els.btnResults.addEventListener('click', showResults);
+      els.btnResultsTop.addEventListener('click', showResults);
+      els.btnReset.addEventListener('click', reset);
+      els.btnExplain.addEventListener('click', () => {
+        renderExplanations();
+        els.explanations.classList.toggle('show');
+        els.btnExplain.textContent = els.explanations.classList.contains('show')
+          ? 'Hide Explanations' : 'Show Explanations';
+      });
+
+      els.select.innerHTML = GC_PASSAGES.map((p, i) =>
+        '<option value="' + i + '">' + p.source + ' — ' + p.title + '</option>'
+      ).join('');
+      els.select.addEventListener('change', () => loadPassage(GC_PASSAGES[parseInt(els.select.value, 10)]));
+
+      loadPassage(GC_PASSAGES[0]);
+    })();
+  </script>
+</body>
+
+</html>
