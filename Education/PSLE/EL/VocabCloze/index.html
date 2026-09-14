@@ -11,13 +11,13 @@
         { label: "Education", href: "../../../index.html" },
         { label: "PSLE", href: "../../index.html" },
         { label: "EL", href: "../index.html" },
-        { label: "Grammar Cloze" }
+        { label: "Vocabulary Cloze" }
       ]
     };
   </script>
   <script src="../../../../nav-top.js"></script>
-  <meta name="description" content="PSLE English Grammar Cloze practice — click-to-fill word bank exercises with instant marking and explanations.">
-  <title>PSLE — Grammar Cloze</title>
+  <meta name="description" content="PSLE English Vocabulary Cloze practice — choose the closest synonym, with instant answer-key marking.">
+  <title>PSLE — Vocabulary Cloze</title>
   <style>
     :root {
       --ink: #1f2b23;
@@ -133,142 +133,11 @@
       padding: 3px 12px;
     }
 
-    .passage {
-      font-size: 1.05rem;
-      line-height: 2.05;
-      margin-top: 18px;
-    }
-
-    .passage p { margin-bottom: 16px; }
-
-    .blank {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 62px;
-      height: 30px;
-      padding: 0 8px;
-      margin: 0 2px;
-      border-radius: 7px;
-      border: 1.5px dashed var(--forest-line);
-      background: var(--forest-dim);
-      font-family: system-ui, sans-serif;
-      font-size: .85rem;
-      font-weight: 700;
-      color: var(--ink-light);
-      cursor: pointer;
-      vertical-align: middle;
-      transition: box-shadow .15s, border-color .15s, background .15s, transform .1s;
-      position: relative;
-      top: -2px;
-    }
-
-    .blank .num {
-      font-size: .62rem;
-      color: var(--ink-light);
-      margin-right: 4px;
-      font-weight: 600;
-    }
-
-    .blank:hover { border-color: var(--gold); transform: translateY(-1px); }
-
-    .blank.active {
-      border-style: solid;
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px var(--gold-dim);
-      background: #fff;
-    }
-
-    .blank.filled {
-      border-style: solid;
-      color: var(--ink);
-      background: #fff;
-    }
-
-    .blank.correct {
-      border-color: var(--good);
-      background: var(--good-bg);
-      color: var(--good);
-    }
-
-    .blank.incorrect {
-      border-color: var(--bad);
-      background: var(--bad-bg);
-      color: var(--bad);
-    }
-
-    .blank .correction {
-      display: block;
-      font-size: .62rem;
-      font-weight: 600;
-      color: var(--bad);
-      margin-left: 5px;
-    }
-
-    .blank.revealed {
-      display: inline;
-      min-width: 0;
-      height: auto;
-      padding: 0;
-      margin: 0 1px;
-      border: none;
-      border-radius: 0;
-      background: transparent;
-      box-shadow: none;
-      cursor: default;
-      font-family: inherit;
-      font-size: inherit;
-      font-weight: 700;
-      color: var(--forest);
-      text-decoration: underline;
-      text-decoration-style: dotted;
-      text-decoration-color: var(--gold);
-      text-underline-offset: 4px;
-      top: 0;
-    }
-
-    .blank.revealed:hover { transform: none; border: none; }
-
-    .blank.revealed .num-rev {
-      font-size: .58rem;
-      vertical-align: super;
-      color: var(--ink-light);
-      font-weight: 700;
-      margin-right: 1px;
-      text-decoration: none;
-    }
-
-    .blank.revealed .ans-letter {
-      font-size: .82rem;
-      color: var(--gold);
-      font-weight: 800;
-      margin-right: 2px;
-      text-decoration: none;
-    }
-
-    .wordbank-label {
-      font-family: system-ui, sans-serif;
-      font-size: .72rem;
-      font-weight: 700;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-      color: var(--ink-light);
-      margin: 16px 0 8px;
-    }
-
-    .wordbank {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      padding-bottom: 16px;
-      border-bottom: 1px dashed var(--forest-line);
-    }
-
     .top-actions {
       display: flex;
       justify-content: flex-end;
       gap: 8px;
-      margin-top: 10px;
+      margin: 14px 0 4px;
     }
 
     .top-actions .action {
@@ -276,12 +145,85 @@
       font-size: .78rem;
     }
 
-    .chip {
+    .passage {
+      font-size: 1.05rem;
+      line-height: 2.05;
+      margin-top: 14px;
+      padding-bottom: 18px;
+      border-bottom: 1px dashed var(--forest-line);
+    }
+
+    .passage p { margin-bottom: 16px; }
+
+    .uword {
+      font-weight: 700;
+      color: var(--ink);
+      text-decoration: underline;
+      text-decoration-style: solid;
+      text-decoration-color: var(--forest-line);
+      text-underline-offset: 3px;
+    }
+
+    .uword .qnum {
+      font-size: .6rem;
+      font-weight: 800;
+      color: var(--gold);
+      vertical-align: super;
+      margin-left: 1px;
+      text-decoration: none;
+    }
+
+    .reveal-tag {
+      font-size: .78rem;
+      font-weight: 800;
+      color: var(--good);
+      margin-left: 3px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .mcq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .mcq-block {
+      border: 1px solid var(--forest-line);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .mcq-head {
       font-family: system-ui, sans-serif;
       font-size: .82rem;
+      font-weight: 700;
+      color: var(--forest);
+      margin-bottom: 8px;
+    }
+
+    .mcq-head .word {
+      color: var(--ink);
       font-weight: 600;
-      padding: 7px 13px;
-      border-radius: 20px;
+      font-style: italic;
+    }
+
+    .mcq-options {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .opt {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: system-ui, sans-serif;
+      font-size: .82rem;
+      text-align: left;
+      padding: 7px 10px;
+      border-radius: 7px;
       border: 1.5px solid var(--forest-line);
       background: #fff;
       color: var(--ink);
@@ -289,22 +231,36 @@
       transition: all .15s;
     }
 
-    .chip:hover:not(:disabled) {
-      border-color: var(--forest);
-      background: var(--forest-dim);
-    }
+    .opt:hover:not(:disabled) { border-color: var(--gold); background: var(--gold-dim); }
 
-    .chip .letter {
-      color: var(--forest);
+    .opt .opt-num {
       font-weight: 800;
-      margin-right: 3px;
+      color: var(--forest);
+      flex-shrink: 0;
     }
 
-    .chip:disabled {
-      opacity: .32;
-      cursor: default;
-      text-decoration: line-through;
+    .opt.selected {
+      border-color: var(--gold);
+      background: var(--gold-dim);
+      box-shadow: 0 0 0 2px var(--gold-dim);
     }
+
+    .opt.correct {
+      border-color: var(--good);
+      background: var(--good-bg);
+      color: var(--good);
+      font-weight: 700;
+    }
+
+    .opt.correct .opt-num { color: var(--good); }
+
+    .opt.incorrect {
+      border-color: var(--bad);
+      background: var(--bad-bg);
+      color: var(--bad);
+    }
+
+    .opt:disabled { cursor: default; }
 
     .toolbar {
       display: flex;
@@ -379,7 +335,7 @@
     }
 
     .explain-ans {
-      flex: 0 0 90px;
+      flex: 0 0 110px;
       font-weight: 700;
       color: var(--gold);
     }
@@ -404,9 +360,10 @@
       font-family: system-ui, sans-serif;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 640px) {
       .card { padding: 18px 16px 16px; }
       .passage { font-size: .98rem; line-height: 2.15; }
+      .mcq-grid { grid-template-columns: 1fr; }
       .score-pill { margin-left: 0; width: 100%; text-align: center; }
       .toolbar { flex-direction: column; align-items: stretch; }
       button.action { width: 100%; }
@@ -417,8 +374,8 @@
 <body>
   <main class="wrap">
     <header class="page-head">
-      <h1>PSLE Grammar Cloze</h1>
-      <div class="sub">Click a blank, then click a word from the bank to fill it in</div>
+      <h1>PSLE Vocabulary Cloze</h1>
+      <div class="sub">Choose the word closest in meaning to each underlined word</div>
     </header>
 
     <div class="leaf-divider">
@@ -437,15 +394,14 @@
       <h2 id="passageTitle"></h2>
       <div class="instructions" id="instructions"></div>
 
-      <div class="wordbank-label">Word Bank — each word used only once</div>
-      <div class="wordbank" id="wordbank"></div>
-
       <div class="top-actions">
         <button class="action btn-results" id="btnResultsTop">Show Results</button>
         <button class="action btn-reset" id="btnResetTop">Reset</button>
       </div>
 
       <div class="passage" id="passage"></div>
+
+      <div class="mcq-grid" id="mcqGrid"></div>
 
       <div class="toolbar">
         <button class="action btn-check" id="btnCheck">Check Answers</button>
@@ -462,16 +418,15 @@
   </main>
 
   <footer class="update-date" aria-label="Last updated">
-    Last updated on 13/09/2026
+    Last updated on 14/09/2026
   </footer>
 
-  <script src="data/gc_passages.js"></script>
+  <script src="data/vc_passages.js"></script>
   <script>
     (function () {
       const state = {
         passage: null,
-        fills: {},      // blankNum -> letter
-        activeBlank: null,
+        picks: {},      // qNum -> option index (1-based)
         checked: false,
         resultsMode: false
       };
@@ -482,7 +437,7 @@
         marks: document.getElementById('marksBadge'),
         instructions: document.getElementById('instructions'),
         passage: document.getElementById('passage'),
-        wordbank: document.getElementById('wordbank'),
+        mcqGrid: document.getElementById('mcqGrid'),
         btnCheck: document.getElementById('btnCheck'),
         btnResults: document.getElementById('btnResults'),
         btnResultsTop: document.getElementById('btnResultsTop'),
@@ -494,12 +449,11 @@
         credit: document.getElementById('credit')
       };
 
-      function storageKey(p) { return 'gc_best_' + p.id; }
+      function storageKey(p) { return 'vc_best_' + p.id; }
 
       function loadPassage(p) {
         state.passage = p;
-        state.fills = {};
-        state.activeBlank = null;
+        state.picks = {};
         state.checked = false;
         state.resultsMode = false;
 
@@ -512,168 +466,112 @@
         els.btnExplain.textContent = 'Show Explanations';
 
         renderPassage();
-        renderWordbank();
+        renderMcq();
       }
 
       function renderPassage() {
         const p = state.passage;
         const paras = p.text.split('\n\n');
         els.passage.innerHTML = paras.map(para => {
-          const html = para.replace(/\[\[(\d+)\]\]/g, (m, numStr) => {
-            const num = parseInt(numStr, 10);
-            return blankHtml(num);
+          const html = para.replace(/\{\{(\d+)\|([^}]+)\}\}/g, (m, numStr, phrase) => {
+            return uwordHtml(parseInt(numStr, 10), phrase);
           });
           return '<p>' + html + '</p>';
         }).join('');
-
-        els.passage.querySelectorAll('.blank').forEach(el => {
-          el.addEventListener('click', () => onBlankClick(parseInt(el.dataset.num, 10)));
-        });
       }
 
-      function blankHtml(num) {
-        const letter = state.fills[num];
-        const word = letter ? findWord(letter) : null;
-
-        if (state.resultsMode) {
-          return '<span class="blank revealed" data-num="' + num + '" id="blank-' + num + '">' +
-            '<span class="num-rev">' + num + '</span>' +
-            '<span class="ans-letter">(' + letter + ')</span> ' + word +
-            '</span>';
+      function uwordHtml(num, phrase) {
+        const q = state.passage.questions.find(q => q.num === num);
+        let tag = '';
+        if (state.resultsMode && q) {
+          tag = '<span class="reveal-tag">(' + q.options[q.answer - 1] + ')</span>';
         }
-
-        const inner = word
-          ? '<span class="num">' + num + '</span>' + word
-          : '<span class="num">' + num + '</span>&nbsp;?';
-        return '<span class="blank' + (letter ? ' filled' : '') + '" data-num="' + num + '" id="blank-' + num + '">' + inner + '</span>';
+        return '<span class="uword">' + phrase + '<sup class="qnum">' + num + '</sup></span>' + tag;
       }
 
-      function findWord(letter) {
-        const entry = state.passage.wordBank.find(w => w.letter === letter);
-        return entry ? entry.word : '';
-      }
-
-      function renderWordbank() {
+      function renderMcq() {
         const p = state.passage;
-        els.wordbank.innerHTML = p.wordBank.map(w => {
-          const used = Object.values(state.fills).includes(w.letter) || state.resultsMode;
-          return '<button class="chip" data-letter="' + w.letter + '" ' + (used ? 'disabled' : '') + '>' +
-            '<span class="letter">(' + w.letter + ')</span>' + w.word + '</button>';
+        els.mcqGrid.innerHTML = p.questions.map(q => {
+          const pick = state.picks[q.num];
+          const opts = q.options.map((opt, i) => {
+            const idx = i + 1;
+            let cls = 'opt';
+            if (state.resultsMode) {
+              if (idx === q.answer) cls += ' correct';
+            } else if (state.checked) {
+              if (idx === q.answer) cls += ' correct';
+              else if (pick === idx) cls += ' incorrect';
+            } else if (pick === idx) {
+              cls += ' selected';
+            }
+            const disabled = (state.checked || state.resultsMode) ? 'disabled' : '';
+            return '<button class="' + cls + '" data-q="' + q.num + '" data-opt="' + idx + '" ' + disabled + '>' +
+              '<span class="opt-num">(' + idx + ')</span>' + opt + '</button>';
+          }).join('');
+          return '<div class="mcq-block">' +
+            '<div class="mcq-head">' + q.num + '. <span class="word">' + q.phrase + '</span></div>' +
+            '<div class="mcq-options">' + opts + '</div>' +
+            '</div>';
         }).join('');
 
-        els.wordbank.querySelectorAll('.chip').forEach(el => {
-          el.addEventListener('click', () => onChipClick(el.dataset.letter));
+        els.mcqGrid.querySelectorAll('.opt').forEach(el => {
+          el.addEventListener('click', () => onOptClick(parseInt(el.dataset.q, 10), parseInt(el.dataset.opt, 10)));
         });
       }
 
-      function onBlankClick(num) {
+      function onOptClick(qNum, opt) {
         if (state.checked || state.resultsMode) return;
-        // If already filled, clicking returns the word to the bank.
-        if (state.fills[num]) {
-          delete state.fills[num];
-          state.activeBlank = num;
-          renderPassage();
-          renderWordbank();
-          setActive(num);
-          return;
-        }
-        state.activeBlank = num;
-        renderPassage();
-        setActive(num);
-      }
-
-      function setActive(num) {
-        const el = document.getElementById('blank-' + num);
-        if (el) el.classList.add('active');
-      }
-
-      function onChipClick(letter) {
-        if (state.checked || state.resultsMode) return;
-        let target = state.activeBlank;
-        if (target == null || state.fills[target]) {
-          target = state.passage.blanks.map(b => b.num).find(n => !state.fills[n]);
-        }
-        if (target == null) return;
-        state.fills[target] = letter;
-
-        const remaining = state.passage.blanks.map(b => b.num).find(n => !state.fills[n]);
-        state.activeBlank = remaining != null ? remaining : null;
-
-        renderPassage();
-        renderWordbank();
-        if (state.activeBlank != null) setActive(state.activeBlank);
+        state.picks[qNum] = (state.picks[qNum] === opt) ? undefined : opt;
+        renderMcq();
       }
 
       function checkAnswers() {
         if (state.resultsMode) return;
         const p = state.passage;
         let score = 0;
-        p.blanks.forEach(b => {
-          const el = document.getElementById('blank-' + b.num);
-          if (!el) return;
-          const given = state.fills[b.num];
-          if (given === b.answer) {
-            score++;
-            el.classList.add('correct');
-          } else if (given) {
-            el.classList.add('incorrect');
-            const corr = document.createElement('span');
-            corr.className = 'correction';
-            corr.textContent = '→ (' + b.answer + ') ' + findWord(b.answer);
-            el.appendChild(corr);
-          } else {
-            el.classList.add('incorrect');
-            const corr = document.createElement('span');
-            corr.className = 'correction';
-            corr.textContent = '→ (' + b.answer + ') ' + findWord(b.answer);
-            el.appendChild(corr);
-          }
+        p.questions.forEach(q => {
+          if (state.picks[q.num] === q.answer) score++;
         });
-
         state.checked = true;
+        renderMcq();
+
         const best = parseInt(localStorage.getItem(storageKey(p)) || '0', 10);
         const newBest = Math.max(best, score);
         localStorage.setItem(storageKey(p), String(newBest));
 
         els.scorePill.style.display = 'block';
-        els.scorePill.innerHTML = 'Score: ' + score + ' / ' + p.blanks.length +
-          '<span class="best">Best: ' + newBest + ' / ' + p.blanks.length + '</span>';
+        els.scorePill.innerHTML = 'Score: ' + score + ' / ' + p.questions.length +
+          '<span class="best">Best: ' + newBest + ' / ' + p.questions.length + '</span>';
       }
 
       function showResults() {
-        const p = state.passage;
-        p.blanks.forEach(b => { state.fills[b.num] = b.answer; });
-        state.activeBlank = null;
-        state.checked = false;
         state.resultsMode = true;
-
+        state.checked = false;
         els.scorePill.style.display = 'none';
-
         renderPassage();
-        renderWordbank();
+        renderMcq();
       }
 
       function renderExplanations() {
         const p = state.passage;
-        els.explanations.innerHTML = p.blanks.map(b => {
+        els.explanations.innerHTML = p.questions.map(q => {
           return '<div class="explain-row">' +
-            '<div class="explain-num">' + b.num + '</div>' +
-            '<div class="explain-ans">(' + b.answer + ') ' + findWord(b.answer) + '</div>' +
-            '<div class="explain-note">' + b.note_en + '<span class="cn">' + (b.note_cn || '') + '</span></div>' +
+            '<div class="explain-num">' + q.num + '</div>' +
+            '<div class="explain-ans">(' + q.answer + ') ' + q.options[q.answer - 1] + '</div>' +
+            '<div class="explain-note">' + q.note_en + '<span class="cn">' + (q.note_cn || '') + '</span></div>' +
             '</div>';
         }).join('');
       }
 
       function reset() {
-        state.fills = {};
-        state.activeBlank = null;
+        state.picks = {};
         state.checked = false;
         state.resultsMode = false;
         els.scorePill.style.display = 'none';
         els.explanations.classList.remove('show');
         els.btnExplain.textContent = 'Show Explanations';
         renderPassage();
-        renderWordbank();
+        renderMcq();
       }
 
       els.btnCheck.addEventListener('click', checkAnswers);
@@ -688,12 +586,12 @@
           ? 'Hide Explanations' : 'Show Explanations';
       });
 
-      els.select.innerHTML = GC_PASSAGES.map((p, i) =>
+      els.select.innerHTML = VC_PASSAGES.map((p, i) =>
         '<option value="' + i + '">' + p.source + ' — ' + p.title + '</option>'
       ).join('');
-      els.select.addEventListener('change', () => loadPassage(GC_PASSAGES[parseInt(els.select.value, 10)]));
+      els.select.addEventListener('change', () => loadPassage(VC_PASSAGES[parseInt(els.select.value, 10)]));
 
-      loadPassage(GC_PASSAGES[0]);
+      loadPassage(VC_PASSAGES[0]);
     })();
   </script>
 </body>
