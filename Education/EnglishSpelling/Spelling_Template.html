@@ -442,6 +442,66 @@
             color: var(--text-color);
         }
 
+        /* 遮盖模式：听写练习时用灰色块盖住单词和句子 */
+        .mask-btn {
+            position: fixed;
+            top: 20px;
+            right: 74px;
+            height: 44px;
+            padding: 0 16px;
+            border: 2px solid #ddd;
+            border-radius: 22px;
+            background: #fff;
+            color: #555;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10001;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .mask-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .word-modal.masked .mask-btn {
+            background: #888;
+            border-color: #888;
+            color: #fff;
+        }
+
+        .word-modal.masked .modal-word,
+        .word-modal.masked .modal-word-image-container,
+        .word-modal.masked .modal-full-phonetic,
+        .word-modal.masked .modal-translation,
+        .word-modal.masked .modal-collocations,
+        .word-modal.masked .modal-sentences {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .word-modal.masked .modal-word::after,
+        .word-modal.masked .modal-word-image-container::after,
+        .word-modal.masked .modal-full-phonetic::after,
+        .word-modal.masked .modal-translation::after,
+        .word-modal.masked .modal-collocations::after,
+        .word-modal.masked .modal-sentences::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: #c8c8c8;
+            border-radius: 8px;
+            z-index: 2;
+        }
+
+        .word-modal.masked .modal-word::after {
+            content: "🔊";
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6em;
+        }
+
         /* Color Classes */
         .color1 {
             color: #E25624;
@@ -723,6 +783,7 @@
     <!-- Word Modal -->
     <div class="word-modal" id="wordModal">
         <button class="close-btn" aria-label="Close modal">×</button>
+        <button class="mask-btn" id="maskBtn" aria-pressed="false" title="遮盖单词和句子（快捷键 M）">🙈 遮盖</button>
         <div class="modal-content">
             <div class="modal-tags">
                 <div class="modal-card-index" id="modalCardIndex">01</div>
@@ -794,8 +855,17 @@
             nextBtn: document.getElementById('nextWord'),
             modalPrevBtn: document.getElementById('modalPrevWord'),
             modalNextBtn: document.getElementById('modalNextWord'),
-            closeBtn: document.querySelector('.close-btn')
+            closeBtn: document.querySelector('.close-btn'),
+            maskBtn: document.getElementById('maskBtn'),
+            modalImageContainer: document.querySelector('.modal-word-image-container')
         };
+
+        // 遮盖模式切换（翻页时保持遮盖状态）
+        function toggleMask() {
+            const masked = elements.wordModal.classList.toggle('masked');
+            elements.maskBtn.textContent = masked ? '👁 显示' : '🙈 遮盖';
+            elements.maskBtn.setAttribute('aria-pressed', masked);
+        }
 
         // Function to load script dynamically
         function loadScript(fileName) {
@@ -926,6 +996,7 @@
             elements.modalPrevBtn.addEventListener('click', showPrevWord);
             elements.modalNextBtn.addEventListener('click', showNextWord);
             elements.closeBtn.addEventListener('click', closeModal);
+            elements.maskBtn.addEventListener('click', toggleMask);
 
             // Click outside modal to close
             // elements.wordModal.addEventListener('click', (e) => {
@@ -950,6 +1021,10 @@
                         case 'p':
                         case 'P':
                             playWordAudio(wordData[currentIndex].word);
+                            break;
+                        case 'm':
+                        case 'M':
+                            toggleMask();
                             break;
                     }
                 }
@@ -976,6 +1051,13 @@
 
             elements.modalWordImage.addEventListener('click', () => {
                 playWordAudio(wordData[currentIndex].word);
+            });
+
+            // 遮盖时灰色块盖住了图片，点击灰色块也朗读
+            elements.modalImageContainer.addEventListener('click', (e) => {
+                if (elements.wordModal.classList.contains('masked') && e.target === elements.modalImageContainer) {
+                    playWordAudio(wordData[currentIndex].word);
+                }
             });
         }
 
