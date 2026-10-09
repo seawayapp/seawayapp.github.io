@@ -43,13 +43,13 @@
     }
 
     .page-wrap {
-      max-width: 780px;
+      max-width: 960px;
       margin: 0 auto;
       padding: 36px 20px 60px;
     }
 
     /* ── Page header ── */
-    .page-header { margin-bottom: 28px; }
+    .page-header { margin-bottom: 24px; }
 
     .page-eyebrow {
       display: inline-flex;
@@ -80,43 +80,120 @@
       color: var(--text-muted);
     }
 
-    /* ── Card list ── */
-    .lesson-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    /* ── Latest ── */
+    .section-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
     }
 
-    .lesson-card {
+    .latest {
+      background: linear-gradient(135deg, #f3fbe9, #ffffff);
+      border: 1px solid var(--green);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 20px rgba(146,208,80,0.18);
+      padding: 18px 20px;
+      margin-bottom: 28px;
       display: flex;
       align-items: center;
       gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .latest-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #fff;
+      background: var(--green-dark);
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .latest-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .latest-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab:hover { border-color: var(--green); color: var(--text); }
+
+    .tab.active {
+      background: var(--green-dark);
+      border-color: var(--green-dark);
+      color: #fff;
+    }
+
+    .tab .tab-count {
+      font-size: 0.75rem;
+      opacity: 0.75;
+      margin-left: 4px;
+    }
+
+    /* ── Grid ── */
+    .lesson-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .unit-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 16px 20px;
+      padding: 14px 16px;
+      box-shadow: var(--shadow);
       text-decoration: none;
       color: var(--text);
-      box-shadow: var(--shadow);
-      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
-      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    .lesson-card:hover {
+    a.unit-card:hover {
       border-color: var(--green);
       box-shadow: 0 4px 20px rgba(146,208,80,0.18);
-      transform: translateX(4px);
-      text-decoration: none;
-      color: var(--text);
     }
 
-    .lesson-num {
-      width: 38px;
-      height: 38px;
+    .unit-num {
+      width: 42px;
+      height: 42px;
       border-radius: 10px;
       background: var(--green-dim);
       color: var(--green-dark);
-      font-size: 0.85rem;
+      font-size: 1rem;
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -124,44 +201,69 @@
       flex-shrink: 0;
     }
 
-    .lesson-body {
-      flex: 1;
-      min-width: 0;
-    }
+    .unit-body { flex: 1; min-width: 0; }
 
-    .lesson-title {
+    .unit-title {
       font-size: 1rem;
       font-weight: 600;
-      color: var(--text);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .lesson-subtitle {
-      margin-top: 3px;
+    .unit-subtitle {
+      margin-top: 2px;
       font-size: 0.78rem;
       color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .lesson-date {
-      margin-top: 3px;
+    .unit-date {
+      margin-top: 2px;
       font-size: 0.78rem;
-      color: var(--text-muted);
+      color: var(--green-dark);
+      font-weight: 500;
     }
 
-    .lesson-date.has-date { color: var(--green-dark); font-weight: 500; }
+    .part-links {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
 
-    .lesson-arrow {
+    .part-btn {
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--green-dark);
+      background: var(--green-dim);
+      border: 1px solid transparent;
+      padding: 8px 14px;
+      border-radius: 8px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .part-btn:hover {
+      background: var(--green-dark);
+      color: #fff;
+    }
+
+    .latest .part-btn {
+      background: var(--green-dark);
+      color: #fff;
+      padding: 10px 18px;
+      font-size: 0.95rem;
+    }
+
+    .latest .part-btn:hover { background: #4f8a17; }
+
+    .arrow {
       color: var(--text-light);
       font-size: 1.1rem;
       flex-shrink: 0;
-      transition: transform 0.2s, color 0.2s;
-    }
-
-    .lesson-card:hover .lesson-arrow {
-      transform: translateX(4px);
-      color: var(--green-dark);
     }
 
     .state-msg {
@@ -171,11 +273,12 @@
       font-size: 0.95rem;
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 640px) {
       .page-wrap { padding: 24px 14px 48px; }
-      .lesson-card { padding: 14px 16px; gap: 12px; }
-      .lesson-title { font-size: 0.92rem; }
-      .lesson-num { width: 32px; height: 32px; font-size: 0.78rem; border-radius: 8px; }
+      .lesson-grid { grid-template-columns: 1fr; }
+      .unit-card { padding: 12px 14px; gap: 12px; }
+      .unit-num { width: 36px; height: 36px; font-size: 0.9rem; border-radius: 8px; }
+      .part-btn { padding: 7px 11px; }
     }
   </style>
 </head>
@@ -189,7 +292,9 @@
       <p class="page-count" id="pageCount"></p>
     </div>
 
-    <div class="lesson-list" id="mainContent">
+    <div id="latestWrap"></div>
+    <div class="tabs" id="tabs"></div>
+    <div class="lesson-grid" id="mainContent">
       <div class="state-msg">Loading...</div>
     </div>
 
@@ -203,35 +308,116 @@
       return "#";
     }
 
+    // "P5 Unit 9 - Part 2" → { grade: "P5", unit: 9, part: 2 }
+    function parseTitle(title) {
+      const m = (title || "").match(/^(P\d)\s+Unit\s+(\d+)(?:\s*-\s*Part\s*(\d+))?/i);
+      return m ? { grade: m[1].toUpperCase(), unit: parseInt(m[2]), part: m[3] ? parseInt(m[3]) : null } : null;
+    }
+
+    // Group data into units (Part 1 / Part 2 merged), keeping the order they were added
+    function buildGroups(data) {
+      const groups = [];
+      const byKey = {};
+      data.forEach((item, order) => {
+        const p = parseTitle(item.title);
+        if (p) {
+          const key = `${p.grade}-${p.unit}`;
+          if (!byKey[key]) {
+            byKey[key] = { grade: p.grade, unit: p.unit, title: `${p.grade} Unit ${p.unit}`, items: [], order };
+            groups.push(byKey[key]);
+          }
+          byKey[key].items.push({ ...item, part: p.part });
+          byKey[key].order = order; // latest addition wins
+        } else {
+          groups.push({ grade: "其他", unit: null, title: item.title, items: [item], order });
+        }
+      });
+      groups.forEach(g => g.items.sort((a, b) => (a.part || 0) - (b.part || 0)));
+      return groups;
+    }
+
+    function subtitleOf(group) {
+      const subs = [...new Set(group.items.map(i => i.subtitle).filter(Boolean))];
+      return subs.join(" · ");
+    }
+
+    function partButtons(group) {
+      if (group.items.length === 1 && !group.items[0].part) return "";
+      return `<div class="part-links">${group.items.map(i =>
+        `<a class="part-btn" href="${getHref(i)}">Part ${i.part || ""}</a>`).join("")}</div>`;
+    }
+
+    function renderCard(group) {
+      const single = group.items.length === 1 && !group.items[0].part;
+      const tag = single ? "a" : "div";
+      const href = single ? ` href="${getHref(group.items[0])}"` : "";
+      const num = group.unit !== null ? group.unit : "★";
+      const sub = subtitleOf(group);
+      const date = group.items.map(i => i.testdate).filter(Boolean)[0];
+      return `
+        <${tag} class="unit-card"${href}>
+          <div class="unit-num">${num}</div>
+          <div class="unit-body">
+            <div class="unit-title">${group.title}</div>
+            ${sub ? `<div class="unit-subtitle">${sub}</div>` : ""}
+            ${date ? `<div class="unit-date">🗓 ${date}</div>` : ""}
+          </div>
+          ${single ? `<span class="arrow">→</span>` : partButtons(group)}
+        </${tag}>`;
+    }
+
+    function renderLatest(group) {
+      const single = group.items.length === 1 && !group.items[0].part;
+      const sub = subtitleOf(group);
+      document.getElementById("latestWrap").innerHTML = `
+        <div class="section-label">最新添加 · Latest</div>
+        <div class="latest">
+          <span class="latest-badge">NEW</span>
+          <div class="latest-title">${group.title}${sub ? `<div class="latest-sub">${sub}</div>` : ""}</div>
+          ${single
+            ? `<div class="part-links"><a class="part-btn" href="${getHref(group.items[0])}">开始 →</a></div>`
+            : partButtons(group)}
+        </div>`;
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
       try {
         const container = document.getElementById("mainContent");
-        container.innerHTML = "";
+        const tabsEl = document.getElementById("tabs");
 
         document.getElementById("pageCount").textContent =
-          `${mainData.length} unit${mainData.length !== 1 ? "s" : ""}`;
+          `${mainData.length} lists · 最新的排在最前面`;
 
-        mainData.forEach((item, index) => {
-          const card = document.createElement("a");
-          card.className = "lesson-card";
-          card.href = getHref(item);
+        const groups = buildGroups(mainData).sort((a, b) => b.order - a.order);
+        renderLatest(groups[0]);
 
-          const title    = item.title    || "";
-          const subtitle = item.subtitle || "";
-          const dateText = item.testdate ? item.testdate : "";
-          const dateClass = item.testdate ? "lesson-date has-date" : "lesson-date";
+        // Tabs: grades in order of most recent activity, "其他" last
+        const grades = [...new Set(groups.map(g => g.grade))]
+          .sort((a, b) => (a === "其他") - (b === "其他"));
 
-          card.innerHTML = `
-            <div class="lesson-num">${index + 1}</div>
-            <div class="lesson-body">
-              <div class="lesson-title">${title}</div>
-              ${subtitle ? `<div class="lesson-subtitle">${subtitle}</div>` : ""}
-              ${dateText ? `<div class="${dateClass}">🗓 ${dateText}</div>` : ""}
-            </div>
-            <span class="lesson-arrow">→</span>`;
+        let current = grades[0];
+        try {
+          const saved = localStorage.getItem("es26-tab");
+          if (saved && grades.includes(saved)) current = saved;
+        } catch (e) {}
 
-          container.appendChild(card);
+        function render() {
+          tabsEl.innerHTML = grades.map(g => {
+            const n = groups.filter(x => x.grade === g).length;
+            return `<button class="tab${g === current ? " active" : ""}" data-grade="${g}">${g}<span class="tab-count">${n}</span></button>`;
+          }).join("");
+          container.innerHTML = groups.filter(g => g.grade === current).map(renderCard).join("");
+        }
+
+        tabsEl.addEventListener("click", e => {
+          const btn = e.target.closest(".tab");
+          if (!btn) return;
+          current = btn.dataset.grade;
+          try { localStorage.setItem("es26-tab", current); } catch (e) {}
+          render();
         });
+
+        render();
       } catch (error) {
         console.error("Failed to load data:", error);
         document.getElementById("mainContent").innerHTML =
