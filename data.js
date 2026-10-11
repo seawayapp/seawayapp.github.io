@@ -1,5 +1,5 @@
 const data = {
-  lastUpdated: "02/04/2026 V1",
+  lastUpdated: "11/10/2026 V1",
   recentReleases: [
     {
       date: "2026-05-05",
