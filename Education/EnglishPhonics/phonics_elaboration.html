@@ -1060,7 +1060,7 @@
 
         // ---------------- Mindmap (word display) ----------------
         // Root = phoneme symbol, branches = spelling patterns, leaves = example words.
-        // Layout/connector logic mirrors Education/PSLE/MA/mindmap.html's tree-canvas.
+        // Layout/connector logic uses a tree-canvas mind-map layout.
         function buildMindmap(item, cat) {
             const canvas = document.createElement('div');
             canvas.className = 'mm-canvas';

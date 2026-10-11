@@ -2,10 +2,6 @@ const data = {
   lastUpdated: "02/04/2026 V1",
   recentReleases: [
     {
-      date: "2026-10-10",
-      name: "<a href='Education/PSLE/index.html'>PSLE (English · Maths · Science · Chinese)</a>"
-    },
-    {
       date: "2026-05-05",
       name: "<a href='Education/ChineseReadingAloud/index.html'>华文朗读练习 P2 (Chinese Reading Aloud)</a>"
     },
@@ -95,10 +91,6 @@ const data = {
     {
       date: "2026-05-13",
       name: "<a href='ReadingNotes/index.html'>Reading Notes 读书笔记</a>"
-    },
-    {
-      date: "2026-06-07",
-      name: "<a href='Education/PSLE/index.html'>PSLE</a>"
     }
   ],
   archiveReleases: [

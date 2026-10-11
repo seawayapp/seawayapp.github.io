@@ -25,3 +25,5 @@ Education/RES/*
 
 .continue/
 .claude/
+# PSLE content is hosted privately (access code), not on GitHub Pages
+Education/PLE/
