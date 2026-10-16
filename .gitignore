@@ -27,3 +27,6 @@ Education/RES/*
 .claude/
 # PSLE content is hosted privately (access code), not on GitHub Pages
 Education/PLE/
+
+# Lishu page images are served from R2 (cdn.seawaycdn.com); local copy only for file:// use
+Calligraphy/lishu/zixingti/

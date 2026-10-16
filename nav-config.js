@@ -39,7 +39,8 @@ window.NAV_MENUS = (function () {
       { label: "🎮 Games", href: url("Games/index.html") },
       { label: "💻 Technology", href: url("Technology/index.html") },
       { label: "➕ Math 数学", href: url("Math/index.html") },
-      { label: "📚 Books 书籍", href: url("Books/index.html") }
+      { label: "📚 Books 书籍", href: url("Books/index.html") },
+      { label: "🖌️ Calligraphy 书法", href: url("Calligraphy/index.html") }
     ];
   }
 

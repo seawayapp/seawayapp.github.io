@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="教育部标准隶书字形表 — 44 页，像翻书一样逐页浏览。">
+  <title>隶书 Lishu · 标准隶书字形表</title>
+  <script src="../nav-config.js"></script>
+  <script>
+    window.NAV_CONFIG = {
+      breadcrumbs: [
+        { label: "Home", href: "../index.html", children: NAV_MENUS.site() },
+        { label: "Calligraphy 书法", href: "index.html" },
+        { label: "隶书 Lishu" }
+      ]
+    };
+  </script>
+  <script src="../nav-top.js"></script>
+  <style>
+    :root {
+      --paper: #f1ece2;
+      --ink: #1f1b16;
+      --ink-mid: #5b5147;
+      --seal: #b23a2e;
+      --bar: #2b2622;
+      --line: #d8cdb9;
+      --nav-h: 56px;
+      --bar-h: 58px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { height: 100%; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: system-ui, "Microsoft YaHei", sans-serif;
+      overflow: hidden;
+    }
+
+    /* ── Book stage ── */
+    .stage {
+      position: fixed;
+      top: var(--nav-h);
+      bottom: var(--bar-h);
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 70px;
+      user-select: none;
+    }
+
+    .book {
+      display: flex;
+      height: 100%;   /* refined by fit() so the spread fits width and height */
+      box-shadow: 0 10px 34px rgba(40, 25, 10, .25);
+      background: #fff;
+      position: relative;
+      transition: opacity .22s ease, transform .22s ease;
+    }
+
+    .book.turn-next { opacity: 0; transform: translateX(-28px); }
+    .book.turn-prev { opacity: 0; transform: translateX(28px); }
+
+    .page {
+      position: relative;
+      height: 100%;
+      aspect-ratio: 657 / 1050;
+      background: #fff;
+      cursor: zoom-in;
+      overflow: hidden;
+    }
+
+    .page img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #fff;
+    }
+
+    .page.blank { cursor: default; background: #faf8f4; }
+
+    /* centre gutter of the open book */
+    .book.double .page:first-child::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 28px;
+      height: 100%;
+      background: linear-gradient(to left, rgba(0, 0, 0, .10), transparent);
+      pointer-events: none;
+    }
+
+    .book.double .page:last-child::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 28px;
+      height: 100%;
+      background: linear-gradient(to right, rgba(0, 0, 0, .10), transparent);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .page .loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #b9ae9c;
+      font-size: .9rem;
+    }
+
+    /* ── Side arrows (like the reference e-book) ── */
+    .side {
+      position: fixed;
+      top: calc(50% + (var(--nav-h) - var(--bar-h)) / 2);
+      transform: translateY(-50%);
+      width: 52px;
+      height: 52px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .75);
+      color: var(--seal);
+      font-size: 26px;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .15);
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .15s, opacity .15s;
+    }
+
+    .side:hover { background: #fff; }
+    .side:disabled { opacity: .25; cursor: default; }
+    .side-left { left: 10px; }
+    .side-right { right: 10px; }
+
+    /* ── Bottom toolbar ── */
+    .bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: var(--bar-h);
+      background: var(--bar);
+      color: #efe7da;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 0 12px;
+      z-index: 30;
+    }
+
+    .bar button {
+      background: transparent;
+      color: #efe7da;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: .9rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .bar button:hover { background: rgba(255, 255, 255, .08); }
+    .bar button.on { border-color: rgba(255, 255, 255, .35); }
+    .bar button:disabled { opacity: .35; cursor: default; }
+
+    .bar .pos { white-space: nowrap; display: flex; align-items: center; gap: 6px; margin: 0 6px; font-size: .9rem; }
+    .bar .pos input {
+      width: 52px;
+      padding: 6px 4px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, .25);
+      background: rgba(255, 255, 255, .08);
+      color: #fff;
+      text-align: center;
+      font-size: .9rem;
+    }
+
+    .bar .sep { width: 1px; height: 26px; background: rgba(255, 255, 255, .15); margin: 0 6px; }
+
+    /* ── Thumbnails drawer ── */
+    .drawer {
+      position: fixed;
+      top: var(--nav-h);
+      bottom: var(--bar-h);
+      left: 0;
+      width: 300px;
+      max-width: 85vw;
+      background: #fbf8f2;
+      border-right: 1px solid var(--line);
+      box-shadow: 4px 0 20px rgba(0, 0, 0, .12);
+      transform: translateX(-105%);
+      transition: transform .25s ease;
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .drawer.open { transform: none; }
+
+    .drawer h3 {
+      font-size: .95rem;
+      padding: 14px 16px 10px;
+      color: var(--ink-mid);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .drawer h3 button {
+      border: none;
+      background: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      color: var(--ink-mid);
+    }
+
+    .thumbs {
+      overflow-y: auto;
+      padding: 4px 14px 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .thumb {
+      border: 2px solid transparent;
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+      padding: 0;
+      text-align: center;
+      font-size: .72rem;
+      color: var(--ink-mid);
+    }
+
+    .thumb img { display: block; width: 100%; aspect-ratio: 657 / 1050; object-fit: cover; background: #f1ece2; }
+    .thumb span { display: block; padding: 2px 0 3px; }
+    .thumb.current { border-color: var(--seal); color: var(--seal); font-weight: 700; }
+
+    /* ── Zoom overlay ── */
+    .zoom {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 16, 12, .92);
+      z-index: 100;
+      display: none;
+      overflow: auto;
+      cursor: zoom-out;
+    }
+
+    .zoom.open { display: block; }
+
+    .zoom img {
+      display: block;
+      margin: 20px auto;
+      width: min(1300px, 180vw);
+      max-width: none;
+      background: #fff;
+    }
+
+    .zoom .close {
+      position: fixed;
+      top: 14px;
+      right: 18px;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 255, 255, .15);
+      color: #fff;
+      font-size: 1.3rem;
+      cursor: pointer;
+    }
+
+    .credit {
+      position: fixed;
+      right: 14px;
+      bottom: calc(var(--bar-h) + 4px);
+      font-size: .7rem;
+      color: #9a8f84;
+      z-index: 10;
+    }
+
+    @media (max-width: 640px) {
+      .stage { padding: 10px 44px; }
+      .side { width: 38px; height: 38px; font-size: 20px; }
+      .side-left { left: 3px; }
+      .side-right { right: 3px; }
+      .bar { gap: 2px; padding: 0 4px; }
+      .bar button { padding: 8px 7px; font-size: .82rem; }
+      .bar .lbl { display: none; }
+      .bar .sep { display: none; }
+      .credit { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="stage" id="stage">
+    <div class="book" id="book"></div>
+  </div>
+
+  <button class="side side-left" id="sidePrev" aria-label="上一页">‹</button>
+  <button class="side side-right" id="sideNext" aria-label="下一页">›</button>
+
+  <aside class="drawer" id="drawer" aria-label="目录">
+    <h3>目录 · 44 页 <button id="drawerClose" aria-label="关闭">✕</button></h3>
+    <div class="thumbs" id="thumbs"></div>
+  </aside>
+
+  <div class="credit">字形来源：中華民國教育部《標準隸書字形表》</div>
+
+  <nav class="bar" aria-label="翻页工具">
+    <button id="btnToc">☰ <span class="lbl">目录</span></button>
+    <span class="sep"></span>
+    <button id="btnFirst" aria-label="第一页">⏮</button>
+    <button id="btnPrev" aria-label="上一页">◀</button>
+    <span class="pos"><input id="pageInput" type="number" min="1" max="44" aria-label="页码"> <span id="pageTotal">/ 44</span></span>
+    <button id="btnNext" aria-label="下一页">▶</button>
+    <button id="btnLast" aria-label="最后一页">⏭</button>
+    <span class="sep"></span>
+    <button id="btnSingle"><span class="lbl">单页</span><span class="ico"> ▯</span></button>
+    <button id="btnDouble"><span class="lbl">双页</span><span class="ico"> ▯▯</span></button>
+    <button id="btnFull" aria-label="全屏">⛶</button>
+  </nav>
+
+  <div class="zoom" id="zoom">
+    <button class="close" id="zoomClose" aria-label="关闭">✕</button>
+    <img id="zoomImg" alt="">
+  </div>
+
+  <script>
+    (function () {
+      const TOTAL = 44;
+      const R2 = 'https://cdn.seawaycdn.com/chinese/lishu/zixingti/';
+      const LOCAL = 'lishu/zixingti/';
+      // Opened straight from disk (file://) → read the local folder; online → R2.
+      const PRIMARY = location.protocol === 'file:' ? LOCAL : R2;
+      const FALLBACK = PRIMARY === LOCAL ? R2 : LOCAL;
+
+      const els = {
+        book: document.getElementById('book'),
+        stage: document.getElementById('stage'),
+        sidePrev: document.getElementById('sidePrev'),
+        sideNext: document.getElementById('sideNext'),
+        first: document.getElementById('btnFirst'),
+        prev: document.getElementById('btnPrev'),
+        next: document.getElementById('btnNext'),
+        last: document.getElementById('btnLast'),
+        input: document.getElementById('pageInput'),
+        single: document.getElementById('btnSingle'),
+        double: document.getElementById('btnDouble'),
+        full: document.getElementById('btnFull'),
+        toc: document.getElementById('btnToc'),
+        drawer: document.getElementById('drawer'),
+        drawerClose: document.getElementById('drawerClose'),
+        thumbs: document.getElementById('thumbs'),
+        zoom: document.getElementById('zoom'),
+        zoomImg: document.getElementById('zoomImg'),
+        zoomClose: document.getElementById('zoomClose')
+      };
+
+      function src(n, base) { return (base || PRIMARY) + 'as' + n + '.jpg'; }
+
+      // If an image fails (e.g. not yet uploaded to R2), try the other source once.
+      function loadImg(img, n) {
+        img.onerror = function () {
+          if (img.dataset.fallback) return;
+          img.dataset.fallback = '1';
+          img.src = src(n, FALLBACK);
+        };
+        img.src = src(n);
+      }
+
+      const state = { page: 1, double: true };
+
+      function wideScreen() {
+        return window.innerWidth >= 900 && window.innerWidth > window.innerHeight * 1.05;
+      }
+
+      // Phones/portrait always start in single-page view; wide screens remember the choice.
+      try {
+        const saved = localStorage.getItem('lishu_view');
+        state.double = wideScreen() && saved !== 'single';
+      } catch (e) { state.double = wideScreen(); }
+
+      const fromHash = parseInt((location.hash.match(/p=(\d+)/) || [])[1], 10);
+      if (fromHash >= 1 && fromHash <= TOTAL) state.page = fromHash;
+
+      // In the open-book view pages are paired 1–2, 3–4, … 43–44.
+      function spreadStart(p) { return state.double ? (p % 2 === 1 ? p : p - 1) : p; }
+      function step() { return state.double ? 2 : 1; }
+
+      function pageEl(n) {
+        const div = document.createElement('div');
+        div.className = 'page';
+        if (n < 1 || n > TOTAL) { div.classList.add('blank'); return div; }
+        div.innerHTML = '<div class="loading">第 ' + n + ' 页 加载中…</div>';
+        const img = document.createElement('img');
+        img.alt = '标准隶书字形表 第 ' + n + ' 页';
+        img.decoding = 'async';
+        img.onload = () => { const l = div.querySelector('.loading'); if (l) l.remove(); };
+        loadImg(img, n);
+        div.appendChild(img);
+        div.addEventListener('click', () => openZoom(n));
+        return div;
+      }
+
+      // Size the book so one page (or a two-page spread) fits inside the stage.
+      function fit() {
+        const cs = getComputedStyle(els.stage);
+        const w = els.stage.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+        const h = els.stage.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+        const ratio = 657 / 1050, n = state.double ? 2 : 1;
+        els.book.style.height = Math.floor(Math.min(h, w / (n * ratio))) + 'px';
+      }
+      window.addEventListener('resize', fit);
+
+      function render() {
+        state.page = spreadStart(state.page);
+        const p = state.page;
+        els.book.className = 'book' + (state.double ? ' double' : '');
+        els.book.innerHTML = '';
+        els.book.appendChild(pageEl(p));
+        if (state.double) els.book.appendChild(pageEl(p + 1));
+        fit();
+
+        const lastStart = spreadStart(TOTAL);
+        const atStart = p <= 1, atEnd = p >= lastStart;
+        els.sidePrev.disabled = els.prev.disabled = els.first.disabled = atStart;
+        els.sideNext.disabled = els.next.disabled = els.last.disabled = atEnd;
+        els.input.value = p;
+        document.getElementById('pageTotal').textContent =
+          (state.double && p + 1 <= TOTAL && window.innerWidth > 640 ? '–' + (p + 1) + ' ' : '') + '/ ' + TOTAL;
+        els.single.classList.toggle('on', !state.double);
+        els.double.classList.toggle('on', state.double);
+        try { history.replaceState(null, '', '#p=' + p); } catch (e) {}
+        markThumb();
+        preload(p + step());
+        preload(p - step());
+      }
+
+      function preload(n) {
+        for (let i = 0; i < step(); i++) {
+          const k = n + i;
+          if (k >= 1 && k <= TOTAL) { const im = new Image(); loadImg(im, k); }
+        }
+      }
+
+      let busy = false;
+      function go(target, dir) {
+        target = Math.max(1, Math.min(TOTAL, target));
+        if (spreadStart(target) === state.page || busy) return;
+        busy = true;
+        els.book.classList.add(dir > 0 ? 'turn-next' : 'turn-prev');
+        setTimeout(() => {
+          state.page = target;
+          render();
+          els.book.classList.add(dir > 0 ? 'turn-prev' : 'turn-next');
+          requestAnimationFrame(() => requestAnimationFrame(() => {
+            els.book.classList.remove('turn-next', 'turn-prev');
+            busy = false;
+          }));
+        }, 200);
+      }
+
+      const next = () => go(state.page + step(), 1);
+      const prev = () => go(state.page - step(), -1);
+
+      els.sideNext.addEventListener('click', next);
+      els.sidePrev.addEventListener('click', prev);
+      els.next.addEventListener('click', next);
+      els.prev.addEventListener('click', prev);
+      els.first.addEventListener('click', () => go(1, -1));
+      els.last.addEventListener('click', () => go(TOTAL, 1));
+      els.input.addEventListener('change', () => {
+        const n = parseInt(els.input.value, 10);
+        if (n >= 1 && n <= TOTAL) go(n, n > state.page ? 1 : -1); else els.input.value = state.page;
+      });
+
+      function setView(double) {
+        state.double = double;
+        try { localStorage.setItem('lishu_view', double ? 'double' : 'single'); } catch (e) {}
+        render();
+      }
+      els.single.addEventListener('click', () => setView(false));
+      els.double.addEventListener('click', () => setView(true));
+
+      els.full.addEventListener('click', () => {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+        else document.exitFullscreen && document.exitFullscreen();
+      });
+
+      // ── Thumbnails ──
+      els.thumbs.innerHTML = Array.from({ length: TOTAL }, (_, i) =>
+        '<button class="thumb" data-p="' + (i + 1) + '"><img loading="lazy" alt=""><span>' + (i + 1) + '</span></button>').join('');
+      els.thumbs.querySelectorAll('.thumb').forEach(b => {
+        const n = parseInt(b.dataset.p, 10);
+        b.addEventListener('click', () => {
+          go(n, n > state.page ? 1 : -1);
+          if (window.innerWidth < 900) els.drawer.classList.remove('open');
+        });
+      });
+      let thumbsLoaded = false;
+      function openDrawer() {
+        els.drawer.classList.toggle('open');
+        if (!thumbsLoaded) {
+          thumbsLoaded = true;
+          els.thumbs.querySelectorAll('.thumb').forEach(b => loadImg(b.querySelector('img'), parseInt(b.dataset.p, 10)));
+        }
+      }
+      function markThumb() {
+        els.thumbs.querySelectorAll('.thumb').forEach(b => {
+          const n = parseInt(b.dataset.p, 10);
+          b.classList.toggle('current', n === state.page || (state.double && n === state.page + 1));
+        });
+      }
+      els.toc.addEventListener('click', openDrawer);
+      els.drawerClose.addEventListener('click', () => els.drawer.classList.remove('open'));
+
+      // ── Zoom ──
+      function openZoom(n) {
+        delete els.zoomImg.dataset.fallback;
+        loadImg(els.zoomImg, n);
+        els.zoomImg.alt = '标准隶书字形表 第 ' + n + ' 页（放大）';
+        els.zoom.classList.add('open');
+        els.zoom.scrollTop = 0;
+      }
+      function closeZoom() { els.zoom.classList.remove('open'); }
+      els.zoom.addEventListener('click', closeZoom);
+      els.zoomClose.addEventListener('click', closeZoom);
+
+      // ── Keyboard & swipe ──
+      document.addEventListener('keydown', e => {
+        if (e.target === els.input) return;
+        if (e.key === 'Escape') { closeZoom(); els.drawer.classList.remove('open'); return; }
+        if (els.zoom.classList.contains('open')) return;
+        if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); next(); }
+        if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+        if (e.key === 'Home') go(1, -1);
+        if (e.key === 'End') go(TOTAL, 1);
+      });
+
+      let sx = null, sy = null;
+      els.stage.addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+      els.stage.addEventListener('touchend', e => {
+        if (sx === null) return;
+        const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) (dx < 0 ? next : prev)();
+        sx = null;
+      });
+
+      window.addEventListener('hashchange', () => {
+        const n = parseInt((location.hash.match(/p=(\d+)/) || [])[1], 10);
+        if (n >= 1 && n <= TOTAL && spreadStart(n) !== state.page) go(n, n > state.page ? 1 : -1);
+      });
+
+      render();
+    })();
+  </script>
+</body>
+
+</html>

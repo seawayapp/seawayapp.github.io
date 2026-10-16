@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SeawayApp Calligraphy 书法 — 隶书、楷书等书法字形与练习资源。">
+  <title>Calligraphy 书法</title>
+  <script src="../nav-config.js"></script>
+  <script>
+    window.NAV_CONFIG = {
+      breadcrumbs: [
+        { label: "Home", href: "../index.html", children: NAV_MENUS.site() },
+        { label: "Calligraphy 书法" }
+      ]
+    };
+  </script>
+  <script src="../nav-top.js"></script>
+  <style>
+    :root {
+      --ink: #1f1b16;
+      --ink-mid: #5b5147;
+      --ink-light: #9a8f84;
+      --paper: #f7f2e8;
+      --card: #fffdf8;
+      --seal: #b23a2e;
+      --seal-dim: rgba(178, 58, 46, 0.10);
+      --line: #e6dccb;
+      --radius: 14px;
+      --shadow: 0 2px 14px rgba(60, 40, 20, 0.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Songti SC", "STSong", "SimSun", Georgia, serif;
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    .wrap { max-width: 920px; margin: 0 auto; padding: 40px 20px 64px; }
+
+    .page-head { text-align: center; margin-bottom: 34px; }
+    .page-head .seal {
+      display: inline-block;
+      font-size: .85rem;
+      color: #fff;
+      background: var(--seal);
+      padding: 4px 10px;
+      border-radius: 4px;
+      letter-spacing: 4px;
+      margin-bottom: 14px;
+    }
+    .page-head h1 { font-size: 2.4rem; letter-spacing: 10px; font-weight: 700; }
+    .page-head p {
+      margin-top: 10px;
+      font-family: system-ui, "Microsoft YaHei", sans-serif;
+      font-size: .92rem;
+      color: var(--ink-mid);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px 22px 20px;
+      text-decoration: none;
+      color: var(--ink);
+      transition: transform .15s, box-shadow .15s, border-color .15s;
+    }
+
+    a.card:hover {
+      transform: translateY(-2px);
+      border-color: var(--seal);
+      box-shadow: 0 6px 22px rgba(178, 58, 46, 0.15);
+    }
+
+    .card .glyph {
+      width: 64px;
+      height: 64px;
+      border-radius: 12px;
+      background: var(--seal-dim);
+      color: var(--seal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      font-weight: 700;
+    }
+
+    .card h2 { font-size: 1.3rem; letter-spacing: 2px; }
+    .card h2 small {
+      font-family: system-ui, sans-serif;
+      font-size: .78rem;
+      font-weight: 500;
+      color: var(--ink-light);
+      letter-spacing: 0;
+      margin-left: 6px;
+    }
+
+    .card p {
+      font-family: system-ui, "Microsoft YaHei", sans-serif;
+      font-size: .86rem;
+      line-height: 1.6;
+      color: var(--ink-mid);
+      flex: 1;
+    }
+
+    .card .go {
+      font-family: system-ui, sans-serif;
+      font-size: .82rem;
+      font-weight: 700;
+      color: var(--seal);
+    }
+
+    .card.soon { opacity: .55; }
+    .card.soon .go { color: var(--ink-light); }
+
+    @media (max-width: 540px) {
+      .page-head h1 { font-size: 1.9rem; letter-spacing: 6px; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <header class="page-head">
+      <div class="seal">墨韵</div>
+      <h1>书法</h1>
+      <p>Chinese Calligraphy · 认识字体、临摹字形、练习书写</p>
+    </header>
+
+    <section class="grid">
+      <a class="card" href="lishu.html">
+        <div class="glyph">隶</div>
+        <h2>隶书<small>Lishu</small></h2>
+        <p>教育部标准隶书字形表，共 44 页、四千余字。像翻书一样逐页浏览，可放大查看笔画细节。</p>
+        <span class="go">翻阅字形表 →</span>
+      </a>
+
+      <div class="card soon">
+        <div class="glyph">楷</div>
+        <h2>楷书<small>Kaishu</small></h2>
+        <p>楷书标准字形与笔顺示范。</p>
+        <span class="go">即将推出</span>
+      </div>
+
+      <div class="card soon">
+        <div class="glyph">篆</div>
+        <h2>篆书<small>Zhuanshu</small></h2>
+        <p>小篆字形与字源演变。</p>
+        <span class="go">即将推出</span>
+      </div>
+    </section>
+  </main>
+</body>
+
+</html>

@@ -2,6 +2,10 @@ const data = {
   lastUpdated: "11/10/2026 V1",
   recentReleases: [
     {
+      date: "2026-10-16",
+      name: "<a href='Calligraphy/lishu.html'>隶书 Lishu 标准隶书字形表</a>"
+    },
+    {
       date: "2026-05-05",
       name: "<a href='Education/ChineseReadingAloud/index.html'>华文朗读练习 P2 (Chinese Reading Aloud)</a>"
     },
@@ -91,6 +95,10 @@ const data = {
     {
       date: "2026-05-13",
       name: "<a href='ReadingNotes/index.html'>Reading Notes 读书笔记</a>"
+    },
+    {
+      date: "2026-10-16",
+      name: "<a href='Calligraphy/index.html'>Calligraphy 书法</a>"
     }
   ],
   archiveReleases: [
