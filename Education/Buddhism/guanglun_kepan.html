@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="zh-Hans">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    window.NAV_CONFIG = {
+      breadcrumbs: [
+        { label: "Home", href: "../../index.html" },
+        { label: "Education", href: "../index.html" },
+        { label: "Buddhism", href: "index.html" },
+        { label: "广论科判" },
+      ],
+    };
+  </script>
+  <script src="../../nav-top.js"></script>
+  <title>广论科判</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script src="./data/guanglun_kepan.js"></script>
+  <style>
+    :root {
+      --bg: #f7f2e8;
+      --panel: #fffdf8;
+      --ink: #2e2619;
+      --ink-mid: #6f6350;
+      --line: #cdbf9f;
+      --box: #fffdf8;
+      --hit: #ffe28a;
+      --root: #7a2e1d;
+      --c-pre: #9a6b3c;    /* 道前基础 */
+      --c-low: #4f8a4b;    /* 下士道 */
+      --c-mid: #3f72a8;    /* 中士道 */
+      --c-high: #b0453a;   /* 上士道 */
+      --c-zg: #b58a1b;     /* 止观 */
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #1d1a16; --panel: #27231d; --ink: #eee5d3; --ink-mid: #b3a68e;
+        --line: #5d5444; --box: #2b2620; --hit: #7a6418; --root: #e3a083;
+        --c-pre: #d0a273; --c-low: #82c27c; --c-mid: #7fb0e6; --c-high: #e98478; --c-zg: #e2bd56;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #1d1a16; --panel: #27231d; --ink: #eee5d3; --ink-mid: #b3a68e;
+      --line: #5d5444; --box: #2b2620; --hit: #7a6418; --root: #e3a083;
+      --c-pre: #d0a273; --c-low: #82c27c; --c-mid: #7fb0e6; --c-high: #e98478; --c-zg: #e2bd56;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Noto Serif SC", "Songti SC", serif;
+    }
+
+    header.top {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 22px 16px 10px;
+      text-align: center;
+    }
+
+    header.top h1 { margin: 0; font-size: 1.7rem; letter-spacing: 3px; color: var(--root); }
+    header.top p { margin: 6px 0 0; color: var(--ink-mid); font-size: .9rem; }
+
+    .bar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      background: color-mix(in srgb, var(--bg) 92%, transparent);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .grp { display: flex; gap: 4px; align-items: center; }
+    .grp > span { font-size: .8rem; color: var(--ink-mid); margin-right: 2px; }
+
+    button, .search input {
+      font: inherit;
+      font-size: .85rem;
+      color: var(--ink);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    button:hover { border-color: var(--ink-mid); }
+    button.on { background: var(--root); border-color: var(--root); color: #fff; }
+
+    .search { display: flex; gap: 4px; align-items: center; }
+    .search input { width: 11em; cursor: text; }
+    .search .cnt { font-size: .78rem; color: var(--ink-mid); min-width: 3.5em; }
+
+    .legend { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; padding: 10px 16px 0; }
+    .legend button { border-left: 5px solid var(--c); }
+
+    /* ── canvas ── */
+    #stage {
+      overflow: auto;
+      height: calc(100vh - 150px);
+      min-height: 420px;
+      cursor: grab;
+      padding: 24px 16px 60px;
+    }
+
+    #stage.drag { cursor: grabbing; user-select: none; }
+    #tree { width: max-content; zoom: var(--z, 1); }
+
+    ul.kids { list-style: none; margin: 0; padding: 0; }
+    li.n { position: relative; }
+
+    .box {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 6px;
+      flex: none;
+      max-width: 20em;
+      padding: 5px 9px;
+      background: var(--box);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--c, var(--line));
+      border-radius: 7px;
+      font-size: .9rem;
+      line-height: 1.45;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(60, 40, 10, .07);
+      transition: box-shadow .15s;
+    }
+
+    .box:hover { box-shadow: 0 2px 10px rgba(60, 40, 10, .18); }
+    .box .no { flex: none; font-size: .72rem; color: var(--c, var(--ink-mid)); font-weight: 700; }
+    .box .t { flex: 1; }
+    .box .pg {
+      flex: none;
+      font-size: .7rem;
+      color: var(--ink-mid);
+      text-decoration: none;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      padding: 0 4px;
+      font-family: system-ui, sans-serif;
+    }
+    .box .pg:hover { color: var(--c); border-color: var(--c); }
+    .box .more {
+      flex: none;
+      font-size: .68rem;
+      color: #fff;
+      background: var(--c, var(--ink-mid));
+      border-radius: 9px;
+      padding: 0 6px;
+      font-family: system-ui, sans-serif;
+    }
+    li.n:not(.closed) > .box .more { display: none; }
+    li.n.closed > ul.kids { display: none; }
+    .box.hit { background: var(--hit); }
+    .box.cur { outline: 2px solid var(--c, var(--root)); outline-offset: 2px; }
+
+    .root > .box { font-size: 1.15rem; font-weight: 700; color: #fff; background: var(--root); border-color: var(--root); padding: 8px 14px; }
+    .root > .box .pg { display: none; }
+
+    /* mind map: children to the right, joined by lines */
+    .map li.n { display: flex; align-items: center; padding: 3px 0 3px 22px; }
+    .map li.root { padding-left: 0; }
+    .map ul.kids { display: flex; flex-direction: column; margin-left: 22px; position: relative; }
+    .map ul.kids::before { content: ""; position: absolute; left: -22px; top: 50%; width: 22px; border-top: 1.5px solid var(--line); }
+    .map ul.kids > li::before { content: ""; position: absolute; left: 0; top: 50%; width: 22px; border-top: 1.5px solid var(--line); }
+    .map ul.kids > li::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; border-left: 1.5px solid var(--line); }
+    .map ul.kids > li:first-child::after { top: 50%; }
+    .map ul.kids > li:last-child::after { bottom: 50%; }
+    .map ul.kids > li:only-child::after { display: none; }
+
+    /* outline: indented list (better on a phone) */
+    .outline { width: auto !important; max-width: 900px; margin: 0 auto; }
+    .outline li.n { padding: 3px 0; }
+    .outline ul.kids { margin-left: 14px; padding-left: 12px; border-left: 1.5px solid var(--line); }
+    .outline .box { max-width: none; }
+
+    footer { text-align: center; font-size: .78rem; color: var(--ink-mid); padding: 12px 16px 24px; }
+
+    @media (max-width: 600px) {
+      header.top h1 { font-size: 1.35rem; }
+      .search input { width: 8em; }
+      #stage { height: auto; min-height: 0; overflow: visible; padding: 16px; cursor: auto; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="top">
+    <h1>菩提道次第广论 · 科判</h1>
+    <p>点按科目展开 / 收起 · 页码可跳到原文 · 拖动画面平移</p>
+  </header>
+
+  <div class="bar">
+    <div class="grp"><span>展开</span>
+      <button data-depth="2">2</button><button data-depth="3">3</button><button data-depth="4">4</button>
+      <button data-depth="6">6</button><button data-depth="99">全部</button>
+    </div>
+    <div class="grp"><span>视图</span>
+      <button id="vMap">导图</button><button id="vList">大纲</button>
+    </div>
+    <div class="grp"><span>大小</span>
+      <button id="zOut">−</button><button id="zIn">＋</button>
+    </div>
+    <div class="search">
+      <input id="q" type="search" placeholder="搜索科目，如 奢摩他" />
+      <button id="qNext">下一个</button><span class="cnt" id="qCnt"></span>
+    </div>
+  </div>
+
+  <div class="legend" id="legend"></div>
+
+  <div id="stage">
+    <div id="tree"></div>
+  </div>
+
+  <footer>科目取自原文中「…分N　一…　二…」的科判语，页码为本书 P1–P585 页次（部分为近似页）。</footer>
+
+  <script>
+    (function () {
+      const STEMS = "甲乙丙丁戊己庚辛壬癸子丑寅卯辰巳午未申酉戌亥";
+      const NUMS = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
+      // branch colour by the heading that opens it
+      const BRANCH = [
+        ["于共下士道次修心", "--c-low", "下士道"],
+        ["于共中士道次修心", "--c-mid", "中士道"],
+        ["于上士夫道次修心", "--c-high", "上士道"],
+        ["特于后二波罗蜜多学习道理", "--c-zg", "止观"],
+      ];
+      const READER = "guanglun_reader_v2.html?p=";
+
+      const root = GUANGLUN_KEPAN;
+      const all = [];
+      (function walk(n, depth, parent, color, no) {
+        n.depth = depth; n.parent = parent; n.no = no;
+        const b = BRANCH.find(x => x[0] === n.t);
+        n.color = b ? b[1] : color;
+        all.push(n);
+        (n.c || []).forEach((c, i) => walk(c, depth + 1, n, n.color,
+          STEMS[depth] + (NUMS[i] || i + 1)));
+      })(root, 0, null, "--c-pre", "");
+
+      const count = n => (n.c || []).reduce((s, c) => s + 1 + count(c), 0);
+      const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+
+      function build(n) {
+        const li = document.createElement("li");
+        li.className = "n" + (n.depth === 0 ? " root" : "");
+        li.style.setProperty("--c", "var(" + n.color + ")");
+        const box = document.createElement("div");
+        box.className = "box";
+        box.innerHTML =
+          (n.no ? '<span class="no">' + n.no + "</span>" : "") +
+          '<span class="t">' + esc(n.t) + "</span>" +
+          (n.c ? '<span class="more">+' + count(n) + "</span>" : "") +
+          '<a class="pg" href="' + READER + n.p + '" target="_blank" title="打开原文 P' + n.p + '">P' + n.p + "</a>";
+        li.appendChild(box);
+        n.li = li; n.box = box;
+        if (n.c) {
+          const ul = document.createElement("ul");
+          ul.className = "kids";
+          n.c.forEach(c => ul.appendChild(build(c)));
+          li.appendChild(ul);
+        }
+        return li;
+      }
+
+      const tree = document.getElementById("tree");
+      const top = document.createElement("ul");
+      top.className = "kids";
+      top.appendChild(build(root));
+      tree.appendChild(top);
+
+      const setOpen = (n, open) => { if (n.c) n.li.classList.toggle("closed", !open); };
+      function expandTo(depth) {
+        all.forEach(n => setOpen(n, n.depth < depth - 1 || depth >= 99));
+        document.querySelectorAll("[data-depth]").forEach(b => b.classList.toggle("on", +b.dataset.depth === depth));
+      }
+      function reveal(n) {
+        for (let p = n.parent; p; p = p.parent) setOpen(p, true);
+      }
+      function focusNode(n) {
+        reveal(n);
+        document.querySelectorAll(".box.cur").forEach(b => b.classList.remove("cur"));
+        n.box.classList.add("cur");
+        n.box.scrollIntoView({ block: "center", inline: "center", behavior: "smooth" });
+      }
+
+      // click a heading: open / close it
+      tree.addEventListener("click", e => {
+        if (e.target.closest(".pg") || moved) return;
+        const box = e.target.closest(".box");
+        if (!box) return;
+        const n = all.find(x => x.box === box);
+        if (!n.c) return;
+        const open = n.li.classList.contains("closed");
+        setOpen(n, open);
+        document.querySelectorAll("[data-depth]").forEach(b => b.classList.remove("on"));
+        if (open) {
+          const kids = n.li.querySelector(":scope > ul.kids");
+          kids.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "smooth" });
+        }
+      });
+
+      document.querySelectorAll("[data-depth]").forEach(b =>
+        b.addEventListener("click", () => expandTo(+b.dataset.depth)));
+
+      // legend: jump to each 士道 / 止观
+      const legend = document.getElementById("legend");
+      [["如何正以教授引导学徒之次第", "--c-pre", "道前基础"]].concat(BRANCH)
+        .forEach(([title, color, label]) => {
+          const n = all.find(x => x.t === title);
+          if (!n) return;
+          const b = document.createElement("button");
+          b.textContent = label;
+          b.style.setProperty("--c", "var(" + color + ")");
+          b.onclick = () => { setOpen(n, true); focusNode(n); };
+          legend.appendChild(b);
+        });
+
+      // view: mind map or outline
+      const VIEW_KEY = "glKepanView";
+      function view(v) {
+        tree.className = v;
+        document.getElementById("vMap").classList.toggle("on", v === "map");
+        document.getElementById("vList").classList.toggle("on", v === "outline");
+        try { localStorage.setItem(VIEW_KEY, v); } catch (e) {}
+      }
+      document.getElementById("vMap").onclick = () => view("map");
+      document.getElementById("vList").onclick = () => view("outline");
+      let saved = null;
+      try { saved = localStorage.getItem(VIEW_KEY); } catch (e) {}
+      view(saved || (innerWidth < 600 ? "outline" : "map"));
+
+      // size
+      let z = 1;
+      const zoom = d => { z = Math.min(1.6, Math.max(0.5, +(z + d).toFixed(2))); tree.style.setProperty("--z", z); };
+      document.getElementById("zIn").onclick = () => zoom(0.1);
+      document.getElementById("zOut").onclick = () => zoom(-0.1);
+
+      // drag the canvas to pan
+      const stage = document.getElementById("stage");
+      let drag = null, moved = false;
+      stage.addEventListener("pointerdown", e => {
+        if (e.pointerType !== "mouse" || e.button !== 0 || e.target.closest(".pg")) return;
+        drag = { x: e.clientX, y: e.clientY, l: stage.scrollLeft, t: stage.scrollTop };
+        moved = false;
+      });
+      addEventListener("pointermove", e => {
+        if (!drag) return;
+        const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+        if (!moved && Math.abs(dx) + Math.abs(dy) < 5) return;
+        moved = true;
+        stage.classList.add("drag");
+        stage.scrollLeft = drag.l - dx;
+        stage.scrollTop = drag.t - dy;
+      });
+      addEventListener("pointerup", () => {
+        drag = null;
+        stage.classList.remove("drag");
+        setTimeout(() => { moved = false; }, 0);
+      });
+
+      // search
+      const q = document.getElementById("q"), qCnt = document.getElementById("qCnt");
+      let hits = [], hi = -1;
+      function search() {
+        const s = q.value.trim();
+        all.forEach(n => n.box.classList.remove("hit"));
+        hits = s ? all.filter(n => n.t.includes(s)) : [];
+        hits.forEach(n => n.box.classList.add("hit"));
+        hi = -1;
+        qCnt.textContent = s ? (hits.length ? hits.length + " 处" : "无") : "";
+        if (hits.length) next();
+      }
+      function next() {
+        if (!hits.length) return;
+        hi = (hi + 1) % hits.length;
+        focusNode(hits[hi]);
+        qCnt.textContent = (hi + 1) + " / " + hits.length;
+      }
+      q.addEventListener("input", search);
+      q.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); next(); } });
+      document.getElementById("qNext").onclick = next;
+
+      expandTo(3);
+    })();
+  </script>
+</body>
+
+</html>

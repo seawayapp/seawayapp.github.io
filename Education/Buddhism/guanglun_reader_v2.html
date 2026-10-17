@@ -1778,6 +1778,11 @@
         localStorage.setItem("guanglun_editor_input", JSON.stringify(data));
         window.open("guanglun_slide_editor.html", "_blank");
       }
+      // ?p=74 opens that page (links from the 科判 page)
+      (function () {
+        const p = parseInt(new URLSearchParams(location.search).get("p"));
+        if (p >= 1 && p <= 585) qs(p, 1, p, 13);
+      })();
     </script>
   </body>
 </html>

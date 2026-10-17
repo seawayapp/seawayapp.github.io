@@ -12,6 +12,12 @@ var mainData = [
     filename: "guanglun_reader_v2.html"
   },
   {
+    title: "菩提道次第广论-科判",
+    subtitle: "导图",
+    category: "file_index",
+    filename: "guanglun_kepan.html"
+  },
+  {
     title: "菩提道次第广论",
     subtitle: "宗喀巴大师",
     category: "folder",
