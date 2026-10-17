@@ -1,6 +1,10 @@
 const data = {
-  lastUpdated: "11/10/2026 V1",
+  lastUpdated: "17/10/2026 V1",
   recentReleases: [
+    {
+      date: "2026-10-17",
+      name: "<a href='Education/Primary/index.html'>Primary Study 小学 — Mind Maps</a>"
+    },
     {
       date: "2026-10-16",
       name: "<a href='Calligraphy/lishu.html'>隶书 Lishu 标准隶书字形表</a>"
@@ -99,6 +103,10 @@ const data = {
     {
       date: "2026-10-16",
       name: "<a href='Calligraphy/index.html'>Calligraphy 书法</a>"
+    },
+    {
+      date: "2026-10-17",
+      name: "<a href='Education/Primary/index.html'>Primary Study 小学</a>"
     }
   ],
   archiveReleases: [

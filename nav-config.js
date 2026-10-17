@@ -36,6 +36,7 @@ window.NAV_MENUS = (function () {
     return [
       { label: "🏠 Home", href: url("index.html") },
       { label: "🎓 Education", href: url("Education/index.html") },
+      { label: "🏫 Primary Study 小学", href: url("Education/Primary/index.html") },
       { label: "🎮 Games", href: url("Games/index.html") },
       { label: "💻 Technology", href: url("Technology/index.html") },
       { label: "➕ Math 数学", href: url("Math/index.html") },
