@@ -30,6 +30,9 @@ const CH6 = "Chapter 6: Simple Series and Parallel Electric Circuits";
 
 const terms = list => `<ul>${list.map(([t, d]) => `<li><strong>${t}</strong> — ${d}</li>`).join('')}</ul>`;
 const ul = list => `<ul>${list.map(x => `<li>${x}</li>`).join('')}</ul>`;
+// picture inside a section (path relative to mindmap.html); first row of table() is the header
+const fig = (src, alt) => `<img class="fig" src="${src}" alt="${alt}" loading="lazy">`;
+const table = rows => `<div class="tbl"><table class="cmp"><tr>${rows[0].map(c => `<th>${c}</th>`).join('')}</tr>${rows.slice(1).map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</table></div>`;
 
 /* ── small themed diagrams ───────────────────────────────────────────── */
 const S = 'style="fill:none;stroke:var(--text);stroke-width:2"';
@@ -638,6 +641,21 @@ const TOPICS = [
       "Batteries arranged in <strong>parallel</strong> give about the same brightness as one battery, but last <strong>longer</strong>.",
       "A battery connected the wrong way round (+ to +) works against the others — brightness drops.",
       "Brightness of a bulb shows the amount of current: brighter = more current."
+    ]) },
+    { h: "1. Batteries in Series", body: fig("images/batteries_series.png", "Two batteries in series lighting a bulb") + ul([
+      "Connect the <strong>positive (+)</strong> terminal of one battery to the <strong>negative (−)</strong> terminal of the next.",
+      "The voltages <strong>add up</strong>.",
+      "The bulb usually shines <strong>brighter</strong> because more current flows through it."
+    ]) },
+    { h: "2. Batteries in Parallel", body: fig("images/batteries_parallel.png", "Two batteries in parallel lighting a bulb") + ul([
+      "Connect <strong>positive (+) to positive (+)</strong> and <strong>negative (−) to negative (−)</strong>.",
+      "The voltage <strong>stays the same</strong> as one battery.",
+      "The bulb has about the <strong>same brightness</strong>, but the batteries can <strong>last longer</strong>."
+    ]) },
+    { h: "Remember for your Science exam", body: table([
+      ["Connection", "Voltage", "Bulb brightness", "Battery life"],
+      ["<strong>Series</strong>", "Increases", "Usually brighter", "Usually similar or shorter"],
+      ["<strong>Parallel</strong>", "Stays the same", "About the same", "Usually longer"]
     ]) },
     { h: "Key Terms", body: terms([["Current", "the amount of electricity flowing through a circuit"]]) }
   ],
