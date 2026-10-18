@@ -26,6 +26,7 @@
 
     <script src="./data/guanglun_index.js"></script>
     <script src="./data/guanglun_vernacular.js"></script>
+    <script src="./data/guanglun_lr.js"></script>
 
     <style>
       :root {
@@ -1349,6 +1350,42 @@
         .pv-cat { display: none; }
         .pv-body { padding-bottom: 60px; }
       }
+
+      /* ── 手抄稿 links ── */
+      .lr-bar {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin: -4px 0 14px;
+        padding: 8px 12px;
+        background: var(--paper-warm);
+        border: 1px solid var(--paper-deep);
+        border-radius: 8px;
+        font-family: "Noto Sans SC", sans-serif;
+      }
+      .lr-label {
+        font-size: 12px;
+        letter-spacing: 2px;
+        color: var(--ink-light);
+        margin-right: 4px;
+      }
+      .lr-chip {
+        font-size: 12px;
+        padding: 2px 9px;
+        border-radius: 999px;
+        border: 1px solid var(--gold-light);
+        background: var(--paper);
+        color: var(--ink);
+        text-decoration: none;
+        white-space: nowrap;
+        transition: background 0.15s;
+      }
+      .lr-chip:hover { background: var(--gold-pale); }
+      .lr-chip small { color: var(--ink-faint); margin-left: 3px; }
+      .lr-none { font-size: 12px; color: var(--ink-faint); }
+      .page-lr { display: inline-flex; gap: 4px; flex-wrap: wrap; margin-left: 8px; }
+      .page-lr .lr-chip { font-size: 11px; padding: 0 7px; }
     </style>
   </head>
 
@@ -1754,6 +1791,30 @@
           .replace(/>/g, "&gt;");
       }
 
+
+      // ── 手抄稿 (日常老和尚 160 卷) links for the searched pages ──────────────────
+      const LR_BASE = "https://bwmonastery.org.sg/";
+      function lrTracks(sp, ep) {
+        if (typeof GUANGLUN_LR === "undefined") return [];
+        return Object.entries(GUANGLUN_LR).filter(([, r]) => r[0] <= ep && r[1] >= sp);
+      }
+      function lrChips(sp, ep, compact) {
+        const ts = lrTracks(sp, ep);
+        if (!ts.length) return "";
+        return `<span class="page-lr">${ts.map(([id, r]) => lrChip(id, r, compact)).join("")}</span>`;
+      }
+      function lrChip(id, r, compact) {
+        const name = id.replace(/^lr(\d+)([ab])$/, (m, n, s) => n + s.toUpperCase());
+        const range = r[0] === r[1] ? `P${r[0]}` : `P${r[0]}–${r[1]}`;
+        return `<a class="lr-chip" href="${LR_BASE}${id}" target="_blank" rel="noopener" title="手抄稿 第${name.slice(0, -1)}卷 ${name.slice(-1)}面 · 广论 ${range}">${name}${compact ? "" : `<small>${range}</small>`}</a>`;
+      }
+      function lrBar(sp, ep) {
+        const ts = lrTracks(sp, ep);
+        return `<div class="lr-bar"><span class="lr-label">📜 手抄稿</span>${
+          ts.length ? ts.map(([id, r]) => lrChip(id, r, false)).join("")
+                    : '<span class="lr-none">此范围暂无对应的手抄稿（止观部分只略讲）</span>'}</div>`;
+      }
+
       function render(sp, sl, ep, el) {
         document.getElementById("welcome").style.display = "none";
         const res = document.getElementById("results");
@@ -1779,6 +1840,7 @@
       <span class="results-count">共 ${currentLines.length} 行</span>
       <button class="btn-pageview" onclick="openPageView()" title="整页原文与白话文对照（← → 翻页）">📖 整页对照</button>
     </div>
+    ${lrBar(sp, ep)}
     ${tabsHtml}
     <div class="col-headers ${cls}">
       <div class="col-h"></div>
@@ -1807,6 +1869,7 @@
           <div class="page-hdr">
             <span class="page-tag">第 ${line.p} 页</span>
             <span class="page-catname">${line.cat}</span>
+            ${lrChips(line.p, line.p, true)}
             <div class="page-rule"></div>
           </div>
       `;
