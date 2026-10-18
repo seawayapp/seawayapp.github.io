@@ -212,6 +212,38 @@
   .leaf-node.learnt-node .en { color: var(--good); }
   ul.learnt { list-style: none; padding-left: 0 !important; }
   ul.learnt li { padding: 6px 10px; border-radius: 8px; background: var(--good-bg); }
+  /* language toggle + Chinese text */
+  .lang-seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .lang-seg button { border: none; background: var(--panel); color: var(--text); font-size: 0.82rem; padding: 9px 12px; cursor: pointer; }
+  .lang-seg button + button { border-left: 1px solid var(--border); }
+  .lang-seg button.on { background: var(--accent); color: #fff; }
+  .zh { display: block; font-weight: 500; color: var(--muted); margin-top: 2px; }
+  .category-node .zh { display: inline; margin: 0 0 0 6px; font-weight: 600; }
+  .legend-item .zh { display: inline; margin-left: 4px; }
+  .drawer h2 .zh { font-size: 0.82em; color: var(--accent); margin-top: 4px; }
+  .drawer .summary .zh { margin-top: 4px; }
+  .zh-block { margin-top: 10px; padding: 8px 0 2px 12px; border-left: 3px solid var(--accent-bg); }
+  .zh-block ul { margin-top: 0; }
+  table.cmp .zh { font-size: 0.92em; }
+  body.lang-zh, body.lang-both { font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", Helvetica, Arial, sans-serif; }
+
+  /* wide screens: roomier, larger drawer (phones keep the full-width drawer below) */
+  @media (min-width: 1100px) {
+    .drawer { width: min(880px, 62vw); padding: 32px 40px 70px; }
+    .drawer h2 { font-size: 1.6rem; }
+    .drawer .tag { font-size: 0.84rem; }
+    .drawer .summary { font-size: 1.12rem; line-height: 1.6; }
+    .drawer .section h3 { font-size: 0.86rem; }
+    .drawer .section .body { font-size: 1.06rem; line-height: 1.7; }
+    .drawer .qa .q { font-size: 1.02rem; }
+    .drawer .qa .a { font-size: 1rem; }
+    .diagram-box svg { max-width: 420px; }
+  }
+  @media (min-width: 1600px) {
+    .drawer { width: min(1000px, 58vw); }
+    .drawer .section .body { font-size: 1.12rem; }
+  }
+
   /* All-formulas overlay reuses the drawer */
   footer { margin-top: 30px; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); padding-top: 14px; }
 
@@ -262,6 +294,9 @@
       <button class="btn" id="fabFormulas">📖 Key Terms</button>
       <button class="btn" id="fabLearnt">✅ What I Have Learnt</button>
       <button class="btn" id="themeToggle">🌓 Theme</button>
+      <span class="lang-seg" id="langSeg" role="group" aria-label="Language">
+        <button data-lang="en">EN</button><button data-lang="zh">中文</button><button data-lang="both">EN + 中文</button>
+      </span>
     </div>
 
     <div class="progress-row" id="progressRow">
@@ -299,6 +334,9 @@
 <script src="data/p3.js"></script>
 <script src="data/p4.js"></script>
 <script src="data/p5.js"></script>
+<script src="data/p3_zh.js"></script>
+<script src="data/p4_zh.js"></script>
+<script src="data/p5_zh.js"></script>
 <script>
 const GRADES = {
   p3: { label: "Primary 3", ready: true },
@@ -336,7 +374,127 @@ function isDark() {
   return window.matchMedia('(prefers-color-scheme: dark)').matches;
 }
 
-function activeData() { return (window.GRADE_DATA || {})[currentGrade]; }
+/* ── language: "en" | "zh" | "both" (English with its Chinese below) ── */
+const LANG_KEY = "psleSciLang";
+let lang = "both";
+try { lang = localStorage.getItem(LANG_KEY) || "both"; } catch (e) {}
+const UI = {
+  title:      ["🔬 PSLE Science — Mind Map", "🔬 PSLE 科学思维导图"],
+  sub:        ["Tap a chapter to see its guiding questions, then tap a question to open the key concepts, key terms, common mistakes and sample questions. Search highlights matches and expands their chapter. Mark topics you understand — progress is saved on this device.",
+               "点按章节查看引导问题，再点按问题查看重点概念、关键词、常见错误和练习题。搜索会标出相符的内容并展开所在章节。把已明白的课题标记起来——进度会保存在这台设备上。"],
+  search:     ["Search topics, key terms… (e.g. xylem, condensation, parallel)", "搜索课题、关键词……（例如：输水管、凝结、并联）"],
+  expand:     ["Expand all", "全部展开"],
+  collapse:   ["Collapse all", "全部收起"],
+  keyTerms:   ["📖 Key Terms", "📖 关键词"],
+  learnt:     ["✅ What I Have Learnt", "✅ 我学到了什么"],
+  theme:      ["🌓 Theme", "🌓 主题"],
+  reviewed:   ["reviewed", "已复习"],
+  themeTag:   ["Theme: ", "主题："],
+  page:       ["Textbook p.", "课本第 "],
+  pageEnd:    ["", " 页"],
+  sample:     ["Sample Questions", "练习题"],
+  show:       ["Show answer ▾", "显示答案 ▾"],
+  mark:       ["Mark as Understood", "标记为已明白"],
+  done:       ["✓ Reviewed", "✓ 已复习"],
+  close:      ["Close", "关闭"],
+  cmp:        ["Quick comparisons", "比较一览"],
+  none:       ["No topics match your search.", "没有相符的课题。"],
+  nothing:    ["Nothing here yet.", "暂时没有内容。"],
+  ktTitle:    ["Key Terms", "关键词"],
+  ktBlurb:    ["Every key term across the chapters, in one place.", "所有章节的关键词，集中一览。"],
+  wlTitle:    ["What I Have Learnt", "我学到了什么"],
+  wlBlurb:    ["The key points that close each chapter, in one place.", "每章结尾的重点，集中一览。"],
+  footer:     ["topics across", "个课题，共"],
+  footer2:    ["chapters · Based on the Primary Science textbooks · Always cross-check against the latest official syllabus.",
+               "章 · 根据小学科学课本编写 · 请以最新的官方课程纲要为准。"]
+};
+// UI string in the current language ("both" shows English · 中文 for short labels)
+function U(k, plain) {
+  const [en, zh] = UI[k];
+  if (lang === "en") return en;
+  if (lang === "zh") return zh;
+  return plain ? en : en + (zh && zh !== en ? " · " + zh.replace(/^[^\w一-鿿]+/u, "").replace(/^PSLE /, "") : "");
+}
+function zhData() { return (window.GRADE_ZH || {})[currentGrade]; }
+// text in the current language: English, Chinese, or English with Chinese on the next line
+function two(en, zh) {
+  if (lang === "en" || !zh) return en;
+  if (lang === "zh") return zh;
+  return `${en}<span class="zh">${zh}</span>`;
+}
+function catLabel(cat) {
+  const z = zhData();
+  return two(cat, z && z.categories && z.categories[cat]);
+}
+function catShort(cat) {
+  const z = zhData(), zh = z && z.categories && z.categories[cat];
+  const en = cat.replace(/^Chapter \d+:\s*/, ''), zs = zh && zh.replace(/^第\d+章：/, '');
+  return lang === "zh" && zh ? zs : lang === "both" && zh ? `${en} · ${zs}` : en;
+}
+const localCache = {};
+function activeData() {
+  const d = (window.GRADE_DATA || {})[currentGrade];
+  const z = zhData();
+  if (!d || lang === "en" || !z) return d;
+  const key = currentGrade + ":" + lang;
+  if (localCache[key]) return localCache[key];
+  const topics = d.topics.map(t => {
+    const k = z.topics[t.id];
+    if (!k) return t;
+    return Object.assign({}, t, {
+      en: two(t.en, k.en),
+      summary: two(t.summary, k.summary),
+      theme: t.theme && two(t.theme, z.themes && z.themes[t.theme]).replace('<span class="zh">', ' · ').replace('</span>', ''),
+      sections: t.sections.map((sec, i) => {
+        const zs = k.sections[i];
+        if (!zs) return sec;
+        return {
+          key: sec.h,
+          h: lang === "zh" ? zs.h : `${sec.h} · ${zs.h}`,
+          body: lang === "zh" ? zs.body : `${sec.body}<div class="zh-block">${zs.body}</div>`
+        };
+      }),
+      examples: t.examples.map((e, i) => {
+        const ze = k.examples[i];
+        return ze ? { q: two(e.q, ze.q), a: two(e.a, ze.a) } : e;
+      })
+    });
+  });
+  const comparisons = (d.comparisons || []).map(c => {
+    const zc = z.comparisons && z.comparisons[c.id];
+    if (!zc) return c;
+    return {
+      id: c.id,
+      title: two(c.title, zc.title),
+      rows: c.rows.map((r, i) => r.map((cell, j) => two(cell, zc.rows[i] && zc.rows[i][j])))
+    };
+  });
+  return (localCache[key] = Object.assign({}, d, { root: two(d.root, z.root), topics, comparisons }));
+}
+function applyUI() {
+  document.body.classList.remove("lang-en", "lang-zh", "lang-both");
+  document.body.classList.add("lang-" + lang);
+  document.documentElement.lang = lang === "zh" ? "zh-Hans" : "en";
+  document.querySelector("header h1").textContent = U("title");
+  document.querySelector("header p.sub").innerHTML = two(UI.sub[0], UI.sub[1]);
+  searchInput.placeholder = lang === "zh" ? UI.search[1] : UI.search[0];
+  document.getElementById("expandAll").textContent = U("expand");
+  document.getElementById("collapseAll").textContent = U("collapse");
+  document.getElementById("fabFormulas").textContent = U("keyTerms");
+  document.getElementById("fabLearnt").textContent = U("learnt");
+  document.getElementById("themeToggle").textContent = U("theme");
+  emptyState.textContent = U("none");
+  document.querySelectorAll("#langSeg button").forEach(b => b.classList.toggle("on", b.dataset.lang === lang));
+}
+function footerText() {
+  const f = document.querySelector("footer");
+  const n = (activeData() || { topics: [] }).topics.length;
+  const c = new Set((activeData() || { topics: [] }).topics.map(t => t.category)).size;
+  f.innerHTML = lang === "zh"
+    ? `<span id="topicTotal">${n}</span> ${UI.footer[1]} <span id="catTotal">${c}</span> ${UI.footer2[1]}`
+    : `<span id="topicTotal">${n}</span> ${UI.footer[0]} <span id="catTotal">${c}</span> ${UI.footer2[0]}` +
+      (lang === "both" ? `<span class="zh">${n} ${UI.footer[1]} ${c} ${UI.footer2[1]}</span>` : "");
+}
 
 function renderGradeTabs() {
   document.getElementById('grades').innerHTML = Object.keys(GRADES).map(key => {
@@ -366,7 +524,7 @@ function updateProgress(topics) {
   const done = ids.filter(id => progress[id]).length;
   progressRow.classList.add('show');
   progressFill.style.width = (ids.length ? (done / ids.length * 100) : 0) + '%';
-  progressLabel.textContent = `${done}/${ids.length} reviewed`;
+  progressLabel.textContent = `${done}/${ids.length} ${U('reviewed', false).replace(/ · .*/, lang === 'both' ? ' · 已复习' : '')}`;
   document.querySelectorAll('.leaf-node').forEach(n => n.classList.toggle('reviewed', !!progress[n.dataset.id]));
 }
 
@@ -410,7 +568,7 @@ function buildTree() {
           <div class="branch collapsed" data-cat="${cat}" style="--branch-color:${color}">
             <div class="node category-node" data-toggle="${cat}">
               <span class="caret">▾</span>
-              <span>${cat}</span>
+              <span>${catLabel(cat)}</span>
               <span class="count">(${main.length + tricky.length})</span>
             </div>
             <div class="leaves">
@@ -435,7 +593,7 @@ function buildTree() {
   `;
 
   legend.innerHTML = categories.map((cat, ci) => `
-    <div class="legend-item"><span class="legend-dot" style="background:${colorFor(ci, palette)}"></span>${cat}</div>
+    <div class="legend-item"><span class="legend-dot" style="background:${colorFor(ci, palette)}"></span>${catLabel(cat)}</div>
   `).join('') + (TOPICS.some(t => t.subcategory === 'tricky') ? `<div class="legend-item"><span class="legend-dot" style="background:${trickyColor}"></span>⭐ Tricky Questions (nested inside relevant chapters)</div>` : '');
 
   document.getElementById('topicTotal').textContent = TOPICS.length;
@@ -550,7 +708,7 @@ function openDrawer(id) {
 
   drawerContent.innerHTML = `
     <h2>${t.en}</h2>
-    <div class="tags">${t.theme ? `<span class="tag">Theme: ${t.theme}</span>` : ''}${t.category ? `<span class="tag">${t.category.replace(/^Chapter \d+:\s*/, '')}</span>` : ''}${t.page ? `<span class="tag">Textbook p.${t.page}</span>` : ''}${(t.tags || []).map(tag => `<span class="tag">#${tag}</span>`).join('')}</div>
+    <div class="tags">${t.theme ? `<span class="tag">${U('themeTag', true)}${t.theme}</span>` : ''}${t.category ? `<span class="tag">${catShort(t.category)}</span>` : ''}${t.page ? `<span class="tag">${lang === 'zh' ? UI.page[1] + t.page + UI.pageEnd[1] : UI.page[0] + t.page}</span>` : ''}${(t.tags || []).map(tag => `<span class="tag">#${tag}</span>`).join('')}</div>
     <p class="summary">${t.summary}</p>
     ${t.diagram ? `<div class="diagram-box">${t.diagram}</div>` : ''}
     ${(t.sections || []).map(s => `
@@ -558,18 +716,18 @@ function openDrawer(id) {
     `).join('')}
     ${(t.examples && t.examples.length) ? `
       <div class="section">
-        <h3>Sample Questions</h3>
+        <h3>${U('sample')}</h3>
         ${t.examples.map((e, i) => `
           <div class="qa" data-qa="${t.id}-${i}">
             <div class="q">Q${i + 1}. ${e.q}</div>
-            <div class="reveal-btn">Show answer ▾</div>
+            <div class="reveal-btn">${U('show')}</div>
             <div class="a">${e.a}</div>
           </div>
         `).join('')}
       </div>
     ` : ''}
-    <button class="mark-btn ${progress[t.id] ? 'on' : ''}" id="markBtn">${progress[t.id] ? '✓ Reviewed' : 'Mark as Understood'}</button>
-    <button class="drawer-close-bottom" id="drawerCloseBottom">Close</button>
+    <button class="mark-btn ${progress[t.id] ? 'on' : ''}" id="markBtn">${progress[t.id] ? U('done') : U('mark')}</button>
+    <button class="drawer-close-bottom" id="drawerCloseBottom">${U('close')}</button>
   `;
 
   drawerContent.querySelectorAll('.qa .reveal-btn').forEach(btn => {
@@ -579,7 +737,7 @@ function openDrawer(id) {
     progress[t.id] = !progress[t.id];
     saveProgress();
     this.classList.toggle('on');
-    this.textContent = progress[t.id] ? '✓ Reviewed' : 'Mark as Understood';
+    this.textContent = progress[t.id] ? U('done') : U('mark');
     const leaf = document.querySelector(`.leaf-node[data-id="${t.id}"]`);
     if (leaf) leaf.classList.toggle('reviewed', !!progress[t.id]);
     updateProgress(data.topics);
@@ -604,7 +762,7 @@ function comparisonHtml(c) {
 
 function renderComparisons(list) {
   comparisonsWrap.innerHTML = list.length
-    ? `<h2>Quick comparisons</h2>` + list.map(comparisonHtml).join('')
+    ? `<h2>${U('cmp')}</h2>` + list.map(comparisonHtml).join('')
     : '';
 }
 
@@ -613,11 +771,11 @@ function openAllSections(section, title, blurb) {
   if (!data) return;
   const items = [];
   data.topics.forEach(t => {
-    (t.sections || []).filter(s => s.h === section).forEach(s => {
-      items.push(`<div class="section"><h3>${t.category}</h3><div class="body">${s.body}</div></div>`);
+    (t.sections || []).filter(s => (s.key || s.h) === section).forEach(s => {
+      items.push(`<div class="section"><h3>${catLabel(t.category)}</h3><div class="body">${s.body}</div></div>`);
     });
   });
-  drawerContent.innerHTML = `<h2>${title} — ${GRADES[currentGrade].label}</h2><div class="summary">${blurb}</div>${items.join('') || '<p>Nothing here yet.</p>'}<button class="drawer-close-bottom" id="drawerCloseBottom">Close</button>`;
+  drawerContent.innerHTML = `<h2>${title} — ${GRADES[currentGrade].label}</h2><div class="summary">${blurb}</div>${items.join('') || `<p>${U('nothing')}</p>`}<button class="drawer-close-bottom" id="drawerCloseBottom">${U('close')}</button>`;
   document.getElementById('drawerCloseBottom').addEventListener('click', closeDrawer);
   overlay.classList.add('open');
   drawer.classList.add('open');
@@ -629,11 +787,11 @@ function openAllFormulas() {
   if (!data) return;
   const items = [];
   data.topics.forEach(t => {
-    (t.sections || []).filter(s => s.h === 'Key Terms').forEach(s => {
+    (t.sections || []).filter(s => (s.key || s.h) === 'Key Terms').forEach(s => {
       items.push(`<div class="section"><h3>${t.category.replace(/^Chapter (\d+):.*/, 'Ch $1')} · ${t.en}</h3><div class="body">${s.body}</div></div>`);
     });
   });
-  drawerContent.innerHTML = `<h2>Key Terms — ${GRADES[currentGrade].label}</h2><div class="summary">Every key term across the chapters, in one place.</div>${items.join('')}<button class="drawer-close-bottom" id="drawerCloseBottom">Close</button>`;
+  drawerContent.innerHTML = `<h2>${U('ktTitle')} — ${GRADES[currentGrade].label}</h2><div class="summary">${two(UI.ktBlurb[0], UI.ktBlurb[1])}</div>${items.join('')}<button class="drawer-close-bottom" id="drawerCloseBottom">${U('close')}</button>`;
   document.getElementById('drawerCloseBottom').addEventListener('click', closeDrawer);
   overlay.classList.add('open');
   drawer.classList.add('open');
@@ -655,7 +813,7 @@ document.getElementById('collapseAll').addEventListener('click', () => {
   requestAnimationFrame(drawConnectors);
 });
 document.getElementById('fabFormulas').addEventListener('click', openAllFormulas);
-document.getElementById('fabLearnt').addEventListener('click', () => openAllSections('What I Have Learnt', 'What I Have Learnt', 'The key points that close each chapter, in one place.'));
+document.getElementById('fabLearnt').addEventListener('click', () => openAllSections('What I Have Learnt', U('wlTitle'), two(UI.wlBlurb[0], UI.wlBlurb[1])));
 
 document.getElementById('themeToggle').addEventListener('click', () => {
   const root = document.documentElement;
@@ -671,6 +829,7 @@ document.getElementById('grades').addEventListener('click', (e) => {
   searchInput.value = '';
   renderGradeTabs();
   buildTree();
+  footerText();
 });
 
 window.addEventListener('resize', () => requestAnimationFrame(drawConnectors));
@@ -678,8 +837,22 @@ if (document.fonts && document.fonts.ready) {
   document.fonts.ready.then(() => requestAnimationFrame(drawConnectors));
 }
 
+document.getElementById('langSeg').addEventListener('click', e => {
+  const b = e.target.closest('button[data-lang]');
+  if (!b || b.dataset.lang === lang) return;
+  lang = b.dataset.lang;
+  try { localStorage.setItem(LANG_KEY, lang); } catch (err) {}
+  closeDrawer();
+  applyUI();
+  buildTree();
+  applySearch();
+  footerText();
+});
+
+applyUI();
 renderGradeTabs();
 buildTree();
+footerText();
 
 if (location.hash) {
   const id = location.hash.slice(1);
