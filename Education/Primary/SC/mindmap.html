@@ -179,10 +179,6 @@
   .drawer .section .body { font-size: 0.92rem; line-height: 1.6; }
   .drawer .section .body ul { margin: 8px 0; padding-left: 20px; }
   .drawer .section .body li { margin-bottom: 8px; }
-  .drawer .section .body img.fig { display: block; width: 100%; max-width: 420px; height: auto; margin: 4px auto 10px; border-radius: 10px; border: 1px solid var(--border); background: #fff; }
-  .drawer .section .body .zh-block img.fig { display: none; }
-  .drawer .section .body .tbl { overflow-x: auto; }
-  .drawer .section .body .tbl table.cmp { min-width: 0; }
   .formula-box { background: var(--accent-bg); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; font-size: 0.95rem; font-weight: 700; text-align: center; }
   .ex-q { margin: 0 0 6px; }
   .ex-steps { color: var(--muted); white-space: pre-line; margin: 0; }
@@ -339,15 +335,17 @@
 <script src="data/p3.js"></script>
 <script src="data/p4.js"></script>
 <script src="data/p5.js"></script>
+<script src="data/p6.js"></script>
 <script src="data/p3_zh.js"></script>
 <script src="data/p4_zh.js"></script>
 <script src="data/p5_zh.js"></script>
+<script src="data/p6_zh.js"></script>
 <script>
 const GRADES = {
   p3: { label: "Primary 3", ready: true },
   p4: { label: "Primary 4", ready: true },
   p5: { label: "Primary 5", ready: true },
-  p6: { label: "Primary 6", ready: false, blurb: "Energy forms and uses, forces, interactions with the environment — coming soon." }
+  p6: { label: "Primary 6", ready: true }
 };
 let currentGrade = "p5";
 { const g = new URLSearchParams(location.search).get("grade"); if (g && GRADES[g] && GRADES[g].ready) currentGrade = g; }

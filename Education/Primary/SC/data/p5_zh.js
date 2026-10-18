@@ -6,9 +6,6 @@
 
 const ul = list => `<ul>${list.map(x => `<li>${x}</li>`).join('')}</ul>`;
 const terms = list => `<ul>${list.map(([t, d]) => `<li><strong>${t}</strong> — ${d}</li>`).join('')}</ul>`;
-// 图片只在纯中文模式显示（中英对照时英文部分已经有图，见 mindmap.html 的 .zh-block .fig）
-const fig = (src, alt) => `<img class="fig" src="${src}" alt="${alt}" loading="lazy">`;
-const table = rows => `<div class="tbl"><table class="cmp"><tr>${rows[0].map(c => `<th>${c}</th>`).join('')}</tr>${rows.slice(1).map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</table></div>`;
 const learnt = list => `<ul class="learnt">${list.map(x => `<li>✅ ${x}</li>`).join('')}</ul>`;
 const KC = "重点概念", KT = "关键词", CM = "常见错误", WL = "我学到了什么";
 const L = (n, pts) => ({ en: "✅ 我学到了什么——第" + n + "章", summary: "第" + n + "章的重点一览。", sections: [{ h: WL, body: learnt(pts) }], examples: [] });
@@ -472,21 +469,6 @@ const TOPICS = {
       "<strong>并联</strong>的电池亮度和一个电池差不多，但用得<strong>更久</strong>。",
       "电池接反（+ 接 +）会抵消其他电池——亮度下降。",
       "灯泡的亮度显示电流的大小：越亮＝电流越大。"
-    ]) },
-    { h: "电池串联", body: fig("images/batteries_series.png", "两个串联的电池点亮灯泡") + ul([
-      "把一个电池的<strong>正极（+）</strong>接到下一个电池的<strong>负极（−）</strong>。",
-      "电压<strong>相加</strong>。",
-      "灯泡通常<strong>更亮</strong>，因为流过它的电流更大。"
-    ]) },
-    { h: "电池并联", body: fig("images/batteries_parallel.png", "两个并联的电池点亮灯泡") + ul([
-      "<strong>正极接正极（+ 接 +）</strong>，<strong>负极接负极（− 接 −）</strong>。",
-      "电压和<strong>一个电池一样</strong>。",
-      "灯泡亮度<strong>差不多</strong>，但电池可以<strong>用得更久</strong>。"
-    ]) },
-    { h: "科学考试要记住", body: table([
-      ["连接方式", "电压", "灯泡亮度", "电池寿命"],
-      ["<strong>串联</strong>", "增加", "通常更亮", "通常差不多或更短"],
-      ["<strong>并联</strong>", "不变", "差不多", "通常更长"]
     ]) },
     { h: KT, body: terms([["电流", "流过电路的电量"]]) }
   ],
