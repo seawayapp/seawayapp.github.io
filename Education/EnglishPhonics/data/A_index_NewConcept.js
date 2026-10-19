@@ -138,5 +138,12 @@ var mainData = [
     category: "file",
     filename: "English-Gaokao-Untested-Words",
     foldername: ""
+  },
+  {
+    title: "Daily English Words 日常英语单词",
+    subtitle: "720 words · 12 groups · 图片 + 英文 / 中文发音 + 小测验",
+    category: "folder",
+    filename: "daily_words.html",
+    foldername: ""
   }
 ];

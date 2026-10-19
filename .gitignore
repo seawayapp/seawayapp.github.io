@@ -30,3 +30,6 @@ Education/PLE/
 
 # Lishu page images are served from R2 (cdn.seawaycdn.com); local copy only for file:// use
 Calligraphy/lishu/zixingti/
+
+# Daily Words images and voice are served from R2 (cdn.seawaycdn.com/english/daily_words); local copy only
+Education/EnglishPhonics/daily_words/
