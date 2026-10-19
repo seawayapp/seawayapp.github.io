@@ -79,7 +79,7 @@
 
     .bu-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
       margin-top: 32px;
     }
@@ -180,7 +180,7 @@
 
     @media (max-width: 700px) {
       .bu-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
       }
 
@@ -216,6 +216,12 @@
         white-space: normal;
       }
     }
+
+    /* responsive: cards may shrink and wrap; one column on narrow screens */
+    .bu-card { min-width: 0; }
+    .bu-card-title, .bu-card-sub { white-space: normal !important; overflow: visible; text-overflow: clip; }
+    @media (max-width: 640px) { .bu-grid { grid-template-columns: 1fr !important; } }
+    html, body { max-width: 100%; overflow-x: hidden; }
   </style>
 </head>
 
