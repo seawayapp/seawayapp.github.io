@@ -222,6 +222,21 @@ var mainData = {
       tags: ["亲子", "个人感悟"],
       en: "You are still a plant that loves the sunlight and loves to grow upward.<br>But you no longer ask every plant to be like you.<br>You let your child grow at his own pace, and you let yourself grow in your own way.<br>You strive for the sunlight, but you also begin to learn to put down roots.<br>Growing upward is your growth; putting down roots is the growth of your heart.<br>And a truly mature person may not be the one who grows tallest, but one whose roots go ever deeper, whose branches spread ever wider, and who can make room for the other lives around them to grow as well.",
       cn: "你仍然是一株喜欢阳光、喜欢向上生长的植物。<br>但你不再要求所有植物都和你一样。<br>你允许孩子按照他的速度成长，也允许自己按照自己的方式成长。<br>你要努力获得阳光，但你也开始学习扎根。<br>向上，是你的成长；扎根，是你的心灵成长。<br>而一个真正成熟的人，也许不是长得最高的人，而是根越来越深、枝叶越来越开，同时能够容纳身边其他生命一起生长的人。"
+    },
+    {
+      tags: ["个人感悟"],
+      en: "You don't have to wait until every problem is solved before you allow yourself to be happy.",
+      cn: "你不必等到所有问题解决以后，才允许自己快乐。"
+    },
+    {
+      tags: ["个人感悟"],
+      en: "But if a person always relies on effort, achievement and solving problems to feel satisfied, he may slip, without noticing, into a habit:<br>\"Once I get this done, then I can be at ease.\"<br>One job is sorted, and there is the next project; the child improves, and there is the next goal; the family is settled, and new problems appear.<br>If happiness always comes last on the to-do list, the list will never really be finished.",
+      cn: "但一个人如果总是依靠努力、成就和解决问题来获得满足，那么他就可能不知不觉地形成一种习惯：<br>等我把这件事做好，我就可以安心了。<br>工作解决了，还有下一个项目；孩子进步了，还有下一个目标；家庭安排妥当了，又会出现新的问题。<br>如果幸福总是排在任务清单的最后，那么任务就永远不会真正结束。"
+    },
+    {
+      tags: ["个人感悟"],
+      en: "I am willing to work hard to make life better; but before life becomes perfect, I also allow myself to be living well already.",
+      cn: "我愿意努力，让生活变得更好；但在生活尚未变得完美之前，我也允许自己，已经很好地活着。"
     }
   ]
 };
