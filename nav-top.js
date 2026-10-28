@@ -337,6 +337,9 @@
       const wrapEl = document.createElement("div");
       wrapEl.className = "__snav-crumb-wrap";
 
+      // The leading "Home" crumb is always a plain button back to the home page (no dropdown)
+      const isHome = i === 0 && /^home$/i.test((item.label || "").trim());
+      if (isHome) item = Object.assign({}, item, { href: item.href || ROOT + "index.html", children: null });
       const hasDD = !!(item.children && item.children.length);
       const el = (item.href || hasDD) ? document.createElement("a") : document.createElement("span");
       el.className = "__snav-crumb" + (hasDD ? " has-dd" : "");
