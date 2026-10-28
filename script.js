@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function iconFor(text) {
     const t = text.toLowerCase();
     if (t.includes("书法") || t.includes("隶书") || t.includes("calligraphy")) return "🖌️";
+    if (t.includes("focus") || t.includes("to-do") || t.includes("清单")) return "✅";
     if (t.includes("buddhism") || t.includes("佛"))          return "🙏";
     if (t.includes("taekwondo") || t.includes("grading"))    return "🥋";
     if (t.includes("chinese") || t.includes("华文") || t.includes("中文")) return "🀄";

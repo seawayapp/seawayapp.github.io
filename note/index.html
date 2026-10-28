@@ -6,6 +6,13 @@
 <!-- Empty = standalone (browser storage). The hosted server fills this in with its API path. -->
 <meta name="focus-api" content="">
 <title>Focus List</title>
+<!-- "Add to Home Screen" on a phone opens it like an app -->
+<meta name="theme-color" content="#f6f5f1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15171a" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Focus">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232f6fed'/%3E%3Cpath d='M18 33l9 9 19-20' stroke='white' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <style>
   :root {
     --bg: #f6f5f1; --card: #ffffff; --ink: #1f2328; --muted: #6b7280; --line: #e7e5df;
@@ -138,6 +145,30 @@
   .check:checked::after { content: ""; width: 6px; height: 11px; border: solid #fff; border-width: 0 2px 2px 0; transform: translateY(-1px) rotate(45deg); }
   .text { flex: 1; min-width: 0; word-break: break-word; outline: none; border-radius: 6px; padding: 2px 4px; }
   .text[contenteditable="true"] { background: var(--bg); box-shadow: 0 0 0 2px var(--accent); }
+  .acts { display: contents; }           /* desktop: the buttons sit in the row */
+  .icon.more { display: none; }
+  .hint .phone { display: none; }
+  @media (max-width: 760px) {             /* phone: text gets the width; Edit/Remark/Delete live behind ⋯ */
+    li.item { flex-wrap: wrap; row-gap: 2px; padding-right: 4px; }
+    .num { display: none; }
+    .icon { opacity: 1; padding: 8px; font-size: 16px; }
+    .icon.play { font-size: 18px; }
+    .icon.more { display: inline-block; }
+    .acts { display: none; }
+    li.item.open .acts { display: flex; flex-basis: 100%; justify-content: flex-end; gap: 4px; padding-top: 4px; margin-top: 4px; border-top: 1px dashed var(--line); }
+    li.item.open .acts .icon::after { content: attr(data-label); font-size: 13px; margin-left: 4px; }
+    .now { flex-wrap: wrap; row-gap: 6px; }
+    .now .grow { flex-basis: 100%; }
+    .now .clock { flex: 1; }
+    .hint .desk { display: none; }
+    .hint .phone { display: inline; }
+    header.page h1 { font-size: 22px; }
+  }
+  .tcol { flex: 1; min-width: 0; }
+  .tcol .text { display: block; }
+  .remark { font-size: 13px; color: var(--muted); padding: 2px 4px 0; cursor: pointer; word-break: break-word; }
+  .remark:hover { color: var(--ink); }
+  .remark-in { display: block; width: 100%; margin-top: 4px; padding: 6px 8px; font-size: 13px; border: 1px solid var(--accent); border-radius: 8px; background: var(--card); outline: none; }
   .spent { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
   li.active .spent { color: var(--accent); font-weight: 600; }
   .icon { border: none; background: none; padding: 4px 6px; color: var(--muted); border-radius: 8px; font-size: 15px; line-height: 1; opacity: 0; transition: opacity .1s; }
@@ -322,10 +353,10 @@
         <button class="good" id="nowDone">Done ✓</button>
       </div>
       <form class="add" id="addForm" autocomplete="off">
-        <input id="newText" placeholder="What do you need to do? (press Enter)" aria-label="New item">
+        <input id="newText" placeholder="Add a to-do, press Enter" aria-label="New item" enterkeyhint="enter">
         <button class="primary" type="submit">Add</button>
       </form>
-      <div class="hint"><kbd>Enter</kbd> add · <kbd>N</kbd> jump here · drag <b>⋮⋮</b> to reorder (or <kbd>Alt</kbd>+<kbd>↑</kbd>/<kbd>↓</kbd>) · double-click to edit · ▶ to start the timer</div>
+      <div class="hint"><span class="desk"><kbd>Enter</kbd> add · <kbd>N</kbd> jump here · drag <b>⋮⋮</b> to reorder (or <kbd>Alt</kbd>+<kbd>↑</kbd>/<kbd>↓</kbd>) · ✎ or double-click to edit · ▶ to start the timer · tick to finish (with an optional remark)</span><span class="phone">▶ start the timer · ○ tick when done · ⋯ edit, remark, delete · drag ⋮⋮ to reorder</span></div>
       <div id="celebrate"></div>
       <ul id="todoList"></ul>
       <div class="done-head" id="doneHead"><h2 id="doneToggle">▾ Done (0)</h2><button class="link" id="clearDone">Clear done</button></div>
@@ -814,6 +845,7 @@
     const it = tFind(id); if (!it) return;
     if (todo.activeId === id) stopTimer();
     it.done = !it.done; it.doneAt = it.done ? Date.now() : null;
+    remarkFor = it.done && todo.showDone ? it.id : null; // offer a remark right after ticking
     if (!it.done) { todo.items = todo.items.filter(i => i !== it); todo.items.push(it); }
     persist('todo'); renderAll();
   }
@@ -867,7 +899,13 @@
     const t = document.createElement('span');
     t.className = 'text'; t.textContent = item.text; t.title = 'Double-click to edit';
     t.addEventListener('dblclick', () => startEdit(t, item));
-    li.appendChild(t);
+    const col = document.createElement('div');
+    col.className = 'tcol'; col.appendChild(t);
+    if (item.done) {
+      if (remarkFor === item.id) col.appendChild(remarkInput(item));
+      else if (item.remark) col.appendChild(remarkView(item));
+    }
+    li.appendChild(col);
     const sp = document.createElement('span');
     sp.className = 'spent'; sp.dataset.spent = item.id; sp.textContent = fmt(spentOf(item));
     li.appendChild(sp);
@@ -879,10 +917,28 @@
       play.addEventListener('click', () => { on ? stopTimer() : startTimer(item.id); persist('todo'); renderAll(); });
       li.appendChild(play);
     }
+    const eb = document.createElement('button');
+    eb.className = 'icon'; eb.textContent = '✎'; eb.title = 'Edit text (or double-click it)';
+    eb.addEventListener('click', () => { li.classList.remove('open'); startEdit(t, item); });
+    eb.dataset.label = 'Edit';
+    const acts = document.createElement('span');
+    acts.className = 'acts'; acts.appendChild(eb);
+    if (item.done) {
+      const rb = document.createElement('button');
+      rb.className = 'icon'; rb.textContent = '💬'; rb.title = item.remark ? 'Edit remark' : 'Add a remark';
+      rb.dataset.label = 'Remark';
+      rb.addEventListener('click', () => { remarkFor = item.id; renderAll(); });
+      acts.appendChild(rb);
+    }
     const del = document.createElement('button');
     del.className = 'icon del'; del.textContent = '✕'; del.title = 'Delete';
+    del.dataset.label = 'Delete';
     del.addEventListener('click', () => tRemove(item.id));
-    li.appendChild(del);
+    acts.appendChild(del);
+    const more = document.createElement('button');
+    more.className = 'icon more'; more.textContent = '⋯'; more.title = 'Edit, remark, delete';
+    more.addEventListener('click', () => li.classList.toggle('open'));
+    li.append(more, acts);
     li.addEventListener('keydown', e => {
       if (e.target !== li) return;
       if (e.altKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown') && !item.done) {
@@ -894,6 +950,39 @@
       else if (e.key === 'Enter' || e.key === 'F2') { e.preventDefault(); startEdit(t, item); }
     });
     return li;
+  }
+
+  // ----- remark on a finished item (how it went, conditions, follow-up) -----
+  let remarkFor = null;
+  function remarkView(item) {
+    const r = document.createElement('div');
+    r.className = 'remark'; r.textContent = '↳ ' + item.remark; r.title = 'Click to edit the remark';
+    r.addEventListener('click', () => { remarkFor = item.id; renderAll(); });
+    return r;
+  }
+  function remarkInput(item) {
+    const inp = document.createElement('input');
+    inp.className = 'remark-in'; inp.value = item.remark || ''; inp.maxLength = 500;
+    inp.placeholder = 'Remark (optional): result, conditions, follow-up… Enter to save';
+    let finished = false;
+    // Swaps the box for the remark in place (no full re-render, so a click elsewhere still lands).
+    const finish = save => {
+      if (finished) return;
+      finished = true; remarkFor = null;
+      if (save) {
+        const v = inp.value.trim();
+        if (v !== (item.remark || '')) { if (v) item.remark = v; else delete item.remark; persist('todo'); }
+      }
+      if (item.remark) inp.replaceWith(remarkView(item)); else inp.remove();
+    };
+    inp.addEventListener('keydown', e => {
+      e.stopPropagation();
+      if (e.key === 'Enter') { e.preventDefault(); finish(true); }
+      if (e.key === 'Escape') { e.preventDefault(); finish(false); }
+    });
+    inp.addEventListener('blur', () => finish(true));
+    requestAnimationFrame(() => inp.focus());
+    return inp;
   }
 
   function startEdit(el, item) {
@@ -997,7 +1086,7 @@
   $('nowDone').onclick = () => todo.activeId && tToggle(todo.activeId);
   $('nowPause').onclick = () => { stopTimer(); persist('todo'); renderAll(); };
   $('copyBtn').onclick = () => {
-    const lines = [...tPending().map(i => `[ ] ${i.text}`), ...tDone().map(i => `[x] ${i.text}${i.spent ? ' (' + fmt(i.spent) + ')' : ''}`)];
+    const lines = [...tPending().map(i => `[ ] ${i.text}`), ...tDone().map(i => `[x] ${i.text}${i.spent ? ' (' + fmt(i.spent) + ')' : ''}${i.remark ? ' — ' + i.remark : ''}`)];
     copyText(lines.join('\n'));
   };
   function copyText(txt) {

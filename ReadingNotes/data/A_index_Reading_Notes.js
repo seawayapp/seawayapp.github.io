@@ -1,5 +1,12 @@
 var mainData = [
   {
+    title: "About Children",
+    subtitle: "关于孩子",
+    category: "file_slide",
+    filename: "RN_About_Children",
+    foldername: ""
+  },
+  {
     title: "Reflections",
     subtitle: "人生感悟（随机顺序）",
     category: "file_slide",

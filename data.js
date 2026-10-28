@@ -1,6 +1,10 @@
 const data = {
-  lastUpdated: "17/10/2026 V1",
+  lastUpdated: "28/10/2026 V1",
   recentReleases: [
+    {
+      date: "2026-10-28",
+      name: "<a href='note/index.html'>Focus List 专注清单 — To-do & Notes</a>"
+    },
     {
       date: "2026-10-17",
       name: "<a href='Education/Primary/index.html'>Primary Study 小学 — Mind Maps</a>"
@@ -107,6 +111,10 @@ const data = {
     {
       date: "2026-10-17",
       name: "<a href='Education/Primary/index.html'>Primary Study 小学</a>"
+    },
+    {
+      date: "2026-10-28",
+      name: "<a href='note/index.html'>Focus List 专注清单</a>"
     }
   ],
   archiveReleases: [
