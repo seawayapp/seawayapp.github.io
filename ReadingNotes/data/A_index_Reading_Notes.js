@@ -1,5 +1,12 @@
 var mainData = [
   {
+    title: "Mindfulness in Plain English",
+    subtitle: "观呼吸：平静的第一步",
+    category: "folder",
+    filename: "Mindfulness_in_Plain_English.html",
+    foldername: ""
+  },
+  {
     title: "About Children",
     subtitle: "关于孩子",
     category: "file_slide",

@@ -1,0 +1,990 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <script>
+    window.NAV_CONFIG = {
+      breadcrumbs: [
+        { label: "Home", href: "../../index.html" },
+        { label: "Technology", href: "../index.html" },
+        { label: "Whiteboard 白板" }
+      ]
+    };
+  </script>
+  <script src="../../nav-top.js"></script>
+  <title>Whiteboard 白板</title>
+  <style>
+    :root {
+      --chrome: #f8f9fa;
+      --line: #dee2e6;
+      --text: #212529;
+      --muted: #868e96;
+      --stage: #e9ecef;
+      --btn: #ffffff;
+      --hover: #f1f3f5;
+      --accent: #1971c2;
+      --accent-soft: #d0ebff;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --chrome: #1f2125;
+        --line: #343a40;
+        --text: #e9ecef;
+        --muted: #909296;
+        --stage: #141517;
+        --btn: #2a2c31;
+        --hover: #34373d;
+        --accent: #4dabf7;
+        --accent-soft: #1c3550;
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; height: 100%; overflow: hidden; overscroll-behavior: none;
+      background: var(--stage); color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+    }
+    button { touch-action: manipulation; font-family: inherit; }
+
+    #app { position: fixed; left: 0; right: 0; bottom: 0; top: var(--nav-h, 56px); display: flex; flex-direction: column; }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      display: flex; gap: 6px; align-items: center; padding: 6px 8px;
+      background: var(--chrome); border-bottom: 1px solid var(--line);
+      overflow-x: auto; scrollbar-width: none; flex-shrink: 0;
+    }
+    .toolbar::-webkit-scrollbar { display: none; }
+    .group { display: flex; gap: 3px; align-items: center; padding-right: 6px; border-right: 1px solid var(--line); flex-shrink: 0; }
+    .group:last-child { border-right: 0; padding-right: 0; }
+    .spacer { flex: 1; min-width: 4px; }
+    .tb {
+      min-width: 42px; height: 42px; padding: 0 8px; border: 1px solid transparent; border-radius: 9px;
+      background: transparent; color: var(--text); font-size: 15px; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap;
+    }
+    .tb:hover { background: var(--hover); }
+    .tb.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+    .tb:disabled { opacity: 0.3; cursor: default; background: transparent; }
+    .tb svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    .sw {
+      width: 28px; height: 28px; margin: 0 2px; border-radius: 50%; border: 2px solid var(--line);
+      cursor: pointer; padding: 0; flex-shrink: 0; position: relative; overflow: hidden;
+    }
+    .sw.on { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .sw.custom { background: conic-gradient(#e03131, #fcc419, #2f9e44, #1971c2, #9c36b5, #e03131); }
+    .sw.custom input { position: absolute; inset: -8px; width: 44px; height: 44px; opacity: 0; cursor: pointer; border: 0; padding: 0; }
+    .dot { display: block; border-radius: 50%; background: currentColor; }
+
+    /* ── Board ── */
+    .stage { flex: 1; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: none; }
+    #board { display: block; background: #fff; box-shadow: 0 2px 14px rgba(0, 0, 0, 0.18); touch-action: none; }
+    #textEditor {
+      position: absolute; display: none; margin: 0; padding: 0; border: 1px dashed var(--accent); border-radius: 2px;
+      background: rgba(255, 255, 255, 0.7); outline: none; resize: none; overflow: hidden; white-space: pre;
+      line-height: 1.25; font-family: "Segoe UI", system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+      -webkit-user-select: text; user-select: text;
+    }
+
+    /* ── Page tabs ── */
+    .bottombar {
+      display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+      background: var(--chrome); border-top: 1px solid var(--line);
+      padding: 5px 8px; padding-bottom: max(5px, env(safe-area-inset-bottom));
+    }
+    .tabs { flex: 1; min-width: 0; display: flex; align-items: center; gap: 5px; overflow-x: auto; scrollbar-width: none; }
+    .actions { display: flex; gap: 4px; flex-shrink: 0; padding-left: 6px; border-left: 1px solid var(--line); }
+    .tb.primary { background: var(--accent); color: #fff; }
+    .tb.primary:hover { filter: brightness(1.1); background: var(--accent); }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab {
+      height: 36px; padding: 0 12px; border-radius: 9px; border: 1px solid var(--line);
+      background: var(--btn); color: var(--text); font-size: 14px; white-space: nowrap; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
+    }
+    .tab.on { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+    .tab .more { padding: 2px 4px; margin-right: -6px; border-radius: 6px; font-weight: 700; }
+    .tab .more:hover { background: var(--accent-soft); }
+    .tab.add { font-size: 20px; padding: 0 14px; }
+
+    /* ── Pop-up menus ── */
+    .menu {
+      position: fixed; z-index: 200; display: none; min-width: 240px; max-width: calc(100vw - 16px);
+      background: var(--btn); color: var(--text); border: 1px solid var(--line); border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22); padding: 6px;
+    }
+    .menu.open { display: block; }
+    .menu > button {
+      display: block; width: 100%; text-align: left; border: 0; background: transparent; color: var(--text);
+      font-size: 15px; padding: 10px 12px; border-radius: 8px; cursor: pointer;
+    }
+    .menu > button:hover { background: var(--hover); }
+    .menu > button.danger { color: #e03131; }
+    .menu hr { border: 0; border-top: 1px solid var(--line); margin: 5px 0; }
+    .menu .label { font-size: 12px; color: var(--muted); padding: 6px 12px 3px; }
+    .menu .note { font-size: 12px; color: var(--muted); padding: 6px 12px 4px; line-height: 1.4; }
+    .menu .row { display: flex; gap: 4px; padding: 3px 6px 6px; }
+    .menu .row button {
+      flex: 1; padding: 8px 4px; font-size: 13px; border: 1px solid var(--line); border-radius: 8px;
+      background: transparent; color: var(--text); cursor: pointer;
+    }
+    .menu .row button.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+
+    /* ── Present (slideshow) ── */
+    #present { position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; background: #111; touch-action: none; }
+    #present.open { display: flex; }
+    #presentCanvas { display: block; background: #fff; }
+    .pbar {
+      position: absolute; left: 50%; bottom: max(16px, env(safe-area-inset-bottom)); transform: translateX(-50%);
+      display: flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 999px;
+      background: rgba(0, 0, 0, 0.6); color: #fff; font-size: 14px; transition: opacity 0.3s;
+    }
+    .pbar.hide { opacity: 0; pointer-events: none; }
+    .pbar button { width: 42px; height: 42px; border: 0; background: transparent; color: #fff; font-size: 22px; cursor: pointer; border-radius: 50%; }
+    .pbar button:hover { background: rgba(255, 255, 255, 0.15); }
+    #pcount { min-width: 56px; text-align: center; }
+
+    .toast {
+      position: fixed; left: 50%; bottom: 76px; transform: translateX(-50%); z-index: 1100;
+      max-width: min(92vw, 560px); padding: 10px 16px; border-radius: 10px; text-align: center;
+      background: #212529; color: #fff; font-size: 14px; line-height: 1.45;
+      opacity: 0; pointer-events: none; transition: opacity 0.25s;
+    }
+    .toast.show { opacity: 0.96; }
+
+    @media (max-width: 640px) {
+      .tb .lbl { display: none; }
+      .tb { min-width: 40px; height: 40px; padding: 0 6px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="toolbar">
+      <div class="group" id="tools">
+        <button class="tb" data-tool="select" title="Select / move 选择·移动 (V)"><svg viewBox="0 0 24 24"><path d="M6 3l13 8-6 1.5L10 19z"/></svg></button>
+        <button class="tb" data-tool="pen" title="Pen 画笔 (P)"><svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 7l3 3"/></svg></button>
+        <button class="tb" data-tool="hl" title="Highlighter 荧光笔 (H)"><svg viewBox="0 0 24 24"><path d="M15 4l5 5-8 8H7v-5z"/><path d="M4 21h10"/></svg></button>
+        <button class="tb" data-tool="line" title="Line 直线 (L)"><svg viewBox="0 0 24 24"><path d="M5 19L19 5"/></svg></button>
+        <button class="tb" data-tool="arrow" title="Arrow 箭头 (A)"><svg viewBox="0 0 24 24"><path d="M5 19L19 5"/><path d="M10 5h9v9"/></svg></button>
+        <button class="tb" data-tool="rect" title="Rectangle 方框 (R)"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="1"/></svg></button>
+        <button class="tb" data-tool="ellipse" title="Ellipse 圆圈 (O)"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9" ry="6.5"/></svg></button>
+        <button class="tb" data-tool="text" title="Text box 文字框 (T)"><svg viewBox="0 0 24 24"><path d="M5 7V4h14v3"/><path d="M12 4v16"/><path d="M9 20h6"/></svg></button>
+        <button class="tb" data-tool="eraser" title="Eraser 橡皮擦 (E)"><svg viewBox="0 0 24 24"><path d="M5 15l9-9 5 5-8 8H8z"/><path d="M9 20h11"/></svg></button>
+      </div>
+      <div class="group" id="colors"></div>
+      <div class="group" id="sizes"></div>
+      <div class="group">
+        <button class="tb" id="undoBtn" title="Undo 撤销 (Ctrl+Z)"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12h-3"/></svg></button>
+        <button class="tb" id="redoBtn" title="Redo 重做 (Ctrl+Y)"><svg viewBox="0 0 24 24"><path d="M15 14l5-5-5-5"/><path d="M20 9H10a6 6 0 000 12h3"/></svg></button>
+        <button class="tb" id="delBtn" title="Delete selected 删除所选 (Delete)"><svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M10 11v6M14 11v6"/><path d="M6 7l1 13h10l1-13"/><path d="M9 7V4h6v3"/></svg></button>
+      </div>
+      <div class="group">
+        <button class="tb" id="penOnlyBtn" title="Pen only: fingers don't draw (for stylus) 仅触控笔书写，手指不画线">✍️<span class="lbl">Pen only</span></button>
+      </div>
+    </div>
+
+    <div class="stage" id="stage">
+      <canvas id="board"></canvas>
+      <textarea id="textEditor" wrap="off" spellcheck="false" autocomplete="off"></textarea>
+    </div>
+
+    <div class="bottombar">
+      <div class="tabs" id="tabs"></div>
+      <div class="actions">
+        <button class="tb" id="exportBtn" title="Export 导出"><svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg><span class="lbl">Export</span></button>
+        <button class="tb primary" id="presentBtn" title="Present full screen 全屏演示"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span class="lbl">Present</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="menu" id="menu"></div>
+
+  <div id="present">
+    <canvas id="presentCanvas"></canvas>
+    <div class="pbar" id="pbar">
+      <button id="pPrev" title="Previous 上一页">‹</button>
+      <span id="pcount"></span>
+      <button id="pNext" title="Next 下一页">›</button>
+      <button id="pClose" title="Exit 退出 (Esc)">✕</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <input type="file" id="fileIn" accept=".json,application/json" hidden />
+
+  <script>
+  (() => {
+    "use strict";
+
+    // Everything is kept in this browser (localStorage) and exported as local files — nothing is sent to a server.
+    const DIMS = { L: [1600, 1000], P: [1000, 1600] };  // page size in board units: landscape / portrait
+    const FONT = '"Segoe UI", system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif';
+    const COLORS = ["#111111", "#e03131", "#1971c2", "#2f9e44", "#f08c00", "#9c36b5", "#fcc419", "#ffffff"];
+    const SIZES = [{ w: 3, e: 10, d: 5 }, { w: 6, e: 22, d: 9 }, { w: 12, e: 44, d: 15 }];
+    const TEXT_SIZES = [20, 28, 38, 52, 72];  // font size in board units (page is 1600 wide)
+    const BGS = [["blank", "Blank 空白"], ["grid", "Grid 方格"], ["dots", "Dots 点阵"], ["lines", "Lines 横线"]];
+    const JSPDF_URL = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+    const KEY = "wb-doc-v1", UIKEY = "wb-ui-v1";
+
+    const $ = (s) => document.querySelector(s);
+    const uid = () => Math.random().toString(36).slice(2, 9);
+    const r1 = (n) => Math.round(n * 10) / 10;
+    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const store = {
+      get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+      set(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } },
+    };
+
+    /* ───────── Document ───────── */
+    const newPage = (n, from) => ({ id: uid(), name: "Page " + n, o: from ? from.o : (innerHeight > innerWidth ? "P" : "L"), bg: from ? from.bg : "blank", items: [] });
+    function validDoc(d) { return d && Array.isArray(d.pages) && d.pages.length && d.pages.every((p) => Array.isArray(p.items)); }
+    let doc = null;
+    try { doc = JSON.parse(store.get(KEY)); } catch (e) {}
+    if (!validDoc(doc)) doc = { pages: [newPage(1)], cur: 0 };
+    doc.cur = Math.max(0, Math.min(doc.cur || 0, doc.pages.length - 1));
+
+    const ui = { tool: "pen", color: COLORS[0], size: 0, tsize: 2, penOnly: false, penSeen: false };
+    try { Object.assign(ui, JSON.parse(store.get(UIKEY)) || {}); } catch (e) {}
+
+    const page = () => doc.pages[doc.cur];
+    const dims = (p) => DIMS[p.o] || DIMS.L;
+    const findItem = (id) => page().items.find((it) => it.id === id);
+
+    // undo / redo per page (kept in memory only)
+    const hist = {};
+    const H = (id) => hist[id] || (hist[id] = { u: [], r: [] });
+    function snapshot() {
+      const h = H(page().id);
+      h.u.push(JSON.stringify(page().items));
+      if (h.u.length > 100) h.u.shift();
+      h.r.length = 0;
+    }
+    function undo() {
+      const h = H(page().id); if (!h.u.length) return;
+      h.r.push(JSON.stringify(page().items)); page().items = JSON.parse(h.u.pop()); sel = null; changed();
+    }
+    function redo() {
+      const h = H(page().id); if (!h.r.length) return;
+      h.u.push(JSON.stringify(page().items)); page().items = JSON.parse(h.r.pop()); sel = null; changed();
+    }
+
+    let saveTimer = 0, warned = false;
+    function saveNow() {
+      clearTimeout(saveTimer);
+      if (!store.set(KEY, JSON.stringify(doc)) && !warned) {
+        warned = true;
+        toast("Browser storage is full — use Export › Save backup file to keep your work.<br>浏览器存储已满，请用「导出 › 备份文件」保存。", 6000);
+      }
+    }
+    const save = () => { clearTimeout(saveTimer); saveTimer = setTimeout(saveNow, 400); };
+    const saveUI = () => store.set(UIKEY, JSON.stringify(ui));
+    function changed() { save(); render(); updateButtons(); }
+
+    /* ───────── Drawing ───────── */
+    const stage = $("#stage"), board = $("#board"), ctx = board.getContext("2d");
+    const base = document.createElement("canvas"), bctx = base.getContext("2d");  // committed items, redrawn only on change
+    const mctx = document.createElement("canvas").getContext("2d");                // text measuring
+    let scale = 1, dpr = 1;
+    let live = null;        // item being drawn
+    let sel = null;         // selected item id
+    let editingId = null;   // text item hidden while its editor is open
+    let eraserAt = null;
+
+    function drawBg(c, bg, W, Hh) {
+      c.fillStyle = "#fff"; c.fillRect(0, 0, W, Hh);
+      c.save();
+      if (bg === "grid") {
+        c.strokeStyle = "#e3e7ec"; c.lineWidth = 1; c.beginPath();
+        for (let x = 40; x < W; x += 40) { c.moveTo(x, 0); c.lineTo(x, Hh); }
+        for (let y = 40; y < Hh; y += 40) { c.moveTo(0, y); c.lineTo(W, y); }
+        c.stroke();
+      } else if (bg === "dots") {
+        c.fillStyle = "#c5ccd4";
+        for (let x = 40; x < W; x += 40) for (let y = 40; y < Hh; y += 40) c.fillRect(x - 1.5, y - 1.5, 3, 3);
+      } else if (bg === "lines") {
+        c.strokeStyle = "#d6e4f0"; c.lineWidth = 1.5; c.beginPath();
+        for (let y = 80; y < Hh; y += 50) { c.moveTo(0, y); c.lineTo(W, y); }
+        c.stroke();
+      }
+      c.restore();
+    }
+
+    const norm = (it) => ({ x: Math.min(it.x1, it.x2), y: Math.min(it.y1, it.y2), w: Math.abs(it.x2 - it.x1), h: Math.abs(it.y2 - it.y1) });
+    const wAt = (it, pt) => (it.pr ? it.w * (0.35 + 1.3 * (pt[2] ?? 0.5)) : it.w);
+
+    function drawStroke(c, it) {
+      const p = it.pts;
+      if (it.t === "hl") c.globalAlpha = 0.35;
+      if (p.length === 1) { c.beginPath(); c.arc(p[0][0], p[0][1], wAt(it, p[0]) / 2, 0, Math.PI * 2); c.fill(); return; }
+      if (!it.pr) {
+        c.beginPath(); c.moveTo(p[0][0], p[0][1]);
+        for (let i = 1; i < p.length - 1; i++) c.quadraticCurveTo(p[i][0], p[i][1], (p[i][0] + p[i + 1][0]) / 2, (p[i][1] + p[i + 1][1]) / 2);
+        const l = p[p.length - 1]; c.lineTo(l[0], l[1]); c.stroke();
+        return;
+      }
+      // stylus: each segment gets its own width from pen pressure
+      let mx = p[0][0], my = p[0][1];
+      for (let i = 1; i < p.length - 1; i++) {
+        const nx = (p[i][0] + p[i + 1][0]) / 2, ny = (p[i][1] + p[i + 1][1]) / 2;
+        c.beginPath(); c.moveTo(mx, my); c.quadraticCurveTo(p[i][0], p[i][1], nx, ny);
+        c.lineWidth = wAt(it, p[i]); c.stroke();
+        mx = nx; my = ny;
+      }
+      const l = p[p.length - 1];
+      c.beginPath(); c.moveTo(mx, my); c.lineTo(l[0], l[1]); c.lineWidth = wAt(it, l); c.stroke();
+    }
+
+    function drawItem(c, it) {
+      c.save();
+      c.strokeStyle = c.fillStyle = it.c; c.lineCap = "round"; c.lineJoin = "round"; c.lineWidth = it.w || 1;
+      if (it.t === "pen" || it.t === "hl") drawStroke(c, it);
+      else if (it.t === "line" || it.t === "arrow") {
+        c.beginPath(); c.moveTo(it.x1, it.y1); c.lineTo(it.x2, it.y2); c.stroke();
+        if (it.t === "arrow") {
+          const a = Math.atan2(it.y2 - it.y1, it.x2 - it.x1), L = Math.max(16, it.w * 4);
+          c.beginPath();
+          c.moveTo(it.x2 - L * Math.cos(a - 0.45), it.y2 - L * Math.sin(a - 0.45));
+          c.lineTo(it.x2, it.y2);
+          c.lineTo(it.x2 - L * Math.cos(a + 0.45), it.y2 - L * Math.sin(a + 0.45));
+          c.stroke();
+        }
+      } else if (it.t === "rect") { const b = norm(it); c.strokeRect(b.x, b.y, b.w, b.h); }
+      else if (it.t === "ellipse") {
+        const b = norm(it);
+        c.beginPath(); c.ellipse(b.x + b.w / 2, b.y + b.h / 2, b.w / 2, b.h / 2, 0, 0, Math.PI * 2); c.stroke();
+      } else if (it.t === "text") {
+        c.font = `${it.s}px ${FONT}`; c.textBaseline = "top";
+        it.text.split("\n").forEach((ln, i) => c.fillText(ln, it.x, it.y + i * it.s * 1.25));
+      }
+      c.restore();
+    }
+
+    function paint(c, p, s, skipId) {
+      const [W, Hh] = dims(p);
+      c.setTransform(s, 0, 0, s, 0, 0);
+      drawBg(c, p.bg, W, Hh);
+      for (const it of p.items) if (it.id !== skipId) drawItem(c, it);
+    }
+
+    // full = committed items changed (redraw base); otherwise only the live overlay changed
+    let raf = 0;
+    function render(full = true) {
+      if (full) paint(bctx, page(), scale * dpr, editingId);
+      if (!raf) raf = requestAnimationFrame(() => { raf = 0; compose(); });
+    }
+    function compose() {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, board.width, board.height);
+      ctx.drawImage(base, 0, 0);
+      ctx.setTransform(scale * dpr, 0, 0, scale * dpr, 0, 0);
+      if (live) drawItem(ctx, live);
+      const it = sel && findItem(sel);
+      if (it) {
+        const b = bbox(it);
+        ctx.save(); ctx.setLineDash([8, 6]); ctx.strokeStyle = "#1971c2"; ctx.lineWidth = 1.5 / scale;
+        ctx.strokeRect(b.x - 6, b.y - 6, b.w + 12, b.h + 12); ctx.restore();
+      }
+      if (eraserAt && ui.tool === "eraser") {
+        ctx.beginPath(); ctx.arc(eraserAt.x, eraserAt.y, SIZES[ui.size].e, 0, Math.PI * 2);
+        ctx.strokeStyle = "#868e96"; ctx.lineWidth = 1.5 / scale; ctx.stroke();
+      }
+    }
+
+    function fit() {
+      const [W, Hh] = dims(page());
+      scale = Math.max(0.05, Math.min((stage.clientWidth - 16) / W, (stage.clientHeight - 16) / Hh));
+      dpr = window.devicePixelRatio || 1;
+      const cw = Math.round(W * scale), ch = Math.round(Hh * scale);
+      board.style.width = cw + "px"; board.style.height = ch + "px";
+      board.width = base.width = Math.round(cw * dpr);
+      board.height = base.height = Math.round(ch * dpr);
+      if (textCtx) placeEditor();
+      render();
+    }
+
+    /* ───────── Geometry: bounds, hit test, move ───────── */
+    function bbox(it) {
+      if (it.t === "pen" || it.t === "hl") {
+        let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+        for (const q of it.pts) { x0 = Math.min(x0, q[0]); y0 = Math.min(y0, q[1]); x1 = Math.max(x1, q[0]); y1 = Math.max(y1, q[1]); }
+        const pad = it.w;
+        return { x: x0 - pad, y: y0 - pad, w: x1 - x0 + 2 * pad, h: y1 - y0 + 2 * pad };
+      }
+      if (it.t === "text") {
+        mctx.font = `${it.s}px ${FONT}`;
+        const ls = it.text.split("\n");
+        return { x: it.x, y: it.y, w: Math.max(10, ...ls.map((l) => mctx.measureText(l).width)), h: ls.length * it.s * 1.25 };
+      }
+      const b = norm(it), h = it.w / 2;
+      return { x: b.x - h, y: b.y - h, w: b.w + it.w, h: b.h + it.w };
+    }
+    function segDist(px, py, ax, ay, bx, by) {
+      const dx = bx - ax, dy = by - ay, l = dx * dx + dy * dy;
+      const t = l ? Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / l)) : 0;
+      return Math.hypot(px - ax - t * dx, py - ay - t * dy);
+    }
+    function hit(it, x, y, tol) {
+      const w = (it.w || 0) / 2 + tol;
+      switch (it.t) {
+        case "pen": case "hl": {
+          const p = it.pts;
+          if (p.length === 1) return Math.hypot(x - p[0][0], y - p[0][1]) <= w;
+          for (let i = 1; i < p.length; i++) if (segDist(x, y, p[i - 1][0], p[i - 1][1], p[i][0], p[i][1]) <= w) return true;
+          return false;
+        }
+        case "line": case "arrow": return segDist(x, y, it.x1, it.y1, it.x2, it.y2) <= w;
+        case "rect": {
+          const b = norm(it), X = b.x + b.w, Y = b.y + b.h;
+          return Math.min(segDist(x, y, b.x, b.y, X, b.y), segDist(x, y, X, b.y, X, Y), segDist(x, y, X, Y, b.x, Y), segDist(x, y, b.x, Y, b.x, b.y)) <= w;
+        }
+        case "ellipse": {
+          const b = norm(it), rx = b.w / 2, ry = b.h / 2;
+          if (rx < 1 || ry < 1) return segDist(x, y, b.x, b.y, b.x + b.w, b.y + b.h) <= w;
+          return Math.abs(Math.hypot((x - b.x - rx) / rx, (y - b.y - ry) / ry) - 1) * Math.min(rx, ry) <= w;
+        }
+        case "text": {
+          const b = bbox(it);
+          return x >= b.x - tol && x <= b.x + b.w + tol && y >= b.y - tol && y <= b.y + b.h + tol;
+        }
+      }
+      return false;
+    }
+    // topmost item under the point; falls back to "inside the box" so shapes are easy to grab
+    function pick(x, y, onlyText) {
+      const its = page().items.filter((it) => !onlyText || it.t === "text");
+      for (let i = its.length - 1; i >= 0; i--) if (hit(its[i], x, y, 12)) return its[i];
+      for (let i = its.length - 1; i >= 0; i--) {
+        const b = bbox(its[i]);
+        if (x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h) return its[i];
+      }
+      return null;
+    }
+    function move(it, dx, dy) {
+      if (it.pts) it.pts.forEach((q) => { q[0] = r1(q[0] + dx); q[1] = r1(q[1] + dy); });
+      else if (it.t === "text") { it.x = r1(it.x + dx); it.y = r1(it.y + dy); }
+      else { it.x1 = r1(it.x1 + dx); it.y1 = r1(it.y1 + dy); it.x2 = r1(it.x2 + dx); it.y2 = r1(it.y2 + dy); }
+    }
+    function eraseAt(p) {
+      const its = page().items, n = its.length;
+      page().items = its.filter((it) => !hit(it, p.x, p.y, SIZES[ui.size].e));
+      return page().items.length !== n;
+    }
+
+    /* ───────── Pointer input (mouse, finger, stylus) ───────── */
+    let act = null, lastTap = { id: null, t: 0 };
+    function pos(e) {
+      const r = board.getBoundingClientRect();
+      return { x: (e.clientX - r.left) / scale, y: (e.clientY - r.top) / scale };
+    }
+    const ptOf = (e, p) => (live && live.pr ? [r1(p.x), r1(p.y), Math.round((e.pressure || 0.5) * 100) / 100] : [r1(p.x), r1(p.y)]);
+
+    stage.addEventListener("pointerdown", (e) => {
+      if (e.target === ed) return;
+      closeMenu();
+      if (e.pointerType === "pen" && !ui.penSeen) {
+        ui.penSeen = true; ui.penOnly = true; saveUI(); updateButtons();
+        toast("Stylus detected — “Pen only” is on, so your hand won't draw. Tap ✍️ to turn it off.<br>已检测到触控笔：手指/手掌不会画线，点 ✍️ 可关闭。", 5000);
+      }
+      if (e.pointerType === "touch" && ui.penOnly) return;
+      if (act) { if (e.pointerType === "touch" && act.pid !== e.pointerId) cancelAct(); return; }  // 2nd finger = not a stroke
+      if (e.button > 0) return;
+      if (textCtx) { commitText(); return; }
+      e.preventDefault();
+
+      const p = pos(e), t = ui.tool, sz = SIZES[ui.size];
+      if (t === "text") { openText(pick(p.x, p.y, true), p); return; }
+      try { stage.setPointerCapture(e.pointerId); } catch (err) {}
+      act = { pid: e.pointerId, tool: t, start: p, last: p, moved: false };
+
+      if (t === "pen" || t === "hl") {
+        live = { id: uid(), t, c: ui.color, w: t === "hl" ? sz.w * 4 : sz.w, pts: [] };
+        if (t === "pen" && e.pointerType === "pen") live.pr = 1;
+        live.pts.push(ptOf(e, p));
+        if (sel) { sel = null; updateButtons(); }
+        render(false);
+      } else if (t === "line" || t === "arrow" || t === "rect" || t === "ellipse") {
+        live = { id: uid(), t, c: ui.color, w: sz.w, x1: r1(p.x), y1: r1(p.y), x2: r1(p.x), y2: r1(p.y) };
+        if (sel) { sel = null; updateButtons(); }
+      } else if (t === "eraser") {
+        snapshot(); act.erased = false; eraserAt = p;
+        act.erased = eraseAt(p); render(act.erased);
+      } else if (t === "select") {
+        const it = pick(p.x, p.y);
+        sel = it ? it.id : null; act.item = it;
+        const now = Date.now();
+        if (it && it.t === "text" && lastTap.id === it.id && now - lastTap.t < 450) { act = null; openText(it); return; }
+        lastTap = { id: it && it.id, t: now };
+        updateButtons(); render(false);
+      }
+    });
+
+    stage.addEventListener("pointermove", (e) => {
+      if (ui.tool === "eraser" && !act && e.pointerType === "mouse") { eraserAt = pos(e); render(false); }
+      if (!act || e.pointerId !== act.pid) return;
+      e.preventDefault();
+      const evs = (e.getCoalescedEvents && e.getCoalescedEvents().length) ? e.getCoalescedEvents() : [e];
+      const p = pos(e);
+      if (live && live.pts) {
+        for (const ce of evs) {
+          const q = pos(ce), l = live.pts[live.pts.length - 1];
+          if (Math.hypot(q.x - l[0], q.y - l[1]) >= 1.2) live.pts.push(ptOf(ce, q));
+        }
+        render(false);
+      } else if (live) {
+        live.x2 = r1(p.x); live.y2 = r1(p.y); render(false);
+      } else if (act.tool === "eraser") {
+        let any = false;
+        for (const ce of evs) any = eraseAt(pos(ce)) || any;
+        act.erased = act.erased || any; eraserAt = p; render(any);
+      } else if (act.tool === "select" && act.item) {
+        if (!act.moved) {
+          if (Math.hypot(p.x - act.start.x, p.y - act.start.y) < 3) return;
+          snapshot(); act.moved = true;
+        }
+        move(act.item, p.x - act.last.x, p.y - act.last.y); act.last = p; render();
+      }
+    });
+
+    function endAct(e) {
+      if (!act || (e && e.pointerId !== act.pid)) return;
+      if (live) {
+        const keep = live.pts ? true : Math.hypot(live.x2 - live.x1, live.y2 - live.y1) > 3;
+        if (keep) { snapshot(); page().items.push(live); }
+        live = null; changed();
+      } else if (act.tool === "eraser") {
+        if (!act.erased) H(page().id).u.pop(); else save();
+        if (e && e.pointerType !== "mouse") eraserAt = null;
+        updateButtons(); render(false);
+      } else if (act.tool === "select" && act.moved) save();
+      act = null;
+    }
+    function cancelAct() {
+      if (act && act.tool === "eraser" && !act.erased) H(page().id).u.pop();
+      live = null; act = null; render(false); updateButtons();
+    }
+    stage.addEventListener("pointerup", endAct);
+    stage.addEventListener("pointercancel", (e) => { if (act && e.pointerId === act.pid) endAct(e); });
+    stage.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse" && !act) { eraserAt = null; render(false); } });
+    stage.addEventListener("contextmenu", (e) => e.preventDefault());
+
+    /* ───────── Text boxes ───────── */
+    const ed = $("#textEditor");
+    let textCtx = null;
+    function openText(it, p) {
+      const s = TEXT_SIZES[ui.tsize];
+      textCtx = it ? { id: it.id, x: it.x, y: it.y, s: it.s, c: it.c }
+                   : { id: null, x: r1(p.x), y: r1(p.y - s * 0.6), s, c: ui.color };
+      editingId = it ? it.id : null; sel = null;
+      ed.value = it ? it.text : "";
+      ed.style.color = textCtx.c === "#ffffff" ? "#111" : textCtx.c;
+      placeEditor();
+      ed.style.display = "block";
+      autosize(); ed.focus();
+      render(); updateButtons();
+    }
+    function placeEditor() {
+      const r = board.getBoundingClientRect(), sr = stage.getBoundingClientRect();
+      ed.style.font = `${textCtx.s * scale}px ${FONT}`;
+      ed.style.left = (r.left - sr.left + textCtx.x * scale - 1) + "px";
+      ed.style.top = (r.top - sr.top + textCtx.y * scale - 1) + "px";
+      autosize();
+    }
+    function autosize() {
+      ed.style.width = "0px"; ed.style.height = "0px";
+      ed.style.width = Math.max(60, ed.scrollWidth + 12) + "px";
+      ed.style.height = Math.max(textCtx ? textCtx.s * scale * 1.25 : 20, ed.scrollHeight) + "px";
+    }
+    function commitText() {
+      if (!textCtx) return;
+      const c = textCtx; textCtx = null;
+      const v = ed.value.replace(/\s+$/, "");
+      ed.style.display = "none"; editingId = null;
+      const its = page().items;
+      if (c.id) {
+        const i = its.findIndex((x) => x.id === c.id);
+        if (i >= 0 && !v) { snapshot(); its.splice(i, 1); }
+        else if (i >= 0 && (v !== its[i].text || c.s !== its[i].s || c.c !== its[i].c)) {
+          snapshot(); Object.assign(its[i], { text: v, s: c.s, c: c.c });
+        }
+      } else if (v) {
+        snapshot(); its.push({ id: uid(), t: "text", c: c.c, s: c.s, x: c.x, y: c.y, text: v });
+      }
+      changed();
+    }
+    ed.addEventListener("input", autosize);
+    ed.addEventListener("blur", commitText);
+    ed.addEventListener("keydown", (e) => {
+      e.stopPropagation();
+      if (e.key === "Escape" || (e.key === "Enter" && (e.ctrlKey || e.metaKey))) { e.preventDefault(); commitText(); }
+    });
+
+    /* ───────── Toolbar ───────── */
+    $("#colors").innerHTML =
+      COLORS.map((c) => `<button class="sw" data-c="${c}" style="background:${c}" title="${c}"></button>`).join("") +
+      `<label class="sw custom" title="Custom colour 自选颜色"><input type="color" id="customColor"></label>`;
+    // size buttons: line widths (dots), or font sizes (A) when the text tool / a text box is in use
+    let sizesMode = "";
+    const textMode = () => ui.tool === "text" || (sel && (findItem(sel) || {}).t === "text") || !!textCtx;
+    function renderSizes() {
+      const m = textMode() ? "text" : "line";
+      if (m === sizesMode) return;
+      sizesMode = m;
+      $("#sizes").innerHTML = m === "text"
+        ? TEXT_SIZES.map((t, i) => `<button class="tb" data-size="${i}" title="Text size 字号 ${t}"><span style="font-size:${11 + i * 3.5}px;font-weight:600;line-height:1">A</span></button>`).join("")
+        : SIZES.map((s, i) => `<button class="tb" data-size="${i}" title="Size 粗细 ${i + 1}"><span class="dot" style="width:${s.d}px;height:${s.d}px"></span></button>`).join("");
+    }
+
+    function setTool(t) {
+      if (textCtx) commitText();
+      ui.tool = t; saveUI();
+      if (t !== "select" && sel) sel = null;
+      eraserAt = null; updateButtons(); render(false);
+    }
+    // with an item selected, colour / size changes apply to that item
+    function restyleSelected(fn) {
+      const it = sel && findItem(sel);
+      if (!it) return false;
+      snapshot(); fn(it); changed(); return true;
+    }
+    function setColor(c) {
+      ui.color = c; saveUI();
+      if (textCtx) { textCtx.c = c; ed.style.color = c === "#ffffff" ? "#111" : c; ed.focus(); updateButtons(); return; }
+      if (!restyleSelected((it) => { it.c = c; }) && (ui.tool === "eraser" || ui.tool === "select")) setTool("pen");
+      updateButtons();
+    }
+    function setSize(i) {
+      if (sizesMode === "text") {
+        ui.tsize = i;
+        if (textCtx) { textCtx.s = TEXT_SIZES[i]; placeEditor(); ed.focus(); }   // resize the box being typed
+        else restyleSelected((it) => { it.s = TEXT_SIZES[i]; });
+      } else {
+        ui.size = i;
+        restyleSelected((it) => { it.w = it.t === "hl" ? SIZES[i].w * 4 : SIZES[i].w; });
+      }
+      saveUI(); updateButtons(); render(false);
+    }
+    function deleteSelected() {
+      if (!sel) return;
+      snapshot(); page().items = page().items.filter((it) => it.id !== sel); sel = null; changed();
+    }
+
+    // keep the text box open (and focused) while picking its size or colour
+    for (const g of ["#sizes", "#colors"]) for (const ev of ["pointerdown", "mousedown"])
+      $(g).addEventListener(ev, (e) => { if (textCtx && !e.target.closest("input")) e.preventDefault(); });
+    $("#tools").addEventListener("click", (e) => { const b = e.target.closest("[data-tool]"); if (b) setTool(b.dataset.tool); });
+    $("#colors").addEventListener("click", (e) => { const b = e.target.closest("[data-c]"); if (b) setColor(b.dataset.c); });
+    $("#customColor").addEventListener("input", (e) => setColor(e.target.value));
+    $("#sizes").addEventListener("click", (e) => { const b = e.target.closest("[data-size]"); if (b) setSize(+b.dataset.size); });
+    $("#undoBtn").onclick = undo;
+    $("#redoBtn").onclick = redo;
+    $("#delBtn").onclick = deleteSelected;
+    $("#penOnlyBtn").onclick = () => {
+      ui.penOnly = !ui.penOnly; ui.penSeen = true; saveUI(); updateButtons();
+      toast(ui.penOnly ? "Pen only: fingers won't draw 仅触控笔书写" : "Fingers can draw again 手指也可以画");
+    };
+
+    function updateButtons() {
+      document.querySelectorAll("[data-tool]").forEach((b) => b.classList.toggle("on", b.dataset.tool === ui.tool));
+      document.querySelectorAll("[data-c]").forEach((b) => b.classList.toggle("on", b.dataset.c === ui.color));
+      $(".sw.custom").classList.toggle("on", !COLORS.includes(ui.color));
+      renderSizes();
+      const cur = sizesMode === "text" ? ui.tsize : ui.size;
+      document.querySelectorAll("[data-size]").forEach((b) => b.classList.toggle("on", +b.dataset.size === cur));
+      const h = H(page().id);
+      $("#undoBtn").disabled = !h.u.length;
+      $("#redoBtn").disabled = !h.r.length;
+      $("#delBtn").disabled = !sel;
+      $("#penOnlyBtn").classList.toggle("on", ui.penOnly);
+      stage.style.cursor = { select: "default", text: "text", eraser: "none" }[ui.tool] || "crosshair";
+    }
+
+    /* ───────── Pages (tabs) ───────── */
+    const tabsEl = $("#tabs");
+    function renderTabs() {
+      tabsEl.innerHTML = doc.pages.map((p, i) =>
+        `<button class="tab${i === doc.cur ? " on" : ""}" data-i="${i}">${esc(p.name)}${i === doc.cur ? '<span class="more" data-more title="Page options 页面选项">⋯</span>' : ""}</button>`
+      ).join("") + `<button class="tab add" id="addPage" title="New page 新页面">＋</button>`;
+      const on = tabsEl.querySelector(".tab.on");
+      if (on) on.scrollIntoView({ block: "nearest", inline: "nearest" });
+    }
+    function goPage(i) {
+      if (textCtx) commitText();
+      sel = null; live = null; act = null;
+      doc.cur = Math.max(0, Math.min(i, doc.pages.length - 1));
+      renderTabs(); fit(); updateButtons(); save();
+    }
+    function addPage() {
+      doc.pages.splice(doc.cur + 1, 0, newPage(doc.pages.length + 1, page()));
+      goPage(doc.cur + 1);
+    }
+    tabsEl.addEventListener("click", (e) => {
+      if (e.target.closest("#addPage")) return addPage();
+      const more = e.target.closest("[data-more]");
+      if (more) { e.stopPropagation(); return openMenu(pageMenu(), more, "up"); }
+      const t = e.target.closest("[data-i]");
+      if (t && +t.dataset.i !== doc.cur) goPage(+t.dataset.i);
+    });
+    tabsEl.addEventListener("dblclick", (e) => { if (e.target.closest(".tab.on")) renamePage(); });
+
+    function renamePage() {
+      const n = prompt("Page name 页面名称", page().name);
+      if (n && n.trim()) { page().name = n.trim().slice(0, 40); renderTabs(); save(); }
+    }
+
+    function pageMenu() {
+      const p = page();
+      return `
+        <button data-act="rename">✏️ Rename 重命名</button>
+        <button data-act="dup">⧉ Duplicate 复制此页</button>
+        <button data-act="left">← Move left 左移</button>
+        <button data-act="right">→ Move right 右移</button>
+        <div class="label">Background 背景</div>
+        <div class="row">${BGS.map(([k, l]) => `<button data-act="bg" data-v="${k}" class="${p.bg === k ? "on" : ""}">${l}</button>`).join("")}</div>
+        <div class="label">Orientation 方向</div>
+        <div class="row">
+          <button data-act="orient" data-v="L" class="${p.o !== "P" ? "on" : ""}">▭ Landscape 横向</button>
+          <button data-act="orient" data-v="P" class="${p.o === "P" ? "on" : ""}">▯ Portrait 纵向</button>
+        </div>
+        <hr>
+        <button data-act="clear">🧹 Clear page 清空此页</button>
+        <button data-act="delete" class="danger">🗑 Delete page 删除此页</button>`;
+    }
+
+    /* ───────── Menus ───────── */
+    const menu = $("#menu");
+    function openMenu(html, anchor, dir) {
+      if (textCtx) commitText();
+      menu.innerHTML = html; menu.classList.add("open");
+      const r = anchor.getBoundingClientRect(), mw = menu.offsetWidth, mh = menu.offsetHeight;
+      menu.style.left = Math.max(8, Math.min(r.left, r.right - mw, innerWidth - mw - 8)) + "px";
+      menu.style.top = (dir === "up" ? Math.max(8, r.top - mh - 6) : Math.min(r.bottom + 6, innerHeight - mh - 8)) + "px";
+    }
+    function closeMenu() { menu.classList.remove("open"); }
+    document.addEventListener("pointerdown", (e) => {
+      if (menu.classList.contains("open") && !menu.contains(e.target) && !e.target.closest("[data-more],#exportBtn")) closeMenu();
+    });
+
+    menu.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-act]"); if (!b) return;
+      const a = b.dataset.act, p = page(), i = doc.cur;
+      closeMenu();
+      switch (a) {
+        case "rename": renamePage(); break;
+        case "dup": {
+          const c = JSON.parse(JSON.stringify(p));
+          c.id = uid(); c.name = p.name + " copy"; c.items.forEach((it) => (it.id = uid()));
+          doc.pages.splice(i + 1, 0, c); goPage(i + 1); break;
+        }
+        case "left": if (i > 0) { doc.pages.splice(i - 1, 0, doc.pages.splice(i, 1)[0]); goPage(i - 1); } break;
+        case "right": if (i < doc.pages.length - 1) { doc.pages.splice(i + 1, 0, doc.pages.splice(i, 1)[0]); goPage(i + 1); } break;
+        case "bg": p.bg = b.dataset.v; changed(); break;
+        case "orient": p.o = b.dataset.v; save(); fit(); break;
+        case "clear":
+          if (p.items.length && confirm("Clear everything on this page? 清空此页所有内容？\n(Undo can bring it back 可撤销)")) {
+            snapshot(); p.items = []; sel = null; changed();
+          }
+          break;
+        case "delete":
+          if (doc.pages.length === 1) { if (p.items.length && confirm("This is the only page — clear it instead? 只剩这一页，改为清空？")) { snapshot(); p.items = []; changed(); } break; }
+          if (!p.items.length || confirm(`Delete “${p.name}”? This can't be undone. 删除此页？无法撤销。`)) {
+            doc.pages.splice(i, 1); goPage(Math.min(i, doc.pages.length - 1));
+          }
+          break;
+        case "png": exportPNG(); break;
+        case "pdf": exportPDF(); break;
+        case "savejson": saveJSON(); break;
+        case "openjson": $("#fileIn").click(); break;
+        case "newboard":
+          if (confirm("Start a new empty board? Everything here will be removed — save a backup first if you need it.\n新建空白白板？当前内容会被清除，如需保留请先备份。")) {
+            doc = { pages: [newPage(1)], cur: 0 };
+            for (const k in hist) delete hist[k];
+            goPage(0); saveNow();
+          }
+          break;
+      }
+    });
+
+    $("#exportBtn").addEventListener("click", (e) => {
+      if (menu.classList.contains("open")) return closeMenu();
+      openMenu(`
+        <button data-act="png">🖼 This page as image (PNG) 本页存为图片</button>
+        <button data-act="pdf">📄 All pages as PDF 全部页面存为 PDF</button>
+        <hr>
+        <button data-act="savejson">💾 Save backup file 保存备份文件 (.json)</button>
+        <button data-act="openjson">📂 Open backup file 打开备份文件</button>
+        <hr>
+        <button data-act="newboard" class="danger">🆕 New empty board 新建白板</button>
+        <div class="note">Your drawings stay in this browser only — nothing is uploaded. Files are saved to this device.<br>内容只保存在本浏览器，不会上传；导出的文件保存在本机。</div>`,
+        e.currentTarget, "up");
+    });
+
+    /* ───────── Export (all local) ───────── */
+    function pageCanvas(p, s) {
+      const [W, Hh] = dims(p), c = document.createElement("canvas");
+      c.width = Math.round(W * s); c.height = Math.round(Hh * s);
+      paint(c.getContext("2d"), p, s);
+      return c;
+    }
+    function download(blob, name) {
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob); a.download = name;
+      document.body.appendChild(a); a.click();
+      setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+    }
+    const stamp = () => new Date().toISOString().slice(0, 10);
+    const fileName = (s) => s.replace(/[\\/:*?"<>|]+/g, "_").trim() || "page";
+
+    function exportPNG() {
+      if (textCtx) commitText();
+      pageCanvas(page(), 2).toBlob((b) => download(b, `${fileName(page().name)}.png`), "image/png");
+    }
+
+    let jsPdfLoading = null;
+    function loadJsPDF() {
+      if (window.jspdf) return Promise.resolve();
+      return jsPdfLoading || (jsPdfLoading = new Promise((ok, fail) => {
+        const s = document.createElement("script");
+        s.src = JSPDF_URL; s.onload = ok;
+        s.onerror = () => { jsPdfLoading = null; fail(); };
+        document.head.appendChild(s);
+      }));
+    }
+    async function exportPDF() {
+      if (textCtx) commitText();
+      toast("Making PDF… 正在生成 PDF…");
+      try { await loadJsPDF(); }
+      catch (e) { toast("Couldn't load the PDF tool — check the internet connection. 无法加载 PDF 工具，请检查网络。", 5000); return; }
+      const { jsPDF } = window.jspdf;
+      let pdf = null;
+      doc.pages.forEach((p, i) => {
+        const [W, Hh] = dims(p), o = W > Hh ? "landscape" : "portrait";
+        if (!pdf) pdf = new jsPDF({ orientation: o, unit: "px", format: [W, Hh], hotfixes: ["px_scaling"], compress: true });
+        else pdf.addPage([W, Hh], o);
+        pdf.addImage(pageCanvas(p, 1.5).toDataURL("image/jpeg", 0.92), "JPEG", 0, 0, W, Hh);
+      });
+      pdf.save(`whiteboard-${stamp()}.pdf`);
+      toast(`PDF saved — ${doc.pages.length} page(s). 已保存 PDF。`);
+    }
+
+    function saveJSON() {
+      if (textCtx) commitText();
+      const data = JSON.stringify({ app: "seaway-whiteboard", v: 1, pages: doc.pages, cur: doc.cur });
+      download(new Blob([data], { type: "application/json" }), `whiteboard-${stamp()}.json`);
+    }
+    $("#fileIn").addEventListener("change", (e) => {
+      const f = e.target.files[0]; e.target.value = "";
+      if (!f) return;
+      const rd = new FileReader();
+      rd.onload = () => {
+        let d = null;
+        try { d = JSON.parse(rd.result); } catch (err) {}
+        if (!validDoc(d)) { toast("That file isn't a whiteboard backup. 不是白板备份文件。"); return; }
+        if (!confirm(`Open “${f.name}”? It replaces the current board. 打开后会替换当前白板。`)) return;
+        doc = { pages: d.pages, cur: d.cur || 0 };
+        doc.pages.forEach((p) => { p.id = p.id || uid(); p.items.forEach((it) => (it.id = it.id || uid())); });
+        for (const k in hist) delete hist[k];
+        goPage(doc.cur); saveNow();
+        toast(`Opened ${doc.pages.length} page(s). 已打开。`);
+      };
+      rd.readAsText(f);
+    });
+
+    /* ───────── Present: full-screen slideshow ───────── */
+    const pres = $("#present"), pc = $("#presentCanvas"), pctx = pc.getContext("2d"), pbar = $("#pbar");
+    let pi = 0, barTimer = 0, downX = null;
+    const isFs = () => document.fullscreenElement || document.webkitFullscreenElement;
+    function openPresent() {
+      if (textCtx) commitText();
+      closeMenu(); sel = null; render(false);
+      pi = doc.cur; pres.classList.add("open");
+      const fs = pres.requestFullscreen || pres.webkitRequestFullscreen;
+      try { const r = fs && fs.call(pres); if (r && r.catch) r.catch(() => {}); } catch (e) {}
+      drawPresent(); showBar();
+    }
+    function closePresent() {
+      if (!pres.classList.contains("open")) return;
+      pres.classList.remove("open");
+      if (isFs()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+      goPage(pi);
+    }
+    function drawPresent() {
+      const p = doc.pages[pi], [W, Hh] = dims(p), d = window.devicePixelRatio || 1;
+      const s = Math.min(innerWidth / W, innerHeight / Hh);
+      pc.style.width = W * s + "px"; pc.style.height = Hh * s + "px";
+      pc.width = Math.round(W * s * d); pc.height = Math.round(Hh * s * d);
+      paint(pctx, p, s * d);
+      $("#pcount").textContent = `${pi + 1} / ${doc.pages.length}`;
+    }
+    function pgo(step) {
+      const n = pi + step;
+      if (n < 0 || n >= doc.pages.length) return;
+      pi = n; drawPresent();
+    }
+    function showBar() {
+      pbar.classList.remove("hide"); clearTimeout(barTimer);
+      barTimer = setTimeout(() => pbar.classList.add("hide"), 2500);
+    }
+    $("#presentBtn").onclick = openPresent;
+    $("#pPrev").onclick = () => { pgo(-1); showBar(); };
+    $("#pNext").onclick = () => { pgo(1); showBar(); };
+    $("#pClose").onclick = closePresent;
+    pres.addEventListener("pointerdown", (e) => { if (!pbar.contains(e.target)) downX = e.clientX; });
+    pres.addEventListener("pointerup", (e) => {
+      if (downX === null) return;
+      const dx = e.clientX - downX; downX = null;
+      if (Math.abs(dx) > 50) pgo(dx < 0 ? 1 : -1);            // swipe
+      else pgo(e.clientX > innerWidth / 2 ? 1 : -1);           // tap right / left half
+      showBar();
+    });
+    pres.addEventListener("pointermove", (e) => { if (e.pointerType === "mouse") showBar(); });
+    document.addEventListener("fullscreenchange", () => { if (!isFs()) closePresent(); });
+    document.addEventListener("webkitfullscreenchange", () => { if (!isFs()) closePresent(); });
+
+    /* ───────── Keyboard ───────── */
+    const KEYS = { v: "select", p: "pen", h: "hl", l: "line", a: "arrow", r: "rect", o: "ellipse", t: "text", e: "eraser" };
+    document.addEventListener("keydown", (e) => {
+      if (pres.classList.contains("open")) {
+        if (["ArrowRight", "ArrowDown", "PageDown", " ", "Enter"].includes(e.key)) { e.preventDefault(); pgo(1); }
+        else if (["ArrowLeft", "ArrowUp", "PageUp", "Backspace"].includes(e.key)) { e.preventDefault(); pgo(-1); }
+        else if (e.key === "Home") { pi = 0; drawPresent(); }
+        else if (e.key === "End") { pi = doc.pages.length - 1; drawPresent(); }
+        else if (e.key === "Escape") closePresent();
+        return;
+      }
+      if (e.target.closest && e.target.closest("input,textarea")) return;
+      const k = e.key.toLowerCase(), mod = e.ctrlKey || e.metaKey;
+      if (mod && k === "z") { e.preventDefault(); e.shiftKey ? redo() : undo(); }
+      else if (mod && k === "y") { e.preventDefault(); redo(); }
+      else if ((e.key === "Delete" || e.key === "Backspace") && sel) { e.preventDefault(); deleteSelected(); }
+      else if (e.key === "Escape") { closeMenu(); sel = null; updateButtons(); render(false); }
+      else if (!mod && !e.altKey && KEYS[k]) setTool(KEYS[k]);
+    });
+
+    /* ───────── Misc ───────── */
+    let toastTimer = 0;
+    function toast(html, ms = 2500) {
+      const t = $("#toast"); t.innerHTML = html; t.classList.add("show");
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), ms);
+    }
+
+    function setNavH() {
+      const n = document.querySelector("nav.__snav");
+      document.documentElement.style.setProperty("--nav-h", (n && getComputedStyle(n).position === "fixed" ? n.offsetHeight : 0) + "px");
+    }
+    let fitRaf = 0;
+    const refit = () => { if (!fitRaf) fitRaf = requestAnimationFrame(() => { fitRaf = 0; setNavH(); fit(); if (pres.classList.contains("open")) drawPresent(); }); };
+    new ResizeObserver(refit).observe(stage);
+    window.addEventListener("resize", refit);
+    window.addEventListener("load", refit);
+    window.addEventListener("pagehide", saveNow);
+    document.addEventListener("visibilitychange", () => { if (document.hidden) saveNow(); });
+
+    setNavH(); renderTabs(); updateButtons(); fit();
+  })();
+  </script>
+</body>
+</html>

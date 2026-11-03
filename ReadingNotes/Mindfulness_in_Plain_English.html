@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script src="../nav-config.js"></script>
+    <script>
+      window.NAV_CONFIG = {
+        breadcrumbs: [
+          { label: "Home", href: "../index.html" },
+          { label: "Reading Notes", href: "./index.html" },
+          { label: "Mindfulness in Plain English" },
+        ],
+      };
+    </script>
+    <script src="../nav-top.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mindfulness in Plain English</title>
+    <style>
+      :root {
+        --bg: #f4f1ea;
+        --card: #fffdf8;
+        --text: #2b2a26;
+        --muted: #7a756a;
+        --border: #e2dccf;
+        --accent: #8a6d3b;
+        --accent-soft: #f1e8d6;
+      }
+      * { box-sizing: border-box; }
+      body {
+        font-family: "Book Antiqua", Georgia, "Songti SC", "SimSun", serif;
+        background: var(--bg);
+        color: var(--text);
+        margin: 0;
+      }
+      .wrap { max-width: 860px; margin: 0 auto; padding: 0 16px 48px; }
+
+      /* ── Book header ── */
+      .book {
+        text-align: center;
+        padding: 36px 0 22px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 18px;
+      }
+      .book h1 { margin: 0; font-size: clamp(1.6rem, 5vw, 2.3rem); letter-spacing: 0.01em; }
+      .book .cn-title { font-size: clamp(1.15rem, 3.6vw, 1.45rem); margin-top: 6px; }
+      .book .author { color: var(--muted); margin-top: 10px; font-size: 0.98rem; line-height: 1.6; }
+
+      /* ── Toolbar ── */
+      .toolbar {
+        position: sticky; top: var(--nav-h, 56px); z-index: 20;
+        display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between;
+        background: rgba(244, 241, 234, 0.95); backdrop-filter: blur(6px);
+        padding: 10px 0; margin-bottom: 8px;
+      }
+      .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 999px; overflow: hidden; background: var(--card); }
+      .seg button, .btn {
+        font: inherit; font-size: 0.9rem; border: 0; background: transparent; color: var(--text);
+        padding: 6px 14px; cursor: pointer;
+      }
+      .seg button.on { background: var(--accent); color: #fff; }
+      .btn { border: 1px solid var(--border); border-radius: 999px; background: var(--card); }
+      .btn:hover, .seg button:not(.on):hover { background: var(--accent-soft); }
+
+      /* ── Chapters ── */
+      .chapter {
+        background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+        margin-bottom: 10px; overflow: hidden;
+      }
+      .chapter summary {
+        list-style: none; cursor: pointer; display: flex; gap: 12px; align-items: baseline;
+        padding: 14px 16px;
+      }
+      .chapter summary::-webkit-details-marker { display: none; }
+      .chapter summary:hover { background: var(--accent-soft); }
+      .ch-num { color: var(--accent); font-weight: 700; min-width: 2.2em; flex-shrink: 0; }
+      .ch-title { flex: 1; line-height: 1.4; }
+      .ch-title .cn { display: block; color: var(--muted); font-size: 0.95em; }
+      .ch-count { color: var(--muted); font-size: 0.82rem; flex-shrink: 0; }
+      .chapter[open] .ch-count::after { content: " ▴"; }
+      .chapter:not([open]) .ch-count::after { content: " ▾"; }
+
+      .notes { padding: 4px 16px 16px 16px; border-top: 1px dashed var(--border); }
+      .note { padding: 12px 0 12px 14px; border-left: 3px solid var(--accent-soft); margin: 10px 0; }
+      .note .en { font-size: 1.05rem; line-height: 1.6; }
+      .note .cn { font-size: 1.02rem; line-height: 1.75; color: #4a463e; margin-top: 4px; }
+      .note .page { color: var(--muted); font-size: 0.8rem; margin-top: 4px; }
+      .empty { color: var(--muted); font-style: italic; padding: 12px 0 2px; }
+
+      /* language modes */
+      body.mode-en .cn { display: none !important; }
+      body.mode-cn .en { display: none !important; }
+      body.mode-en .ch-title .cn { display: none; }
+
+      .page-footer { text-align: center; margin-top: 30px; color: var(--muted); font-size: 0.85rem; }
+
+      @media (max-width: 540px) {
+        .book { padding-top: 22px; }
+        .chapter summary { padding: 12px; gap: 8px; }
+        .notes { padding: 2px 12px 12px; }
+        .ch-count { display: none; }
+      }
+    </style>
+  </head>
+
+  <body class="mode-both">
+    <div class="wrap">
+      <header class="book">
+        <h1>Mindfulness in Plain English</h1>
+        <div class="cn-title">观呼吸：平静的第一步</div>
+        <div class="author">Bhante Henepola Gunaratana 德宝法师</div>
+      </header>
+
+      <div class="toolbar">
+        <div class="seg" id="langSeg">
+          <button data-m="en">EN</button>
+          <button data-m="cn">中文</button>
+          <button data-m="both">EN + 中文</button>
+        </div>
+        <button class="btn" id="toggleAll">Expand all 全部展开</button>
+      </div>
+
+      <div id="chapters"></div>
+
+      <div class="page-footer">咖啡先生 · Reading Notes 读书笔记</div>
+    </div>
+
+    <script>
+      // ── Notes ──
+      // Add notes to a chapter's `notes` list: { en: "...", cn: "...", page: "p. 12" }  (page is optional, <br> starts a new line)
+      const BOOK = [
+        { no: "1",  en: "Meditation: Why Bother?",          cn: "禅修：何必费心？", notes: [] },
+        { no: "2",  en: "What Meditation Isn't",            cn: "禅修不是什么", notes: [] },
+        { no: "3",  en: "What Meditation Is",               cn: "禅修是什么", notes: [] },
+        { no: "4",  en: "Attitude",                         cn: "态度", notes: [] },
+        { no: "5",  en: "The Practice",                     cn: "修习", notes: [] },
+        { no: "6",  en: "What to Do with Your Body",        cn: "如何安顿身体", notes: [] },
+        { no: "7",  en: "What to Do with Your Mind",        cn: "如何安顿心", notes: [] },
+        { no: "8",  en: "Structuring Your Meditation",      cn: "安排你的禅修", notes: [] },
+        { no: "9",  en: "Set-Up Exercises",                 cn: "预备练习", notes: [] },
+        { no: "10", en: "Dealing with Problems",            cn: "处理问题", notes: [] },
+        { no: "11", en: "Dealing with Distractions I",      cn: "处理分心（一）", notes: [] },
+        { no: "12", en: "Dealing with Distractions II",     cn: "处理分心（二）", notes: [] },
+        { no: "13", en: "Mindfulness (Sati)",               cn: "正念（Sati）", notes: [] },
+        { no: "14", en: "Mindfulness versus Concentration", cn: "正念与专注", notes: [] },
+        { no: "15", en: "Meditation in Everyday Life",      cn: "日常生活中的禅修", notes: [] },
+        { no: "16", en: "What's in It for You",             cn: "你能得到什么", notes: [] },
+        { no: "★",  en: "Afterword: The Power of Loving-Friendliness", cn: "后记：慈爱的力量", notes: [] },
+      ];
+
+      const store = {
+        get(k) { try { return localStorage.getItem("mipe-" + k); } catch (e) { return null; } },
+        set(k, v) { try { localStorage.setItem("mipe-" + k, v); } catch (e) {} },
+      };
+
+      // chapters
+      const box = document.getElementById("chapters");
+      box.innerHTML = BOOK.map((ch, i) => {
+        const notes = ch.notes.length
+          ? ch.notes.map(n => `
+              <div class="note">
+                <div class="en">${n.en || ""}</div>
+                <div class="cn">${n.cn || ""}</div>
+                ${n.page ? `<div class="page">${n.page}</div>` : ""}
+              </div>`).join("")
+          : `<div class="empty">No notes yet · 暂无笔记</div>`;
+        return `
+          <details class="chapter" data-i="${i}">
+            <summary>
+              <span class="ch-num">${ch.no}</span>
+              <span class="ch-title"><span class="en">${ch.en}</span><span class="cn">${ch.cn}</span></span>
+              <span class="ch-count">${ch.notes.length} notes</span>
+            </summary>
+            <div class="notes">${notes}</div>
+          </details>`;
+      }).join("");
+
+      // language toggle (remembered per browser)
+      const seg = document.getElementById("langSeg");
+      function setMode(m) {
+        document.body.className = "mode-" + m;
+        seg.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.m === m));
+        store.set("lang", m);
+      }
+      seg.addEventListener("click", e => { if (e.target.dataset.m) setMode(e.target.dataset.m); });
+      setMode(store.get("lang") || "both");
+
+      // expand / collapse all
+      const all = () => [...box.querySelectorAll("details")];
+      const toggleBtn = document.getElementById("toggleAll");
+      function syncBtn() {
+        toggleBtn.textContent = all().every(d => d.open) ? "Collapse all 全部收起" : "Expand all 全部展开";
+      }
+      toggleBtn.addEventListener("click", () => {
+        const open = !all().every(d => d.open);
+        all().forEach(d => (d.open = open));
+        syncBtn();
+      });
+      box.addEventListener("toggle", syncBtn, true);
+
+      // keep the toolbar under the fixed nav bar
+      window.addEventListener("load", () => {
+        const n = document.querySelector("nav.__snav");
+        if (n) document.documentElement.style.setProperty("--nav-h", n.offsetHeight + "px");
+      });
+    </script>
+  </body>
+</html>
