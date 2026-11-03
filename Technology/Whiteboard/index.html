@@ -14,6 +14,8 @@
   </script>
   <script src="../../nav-top.js"></script>
   <title>Whiteboard 白板</title>
+  <!-- 楷体 fallback for devices without one (e.g. iPad); only the characters shown are downloaded -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-regular.css" />
   <style>
     :root {
       --chrome: #f8f9fa;
@@ -133,7 +135,7 @@
     .menu .row button.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
 
     /* ── Present (slideshow) ── */
-    #present { position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; background: #111; touch-action: none; }
+    #present { position: fixed; inset: 0; z-index: 10100; display: none; align-items: center; justify-content: center; background: #111; touch-action: none; }
     #present.open { display: flex; }
     #presentCanvas { display: block; background: #fff; }
     .pbar {
@@ -146,8 +148,66 @@
     .pbar button:hover { background: rgba(255, 255, 255, 0.15); }
     #pcount { min-width: 56px; text-align: center; }
 
+    /* ── Word game 猜词: setup sheet ── */
+    .modal { position: fixed; inset: 0; z-index: 10050; display: none; align-items: center; justify-content: center; padding: 16px; background: rgba(0, 0, 0, 0.45); }
+    .modal.open { display: flex; }
+    .sheet {
+      width: min(600px, 100%); max-height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch;
+      background: var(--btn); color: var(--text); border-radius: 16px; padding: 18px 18px 20px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    }
+    .sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .sheet h2 { margin: 0; font-size: 1.25rem; }
+    .sheet .x { width: 40px; height: 40px; border: 0; border-radius: 50%; background: transparent; color: var(--muted); font-size: 20px; cursor: pointer; }
+    .sheet .x:hover { background: var(--hover); }
+    .sheet .hint { color: var(--muted); font-size: 13px; line-height: 1.5; margin: 6px 0 4px; }
+    .sheet .label { font-size: 13px; font-weight: 600; color: var(--muted); margin: 14px 0 6px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip {
+      display: inline-flex; align-items: center; gap: 4px; padding: 7px 12px; border-radius: 999px;
+      border: 1px solid var(--line); background: transparent; color: var(--text); font-size: 14px; cursor: pointer;
+    }
+    .chip small { color: var(--muted); }
+    .chip.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+    .chip.on small { color: inherit; }
+    .chip.own { cursor: default; padding-right: 4px; background: var(--hover); }
+    .chip.own button { border: 0; background: transparent; color: var(--muted); font-size: 15px; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; }
+    .chip.own button:hover { background: var(--line); color: #e03131; }
+    .chip.link { border-style: dashed; color: var(--muted); }
+    .addrow { display: flex; gap: 6px; }
+    .addrow input {
+      flex: 1; min-width: 0; height: 42px; padding: 0 12px; border: 1px solid var(--line); border-radius: 10px;
+      background: var(--chrome); color: var(--text); font-size: 16px; -webkit-user-select: text; user-select: text;
+    }
+    .addrow input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+    .segrow { display: flex; gap: 6px; flex-wrap: wrap; }
+    .segrow button { flex: 1; min-width: 90px; padding: 9px 6px; border: 1px solid var(--line); border-radius: 10px; background: transparent; color: var(--text); font-size: 14px; cursor: pointer; }
+    .segrow button.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+    .check { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 14px; cursor: pointer; }
+    .check input { width: 18px; height: 18px; }
+    .startbtn {
+      display: block; width: 100%; margin-top: 18px; height: 50px; border: 0; border-radius: 12px;
+      background: var(--accent); color: #fff; font-size: 17px; font-weight: 600; cursor: pointer;
+    }
+    .startbtn:disabled { opacity: 0.4; cursor: default; }
+
+    /* ── Word game 猜词: full-screen card ── */
+    #game {
+      position: fixed; inset: 0; z-index: 10100; display: none; flex-direction: column; align-items: center; justify-content: center;
+      color: #111; background: #fff; touch-action: manipulation; cursor: pointer;
+    }
+    #game.open { display: flex; }
+    .gtop { position: absolute; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: max(10px, env(safe-area-inset-top)) 12px 0 16px; }
+    #gCount { font-size: 15px; color: #868e96; }
+    #gExit { width: 52px; height: 52px; border: 0; border-radius: 50%; background: #f1f3f5; color: #495057; font-size: 22px; cursor: pointer; }
+    .gcard { text-align: center; max-width: 94vw; }
+    #gWord { font-weight: 700; line-height: 1.15; white-space: nowrap; }
+    #gSub { margin-top: 0.35em; font-weight: 500; color: #343a40; white-space: nowrap; }
+    #game .kai { font-family: "KaiTi", "STKaiti", "Kaiti SC", "LXGW WenKai", "楷体", serif; font-weight: 400; }
+    .ghint { position: absolute; bottom: max(18px, env(safe-area-inset-bottom)); font-size: 14px; color: #868e96; transition: opacity 0.4s; }
+
     .toast {
-      position: fixed; left: 50%; bottom: 76px; transform: translateX(-50%); z-index: 1100;
+      position: fixed; left: 50%; bottom: 76px; transform: translateX(-50%); z-index: 10200;
       max-width: min(92vw, 560px); padding: 10px 16px; border-radius: 10px; text-align: center;
       background: #212529; color: #fff; font-size: 14px; line-height: 1.45;
       opacity: 0; pointer-events: none; transition: opacity 0.25s;
@@ -195,6 +255,7 @@
     <div class="bottombar">
       <div class="tabs" id="tabs"></div>
       <div class="actions">
+        <button class="tb" id="gameBtn" title="Word game 猜词游戏">🎯<span class="lbl">猜词</span></button>
         <button class="tb" id="exportBtn" title="Export 导出"><svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg><span class="lbl">Export</span></button>
         <button class="tb primary" id="presentBtn" title="Present full screen 全屏演示"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span class="lbl">Present</span></button>
       </div>
@@ -211,6 +272,42 @@
       <button id="pNext" title="Next 下一页">›</button>
       <button id="pClose" title="Exit 退出 (Esc)">✕</button>
     </div>
+  </div>
+
+  <div class="modal" id="gameSetup">
+    <div class="sheet" role="dialog" aria-labelledby="gTitle">
+      <div class="sheet-head">
+        <h2 id="gTitle">🎯 Word Game 猜词游戏</h2>
+        <button class="x" id="gSetupClose" title="Close 关闭">✕</button>
+      </div>
+      <p class="hint">
+        One big word per screen. The guesser holds the tablet facing the others, who give clues without saying the word.
+        Tap anywhere for the next word; after the last one it starts again.<br>
+        每屏一个大字。猜的人把平板朝外举着，其他人提示但不能说出这个词。点屏幕任意处换下一个，最后一个之后自动回到第一个。
+      </p>
+      <div class="label">Word lists 词库</div>
+      <div class="chips" id="gLists"></div>
+      <div class="label">My words 自己的词</div>
+      <div class="addrow">
+        <input id="gInput" type="text" placeholder="Type a word, press Enter 输入词语，按回车" enterkeyhint="enter" autocomplete="off" />
+        <button class="tb primary" id="gAdd">Add 添加</button>
+      </div>
+      <div class="chips" id="gMine" style="margin-top:8px"></div>
+      <div class="label">Show 显示</div>
+      <div class="segrow" id="gLang">
+        <button data-l="cn">中文</button>
+        <button data-l="en">English</button>
+        <button data-l="both">中文 + English</button>
+      </div>
+      <label class="check"><input type="checkbox" id="gShuffle" /> Shuffle 随机顺序</label>
+      <button class="startbtn" id="gStart">▶ Start</button>
+    </div>
+  </div>
+
+  <div id="game">
+    <div class="gtop"><span id="gCount"></span><button id="gExit" title="Exit 退出 (Esc)">✕</button></div>
+    <div class="gcard"><div id="gWord"></div><div id="gSub"></div></div>
+    <div class="ghint" id="gHint">Tap anywhere for the next word · 点任意处换下一个</div>
   </div>
 
   <div class="toast" id="toast"></div>
@@ -941,12 +1038,146 @@
       showBar();
     });
     pres.addEventListener("pointermove", (e) => { if (e.pointerType === "mouse") showBar(); });
-    document.addEventListener("fullscreenchange", () => { if (!isFs()) closePresent(); });
-    document.addEventListener("webkitfullscreenchange", () => { if (!isFs()) closePresent(); });
+    const onFsChange = () => { if (!isFs()) { closePresent(); closeGame(); } };
+    document.addEventListener("fullscreenchange", onFsChange);
+    document.addEventListener("webkitfullscreenchange", onFsChange);
+
+    /* ───────── Word game 猜词: one word per screen, tap anywhere for the next ───────── */
+    // "中文|English" pairs; an idiom with no English shows the Chinese in every mode
+    const WORD_LISTS = [
+      { id: "animals", name: "Animals 动物", words: "猫|cat,狗|dog,大象|elephant,长颈鹿|giraffe,老虎|tiger,狮子|lion,猴子|monkey,熊猫|panda,兔子|rabbit,企鹅|penguin,袋鼠|kangaroo,鳄鱼|crocodile,蛇|snake,青蛙|frog,蝴蝶|butterfly,蜜蜂|bee,鲨鱼|shark,海豚|dolphin,乌龟|turtle,猫头鹰|owl,斑马|zebra,骆驼|camel,松鼠|squirrel,章鱼|octopus,鸭子|duck" },
+      { id: "food", name: "Food 食物", words: "苹果|apple,香蕉|banana,西瓜|watermelon,葡萄|grapes,草莓|strawberry,菠萝|pineapple,榴莲|durian,面包|bread,米饭|rice,面条|noodles,饺子|dumplings,披萨|pizza,汉堡|hamburger,薯条|French fries,冰淇淋|ice cream,蛋糕|cake,巧克力|chocolate,鸡蛋|egg,牛奶|milk,爆米花|popcorn,三明治|sandwich,胡萝卜|carrot,椰子|coconut,月饼|mooncake" },
+      { id: "things", name: "Things 物品", words: "雨伞|umbrella,手机|mobile phone,电脑|computer,眼镜|glasses,牙刷|toothbrush,钥匙|key,书包|school bag,铅笔|pencil,剪刀|scissors,闹钟|alarm clock,电视|television,冰箱|refrigerator,镜子|mirror,枕头|pillow,气球|balloon,风筝|kite,自行车|bicycle,飞机|aeroplane,火车|train,帽子|hat,袜子|socks,杯子|cup,灯泡|light bulb,吸尘器|vacuum cleaner" },
+      { id: "actions", name: "Actions 动作", words: "跑步|running,游泳|swimming,跳舞|dancing,唱歌|singing,睡觉|sleeping,刷牙|brushing teeth,洗澡|taking a bath,踢足球|playing football,打篮球|playing basketball,骑自行车|riding a bicycle,钓鱼|fishing,做饭|cooking,拍照|taking a photo,打电话|making a phone call,放风筝|flying a kite,打喷嚏|sneezing,哭|crying,笑|laughing,跳绳|skipping rope,爬山|hiking,写字|writing,弹钢琴|playing the piano,开车|driving,画画|drawing" },
+      { id: "jobs", name: "Jobs 职业", words: "医生|doctor,老师|teacher,警察|police officer,消防员|firefighter,厨师|chef,司机|driver,飞行员|pilot,宇航员|astronaut,农夫|farmer,护士|nurse,牙医|dentist,歌手|singer,画家|artist,科学家|scientist,魔术师|magician,邮递员|postman,理发师|hairdresser,侦探|detective,运动员|athlete,建筑工人|builder" },
+      { id: "places", name: "Places 地方", words: "学校|school,医院|hospital,超市|supermarket,动物园|zoo,海滩|beach,图书馆|library,机场|airport,公园|park,游乐场|playground,电影院|cinema,博物馆|museum,游泳池|swimming pool,厨房|kitchen,餐厅|restaurant,森林|forest,沙漠|desert,火山|volcano,地铁站|MRT station,银行|bank,农场|farm" },
+      { id: "singapore", name: "Singapore 新加坡", words: "鱼尾狮|Merlion,滨海湾金沙|Marina Bay Sands,滨海湾花园|Gardens by the Bay,圣淘沙|Sentosa,牛车水|Chinatown,小印度|Little India,乌节路|Orchard Road,樟宜机场|Changi Airport,星耀樟宜|Jewel Changi,新加坡摩天观景轮|Singapore Flyer,植物园|Botanic Gardens,夜间动物园|Night Safari,组屋|HDB flat,小贩中心|hawker centre,咖啡店|kopitiam,地铁|MRT,易通卡|EZ-Link card,国庆日|National Day,胡姬花|orchid,海南鸡饭|chicken rice,辣椒螃蟹|chilli crab,叻沙|laksa,沙爹|satay,咖椰吐司|kaya toast,印度煎饼|roti prata,椰浆饭|nasi lemak,肉骨茶|bak kut teh,红包|ang bao,占位|chope,怕输|kiasu,新加坡式英语|Singlish" },
+      { id: "potter", name: "Harry Potter 哈利·波特", words: "哈利·波特|Harry Potter,赫敏|Hermione,罗恩|Ron,邓布利多|Dumbledore,伏地魔|Voldemort,斯内普|Snape,海格|Hagrid,马尔福|Malfoy,麦格教授|Professor McGonagall,小天狼星|Sirius Black,多比|Dobby,海德薇|Hedwig,霍格沃茨|Hogwarts,霍格沃茨特快|Hogwarts Express,九又四分之三站台|Platform Nine and Three-Quarters,对角巷|Diagon Alley,格兰芬多|Gryffindor,斯莱特林|Slytherin,赫奇帕奇|Hufflepuff,拉文克劳|Ravenclaw,分院帽|Sorting Hat,魁地奇|Quidditch,金色飞贼|Golden Snitch,魔杖|wand,飞天扫帚|broomstick,隐形衣|Invisibility Cloak,活点地图|Marauder's Map,魔法石|Philosopher's Stone,摄魂怪|Dementor,守护神|Patronus,麻瓜|Muggle,黄油啤酒|Butterbeer" },
+      { id: "idioms", name: "成语 Idioms", words: "画蛇添足|,对牛弹琴|,守株待兔|,亡羊补牢|,井底之蛙|,掩耳盗铃|,狐假虎威|,一石二鸟|,拔苗助长|,半途而废|,三心二意|,自相矛盾|,杞人忧天|,刻舟求剑|,叶公好龙|,鹤立鸡群|,胸有成竹|,马到成功|,一心一意|,九牛一毛|" },
+    ];
+    const listWords = (l) => l.words.split(",").map((x) => { const [cn, en] = x.split("|"); return { cn, en }; });
+    const GKEY = "wb-game-v1";
+    const gs = { lists: ["animals"], mine: [], lang: "cn", shuffle: true };
+    try { Object.assign(gs, JSON.parse(store.get(GKEY)) || {}); } catch (e) {}
+    const saveGame = () => store.set(GKEY, JSON.stringify(gs));
+
+    function gameWords() {
+      const out = [];
+      for (const l of WORD_LISTS) if (gs.lists.includes(l.id)) out.push(...listWords(l));
+      if (gs.lists.includes("mine")) out.push(...gs.mine.map((t) => ({ own: t })));
+      return out;
+    }
+
+    const setup = $("#gameSetup"), gInput = $("#gInput");
+    function renderSetup() {
+      $("#gLists").innerHTML =
+        WORD_LISTS.map((l) => `<button class="chip${gs.lists.includes(l.id) ? " on" : ""}" data-list="${l.id}">${l.name} <small>${listWords(l).length}</small></button>`).join("") +
+        `<button class="chip${gs.lists.includes("mine") ? " on" : ""}" data-list="mine">My words 我的词 <small>${gs.mine.length}</small></button>`;
+      $("#gMine").innerHTML = gs.mine.length
+        ? gs.mine.map((w, i) => `<span class="chip own">${esc(w)}<button data-del="${i}" title="Remove 删除">×</button></span>`).join("") +
+          (gs.mine.length > 1 ? `<button class="chip link" data-clear>Clear all 清空</button>` : "")
+        : `<span class="hint" style="margin:0">Nothing yet — add words one at a time, or paste several separated by commas or new lines. 还没有，可以一个一个加，也可以用逗号或换行一次加多个。</span>`;
+      document.querySelectorAll("#gLang [data-l]").forEach((b) => b.classList.toggle("on", b.dataset.l === gs.lang));
+      $("#gShuffle").checked = gs.shuffle;
+      const n = gameWords().length;
+      $("#gStart").disabled = !n;
+      $("#gStart").textContent = n ? `▶ Start · ${n} words 开始` : "Pick a word list or add words 请选择词库或添加词语";
+    }
+    function addWords() {
+      const parts = gInput.value.split(/[\n,，、;；]+/).map((w) => w.trim().slice(0, 40)).filter(Boolean);
+      if (!parts.length) return;
+      for (const w of parts) if (!gs.mine.includes(w)) gs.mine.push(w);
+      if (!gs.lists.includes("mine")) gs.lists.push("mine");
+      gInput.value = ""; gInput.focus();
+      saveGame(); renderSetup();
+    }
+    function openSetup() {
+      if (textCtx) commitText();
+      closeMenu(); renderSetup(); setup.classList.add("open");
+    }
+    const closeSetup = () => setup.classList.remove("open");
+
+    $("#gameBtn").onclick = openSetup;
+    $("#gSetupClose").onclick = closeSetup;
+    setup.addEventListener("click", (e) => { if (e.target === setup) closeSetup(); });
+    $("#gAdd").onclick = addWords;
+    gInput.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); addWords(); } });
+    gInput.addEventListener("paste", () => setTimeout(() => { if (/[\n,，、;；]/.test(gInput.value)) addWords(); }, 0));
+    $("#gLists").addEventListener("click", (e) => {
+      const b = e.target.closest("[data-list]"); if (!b) return;
+      const id = b.dataset.list, i = gs.lists.indexOf(id);
+      if (i >= 0) gs.lists.splice(i, 1); else gs.lists.push(id);
+      saveGame(); renderSetup();
+    });
+    $("#gMine").addEventListener("click", (e) => {
+      const d = e.target.closest("[data-del]");
+      if (d) { gs.mine.splice(+d.dataset.del, 1); saveGame(); renderSetup(); return; }
+      if (e.target.closest("[data-clear]") && confirm("Remove all your own words? 删除所有自己的词？")) { gs.mine = []; saveGame(); renderSetup(); }
+    });
+    $("#gLang").addEventListener("click", (e) => { const b = e.target.closest("[data-l]"); if (b) { gs.lang = b.dataset.l; saveGame(); renderSetup(); } });
+    $("#gShuffle").addEventListener("change", (e) => { gs.shuffle = e.target.checked; saveGame(); });
+
+    const game = $("#game");
+    let deck = [], gi = 0, wakeLock = null;
+    function startGame() {
+      deck = gameWords();
+      if (!deck.length) return;
+      if (gs.shuffle) for (let i = deck.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [deck[i], deck[j]] = [deck[j], deck[i]]; }
+      gi = 0; closeSetup();
+      game.classList.add("open");
+      $("#gHint").style.opacity = "";
+      const fs = game.requestFullscreen || game.webkitRequestFullscreen;
+      try { const r = fs && fs.call(game); if (r && r.catch) r.catch(() => {}); } catch (e) {}
+      try { navigator.wakeLock.request("screen").then((l) => (wakeLock = l)).catch(() => {}); } catch (e) {}   // keep the screen on
+      showCard();
+    }
+    function closeGame() {
+      if (!game.classList.contains("open")) return;
+      game.classList.remove("open");
+      if (isFs()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+      if (wakeLock) { wakeLock.release().catch(() => {}); wakeLock = null; }
+    }
+    function fitText(el, maxW, maxH) {
+      el.style.fontSize = "100px";
+      const k = Math.min(maxW / (el.scrollWidth || 1), maxH / (el.scrollHeight || 1));
+      el.style.fontSize = Math.max(20, Math.floor(100 * k)) + "px";
+    }
+    function showCard() {
+      const w = deck[gi];
+      // 中文 + English: English big on top, Chinese smaller underneath
+      let main = w.own || w.cn, sub = "";
+      if (!w.own && w.en) {
+        if (gs.lang === "en") main = w.en;
+        else if (gs.lang === "both") { main = w.en; sub = w.cn; }
+      }
+      const wEl = $("#gWord"), sEl = $("#gSub");
+      wEl.textContent = main; sEl.textContent = sub; sEl.style.display = sub ? "" : "none";
+      const hasCJK = (t) => /[㐀-鿿]/.test(t);   // Chinese is shown in 楷体
+      wEl.classList.toggle("kai", hasCJK(main)); sEl.classList.toggle("kai", hasCJK(sub));
+      fitText(wEl, innerWidth * 0.9, innerHeight * (sub ? 0.42 : 0.6));
+      if (sub) fitText(sEl, innerWidth * 0.9, Math.min(innerHeight * 0.16, parseFloat(wEl.style.fontSize) * 0.45));
+      $("#gCount").textContent = `${gi + 1} / ${deck.length}`;
+    }
+    function nextCard(step) {
+      gi = (gi + step + deck.length) % deck.length;   // after the last word, back to the first
+      $("#gHint").style.opacity = "0";
+      showCard();
+    }
+    $("#gStart").onclick = startGame;
+    $("#gExit").addEventListener("click", (e) => { e.stopPropagation(); closeGame(); });
+    game.addEventListener("click", () => nextCard(1));
+    window.addEventListener("resize", () => { if (game.classList.contains("open")) showCard(); });
 
     /* ───────── Keyboard ───────── */
     const KEYS = { v: "select", p: "pen", h: "hl", l: "line", a: "arrow", r: "rect", o: "ellipse", t: "text", e: "eraser" };
     document.addEventListener("keydown", (e) => {
+      if (game.classList.contains("open")) {
+        if (["ArrowRight", "ArrowDown", "PageDown", " ", "Enter"].includes(e.key)) { e.preventDefault(); nextCard(1); }
+        else if (["ArrowLeft", "ArrowUp", "PageUp", "Backspace"].includes(e.key)) { e.preventDefault(); nextCard(-1); }
+        else if (e.key === "Escape") closeGame();
+        return;
+      }
+      if (setup.classList.contains("open")) { if (e.key === "Escape") closeSetup(); return; }
       if (pres.classList.contains("open")) {
         if (["ArrowRight", "ArrowDown", "PageDown", " ", "Enter"].includes(e.key)) { e.preventDefault(); pgo(1); }
         else if (["ArrowLeft", "ArrowUp", "PageUp", "Backspace"].includes(e.key)) { e.preventDefault(); pgo(-1); }
