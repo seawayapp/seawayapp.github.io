@@ -1,6 +1,10 @@
 const data = {
-  lastUpdated: "28/10/2026 V1",
+  lastUpdated: "08/11/2026 V1",
   recentReleases: [
+    {
+      date: "2026-11-08",
+      name: "<a href='Education/Tools/EnglishLetterWriting.html'>English Letter Writing 两线字帖 — Stroke Order Animation</a>"
+    },
     {
       date: "2026-10-28",
       name: "<a href='note/index.html'>Focus List 专注清单 — To-do & Notes</a>"
