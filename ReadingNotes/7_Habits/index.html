@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>高效能人士的七个习惯 · 读书笔记</title>
+  <script>
+    window.NAV_CONFIG = {
+      breadcrumbs: [
+        { label: "Home", href: "../../index.html" },
+        { label: "Reading Notes", href: "../index.html" },
+        { label: "The 7 Habits 七个习惯" }
+      ]
+    };
+  </script>
+  <script src="../../nav-top.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f7f4ee;
+      --paper: #fffdf9;
+      --text: #2a2722;
+      --muted: #8a8276;
+      --line: #e6dfd3;
+      --accent: #2f6f6a;
+      --accent-soft: #e2efed;
+      --then: #b07a2a;       /* 2006 */
+      --then-soft: #f7eedf;
+      --now: #2f6f6a;        /* now */
+      --now-soft: #e2efed;
+      --en-font: "Source Serif 4", Georgia, "Times New Roman", serif;
+      --zh-font: "LXGW WenKai", "KaiTi", "STKaiti", serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #171614;
+        --paper: #211f1c;
+        --text: #ebe6dd;
+        --muted: #a39b8f;
+        --line: #36322c;
+        --accent: #6fbfb6;
+        --accent-soft: #1d3633;
+        --then: #e0a95a;
+        --then-soft: #3a2e1d;
+        --now: #6fbfb6;
+        --now-soft: #1d3633;
+      }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px 56px; }
+
+    /* ── Book header ── */
+    .book { text-align: center; padding: 34px 0 18px; }
+    .book h1 { margin: 0; font-family: var(--zh-font); font-weight: 400; font-size: clamp(1.7rem, 5vw, 2.4rem); }
+    .book .en-title { font-family: var(--en-font); font-style: italic; font-size: clamp(1.05rem, 3vw, 1.3rem); margin-top: 4px; }
+    .book .meta { color: var(--muted); font-size: 0.9rem; margin-top: 10px; }
+    .book .meta b { font-weight: 600; }
+    .book .meta .then { color: var(--then); }
+    .book .meta .now { color: var(--now); }
+
+    /* ── Chapter bar + language toggle (sticky) ── */
+    .bar {
+      position: sticky; top: var(--nav-h, 56px); z-index: 20;
+      background: var(--bg); border-bottom: 1px solid var(--line);
+      padding: 8px 0; display: flex; gap: 10px; align-items: center;
+    }
+    .chapters { flex: 1; min-width: 0; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 2px; }
+    .chapters::-webkit-scrollbar { display: none; }
+    .chip {
+      flex-shrink: 0; border: 1px solid var(--line); background: var(--paper); color: var(--text);
+      border-radius: 999px; padding: 7px 13px; font-size: 14px; cursor: pointer; white-space: nowrap; font-family: var(--zh-font);
+    }
+    .chip small { color: var(--muted); margin-left: 3px; font-family: system-ui, sans-serif; }
+    .chip.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .chip.on small { color: rgba(255, 255, 255, 0.8); }
+    .chip.empty { opacity: 0.5; }
+    .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; flex-shrink: 0; background: var(--paper); }
+    .seg button { border: 0; background: transparent; color: var(--text); padding: 7px 11px; font-size: 13px; cursor: pointer; }
+    .seg button.on { background: var(--accent); color: #fff; }
+
+    /* ── Notes ── */
+    .ch-head { margin: 30px 0 12px; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+    .ch-head h2 { margin: 0; font-family: var(--zh-font); font-weight: 400; font-size: 1.5rem; }
+    .ch-head .en { font-family: var(--en-font); font-style: italic; color: var(--muted); }
+
+    .note {
+      display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      background: var(--paper); border: 1px solid var(--line); border-radius: 14px; margin-bottom: 16px; overflow: hidden;
+    }
+    .passage { padding: 22px 24px; position: relative; }
+    .num { position: absolute; top: 12px; right: 14px; color: var(--muted); font-size: 12px; }
+    .p-en { font-family: var(--en-font); font-size: 1.22rem; line-height: 1.65; }
+    .p-zh { font-family: var(--zh-font); font-size: 1.2rem; line-height: 1.85; margin-top: 12px; }
+    .p-en + .p-zh { padding-top: 12px; border-top: 1px dashed var(--line); }
+    .p-src { margin-top: 12px; color: var(--muted); font-size: 12px; }
+    body.lang-en .p-zh, body.lang-zh .p-en { display: none; }
+    body.lang-zh .p-zh { margin-top: 0; padding-top: 0; border-top: 0; }
+
+    .margin { border-left: 1px solid var(--line); background: color-mix(in srgb, var(--paper) 70%, var(--bg)); padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+    .thought { border-radius: 10px; padding: 10px 12px; font-family: var(--zh-font); font-size: 1.05rem; line-height: 1.75; }
+    .thought .tag { font-family: system-ui, sans-serif; font-size: 12px; font-weight: 600; display: block; margin-bottom: 2px; }
+    .thought.then { background: var(--then-soft); }
+    .thought.then .tag { color: var(--then); }
+    .thought.now { background: var(--now-soft); }
+    .thought.now .tag { color: var(--now); }
+    .thought.blank { background: transparent; border: 1px dashed var(--line); color: var(--muted); font-size: 0.95rem; }
+
+    .empty-ch { text-align: center; color: var(--muted); padding: 50px 0; font-family: var(--zh-font); font-size: 1.1rem; }
+
+    .pager { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; }
+    .pager button {
+      flex: 1; max-width: 48%; border: 1px solid var(--line); background: var(--paper); color: var(--text);
+      border-radius: 12px; padding: 12px 14px; cursor: pointer; font-family: var(--zh-font); font-size: 1rem; text-align: left;
+    }
+    .pager button.next { text-align: right; margin-left: auto; }
+    .pager button small { display: block; color: var(--muted); font-family: system-ui, sans-serif; font-size: 12px; }
+    .pager button:disabled { visibility: hidden; }
+
+    .present-btn {
+      flex-shrink: 0; border: 0; border-radius: 999px; background: var(--accent); color: #fff;
+      padding: 8px 14px; font-size: 14px; cursor: pointer; white-space: nowrap;
+    }
+    .present-btn:hover { filter: brightness(1.08); }
+    .num { cursor: pointer; }
+    .num:hover { color: var(--accent); }
+
+    /* ── Present: one passage per screen, English on top, Chinese below ── */
+    #present {
+      position: fixed; inset: 0; z-index: 10100; display: none;
+      background: var(--paper); color: var(--text); touch-action: manipulation; cursor: pointer;
+      flex-direction: column; align-items: center; justify-content: center;
+    }
+    #present.open { display: flex; }
+    .s-top {
+      position: absolute; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center;
+      padding: max(10px, env(safe-area-inset-top)) 12px 0 18px; color: var(--muted); font-size: 14px;
+    }
+    .s-top button {
+      width: 48px; height: 48px; border: 0; border-radius: 50%; background: var(--line); color: var(--text);
+      font-size: 20px; cursor: pointer;
+    }
+    .s-body { width: min(88vw, 1300px); text-align: center; }
+    .s-en { font-family: var(--en-font); line-height: 1.45; }
+    .s-zh { font-family: var(--zh-font); line-height: 1.7; color: var(--text); margin-top: 0.9em; padding-top: 0.9em; border-top: 1px solid var(--line); }
+    .s-pairs { margin: 0 auto; border-collapse: collapse; text-align: left; }
+    .s-pairs td { padding: 0.18em 0.6em; vertical-align: baseline; border-bottom: 1px solid var(--line); }
+    .s-pairs tr:first-child td { border-bottom-width: 2px; font-weight: 600; }
+    .s-pairs tr:last-child td { border-bottom: 0; }
+    .s-pairs .pe { font-family: var(--en-font); line-height: 1.35; }
+    .s-pairs .pz { font-family: var(--zh-font); line-height: 1.5; }
+    .s-hint { position: absolute; bottom: max(14px, env(safe-area-inset-bottom)); color: var(--muted); font-size: 13px; transition: opacity 0.4s; }
+
+    .foot { text-align: center; color: var(--muted); font-size: 12px; margin-top: 36px; line-height: 1.6; }
+
+    @media (max-width: 720px) {
+      .note { grid-template-columns: 1fr; }
+      .margin { border-left: 0; border-top: 1px solid var(--line); }
+      .passage { padding: 18px 16px; }
+      .p-en { font-size: 1.12rem; }
+      .p-zh { font-size: 1.12rem; }
+      .bar { flex-wrap: wrap; }
+      .seg { margin-left: auto; }
+    }
+  </style>
+</head>
+
+<body class="lang-both">
+  <div class="wrap">
+    <header class="book">
+      <h1 id="zhTitle">高效能人士的七个习惯</h1>
+      <div class="en-title" id="enTitle">The 7 Habits of Highly Effective People</div>
+      <div class="meta"><span id="author"></span> · <b class="then">初读 <span id="firstRead"></span></b> · <b class="now">重读 <span id="nowYear"></span></b></div>
+    </header>
+
+    <div class="bar" id="bar">
+      <div class="chapters" id="chapters"></div>
+      <div class="seg" id="lang">
+        <button data-l="both">中英</button><button data-l="en">EN</button><button data-l="zh">中</button>
+      </div>
+      <button class="present-btn" id="presentBtn" title="Full-screen slides for reading aloud 全屏朗读">▶ 朗读</button>
+    </div>
+
+    <main id="main"></main>
+
+    <div class="foot">
+      Short passages quoted for personal reading notes · 摘录仅作个人读书笔记<br />
+      <span style="color:var(--then)">■</span> 当时的我 (first reading) &nbsp; <span style="color:var(--now)">■</span> 现在的我 (re-reading)
+    </div>
+  </div>
+
+  <div id="present">
+    <div class="s-top"><span id="sCount"></span><button id="sExit" title="Exit 退出 (Esc)">✕</button></div>
+    <div class="s-body"><div class="s-en" id="sEn"></div><div class="s-zh" id="sZh"></div></div>
+    <div class="s-hint" id="sHint">Tap right / left for next / previous · 点右边下一句，左边上一句 · Esc 退出</div>
+  </div>
+
+  <script src="7_habits_notes.js"></script>
+  <script>
+  (() => {
+    "use strict";
+    const PER_PAGE = 10;        // a chapter with more notes than this is split into pages
+    const $ = (s) => document.querySelector(s);
+    const esc = (s) => String(s || "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const lines = (s) => esc(s).replace(/\n/g, "<br>");
+    const store = {
+      get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+      set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+    };
+
+    let data = null, chapters = [];
+    const nowYear = String(new Date().getFullYear());
+    $("#nowYear").textContent = nowYear;
+
+    // ── routing: #<chapter id> or #<chapter id>/<page>, "#all" = every note ──
+    function route() {
+      const [id, pg] = location.hash.slice(1).split("/");
+      return { id: id || "all", page: Math.max(1, parseInt(pg, 10) || 1) };
+    }
+    const go = (id, page) => { location.hash = id + (page > 1 ? "/" + page : ""); };
+
+    function noteHtml(n, idx, ch) {
+      const thought = (cls, label, text) => text
+        ? `<div class="thought ${cls}"><span class="tag">${label}</span>${lines(text)}</div>`
+        : `<div class="thought blank"><span class="tag">${label}</span>还没写 · not written yet</div>`;
+      return `
+        <article class="note">
+          <div class="passage">
+            <span class="num" data-start="${ch.id}|${idx - 1}" title="从这句开始朗读 · Present from here">${ch.zh.split(" · ")[0]} · ${idx}</span>
+            ${n.en ? `<div class="p-en">${lines(n.en)}</div>` : ""}
+            ${n.zh ? `<div class="p-zh">${lines(n.zh)}</div>` : ""}
+            ${n.zhBy === "self" ? `<div class="p-src">中文为自译 · my own translation</div>` : n.ref ? `<div class="p-src">${esc(n.ref)}</div>` : ""}
+          </div>
+          <aside class="margin">
+            ${thought("then", `当时的我 · ${esc(n.thenYear || data.book.firstRead)}`, n.then)}
+            ${thought("now", `现在的我 · ${esc(n.nowYear || nowYear)}`, n.now)}
+          </aside>
+        </article>`;
+    }
+
+    function chapterBlock(ch, notes, startNo) {
+      return `
+        <div class="ch-head"><h2>${esc(ch.zh)}</h2><span class="en">${esc(ch.en)}</span></div>
+        ${notes.length ? notes.map((n, i) => noteHtml(n, startNo + i, ch)).join("") : `<div class="empty-ch">这一章还没有笔记 · No notes yet</div>`}`;
+    }
+
+    function render() {
+      const r = route();
+      const withNotes = chapters.filter((c) => c.notes.length);
+      document.querySelectorAll(".chip").forEach((b) => b.classList.toggle("on", b.dataset.id === r.id));
+      const on = document.querySelector(".chip.on");
+      if (on) on.scrollIntoView({ block: "nearest", inline: "nearest" });
+
+      let html = "", prev = null, next = null;
+      if (r.id === "all") {
+        html = withNotes.map((c) => chapterBlock(c, c.notes, 1)).join("") ||
+          `<div class="empty-ch">还没有笔记 · No notes yet</div>`;
+      } else {
+        const i = chapters.findIndex((c) => c.id === r.id);
+        const ch = chapters[i] || chapters[0];
+        const pages = Math.max(1, Math.ceil(ch.notes.length / PER_PAGE));
+        const page = Math.min(r.page, pages);
+        const slice = ch.notes.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+        html = chapterBlock(ch, slice, (page - 1) * PER_PAGE + 1);
+        if (pages > 1) html = html.replace("</h2>", `</h2><span class="en">${page} / ${pages}</span>`);
+        // prev / next: pages within the chapter first, then neighbouring chapters that have notes
+        const before = withNotes.filter((c) => chapters.indexOf(c) < i).pop();
+        const after = withNotes.find((c) => chapters.indexOf(c) > i);
+        prev = page > 1 ? { id: ch.id, page: page - 1, label: `${ch.zh} · ${page - 1}` }
+             : before ? { id: before.id, page: Math.ceil(before.notes.length / PER_PAGE), label: before.zh } : null;
+        next = page < pages ? { id: ch.id, page: page + 1, label: `${ch.zh} · ${page + 1}` }
+             : after ? { id: after.id, page: 1, label: after.zh } : null;
+      }
+      html += `<nav class="pager">
+        <button class="prev" ${prev ? "" : "disabled"} data-go="${prev ? prev.id + "|" + prev.page : ""}"><small>← 上一页</small>${prev ? esc(prev.label) : ""}</button>
+        <button class="next" ${next ? "" : "disabled"} data-go="${next ? next.id + "|" + next.page : ""}"><small>下一页 →</small>${next ? esc(next.label) : ""}</button>
+      </nav>`;
+      $("#main").innerHTML = html;
+    }
+
+    function buildChips() {
+      const total = chapters.reduce((s, c) => s + c.notes.length, 0);
+      $("#chapters").innerHTML =
+        `<button class="chip" data-id="all">全部<small>${total}</small></button>` +
+        chapters.map((c) => `<button class="chip${c.notes.length ? "" : " empty"}" data-id="${c.id}" title="${esc(c.en)}">${esc(c.zh.split(" · ")[0])}${c.notes.length ? `<small>${c.notes.length}</small>` : ""}</button>`).join("");
+    }
+
+    $("#chapters").addEventListener("click", (e) => { const b = e.target.closest(".chip"); if (b) go(b.dataset.id, 1); });
+    $("#main").addEventListener("click", (e) => {
+      const b = e.target.closest("[data-go]"); if (!b || !b.dataset.go) return;
+      const [id, p] = b.dataset.go.split("|"); go(id, +p);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    window.addEventListener("hashchange", render);
+
+    /* ── Present (read aloud): the notes in view, one per full screen ── */
+    const pres = $("#present");
+    let deck = [], si = 0, wakeLock = null, downX = null;
+    const isFs = () => document.fullscreenElement || document.webkitFullscreenElement;
+    function openPresent(list, start) {
+      deck = list; si = start || 0;
+      if (!deck.length) return;
+      pres.classList.add("open"); $("#sHint").style.opacity = "";
+      const fs = pres.requestFullscreen || pres.webkitRequestFullscreen;
+      try { const r = fs && fs.call(pres); if (r && r.catch) r.catch(() => {}); } catch (e) {}
+      try { navigator.wakeLock.request("screen").then((l) => (wakeLock = l)).catch(() => {}); } catch (e) {}
+      showSlide();
+    }
+    function closePresent() {
+      if (!pres.classList.contains("open")) return;
+      pres.classList.remove("open");
+      if (isFs()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+      if (wakeLock) { wakeLock.release().catch(() => {}); wakeLock = null; }
+    }
+    // biggest font that keeps the whole passage on screen; Chinese is ~60% of the English size
+    function fitSlide() {
+      const body = $(".s-body"), pairs = body.querySelector(".s-pairs");
+      const maxH = innerHeight * 0.8, maxW = body.clientWidth;
+      let size = Math.min(innerWidth / 12, innerHeight / 7, 76);
+      do {
+        if (pairs) {
+          pairs.querySelectorAll(".pe").forEach((el) => (el.style.fontSize = size + "px"));
+          pairs.querySelectorAll(".pz").forEach((el) => (el.style.fontSize = Math.max(16, size * 0.75) + "px"));
+        } else {
+          $("#sEn").style.fontSize = size + "px";
+          $("#sZh").style.fontSize = Math.max(16, size * 0.6) + "px";
+        }
+        size -= 2;
+      } while ((body.scrollHeight > maxH || body.scrollWidth > maxW + 1) && size > 16);
+    }
+    function showSlide() {
+      const { n, ch } = deck[si];
+      const enL = (n.en || "").split("\n"), zhL = (n.zh || "").split("\n");
+      const old = $(".s-pairs"); if (old) old.remove();
+      if (enL.length > 3 && enL.length === zhL.length) {
+        // a list: each English line with its Chinese beside it, so it fits at a readable size
+        $("#sEn").style.display = $("#sZh").style.display = "none";
+        $(".s-body").insertAdjacentHTML("beforeend",
+          `<table class="s-pairs">${enL.map((e, i) => `<tr><td class="pe">${esc(e)}</td><td class="pz">${esc(zhL[i])}</td></tr>`).join("")}</table>`);
+      } else {
+        $("#sEn").style.display = "";
+        $("#sEn").innerHTML = lines(n.en);
+        $("#sZh").innerHTML = lines(n.zh);
+        $("#sZh").style.display = n.zh ? "" : "none";
+      }
+      $("#sCount").textContent = `${ch.zh}  ·  ${si + 1} / ${deck.length}`;
+      fitSlide();
+    }
+    function step(d) {
+      si = (si + d + deck.length) % deck.length;   // loops round at the ends
+      $("#sHint").style.opacity = "0";
+      showSlide();
+    }
+    // the notes currently shown: one chapter, or all of them under "全部"
+    function viewDeck() {
+      const r = route();
+      const chs = r.id === "all" ? chapters : chapters.filter((c) => c.id === r.id);
+      return chs.flatMap((ch) => ch.notes.map((n) => ({ n, ch })));
+    }
+    $("#presentBtn").addEventListener("click", () => openPresent(viewDeck(), 0));
+    $("#main").addEventListener("click", (e) => {
+      const b = e.target.closest("[data-start]"); if (!b) return;
+      const [id, i] = b.dataset.start.split("|");
+      const list = viewDeck();
+      openPresent(list, Math.max(0, list.findIndex((x) => x.ch.id === id && x.ch.notes.indexOf(x.n) === +i)));
+    });
+    $("#sExit").addEventListener("click", (e) => { e.stopPropagation(); closePresent(); });
+    pres.addEventListener("pointerdown", (e) => { downX = e.clientX; });
+    pres.addEventListener("pointerup", (e) => {
+      if (downX === null || e.target.closest("#sExit")) { downX = null; return; }
+      const dx = e.clientX - downX; downX = null;
+      if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);          // swipe
+      else step(e.clientX > innerWidth / 3 ? 1 : -1);         // tap: left third = back, rest = next
+    });
+    document.addEventListener("keydown", (e) => {
+      if (!pres.classList.contains("open")) return;
+      if (["ArrowRight", "ArrowDown", "PageDown", " ", "Enter"].includes(e.key)) { e.preventDefault(); step(1); }
+      else if (["ArrowLeft", "ArrowUp", "PageUp", "Backspace"].includes(e.key)) { e.preventDefault(); step(-1); }
+      else if (e.key === "Escape") closePresent();
+    });
+    const onFs = () => { if (!isFs()) closePresent(); };
+    document.addEventListener("fullscreenchange", onFs);
+    document.addEventListener("webkitfullscreenchange", onFs);
+    window.addEventListener("resize", () => { if (pres.classList.contains("open")) fitSlide(); });
+
+    // language: 中英 / EN / 中 (remembered)
+    function setLang(l) {
+      document.body.classList.remove("lang-both", "lang-en", "lang-zh");
+      document.body.classList.add("lang-" + l);
+      document.querySelectorAll("#lang button").forEach((b) => b.classList.toggle("on", b.dataset.l === l));
+      store.set("7h-lang", l);
+    }
+    $("#lang").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) setLang(b.dataset.l); });
+    setLang(store.get("7h-lang") || "both");
+
+    function setNavH() {
+      const n = document.querySelector("nav.__snav");
+      document.documentElement.style.setProperty("--nav-h", (n && getComputedStyle(n).position === "fixed" ? n.offsetHeight : 0) + "px");
+    }
+    window.addEventListener("load", setNavH);
+
+    // notes come from 7_habits_notes.js (a script, so the page also works when opened from disk)
+    const d = window.SEVEN_HABITS_NOTES;
+    if (!d) {
+      $("#main").innerHTML = `<div class="empty-ch">笔记文件读取失败 · Couldn't load the notes file</div>`;
+    } else {
+      data = d; chapters = d.chapters;
+      $("#zhTitle").textContent = d.book.zh;
+      $("#enTitle").textContent = d.book.en;
+      $("#author").textContent = d.book.author;
+      $("#firstRead").textContent = d.book.firstRead;
+      buildChips(); render(); setNavH();
+    }
+  })();
+  </script>
+</body>
+</html>

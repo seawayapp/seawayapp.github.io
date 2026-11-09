@@ -1,5 +1,12 @@
 var mainData = [
   {
+    title: "The 7 Habits of Highly Effective People",
+    subtitle: "高效能人士的七个习惯",
+    category: "folder",
+    filename: "7_Habits/index.html",
+    foldername: ""
+  },
+  {
     title: "Mindfulness in Plain English",
     subtitle: "观呼吸：平静的第一步",
     category: "folder",
