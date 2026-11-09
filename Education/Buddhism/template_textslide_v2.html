@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- <script src="../../nav-top.js"></script> -->
     <title id="maintitle">加载中...</title>
+    <!-- 楷体 fallback (霞鹜文楷) for devices without a Kaiti font, e.g. iPad; only the characters used are downloaded -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-regular.css" />
     <style>
       /* =========================================
        THEME — change colors here
@@ -118,7 +120,7 @@
       .box-explanation {
         border: 2px dashed var(--border-color);
         padding: 10px;
-        font-family: "Kaiti", "STKaiti", "楷体", "楷体_GB2312", serif;
+        font-family: "KaiTi", "STKaiti", "Kaiti SC", "楷体", "楷体_GB2312", "LXGW WenKai", serif;
         font-size: var(--font-explanation);
         line-height: 1.8;
         flex-grow: 1;
@@ -150,7 +152,7 @@
       .chapter-cover h1 {
         font-size: clamp(40px, 8vw, 80px);
         margin: 0;
-        font-family: "Kaiti", "STKaiti", serif;
+        font-family: "KaiTi", "STKaiti", "Kaiti SC", "LXGW WenKai", serif;
         font-weight: normal;
         letter-spacing: 10px;
       }

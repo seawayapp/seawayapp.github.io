@@ -148,6 +148,13 @@ var mainData = [
     filename: "gl_data_P127L1_P129L4",
   },
   {
+    title: "P142L9 - P144L9 即彼经云---于此中生",
+    subtitle: "深信业果",
+    testdate: "07/11/2026",
+    category: "file_slide_v2",
+    filename: "gl_data_P142L9-P144L9",
+  },
+  {
     title: "P152L2 - P155L7 敬礼胜尊---增上慢耳",
     subtitle: "中士道 - 希求解脱",
     testdate: "",
