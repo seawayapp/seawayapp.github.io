@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    window.NAV_CONFIG = {
+      breadcrumbs: [
+        { label: "Home", href: "../../index.html" },
+        { label: "Technology", href: "../index.html" },
+        { label: "ICT Glossary 词汇" }
+      ]
+    };
+  </script>
+  <script src="../../nav-top.js"></script>
+  <title>ICT Glossary 资讯科技英汉词汇</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #1f2933;
+      --muted: #7b8794;
+      --line: #e4e7eb;
+      --accent: #0b7285;
+      --accent-soft: #e3f4f6;
+      --mark: #ffe066;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #14171a;
+        --card: #1e2227;
+        --text: #e4e7eb;
+        --muted: #9aa5b1;
+        --line: #323840;
+        --accent: #3bc9db;
+        --accent-soft: #163a40;
+        --mark: #8a6d00;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 16px 48px; }
+
+    header.page { padding: 28px 0 14px; }
+    header.page h1 { margin: 0; font-size: clamp(1.4rem, 4.5vw, 2rem); }
+    header.page .sub { color: var(--muted); margin-top: 6px; font-size: 0.95rem; }
+
+    /* search + A–Z stay under the site nav while scrolling */
+    .bar {
+      position: sticky; top: var(--nav-h, 56px); z-index: 20;
+      background: var(--bg); padding: 10px 0 8px; border-bottom: 1px solid var(--line);
+    }
+    .searchrow { display: flex; gap: 8px; align-items: center; }
+    .search {
+      flex: 1; min-width: 0; height: 46px; padding: 0 14px; font-size: 17px;
+      border: 1px solid var(--line); border-radius: 12px; background: var(--card); color: var(--text);
+    }
+    .search:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+    .toggle {
+      height: 46px; padding: 0 12px; border: 1px solid var(--line); border-radius: 12px;
+      background: var(--card); color: var(--text); font-size: 14px; cursor: pointer; white-space: nowrap;
+    }
+    .toggle.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+    .letters { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+    .letters button {
+      min-width: 30px; height: 30px; padding: 0 6px; border: 0; border-radius: 8px;
+      background: transparent; color: var(--accent); font-weight: 600; font-size: 14px; cursor: pointer;
+    }
+    .letters button:hover { background: var(--accent-soft); }
+    .letters button:disabled { color: var(--muted); opacity: 0.4; cursor: default; background: transparent; }
+    .count { color: var(--muted); font-size: 13px; margin-top: 6px; }
+
+    .group-h { margin: 22px 0 8px; font-size: 1.1rem; color: var(--accent); scroll-margin-top: calc(var(--nav-h, 56px) + var(--bar-h, 130px)); }
+    .list { background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+    .row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding: 11px 14px; border-top: 1px solid var(--line); }
+    .row:first-child { border-top: 0; }
+    .en { font-weight: 500; line-height: 1.45; word-break: break-word; }
+    .abbr { color: var(--accent); font-weight: 600; }
+    .zh { line-height: 1.5; font-size: 1.05rem; }
+    .zh .alt { color: var(--muted); }
+    .hk, .tc { color: var(--muted); font-size: 0.85rem; margin-top: 2px; }
+    .hk b, .tc b { font-weight: 500; }
+    .tc { display: none; }
+    body.show-tc .tc { display: block; }
+    mark { background: var(--mark); color: inherit; border-radius: 3px; padding: 0 1px; }
+    .empty { text-align: center; color: var(--muted); padding: 40px 0; }
+
+    .source { margin-top: 30px; color: var(--muted); font-size: 0.82rem; line-height: 1.6; }
+
+    @media (max-width: 560px) {
+      .row { grid-template-columns: 1fr; gap: 2px; }
+      .toggle { padding: 0 10px; font-size: 13px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header class="page">
+      <h1>ICT Glossary 资讯科技英汉词汇</h1>
+      <div class="sub">English – 简体中文 · <span id="total"></span> terms</div>
+    </header>
+
+    <div class="bar" id="bar">
+      <div class="searchrow">
+        <input class="search" id="q" type="search" placeholder="Search 搜索：network / 网络 / CPU …" autocomplete="off" />
+        <button class="toggle" id="tcBtn" title="Also show the original traditional Chinese 同时显示繁体原文">繁体原文</button>
+      </div>
+      <div class="letters" id="letters"></div>
+      <div class="count" id="count"></div>
+    </div>
+
+    <div id="results"></div>
+
+    <div class="source">
+      Source 资料来源: <em>An English-Chinese Glossary of Terms Commonly Used in the Teaching of Information and Communication Technology in Secondary Schools</em>
+      (中學資訊及通訊科技科常用英漢辭彙), Technology Education Section, Curriculum Development Institute, Education Bureau, HKSARG, updated January 2023.
+      The Chinese is given as the standard simplified term (as used in mainland China and Singapore); where Hong Kong usage differs,
+      the original wording is shown in grey after 港 (e.g. 程序 / 港 程式). A few mistakes in the source have also been corrected.<br />
+      中文采用通用的简体规范用词；与香港用法不同时，原文以灰色「港」标出。原文中的个别错误已更正。
+    </div>
+  </div>
+
+  <script>
+  (() => {
+    "use strict";
+    // en: English term · sc: standard simplified term · hk: the source's Hong Kong wording, when different · tc: source in traditional
+    const DATA = [
+      {"en": "Accelerated Graphics Port (AGP)", "sc": "加速图形端口", "tc": "圖形加速埠", "hk": "图形加速埠"},
+      {"en": "Access Point (AP)", "sc": "接入点；无线接入点", "tc": "網絡接達點", "hk": "网络接达点"},
+      {"en": "actual argument", "sc": "实参；实际变元", "tc": "實際變元", "hk": "实际变元"},
+      {"en": "actual parameter", "sc": "实际参数", "tc": "實際參數"},
+      {"en": "adapter", "sc": "适配器", "tc": "適配器"},
+      {"en": "address", "sc": "地址", "tc": "位址；地址", "hk": "位址；地址"},
+      {"en": "addressing mode", "sc": "寻址模式；编址模式", "tc": "尋址模式；編址模式"},
+      {"en": "adware", "sc": "广告软件", "tc": "廣告程式；廣告軟件", "hk": "广告程式；广告软件"},
+      {"en": "aggregate function", "sc": "聚合函数", "tc": "集合函數", "hk": "集合函数"},
+      {"en": "algorithm", "sc": "算法", "tc": "算法"},
+      {"en": "aliasing", "sc": "混叠；锯齿效应", "tc": "階梯效應；圖形失真", "hk": "阶梯效应；图形失真"},
+      {"en": "American National Standards Institute (ANSI)", "sc": "美国国家标准学会", "tc": "美國國家標準學會"},
+      {"en": "American Standard Code for Information Interchange (ASCII)", "sc": "美国信息交换标准代码", "tc": "美國信息交換標準碼", "hk": "美国信息交换标准码"},
+      {"en": "analog / analogue", "sc": "模拟", "tc": "模擬"},
+      {"en": "Analog Digital Converter (ADC)", "sc": "模数转换器", "tc": "模擬數碼轉換器", "hk": "模拟数码转换器"},
+      {"en": "anchor", "sc": "锚点", "tc": "錨點；鎖定點", "hk": "锚点；锁定点"},
+      {"en": "applet", "sc": "小应用程序；小程序", "tc": "微應用程式", "hk": "微应用程式"},
+      {"en": "application program interface (API)", "sc": "应用程序接口；应用程序编程接口", "tc": "應用程式界面", "hk": "应用程式界面"},
+      {"en": "Application Service Provider (ASP)", "sc": "应用服务提供商", "tc": "應用服務供應商", "hk": "应用服务供应商"},
+      {"en": "argument", "sc": "参数；自变量", "tc": "變元", "hk": "变元"},
+      {"en": "Arithmetic and Logic Unit (ALU)", "sc": "算术逻辑单元", "tc": "算術及邏輯運算部件", "hk": "算术及逻辑运算部件"},
+      {"en": "array", "sc": "数组", "tc": "陣列", "hk": "阵列"},
+      {"en": "Artificial Intelligence (AI)", "sc": "人工智能", "tc": "人工智能"},
+      {"en": "assembler", "sc": "汇编程序；汇编器", "tc": "匯編程式", "hk": "汇编程式"},
+      {"en": "assembly language", "sc": "汇编语言", "tc": "匯編語言"},
+      {"en": "assignment statement", "sc": "赋值语句", "tc": "賦值語句"},
+      {"en": "Asymmetric Digital Subscriber Line (ADSL)", "sc": "非对称数字用户线路", "tc": "不對稱數碼用戶線；非對稱數碼用戶線", "hk": "不对称数码用户线；非对称数码用户线"},
+      {"en": "asynchronous transfer mode", "sc": "异步传输模式", "tc": "異步傳輸模式；異步傳輸形式", "hk": "异步传输模式；异步传输形式"},
+      {"en": "attenuation", "sc": "衰减", "tc": "衰減；衰減作用", "hk": "衰减；衰减作用"},
+      {"en": "attribute", "sc": "属性", "tc": "屬性"},
+      {"en": "Audio Video Interleave (AVI)", "sc": "音频视频交错格式", "tc": "音頻視頻交替格式疊", "hk": "音频视频交替格式叠"},
+      {"en": "Augmented Reality (AR)", "sc": "增强现实", "tc": "擴增實境", "hk": "扩增实境"},
+      {"en": "Automatic Teller Machine (ATM)", "sc": "自动取款机；自动柜员机", "tc": "自動櫃員機", "hk": "自动柜员机"},
+      {"en": "back pointer", "sc": "反向指针", "tc": "反向指示字；反向指示標", "hk": "反向指示字；反向指示标"},
+      {"en": "backbone", "sc": "主干网；骨干网", "tc": "主幹", "hk": "主干"},
+      {"en": "bandwidth", "sc": "带宽", "tc": "頻寬", "hk": "频宽"},
+      {"en": "bar code", "sc": "条形码；条码", "tc": "條碼", "hk": "条码"},
+      {"en": "baseband", "sc": "基带", "tc": "基帶"},
+      {"en": "Basic Input / Output System (BIOS)", "sc": "基本输入输出系统", "tc": "基本輸入輸出系統"},
+      {"en": "batch processing", "sc": "批处理", "tc": "成批處理；整批處理；成批工件處理", "hk": "成批处理；整批处理；成批工件处理"},
+      {"en": "baud", "sc": "波特", "tc": "波特"},
+      {"en": "Beginning Of File (BOF)", "sc": "文件开头", "tc": "檔起始", "hk": "档起始"},
+      {"en": "BIG-5 code", "sc": "大五码", "tc": "大五碼"},
+      {"en": "Binary Coded Decimal (BCD)", "sc": "二进制编码十进制", "tc": "二進制編碼十進制"},
+      {"en": "binary file", "sc": "二进制文件", "tc": "二進制檔", "hk": "二进制档"},
+      {"en": "binary relationship", "sc": "二元关系", "tc": "二元關係"},
+      {"en": "binary search", "sc": "二分查找；折半查找", "tc": "對分檢索；二分檢索", "hk": "对分检索；二分检索"},
+      {"en": "binary tree", "sc": "二叉树", "tc": "二叉樹"},
+      {"en": "bit", "sc": "比特；位；二进制位", "tc": "位元；二進制位", "hk": "位元；二进制位"},
+      {"en": "bitmap", "sc": "位图；点阵图", "tc": "點陣圖；位圖", "hk": "点阵图；位图"},
+      {"en": "bits per second (bps)", "sc": "比特每秒；每秒比特数", "tc": "每秒位元", "hk": "每秒位元"},
+      {"en": "bitwise complement", "sc": "按位取反；按位求补", "tc": "順位元方式互補", "hk": "顺位元方式互补"},
+      {"en": "block diagram", "sc": "方块图", "tc": "方塊圖"},
+      {"en": "blog", "sc": "博客；网络日志", "tc": "網誌；網上日誌", "hk": "网志；网上日志"},
+      {"en": "Bluetooth", "sc": "蓝牙", "tc": "藍牙"},
+      {"en": "Boolean", "sc": "布尔", "tc": "布爾"},
+      {"en": "boot", "sc": "启动", "tc": "啟動"},
+      {"en": "bootstrap", "sc": "引导程序；自举", "tc": "啟動程式", "hk": "启动程式"},
+      {"en": "breadth-first search", "sc": "广度优先搜索", "tc": "寬度優先搜索", "hk": "宽度优先搜索"},
+      {"en": "broadband", "sc": "宽带", "tc": "寬頻", "hk": "宽频"},
+      {"en": "bubble sort", "sc": "冒泡排序", "tc": "冒泡排序法", "hk": "冒泡排序法"},
+      {"en": "buffer", "sc": "(1)缓冲器，(2)缓冲区", "tc": "(1)緩衝器，(2)緩衝區"},
+      {"en": "bug", "sc": "程序错误；缺陷", "tc": "錯誤", "hk": "错误"},
+      {"en": "bundled software", "sc": "捆绑软件", "tc": "附隨軟件", "hk": "附随软件"},
+      {"en": "bus", "sc": "总线", "tc": "匯流排；總線", "hk": "汇流排；总线"},
+      {"en": "byte", "sc": "字节", "tc": "字節；位元組", "hk": "字节；位元组"},
+      {"en": "cache", "sc": "高速缓存；缓存", "tc": "快取記憶體；高速緩衝器", "hk": "快取记忆体；高速缓冲器"},
+      {"en": "call by address", "sc": "按地址调用", "tc": "位址調用", "hk": "位址调用"},
+      {"en": "call by reference", "sc": "按引用调用；引用调用", "tc": "按址調用；引址調用", "hk": "按址调用；引址调用"},
+      {"en": "call by result", "sc": "按结果调用", "tc": "結果調用", "hk": "结果调用"},
+      {"en": "call by value", "sc": "按值调用；传值调用", "tc": "按值調用；引值調用", "hk": "按值调用；引值调用"},
+      {"en": "candidate key", "sc": "候选键", "tc": "候選鍵碼", "hk": "候选键码"},
+      {"en": "Cascading Style Sheet (CSS)", "sc": "层叠样式表", "tc": "級聯式頁面；層疊樣式表", "hk": "级联式页面；层叠样式表"},
+      {"en": "Cascading Style Sheets (CSS)", "sc": "层叠样式表", "tc": "層疊樣式表"},
+      {"en": "Central Processing Unit (CPU)", "sc": "中央处理器", "tc": "中央處理器"},
+      {"en": "Certificate Authority (CA)", "sc": "证书颁发机构；认证机构", "tc": "核證機關", "hk": "核证机关"},
+      {"en": "character", "sc": "字符", "tc": "字符；字元", "hk": "字符；字元"},
+      {"en": "character head", "sc": "字首", "tc": "字首"},
+      {"en": "check box", "sc": "复选框", "tc": "複選框"},
+      {"en": "check digit", "sc": "校验位", "tc": "檢查數位", "hk": "检查数位"},
+      {"en": "checksum", "sc": "校验和", "tc": "檢查和", "hk": "检查和"},
+      {"en": "Chinese Character Code for Information Interchange (CCCII)", "sc": "中文信息交换码", "tc": "中文信息交換碼"},
+      {"en": "chip", "sc": "芯片", "tc": "晶片", "hk": "晶片"},
+      {"en": "client-side", "sc": "客户端", "tc": "客戶端"},
+      {"en": "cluster", "sc": "集群；簇", "tc": "群集", "hk": "群集"},
+      {"en": "coaxial cable", "sc": "同轴电缆", "tc": "同軸電纜"},
+      {"en": "code", "sc": "(1)编码，(2)代码", "tc": "(1)編碼，(2)代碼"},
+      {"en": "coder-decoder (codec)", "sc": "编解码器", "tc": "編碼－譯碼器；編碼－解碼器", "hk": "编码－译码器；编码－解码器"},
+      {"en": "command line interface", "sc": "命令行界面", "tc": "命令行界面"},
+      {"en": "communication port", "sc": "通信端口", "tc": "通訊埠", "hk": "通讯埠"},
+      {"en": "Compact Disc (CD)", "sc": "光盘", "tc": "光碟", "hk": "光碟"},
+      {"en": "Compact Disc Read-Only Memory (CD-ROM)", "sc": "只读光盘", "tc": "唯讀光碟", "hk": "唯读光碟"},
+      {"en": "Compact Disc Recordable (CD-R)", "sc": "可录光盘", "tc": "可記錄光碟", "hk": "可记录光碟"},
+      {"en": "Compact Disc Rewritable (CD-RW)", "sc": "可擦写光盘", "tc": "復寫光碟；可重寫光碟", "hk": "复写光碟；可重写光碟"},
+      {"en": "compiler", "sc": "编译程序；编译器", "tc": "編譯程式；編譯器", "hk": "编译程式；编译器"},
+      {"en": "Complementary Metal-Oxide Semiconductor (CMOS)", "sc": "互补金属氧化物半导体", "tc": "互補金屬氧化物半導體"},
+      {"en": "Complex Instruction Set Computer (CISC)", "sc": "复杂指令集计算机", "tc": "複雜指令集電腦", "hk": "复杂指令集电脑"},
+      {"en": "computer", "sc": "计算机；电脑", "tc": "電腦；計算機", "hk": "电脑；计算机"},
+      {"en": "Computer Aided Design (CAD)", "sc": "计算机辅助设计", "tc": "電腦輔助設計", "hk": "电脑辅助设计"},
+      {"en": "Computer Aided Instruction (CAI)", "sc": "计算机辅助教学", "tc": "電腦輔助指令", "hk": "电脑辅助指令"},
+      {"en": "Computer Aided Manufacturing (CAM)", "sc": "计算机辅助制造", "tc": "電腦輔助製造", "hk": "电脑辅助制造"},
+      {"en": "Computer Aided Software Engineering (CASE)", "sc": "计算机辅助软件工程", "tc": "電腦輔助軟件工程", "hk": "电脑辅助软件工程"},
+      {"en": "Computer Assisted Learning (CAL)", "sc": "计算机辅助学习", "tc": "電腦輔助學習", "hk": "电脑辅助学习"},
+      {"en": "Computer Based Training (CBT)", "sc": "计算机辅助培训", "tc": "電腦輔助訓練；電腦輔助培訓", "hk": "电脑辅助训练；电脑辅助培训"},
+      {"en": "console", "sc": "控制台", "tc": "控制台"},
+      {"en": "constant", "sc": "常量；常数", "tc": "常數；常量", "hk": "常数；常量"},
+      {"en": "content management system (CMS)", "sc": "内容管理系统", "tc": "內容管理系統"},
+      {"en": "cookies", "sc": "Cookie；小型文本文件", "tc": "曲奇;小型文字檔案", "hk": "曲奇;小型文字档案"},
+      {"en": "coprocessor", "sc": "协处理器", "tc": "協處理器"},
+      {"en": "cracking", "sc": "破解", "tc": "破解"},
+      {"en": "cryptography", "sc": "密码学", "tc": "密碼學"},
+      {"en": "cursor", "sc": "光标；游标", "tc": "光標；游標"},
+      {"en": "Cyclic Redundancy Check (CRC)", "sc": "循环冗余校验", "tc": "循環冗餘核對", "hk": "循环冗余核对"},
+      {"en": "Data Definition Language (DDL)", "sc": "数据定义语言", "tc": "數據定義語言"},
+      {"en": "data dependence", "sc": "数据相关性", "tc": "數據相關性"},
+      {"en": "data description language", "sc": "数据描述语言", "tc": "數據描述語言"},
+      {"en": "Data Flow Diagram (DFD)", "sc": "数据流程图", "tc": "數據流程圖"},
+      {"en": "Data Manipulation Language (DML)", "sc": "数据操纵语言", "tc": "數據操作語言；數據處理語言", "hk": "数据操作语言；数据处理语言"},
+      {"en": "data mining", "sc": "数据挖掘", "tc": "數據開採", "hk": "数据开采"},
+      {"en": "data redundancy", "sc": "数据冗余", "tc": "數據冗餘度；數據冗餘性", "hk": "数据冗余度；数据冗余性"},
+      {"en": "data sink", "sc": "数据接收器；数据宿", "tc": "數據接收器；數據宿"},
+      {"en": "data structure", "sc": "数据结构", "tc": "數據結構"},
+      {"en": "data warehouse", "sc": "数据仓库", "tc": "數據倉", "hk": "数据仓"},
+      {"en": "database", "sc": "数据库", "tc": "數據庫"},
+      {"en": "Database Administrator (DBA)", "sc": "数据库管理员", "tc": "數據庫管理員"},
+      {"en": "Database Management System (DBMS)", "sc": "数据库管理系统", "tc": "數據庫管理系統"},
+      {"en": "database query language", "sc": "数据库查询语言", "tc": "數據庫查詢語言"},
+      {"en": "deadlock", "sc": "死锁", "tc": "死鎖"},
+      {"en": "debug", "sc": "调试；除错", "tc": "除錯", "hk": "除错"},
+      {"en": "Decision Support System (DSS)", "sc": "决策支持系统", "tc": "決策支援系統", "hk": "决策支援系统"},
+      {"en": "declarative language", "sc": "声明式语言", "tc": "宣告性語言；陳述性語言", "hk": "宣告性语言；陈述性语言"},
+      {"en": "decode", "sc": "解码；译码", "tc": "譯碼；解碼", "hk": "译码；解码"},
+      {"en": "decryption", "sc": "解密", "tc": "解密"},
+      {"en": "defragmentation software", "sc": "磁盘碎片整理软件", "tc": "磁碟重組軟件", "hk": "磁碟重组软件"},
+      {"en": "delimiter", "sc": "分隔符；定界符", "tc": "定界符號", "hk": "定界符号"},
+      {"en": "Denial of Service (DoS)", "sc": "拒绝服务", "tc": "拒絕服務"},
+      {"en": "depth-first search", "sc": "深度优先搜索", "tc": "深度優先搜索"},
+      {"en": "Digital Analog Converter (DAC)", "sc": "数模转换器", "tc": "數碼模擬轉換器", "hk": "数码模拟转换器"},
+      {"en": "digital divide", "sc": "数字鸿沟", "tc": "數碼隔閡；數碼鴻溝", "hk": "数码隔阂；数码鸿沟"},
+      {"en": "Digital Subscriber Line (DSL)", "sc": "数字用户线路", "tc": "數碼用戶線", "hk": "数码用户线"},
+      {"en": "Digital Versatile Disc (DVD)", "sc": "数字多功能光盘", "tc": "數碼多用途光碟", "hk": "数码多用途光碟"},
+      {"en": "direct cutover conversion", "sc": "直接转换；直接切换", "tc": "直接切入式轉換；直接接入轉換", "hk": "直接切入式转换；直接接入转换"},
+      {"en": "Direct Memory Access (DMA)", "sc": "直接存储器访问；直接内存访问", "tc": "直接記憶體存取", "hk": "直接记忆体存取"},
+      {"en": "directory", "sc": "目录", "tc": "目錄"},
+      {"en": "distributed system", "sc": "分布式系统", "tc": "分布式系統"},
+      {"en": "Domain controller (DC)", "sc": "域控制器", "tc": "網域控制伺服器", "hk": "网域控制伺服器"},
+      {"en": "domain integrity", "sc": "域完整性", "tc": "域完整性"},
+      {"en": "Domain Name System (DNS)", "sc": "域名系统", "tc": "網域名稱系統；網域系統；域名系統", "hk": "网域名称系统；网域系统；域名系统"},
+      {"en": "dot matrix", "sc": "点阵", "tc": "點陣"},
+      {"en": "dot pitch", "sc": "点距", "tc": "點密度", "hk": "点密度"},
+      {"en": "Double-Byte Character Set (DBCS)", "sc": "双字节字符集", "tc": "雙字節字符集"},
+      {"en": "Double-Data-Rate Synchronous Dynamic Random Access Memory (DDR SDRAM)", "sc": "双倍数据速率同步动态随机存储器", "tc": "雙通道同步動態隨機存取記憶體", "hk": "双通道同步动态随机存取记忆体"},
+      {"en": "driver", "sc": "驱动程序", "tc": "驅動程式；驅動器", "hk": "驱动程式；驱动器"},
+      {"en": "dry run", "sc": "空运行", "tc": "空運行"},
+      {"en": "Dual In-line Memory Module (DIMM)", "sc": "双列直插式内存模块", "tc": "雙列直插式記憶體模組", "hk": "双列直插式记忆体模组"},
+      {"en": "dummy argument", "sc": "哑元；虚参", "tc": "虛變元", "hk": "虚变元"},
+      {"en": "duplex", "sc": "双工", "tc": "雙向", "hk": "双向"},
+      {"en": "Dynamic Host Configuration Protocol (DHCP)", "sc": "动态主机配置协议", "tc": "動態主機配置協定", "hk": "动态主机配置协定"},
+      {"en": "Dynamic Hypertext Markup Language (DHTML)", "sc": "动态超文本标记语言", "tc": "動態超文本標示語言", "hk": "动态超文本标示语言"},
+      {"en": "Dynamic Link Library (DLL)", "sc": "动态链接库", "tc": "動態連結庫", "hk": "动态连结库"},
+      {"en": "Dynamic Random Access Memory (DRAM)", "sc": "动态随机存储器", "tc": "動態隨機存取記憶體", "hk": "动态随机存取记忆体"},
+      {"en": "Electrically Erasable Programmable Read Only Memory (EEPROM)", "sc": "电可擦可编程只读存储器", "tc": "可電刪可編程唯讀記憶體", "hk": "可电删可编程唯读记忆体"},
+      {"en": "Electronic Data Interchange (EDI)", "sc": "电子数据交换", "tc": "電子數據聯通；電子數據交換", "hk": "电子数据联通；电子数据交换"},
+      {"en": "Electronic Data Processing (EDP)", "sc": "电子数据处理", "tc": "電子數據處理"},
+      {"en": "Electronic Fund Transfer (EFT)", "sc": "电子资金转账", "tc": "電子轉帳", "hk": "电子转帐"},
+      {"en": "Electronic Payment System", "sc": "电子支付系统", "tc": "電子付款系統", "hk": "电子付款系统"},
+      {"en": "embedded system", "sc": "嵌入式系统", "tc": "嵌入式系統"},
+      {"en": "encode", "sc": "编码", "tc": "編碼"},
+      {"en": "encryption", "sc": "加密", "tc": "加密"},
+      {"en": "End Of File (EOF)", "sc": "文件结束；文件尾", "tc": "檔尾", "hk": "档尾"},
+      {"en": "Enhanced Graphics Adapter (EGA)", "sc": "增强图形适配器", "tc": "加強圖形適配器", "hk": "加强图形适配器"},
+      {"en": "entity integrity", "sc": "实体完整性", "tc": "實體完整性"},
+      {"en": "Entity Relationship Diagram (ERD)", "sc": "实体关系图", "tc": "實體關係圖"},
+      {"en": "equi-join", "sc": "等值连接", "tc": "等連接；等聯結", "hk": "等连接；等联结"},
+      {"en": "Erasable Programmable Read Only Memory (EPROM)", "sc": "可擦可编程只读存储器", "tc": "可刪可編程唯讀記憶體", "hk": "可删可编程唯读记忆体"},
+      {"en": "ergonomics", "sc": "人体工程学；人机工程学", "tc": "人體工學；人體工程學；人機工程學", "hk": "人体工学；人体工程学；人机工程学"},
+      {"en": "ethernet", "sc": "以太网", "tc": "以太網；乙太網", "hk": "以太网；乙太网"},
+      {"en": "Event handler", "sc": "事件处理器", "tc": "事件處理器"},
+      {"en": "Event-driven Program", "sc": "事件驱动程序", "tc": "事件驅動程式", "hk": "事件驱动程式"},
+      {"en": "exception handling", "sc": "异常处理", "tc": "異常處理"},
+      {"en": "explicit declaration", "sc": "显式声明", "tc": "顯式說明", "hk": "显式说明"},
+      {"en": "expression", "sc": "表达式", "tc": "算式", "hk": "算式"},
+      {"en": "Extended Binary Coded Decimal Interchange Code (EBCDIC)", "sc": "扩展二-十进制交换码", "tc": "擴充二/十進制交換代碼", "hk": "扩充二/十进制交换代码"},
+      {"en": "Extended Graphics Array (XGA)", "sc": "扩展图形阵列", "tc": "擴充圖形陣列", "hk": "扩充图形阵列"},
+      {"en": "Extended Industry Standard Architecture (EISA)", "sc": "扩展工业标准结构", "tc": "延伸工業標準架構", "hk": "延伸工业标准架构"},
+      {"en": "Extensible Hypertext Markup Language (XHTML)", "sc": "可扩展超文本标记语言", "tc": "可擴充超文本標示語言；可擴展超文本標記語言", "hk": "可扩充超文本标示语言；可扩展超文本标记语言"},
+      {"en": "Extensible Markup Language (XML)", "sc": "可扩展标记语言", "tc": "可擴充標示語言", "hk": "可扩充标示语言"},
+      {"en": "fault tolerant", "sc": "容错", "tc": "容錯"},
+      {"en": "fetch-decode-execute cycle", "sc": "取指－译码－执行周期", "tc": "提取－譯碼－執行周期；提取－譯碼－執行循環", "hk": "提取－译码－执行周期；提取－译码－执行循环"},
+      {"en": "Fibre Distributed Data Interface (FDDI)", "sc": "光纤分布式数据接口", "tc": "光纖分布式數據界面", "hk": "光纤分布式数据界面"},
+      {"en": "field", "sc": "字段", "tc": "欄", "hk": "栏"},
+      {"en": "File Allocation Table (FAT)", "sc": "文件分配表", "tc": "檔案配置表", "hk": "档案配置表"},
+      {"en": "File Control Block (FCB)", "sc": "文件控制块", "tc": "檔案控制段", "hk": "档案控制段"},
+      {"en": "File Transfer Protocol (FTP)", "sc": "文件传输协议", "tc": "檔案傳輸協定", "hk": "档案传输协定"},
+      {"en": "firewall", "sc": "防火墙", "tc": "防火牆"},
+      {"en": "firewire", "sc": "火线", "tc": "火線"},
+      {"en": "firmware", "sc": "固件", "tc": "韌體；固件", "hk": "韧体；固件"},
+      {"en": "First Normal Form (1NF)", "sc": "第一范式", "tc": "第一範式"},
+      {"en": "First-In First-Out (FIFO)", "sc": "先进先出", "tc": "先進先出法", "hk": "先进先出法"},
+      {"en": "flag", "sc": "标志；标记", "tc": "標記；旗標", "hk": "标记；旗标"},
+      {"en": "flash memory", "sc": "闪存", "tc": "快閃記憶體", "hk": "快闪记忆体"},
+      {"en": "flip-flop", "sc": "触发器", "tc": "觸發器；正反器", "hk": "触发器；正反器"},
+      {"en": "floppy disk", "sc": "软盘", "tc": "軟磁碟", "hk": "软磁碟"},
+      {"en": "flowchart", "sc": "流程图", "tc": "流程圖"},
+      {"en": "footer", "sc": "(1)页脚，(2)表尾", "tc": "(1)頁尾，(2)表尾", "hk": "(1)页尾，(2)表尾"},
+      {"en": "foreign key", "sc": "外键", "tc": "外鍵碼", "hk": "外键码"},
+      {"en": "formal argument", "sc": "形式参数；形参", "tc": "形式變元", "hk": "形式变元"},
+      {"en": "formal parameter", "sc": "形式参数", "tc": "形式參數"},
+      {"en": "frame", "sc": "(1)帧，(2)框架", "tc": "(1)幀；影格，(2)框", "hk": "(1)帧；影格，(2)框"},
+      {"en": "Frame Check Sequence (FCS)", "sc": "帧校验序列", "tc": "幀檢驗序列", "hk": "帧检验序列"},
+      {"en": "freeware", "sc": "免费软件", "tc": "免費軟件"},
+      {"en": "Gantt chart", "sc": "甘特图", "tc": "甘特圖"},
+      {"en": "Garbage-In Garbage-Out (GIGO)", "sc": "垃圾进，垃圾出", "tc": "無用輸入無用輸出", "hk": "无用输入无用输出"},
+      {"en": "gateway", "sc": "网关", "tc": "網間連接器；通訊閘", "hk": "网间连接器；通讯闸"},
+      {"en": "Geographic Information System (GIS)", "sc": "地理信息系统", "tc": "地理信息系統；地理資訊系統", "hk": "地理信息系统；地理资讯系统"},
+      {"en": "Global Positioning System (GPS)", "sc": "全球定位系统", "tc": "全球定位系統"},
+      {"en": "global variable", "sc": "全局变量", "tc": "全程變量", "hk": "全程变量"},
+      {"en": "grandfather-father-son technique", "sc": "祖父-父-子备份法", "tc": "三代備份儲存法", "hk": "三代备份储存法"},
+      {"en": "Graphical User Interface (GUI)", "sc": "图形用户界面", "tc": "圖形用戶界面"},
+      {"en": "Graphics Interchange Format (GIF)", "sc": "图形互换格式", "tc": "圖形互換格式"},
+      {"en": "Guo Biao (GB) code", "sc": "国标码", "tc": "國標碼；國家標準碼", "hk": "国标码；国家标准码"},
+      {"en": "hacking", "sc": "黑客入侵", "tc": "黑客入侵；駭客入侵", "hk": "黑客入侵；骇客入侵"},
+      {"en": "handshaking", "sc": "握手；信号交换", "tc": "信號交換", "hk": "信号交换"},
+      {"en": "hang", "sc": "死机；挂起", "tc": "暫停；中止；當機", "hk": "暂停；中止；当机"},
+      {"en": "hard disk", "sc": "硬盘", "tc": "硬碟；硬磁碟", "hk": "硬碟；硬磁碟"},
+      {"en": "hardware", "sc": "硬件", "tc": "硬件"},
+      {"en": "header", "sc": "(1)页眉，(2)表头", "tc": "(1)頁首，(2)表頭", "hk": "(1)页首，(2)表头"},
+      {"en": "hierarchical model", "sc": "层次模型", "tc": "分級模型；分層模型", "hk": "分级模型；分层模型"},
+      {"en": "high level language", "sc": "高级语言", "tc": "高級語言；高階語言", "hk": "高级语言；高阶语言"},
+      {"en": "homepage", "sc": "主页；首页", "tc": "主網頁；首頁", "hk": "主网页；首页"},
+      {"en": "Hong Kong Supplementary Character Set (HKSCS)", "sc": "香港增补字符集", "tc": "香港增補字符集；香港增補字元集", "hk": "香港增补字符集；香港增补字元集"},
+      {"en": "hub", "sc": "集线器", "tc": "集線器"},
+      {"en": "Human Computer Interface (HCI)", "sc": "人机界面；人机交互", "tc": "人機界面", "hk": "人机界面"},
+      {"en": "hyperlink", "sc": "超链接", "tc": "超連結；超文本連結", "hk": "超连结；超文本连结"},
+      {"en": "Hypertext Markup Language (HTML)", "sc": "超文本标记语言", "tc": "超文本標示語言", "hk": "超文本标示语言"},
+      {"en": "Hypertext Transfer Protocol (HTTP)", "sc": "超文本传输协议", "tc": "超文本傳輸協定", "hk": "超文本传输协定"},
+      {"en": "icon", "sc": "图标", "tc": "圖示；圖標", "hk": "图示；图标"},
+      {"en": "identifier", "sc": "标识符", "tc": "識別符；標識符", "hk": "识别符；标识符"},
+      {"en": "implicit declaration", "sc": "隐式声明", "tc": "隱式說明", "hk": "隐式说明"},
+      {"en": "index key", "sc": "索引键", "tc": "索引鍵碼", "hk": "索引键码"},
+      {"en": "Industry Standard Architecture (ISA)", "sc": "工业标准结构", "tc": "工業標準結構"},
+      {"en": "Infrared Data Association (IrDA) port", "sc": "红外数据端口", "tc": "紅外線數據埠；紅外線數據連接埠", "hk": "红外线数据埠；红外线数据连接埠"},
+      {"en": "initial program load", "sc": "初始程序装入", "tc": "初始程式載入；初始程序載入", "hk": "初始程式载入；初始程序载入"},
+      {"en": "initialisation", "sc": "初始化", "tc": "初始化"},
+      {"en": "inorder traversal", "sc": "中序遍历", "tc": "中序遍歷"},
+      {"en": "Input/Output (I/O) device", "sc": "输入/输出设备", "tc": "輸入/輸出設備；輸入/輸出裝置", "hk": "输入/输出设备；输入/输出装置"},
+      {"en": "Input-Process-Output (IPO) cycle", "sc": "输入－处理－输出周期", "tc": "輸入－處理－輸出周期；輸入－處理－輸出循環", "hk": "输入－处理－输出周期；输入－处理－输出循环"},
+      {"en": "insertion sort", "sc": "插入排序", "tc": "插入排序法", "hk": "插入排序法"},
+      {"en": "instance", "sc": "实例", "tc": "實例"},
+      {"en": "Institute of Electrical and Electronics Engineers (IEEE)", "sc": "电气电子工程师学会", "tc": "電機及電子工程師學會", "hk": "电机及电子工程师学会"},
+      {"en": "Instruction Register (IR)", "sc": "指令寄存器", "tc": "指令寄存器"},
+      {"en": "Integrated Circuit (IC)", "sc": "集成电路", "tc": "集成電路"},
+      {"en": "Integrated Drive Electronics (IDE)", "sc": "集成驱动电子设备", "tc": "集成電子裝置", "hk": "集成电子装置"},
+      {"en": "Integrated Services Digital Network (ISDN)", "sc": "综合业务数字网", "tc": "綜合服務數碼網絡", "hk": "综合服务数码网络"},
+      {"en": "International Organisation for Standardisation (ISO)", "sc": "国际标准化组织", "tc": "國際標準化組織"},
+      {"en": "Internet", "sc": "互联网；因特网", "tc": "互聯網", "hk": "互联网"},
+      {"en": "Internet Control Message Protocol (ICMP)", "sc": "互联网控制报文协议", "tc": "網絡控制信息協定", "hk": "网络控制信息协定"},
+      {"en": "Internet Message Access Protocol (IMAP)", "sc": "互联网消息访问协议", "tc": "網絡信息存取協定；網絡信息接達協定", "hk": "网络信息存取协定；网络信息接达协定"},
+      {"en": "Internet Network Information Center (InterNIC)", "sc": "互联网信息中心", "tc": "互聯網資訊中心", "hk": "互联网资讯中心"},
+      {"en": "Internet of things (IoT)", "sc": "物联网", "tc": "物聯網"},
+      {"en": "Internet Protocol (IP)", "sc": "互联网协议；网际协议", "tc": "網絡協定；互聯網協定", "hk": "网络协定；互联网协定"},
+      {"en": "Internet Service Provider (ISP)", "sc": "互联网服务提供商", "tc": "互聯網服務供應商", "hk": "互联网服务供应商"},
+      {"en": "interoperability", "sc": "互操作性", "tc": "互用性；相互操作性", "hk": "互用性；相互操作性"},
+      {"en": "interpreter", "sc": "解释程序；解释器", "tc": "解譯程式；解譯程序；解譯器", "hk": "解译程式；解译程序；解译器"},
+      {"en": "interrupt handler", "sc": "中断处理程序", "tc": "中斷處理程式；中斷處理器程序", "hk": "中断处理程式；中断处理器程序"},
+      {"en": "Interrupt Request (IRQ)", "sc": "中断请求", "tc": "中斷請求"},
+      {"en": "intranet", "sc": "内联网；企业内部网", "tc": "內聯網", "hk": "内联网"},
+      {"en": "IPsec", "sc": "IP 安全协议", "tc": "互聯網絡協定安全", "hk": "互聯网络协定安全"},
+      {"en": "iteration", "sc": "迭代；循环", "tc": "迭代；循環"},
+      {"en": "Joint Photographic Experts Group (JPEG)", "sc": "联合图像专家组", "tc": "聯合影像專家群組", "hk": "联合影像专家群组"},
+      {"en": "jumper", "sc": "跳线", "tc": "跨接器", "hk": "跨接器"},
+      {"en": "kernel", "sc": "内核", "tc": "核心", "hk": "核心"},
+      {"en": "Large Scale Integration (LSI)", "sc": "大规模集成电路", "tc": "大規模集成技術", "hk": "大规模集成技术"},
+      {"en": "Last-In First-Out (LIFO)", "sc": "后进先出", "tc": "後進先出法", "hk": "后进先出法"},
+      {"en": "latency", "sc": "延迟；时延", "tc": "時延", "hk": "时延"},
+      {"en": "leased line", "sc": "专线", "tc": "專線"},
+      {"en": "lexical analysis", "sc": "词法分析", "tc": "語句分析；詞法分析", "hk": "语句分析；词法分析"},
+      {"en": "Line Feed (LF)", "sc": "换行", "tc": "換行"},
+      {"en": "linear linked list", "sc": "线性链表", "tc": "線性鏈表；線性連接表", "hk": "线性链表；线性连接表"},
+      {"en": "linear search", "sc": "线性查找；顺序查找", "tc": "線性檢索", "hk": "线性检索"},
+      {"en": "linked list", "sc": "链表", "tc": "鏈表；連接表", "hk": "链表；连接表"},
+      {"en": "linker", "sc": "链接程序；链接器", "tc": "連接程式；連接程序", "hk": "连接程式；连接程序"},
+      {"en": "loader", "sc": "装入程序；加载器", "tc": "載入程式；載入程序", "hk": "载入程式；载入程序"},
+      {"en": "Local Area Network (LAN)", "sc": "局域网", "tc": "局部區域網絡；區域網絡", "hk": "局部区域网络；区域网络"},
+      {"en": "local variable", "sc": "局部变量", "tc": "局部變量"},
+      {"en": "loop", "sc": "循环", "tc": "循環"},
+      {"en": "low level language", "sc": "低级语言", "tc": "低階語言；低級語言", "hk": "低阶语言；低级语言"},
+      {"en": "machine language", "sc": "机器语言", "tc": "機器語言"},
+      {"en": "magnetic core memory", "sc": "磁芯存储器", "tc": "磁蕊記憶體", "hk": "磁蕊记忆体"},
+      {"en": "Magnetic Ink Character Recognition (MICR)", "sc": "磁墨水字符识别", "tc": "磁墨字符識別；磁墨水字元識別", "hk": "磁墨字符识别；磁墨水字元识别"},
+      {"en": "Magneto-Optical (MO) disk", "sc": "磁光盘", "tc": "磁光碟", "hk": "磁光碟"},
+      {"en": "mail merge", "sc": "邮件合并", "tc": "郵件合併；合併列印", "hk": "邮件合并；合并列印"},
+      {"en": "main memory", "sc": "主存储器；内存", "tc": "主記憶體", "hk": "主记忆体"},
+      {"en": "mainframe computer", "sc": "大型计算机；大型机", "tc": "大型電腦；主機電腦", "hk": "大型电脑；主机电脑"},
+      {"en": "malware", "sc": "恶意软件", "tc": "惡意軟件；惡性程式", "hk": "恶意软件；恶性程式"},
+      {"en": "Management Information System (MIS)", "sc": "管理信息系统", "tc": "管理資訊系統", "hk": "管理资讯系统"},
+      {"en": "mask", "sc": "掩码；屏蔽", "tc": "遮罩；屏蔽；掩碼", "hk": "遮罩；屏蔽；掩码"},
+      {"en": "master-slave", "sc": "主从；主从式", "tc": "主從；主從式"},
+      {"en": "Media Access Control (MAC)", "sc": "介质访问控制", "tc": "媒介接達控制；媒介存取控制", "hk": "媒介接达控制；媒介存取控制"},
+      {"en": "Memory Address Register (MAR)", "sc": "存储器地址寄存器", "tc": "記憶體位址寄存器", "hk": "记忆体位址寄存器"},
+      {"en": "Memory Data Register (MDR)", "sc": "存储器数据寄存器", "tc": "記憶體數據寄存器", "hk": "记忆体数据寄存器"},
+      {"en": "menu", "sc": "菜单", "tc": "選單；選項單", "hk": "选单；选项单"},
+      {"en": "merge sort", "sc": "归并排序", "tc": "合併排序法", "hk": "合并排序法"},
+      {"en": "metadata", "sc": "元数据", "tc": "元數據"},
+      {"en": "Metropolitan Area Network (MAN)", "sc": "城域网", "tc": "城市區域網絡；城域網", "hk": "城市区域网络；城域网"},
+      {"en": "microcomputer", "sc": "微型计算机", "tc": "微型電腦；微計算機", "hk": "微型电脑；微计算机"},
+      {"en": "minicomputer", "sc": "小型计算机", "tc": "小型電腦；小型計算機", "hk": "小型电脑；小型计算机"},
+      {"en": "mirror", "sc": "镜像", "tc": "鏡像；映照", "hk": "镜像；映照"},
+      {"en": "mnemonic", "sc": "助记符", "tc": "助記操作碼；助記碼", "hk": "助记操作码；助记码"},
+      {"en": "modularity", "sc": "模块化；模块性", "tc": "模組性", "hk": "模组性"},
+      {"en": "modulator-demodulator (modem)", "sc": "调制解调器", "tc": "數據機；調解器；調制解調器", "hk": "数据机；调解器；调制解调器"},
+      {"en": "morphing", "sc": "变形", "tc": "變形"},
+      {"en": "Motion Picture Experts Group (MPEG)", "sc": "动态图像专家组", "tc": "動畫專家群組", "hk": "动画专家群组"},
+      {"en": "multicast", "sc": "组播；多播", "tc": "多址廣播；多信道廣播", "hk": "多址广播；多信道广播"},
+      {"en": "multiplexing", "sc": "多路复用", "tc": "多路轉接；多路傳輸", "hk": "多路转接；多路传输"},
+      {"en": "multiprocessing", "sc": "多处理", "tc": "多道處理", "hk": "多道处理"},
+      {"en": "Multipurpose Internet Mail Extension (MIME)", "sc": "多用途互联网邮件扩展", "tc": "多功能互聯網郵遞伸延", "hk": "多功能互联网邮递伸延"},
+      {"en": "multitasking", "sc": "多任务处理", "tc": "多工作業；多工處理", "hk": "多工作业；多工处理"},
+      {"en": "multithreading", "sc": "多线程", "tc": "多線運作", "hk": "多线运作"},
+      {"en": "Musical Instrument Digital Interface (MIDI)", "sc": "乐器数字接口", "tc": "樂器數位界面；樂器數碼界面", "hk": "乐器数位界面；乐器数码界面"},
+      {"en": "natural join", "sc": "自然连接", "tc": "自然連接；自然聯結", "hk": "自然连接；自然联结"},
+      {"en": "Near Field Communication (NFC)", "sc": "近场通信", "tc": "近場通訊", "hk": "近场通讯"},
+      {"en": "nested function", "sc": "嵌套函数", "tc": "嵌套函數"},
+      {"en": "nested loop", "sc": "嵌套循环", "tc": "嵌套循環"},
+      {"en": "netiquette", "sc": "网络礼仪", "tc": "網上禮儀；網上的行為規範", "hk": "网上礼仪；网上的行为规范"},
+      {"en": "Network Address Translation (NAT)", "sc": "网络地址转换", "tc": "網址端轉換", "hk": "网址端转换"},
+      {"en": "Network Interface Card (NIC)", "sc": "网卡；网络接口卡", "tc": "網絡界面卡", "hk": "网络界面卡"},
+      {"en": "Network Time Protocol (NTP)", "sc": "网络时间协议", "tc": "網絡時間協定", "hk": "网络时间协定"},
+      {"en": "network topology", "sc": "网络拓扑", "tc": "網絡布局；網絡佈局", "hk": "网络布局；网络布局"},
+      {"en": "node", "sc": "节点", "tc": "節點"},
+      {"en": "normalisation", "sc": "规范化", "tc": "規範化；規格化", "hk": "规范化；规格化"},
+      {"en": "null", "sc": "空值", "tc": "空值"},
+      {"en": "Object Linking and Embedding (OLE)", "sc": "对象链接与嵌入", "tc": "物件連接與嵌入", "hk": "物件连接与嵌入"},
+      {"en": "Object-Oriented Programming (OOP)", "sc": "面向对象程序设计；面向对象编程", "tc": "物件導向編程", "hk": "物件导向编程"},
+      {"en": "one-dimensional array", "sc": "一维数组", "tc": "一維陣列；單陣列", "hk": "一维阵列；单阵列"},
+      {"en": "one's complement", "sc": "反码", "tc": "一補碼", "hk": "一补码"},
+      {"en": "open source software", "sc": "开源软件", "tc": "開放源碼軟件", "hk": "开放源码软件"},
+      {"en": "Open System Interconnection (OSI)", "sc": "开放系统互连", "tc": "開放系統互連"},
+      {"en": "operand", "sc": "操作数", "tc": "操作數"},
+      {"en": "Operating System (OS)", "sc": "操作系统", "tc": "操作系統"},
+      {"en": "operation code (op-code)", "sc": "操作码", "tc": "操作碼"},
+      {"en": "operator", "sc": "(1)运算符，(2)操作员", "tc": "(1)運算符，(2)操作員"},
+      {"en": "Optical Character Recognition (OCR)", "sc": "光学字符识别", "tc": "光符識別", "hk": "光符识别"},
+      {"en": "Optical Mark Recognition (OMR)", "sc": "光学标记识别", "tc": "光標識別；光學標記識別", "hk": "光标识别；光学标记识别"},
+      {"en": "outer join", "sc": "外连接", "tc": "外連接；外聯結", "hk": "外连接；外联结"},
+      {"en": "overflow error", "sc": "上溢错误；溢出错误", "tc": "上溢錯誤；溢出誤差", "hk": "上溢错误；溢出误差"},
+      {"en": "packet switching", "sc": "分组交换；包交换", "tc": "數據包切換", "hk": "数据包切换"},
+      {"en": "parallel port", "sc": "并行端口；并口", "tc": "並行埠", "hk": "并行埠"},
+      {"en": "parameter", "sc": "参数", "tc": "參數"},
+      {"en": "parameter passing", "sc": "参数传递", "tc": "參數傳遞"},
+      {"en": "parity", "sc": "奇偶性", "tc": "奇偶性"},
+      {"en": "parity bit", "sc": "奇偶校验位", "tc": "奇偶檢驗位", "hk": "奇偶检验位"},
+      {"en": "parity check", "sc": "奇偶校验", "tc": "奇偶檢測", "hk": "奇偶检测"},
+      {"en": "Peer-to-Peer (P2P) file sharing software", "sc": "点对点文件共享软件", "tc": "點對點檔案分享軟件", "hk": "点对点档案分享软件"},
+      {"en": "Peer-to-Peer (P2P) network", "sc": "对等网络", "tc": "對等網絡"},
+      {"en": "Peripheral Component Interconnect (PCI)", "sc": "外设部件互连标准", "tc": "周邊部件互連；周邊組件聯繫", "hk": "周边部件互连；周边组件联系"},
+      {"en": "Personal Area Network (PAN)", "sc": "个人区域网；个域网", "tc": "個人區域網絡", "hk": "个人区域网络"},
+      {"en": "Personal Digital Assistant (PDA)", "sc": "个人数字助理", "tc": "個人數碼助理", "hk": "个人数码助理"},
+      {"en": "Personal Identity Number (PIN)", "sc": "个人识别码", "tc": "個人識別號碼", "hk": "个人识别号码"},
+      {"en": "phishing", "sc": "网络钓鱼", "tc": "仿冒詐騙", "hk": "仿冒诈骗"},
+      {"en": "picture element (pixel)", "sc": "像素", "tc": "像素"},
+      {"en": "pipelining", "sc": "流水线技术", "tc": "流水線操作；流水線技術", "hk": "流水线操作；流水线技术"},
+      {"en": "pitch", "sc": "(1)字符间距，(2)音调", "tc": "(1)字元間距；字寬，(2)音調", "hk": "(1)字元间距；字宽，(2)音调"},
+      {"en": "pivot table", "sc": "数据透视表", "tc": "樞紐分析表", "hk": "枢纽分析表"},
+      {"en": "Plug and Play (PnP)", "sc": "即插即用", "tc": "隨插即用", "hk": "随插即用"},
+      {"en": "plug-in", "sc": "插件", "tc": "插件"},
+      {"en": "pointer", "sc": "指针", "tc": "指示字；指示標", "hk": "指示字；指示标"},
+      {"en": "Point-Of-Sale (POS) terminal", "sc": "销售点终端", "tc": "銷售點終端機", "hk": "销售点终端机"},
+      {"en": "Polish notation", "sc": "波兰表示法", "tc": "波義表示法", "hk": "波义表示法"},
+      {"en": "polling", "sc": "轮询", "tc": "輪詢；探詢", "hk": "轮询；探询"},
+      {"en": "port", "sc": "端口", "tc": "通訊埠;埠", "hk": "通讯埠;埠"},
+      {"en": "Portable Document Format (PDF)", "sc": "便携式文档格式", "tc": "可攜式文件格式", "hk": "可携式文件格式"},
+      {"en": "Portable Network Graphics (PNG)", "sc": "便携式网络图形", "tc": "便攜式網絡圖形格式", "hk": "便携式网络图形格式"},
+      {"en": "portal", "sc": "门户网站", "tc": "入門網站", "hk": "入门网站"},
+      {"en": "Post Office Protocol (POP)", "sc": "邮局协议", "tc": "郵局協定", "hk": "邮局协定"},
+      {"en": "primary key", "sc": "主键", "tc": "主關鍵碼", "hk": "主关键码"},
+      {"en": "private key", "sc": "私钥", "tc": "私人密碼匙；私鑰", "hk": "私人密码匙；私钥"},
+      {"en": "program", "sc": "程序", "tc": "程式；程序", "hk": "程式；程序"},
+      {"en": "Program Counter (PC)", "sc": "程序计数器", "tc": "程式計數器", "hk": "程式计数器"},
+      {"en": "Programmable Read Only Memory (PROM)", "sc": "可编程只读存储器", "tc": "可編程唯讀記憶體", "hk": "可编程唯读记忆体"},
+      {"en": "prototype", "sc": "原型", "tc": "原型"},
+      {"en": "proxy server", "sc": "代理服务器", "tc": "代理伺服器", "hk": "代理伺服器"},
+      {"en": "pseudocode", "sc": "伪代码", "tc": "偽代碼"},
+      {"en": "public key", "sc": "公钥", "tc": "公開密碼匙；公鑰", "hk": "公开密码匙；公钥"},
+      {"en": "Public Key Infrastructure (PKI)", "sc": "公钥基础设施", "tc": "公開密碼匙基礎建設；公鑰基礎建設", "hk": "公开密码匙基础建设；公钥基础建设"},
+      {"en": "query by example", "sc": "示例查询；按例查询", "tc": "範例查詢法", "hk": "范例查询法"},
+      {"en": "queue", "sc": "队列", "tc": "隊列"},
+      {"en": "quick sort", "sc": "快速排序", "tc": "快速排序法", "hk": "快速排序法"},
+      {"en": "radical", "sc": "部首", "tc": "部首"},
+      {"en": "radio button", "sc": "单选按钮", "tc": "單選按鈕"},
+      {"en": "Radio Frequency Identification (RFID)", "sc": "射频识别", "tc": "無線射頻識別", "hk": "无线射频识别"},
+      {"en": "Random Access Memory (RAM)", "sc": "随机存取存储器；内存", "tc": "隨機存取記憶體", "hk": "随机存取记忆体"},
+      {"en": "ransomware", "sc": "勒索软件", "tc": "勒索軟體", "hk": "勒索软体"},
+      {"en": "Read-Only Memory (ROM)", "sc": "只读存储器", "tc": "唯讀記憶體", "hk": "唯读记忆体"},
+      {"en": "Really Simple Syndication (RSS)", "sc": "简易资讯聚合", "tc": "簡易資訊聚合"},
+      {"en": "real-time processing", "sc": "实时处理", "tc": "實時處理"},
+      {"en": "recursion", "sc": "递归", "tc": "遞歸"},
+      {"en": "Reduced Instruction Set Computer (RISC)", "sc": "精简指令集计算机", "tc": "精簡指令集電腦", "hk": "精简指令集电脑"},
+      {"en": "referential integrity", "sc": "参照完整性", "tc": "參照完整性"},
+      {"en": "register", "sc": "寄存器", "tc": "暫存器；寄存器", "hk": "暂存器；寄存器"},
+      {"en": "Relational Database Management System (RDBMS)", "sc": "关系数据库管理系统", "tc": "關聯數據庫管理系統；關係數據庫管理系統", "hk": "关联数据库管理系统；关系数据库管理系统"},
+      {"en": "repeater", "sc": "中继器", "tc": "轉發器；中繼器", "hk": "转发器；中继器"},
+      {"en": "reserved word", "sc": "保留字", "tc": "保留字"},
+      {"en": "resolution", "sc": "分辨率", "tc": "解像度；解析度", "hk": "解像度；解析度"},
+      {"en": "Responsive Web Design (RWD)", "sc": "响应式网页设计；自适应网页设计", "tc": "回應式網頁設計；自適應網頁設計；響應式網頁設計；對應式網頁設計", "hk": "回应式网页设计；自适应网页设计；响应式网页设计；对应式网页设计"},
+      {"en": "Rich Text Format (RTF)", "sc": "富文本格式", "tc": "多文本格式", "hk": "多文本格式"},
+      {"en": "root directory", "sc": "根目录", "tc": "根目錄"},
+      {"en": "rounding error", "sc": "舍入误差", "tc": "捨入誤差"},
+      {"en": "router", "sc": "路由器", "tc": "路由器"},
+      {"en": "run", "sc": "运行；执行", "tc": "執行；運行", "hk": "执行；运行"},
+      {"en": "scalar type", "sc": "标量类型", "tc": "標量類形", "hk": "标量类形"},
+      {"en": "schema", "sc": "模式；架构", "tc": "模式", "hk": "模式"},
+      {"en": "scripting language", "sc": "脚本语言", "tc": "手稿程式語言", "hk": "手稿程式语言"},
+      {"en": "search engine", "sc": "搜索引擎", "tc": "搜尋器；檢索器", "hk": "搜寻器；检索器"},
+      {"en": "Second Normal Form (2NF)", "sc": "第二范式", "tc": "第二範式"},
+      {"en": "secondary key", "sc": "辅键；次键", "tc": "輔助關鍵碼", "hk": "辅助关键码"},
+      {"en": "secondary storage", "sc": "辅助存储器；外存", "tc": "輔助儲存器；輔助存貯器", "hk": "辅助储存器；辅助存贮器"},
+      {"en": "sector", "sc": "扇区", "tc": "扇區"},
+      {"en": "Secure Sockets Layer (SSL)", "sc": "安全套接层", "tc": "保密插口層", "hk": "保密插口层"},
+      {"en": "segment", "sc": "段", "tc": "段；部分", "hk": "段；部分"},
+      {"en": "serial port", "sc": "串行端口；串口", "tc": "串行埠", "hk": "串行埠"},
+      {"en": "server-side", "sc": "服务器端", "tc": "伺服器端", "hk": "伺服器端"},
+      {"en": "shareware", "sc": "共享软件", "tc": "共享軟件"},
+      {"en": "Shielded Twisted Pair (STP)", "sc": "屏蔽双绞线", "tc": "屏蔽雙扭線", "hk": "屏蔽双扭线"},
+      {"en": "Short Message Service (SMS)", "sc": "短信服务", "tc": "短訊服務", "hk": "短讯服务"},
+      {"en": "Simple Mail Transfer Protocol (SMTP)", "sc": "简单邮件传输协议", "tc": "簡單郵遞傳送協定", "hk": "简单邮递传送协定"},
+      {"en": "slot", "sc": "插槽", "tc": "槽", "hk": "槽"},
+      {"en": "Small Computer Systems Interface (SCSI)", "sc": "小型计算机系统接口", "tc": "小型電腦系統界面", "hk": "小型电脑系统界面"},
+      {"en": "software", "sc": "软件", "tc": "軟件"},
+      {"en": "source code", "sc": "源代码", "tc": "源碼", "hk": "源码"},
+      {"en": "spamming", "sc": "发送垃圾邮件", "tc": "濫發郵件", "hk": "滥发邮件"},
+      {"en": "spooling", "sc": "假脱机输入输出", "tc": "假脫機輸入輸出"},
+      {"en": "spyware", "sc": "间谍软件", "tc": "間諜程式；間諜軟件", "hk": "间谍程式；间谍软件"},
+      {"en": "stack", "sc": "栈；堆栈", "tc": "堆疊", "hk": "堆叠"},
+      {"en": "Static Random Access Memory (SRAM)", "sc": "静态随机存储器", "tc": "靜態隨機存取記憶體", "hk": "静态随机存取记忆体"},
+      {"en": "Status Register (SR)", "sc": "状态寄存器", "tc": "狀態寄存器"},
+      {"en": "stepwise refinement", "sc": "逐步求精法", "tc": "逐步求精法"},
+      {"en": "streaming", "sc": "流媒体；流式传输", "tc": "串流傳輸；流式傳輸", "hk": "串流传输；流式传输"},
+      {"en": "string", "sc": "字符串", "tc": "字串；字符串", "hk": "字串；字符串"},
+      {"en": "structure chart", "sc": "结构图", "tc": "結構圖"},
+      {"en": "Structured Query Language (SQL)", "sc": "结构化查询语言", "tc": "結構化查詢語言"},
+      {"en": "stub", "sc": "桩程序；存根", "tc": "子程式存根；子程序存根", "hk": "子程式存根；子程序存根"},
+      {"en": "subdirectory", "sc": "子目录", "tc": "子目錄"},
+      {"en": "subnet", "sc": "子网", "tc": "子網絡", "hk": "子网络"},
+      {"en": "sub-program", "sc": "子程序", "tc": "子程式", "hk": "子程式"},
+      {"en": "Super Video Graphics Array (SVGA)", "sc": "超级视频图形阵列", "tc": "超視像圖形陣列", "hk": "超视像图形阵列"},
+      {"en": "supercomputer", "sc": "超级计算机", "tc": "超級電腦", "hk": "超级电脑"},
+      {"en": "switch", "sc": "交换机", "tc": "交換器", "hk": "交换器"},
+      {"en": "Synchronous Dynamic Random Access Memory (SDRAM)", "sc": "同步动态随机存储器", "tc": "同步動態隨機存取記憶體", "hk": "同步动态随机存取记忆体"},
+      {"en": "syntax", "sc": "语法", "tc": "語法"},
+      {"en": "Tagged Image File Format (TIFF)", "sc": "标记图像文件格式", "tc": "標記圖像文件格式"},
+      {"en": "telecommunication", "sc": "远程通信；电信", "tc": "遠程通訊", "hk": "远程通讯"},
+      {"en": "telecommuting", "sc": "远程办公", "tc": "遠程通勤；電傳通勤；電子通勤", "hk": "远程通勤；电传通勤；电子通勤"},
+      {"en": "telnet", "sc": "远程登录", "tc": "遠程登錄；遠端登入", "hk": "远程登录；远端登入"},
+      {"en": "terminal", "sc": "终端", "tc": "終端機", "hk": "终端机"},
+      {"en": "Thin-Film Transistor (TFT)", "sc": "薄膜晶体管", "tc": "薄膜晶體管"},
+      {"en": "Third Normal Form (3NF)", "sc": "第三范式", "tc": "第三範式"},
+      {"en": "token", "sc": "令牌", "tc": "權標；令牌", "hk": "权标；令牌"},
+      {"en": "token ring", "sc": "令牌环", "tc": "權標環；令牌環", "hk": "权标环；令牌环"},
+      {"en": "trace table", "sc": "跟踪表", "tc": "追蹤表", "hk": "追踪表"},
+      {"en": "track", "sc": "磁道", "tc": "磁道"},
+      {"en": "trailer", "sc": "表尾", "tc": "表尾"},
+      {"en": "transcription error", "sc": "转录错误", "tc": "轉錄錯誤"},
+      {"en": "Transmission Control Protocol (TCP)", "sc": "传输控制协议", "tc": "傳輸控制協定", "hk": "传输控制协定"},
+      {"en": "traversal", "sc": "遍历", "tc": "遍歷"},
+      {"en": "tree structure", "sc": "树状结构", "tc": "樹狀結構"},
+      {"en": "trial-and-error approach", "sc": "试错法", "tc": "試湊法", "hk": "试凑法"},
+      {"en": "Trojan program", "sc": "木马程序", "tc": "木馬程式", "hk": "木马程式"},
+      {"en": "truncation error", "sc": "截断误差", "tc": "截尾誤差", "hk": "截尾误差"},
+      {"en": "truth table", "sc": "真值表", "tc": "真值表；真假值表", "hk": "真值表；真假值表"},
+      {"en": "tweening", "sc": "补间", "tc": "漸變；補間", "hk": "渐变；补间"},
+      {"en": "twisted pair", "sc": "双绞线", "tc": "雙扭線", "hk": "双扭线"},
+      {"en": "two-dimensional array", "sc": "二维数组", "tc": "雙陣列；二維陣列", "hk": "双阵列；二维阵列"},
+      {"en": "two's complement", "sc": "补码", "tc": "二補碼；二進制補碼", "hk": "二补码；二进制补码"},
+      {"en": "type casting", "sc": "类型转换", "tc": "轉換數據類型", "hk": "转换数据类型"},
+      {"en": "underflow error", "sc": "下溢错误", "tc": "下溢錯誤；下溢誤差", "hk": "下溢错误；下溢误差"},
+      {"en": "Unicode", "sc": "统一码", "tc": "統一碼"},
+      {"en": "Uniform Resource Locator (URL)", "sc": "统一资源定位符；网址", "tc": "劃一資源定位", "hk": "划一资源定位"},
+      {"en": "Uninterruptible Power Supply (UPS)", "sc": "不间断电源", "tc": "不間斷電源供應器", "hk": "不间断电源供应器"},
+      {"en": "Universal Product Code (UPC)", "sc": "通用产品码", "tc": "通用產品碼"},
+      {"en": "Universal Serial Bus (USB)", "sc": "通用串行总线", "tc": "通用串列匯流排；通用串行總線", "hk": "通用串列汇流排；通用串行总线"},
+      {"en": "Unshielded Twisted Pair (UTP)", "sc": "非屏蔽双绞线", "tc": "無屏蔽雙扭線", "hk": "无屏蔽双扭线"},
+      {"en": "User Datagram Protocol (UDP)", "sc": "用户数据报协议", "tc": "用戶數據包協定", "hk": "用户数据包协定"},
+      {"en": "utility software", "sc": "实用软件；工具软件", "tc": "實用軟件", "hk": "实用软件"},
+      {"en": "validation", "sc": "数据验证；有效性检查", "tc": "有效性檢驗", "hk": "有效性检验"},
+      {"en": "variable", "sc": "变量", "tc": "變量"},
+      {"en": "verification", "sc": "校验；核实", "tc": "校驗；驗證", "hk": "校验；验证"},
+      {"en": "Very Large Scale Integration (VLSI)", "sc": "超大规模集成电路", "tc": "超大規模集成電路"},
+      {"en": "Video Compact Disc (VCD)", "sc": "视频光盘", "tc": "視像光碟", "hk": "视像光碟"},
+      {"en": "Video Graphics Array (VGA)", "sc": "视频图形阵列", "tc": "視像圖形陣列", "hk": "视像图形阵列"},
+      {"en": "Video On Demand (VOD)", "sc": "视频点播", "tc": "自選視訊服務", "hk": "自选视讯服务"},
+      {"en": "Virtual Private Network (VPN)", "sc": "虚拟专用网络", "tc": "虛擬私有網絡；虛擬專用網絡", "hk": "虚拟私有网络；虚拟专用网络"},
+      {"en": "Virtual Reality (VR)", "sc": "虚拟现实", "tc": "虛擬實境；虛擬現實", "hk": "虚拟实境；虚拟现实"},
+      {"en": "Virtual Reality Modeling Language (VRML)", "sc": "虚拟现实建模语言", "tc": "虛擬實境製模語言；虛擬現實建模語言", "hk": "虚拟实境制模语言；虚拟现实建模语言"},
+      {"en": "Visual Display Unit (VDU)", "sc": "显示器", "tc": "顯示器"},
+      {"en": "volatility", "sc": "易失性", "tc": "易失性"},
+      {"en": "what-if analysis", "sc": "假设分析", "tc": "假設分析"},
+      {"en": "Wide Area Network (WAN)", "sc": "广域网", "tc": "寬廣區域網絡；廣域網絡", "hk": "宽广区域网络；广域网络"},
+      {"en": "Wired Equivalent Privacy (WEP)", "sc": "有线等效加密", "tc": "有線等效加密"},
+      {"en": "Wireless Application Protocol (WAP)", "sc": "无线应用协议", "tc": "無線應用系統協定", "hk": "无线应用系统协定"},
+      {"en": "Wireless Markup Language (WML)", "sc": "无线标记语言", "tc": "無線標示語言", "hk": "无线标示语言"},
+      {"en": "World Wide Web (WWW)", "sc": "万维网", "tc": "萬維網"},
+      {"en": "World Wide Web Consortium (W3C)", "sc": "万维网联盟", "tc": "萬維網聯盟"},
+      {"en": "worm", "sc": "蠕虫", "tc": "蠕蟲"},
+      {"en": "Write-Once Read-Many (WORM)", "sc": "单写多读", "tc": "單寫多讀"}
+    ];
+
+    const $ = (s) => document.querySelector(s);
+    const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const reEsc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const store = {
+      get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+      set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+    };
+
+    const items = DATA.map((d) => ({ ...d, key: (d.en + " " + d.sc + " " + (d.hk || "") + " " + d.tc).toLowerCase() }));
+    const letterOf = (d) => d.en[0].toUpperCase();
+    const LETTERS = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
+    $("#total").textContent = items.length;
+
+    // highlight the query; "(ABBR)" in the English is shown in the accent colour
+    function mark(text, re) {
+      const safe = esc(text);
+      return re ? safe.replace(re, (m) => `<mark>${m}</mark>`) : safe;
+    }
+    function enHtml(en, re) {
+      const m = en.match(/^(.*?)(\s*\(([^()]+)\))?$/);
+      const main = mark(m[1], re);
+      return m[2] ? `${main} <span class="abbr">(${mark(m[3], re)})</span>` : main;
+    }
+    // several translations are separated by "；" — the first is the main one, the rest are greyed
+    function zhHtml(zh, re) {
+      const parts = zh.split("；");
+      return parts.map((p, i) => (i ? `<span class="alt">${mark(p, re)}</span>` : mark(p, re))).join('<span class="alt">；</span>');
+    }
+
+    function render() {
+      const q = $("#q").value.trim().toLowerCase();
+      const re = q ? new RegExp(reEsc(q), "gi") : null;
+      const list = q ? items.filter((d) => d.key.includes(q)) : items;
+
+      // with a search, terms that start with the query come first
+      if (q) list.sort((a, b) => (b.en.toLowerCase().startsWith(q) || b.sc.startsWith(q)) - (a.en.toLowerCase().startsWith(q) || a.sc.startsWith(q)));
+
+      const groups = {};
+      for (const d of list) {
+        const L = q ? "" : letterOf(d);
+        (groups[L] = groups[L] || []).push(d);
+      }
+      const rows = (arr) => arr.map((d) => `
+        <div class="row">
+          <div class="en">${enHtml(d.en, re)}</div>
+          <div><div class="zh">${zhHtml(d.sc, re)}</div>${d.hk ? `<div class="hk"><b>港</b> ${mark(d.hk, re)}</div>` : ""}<div class="tc"><b>繁</b> ${mark(d.tc, re)}</div></div>
+        </div>`).join("");
+
+      $("#results").innerHTML = !list.length
+        ? `<div class="empty">No match 没有找到 “${esc(q)}”</div>`
+        : Object.keys(groups).map((L) => (L ? `<h2 class="group-h" id="L-${L}">${L}</h2>` : `<div style="height:12px"></div>`) + `<div class="list">${rows(groups[L])}</div>`).join("");
+
+      $("#count").textContent = q ? `${list.length} of ${items.length} terms 个词` : "";
+      document.querySelectorAll("#letters button").forEach((b) => { b.disabled = !!q || !items.some((d) => letterOf(d) === b.dataset.l); });
+    }
+
+    $("#letters").innerHTML = LETTERS.map((L) => `<button data-l="${L}">${L}</button>`).join("");
+    $("#letters").addEventListener("click", (e) => {
+      const b = e.target.closest("button"); if (!b || b.disabled) return;
+      const h = document.getElementById("L-" + b.dataset.l);
+      if (h) h.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    let t = 0;
+    $("#q").addEventListener("input", () => { clearTimeout(t); t = setTimeout(render, 80); });
+
+    const tcBtn = $("#tcBtn");
+    function setTc(on) { document.body.classList.toggle("show-tc", on); tcBtn.classList.toggle("on", on); store.set("ictg-tc", on ? "1" : ""); }
+    tcBtn.addEventListener("click", () => setTc(!document.body.classList.contains("show-tc")));
+    setTc(store.get("ictg-tc") === "1");
+
+    // keep the sticky bar under the fixed site nav, and letter jumps clear of both
+    function setOffsets() {
+      const n = document.querySelector("nav.__snav");
+      const navH = n && getComputedStyle(n).position === "fixed" ? n.offsetHeight : 0;
+      document.documentElement.style.setProperty("--nav-h", navH + "px");
+      document.documentElement.style.setProperty("--bar-h", $("#bar").offsetHeight + 8 + "px");
+    }
+    window.addEventListener("load", setOffsets);
+    window.addEventListener("resize", setOffsets);
+    setOffsets();
+    render();
+  })();
+  </script>
+</body>
+</html>
