@@ -1,5 +1,12 @@
 var mainData = [
   {
+    title: "Mr. Coffee's English Lessons",
+    subtitle: "咖啡先生的英语课",
+    category: "file_slide",
+    filename: "RN_Coffee_English",
+    foldername: ""
+  },
+  {
     title: "The 7 Habits of Highly Effective People",
     subtitle: "高效能人士的七个习惯",
     category: "folder",
