@@ -1,6 +1,10 @@
 const data = {
-  lastUpdated: "08/11/2026 V1",
+  lastUpdated: "28/11/2026 V1",
   recentReleases: [
+    {
+      date: "2026-11-28",
+      name: "<a href='pdf/index.html'>PDF Editor PDF编辑器 — Edit, Sign & Print (offline)</a>"
+    },
     {
       date: "2026-11-08",
       name: "<a href='Education/Tools/EnglishLetterWriting.html'>English Letter Writing 两线字帖 — Stroke Order Animation</a>"

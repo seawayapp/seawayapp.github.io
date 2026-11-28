@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Pick an emoji icon based on title keywords
   function iconFor(text) {
     const t = text.toLowerCase();
+    if (t.includes("pdf"))                                    return "📄";
     if (t.includes("书法") || t.includes("隶书") || t.includes("calligraphy")) return "🖌️";
     if (t.includes("focus") || t.includes("to-do") || t.includes("清单")) return "✅";
     if (t.includes("buddhism") || t.includes("佛"))          return "🙏";
